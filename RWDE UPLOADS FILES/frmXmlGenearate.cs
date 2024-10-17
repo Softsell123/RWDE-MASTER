@@ -443,14 +443,33 @@ namespace RWDE_UPLOADS_FILES
                 // DateTime startTime = DateTime.Now;
                 //calling Service xml file generation Method
                 XElement xml = await GenerateXmlService(data, xmlStructure);//generate xml
-
-
-                // Save the XML to a file
+                                                                            // Save the XML to a file with automatic numbering if the file exists
                 string folderPath = txtPath.Text;
-                Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist ServiceDetails_0712_0422_11032023_143100.xml
-                string servicesFileName = $"ServiceDetails_0246_0422_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
-                string servicesFilePath = Path.Combine(folderPath, servicesFileName);
+                Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
+                string baseFileName = $"ServiceDetails_0246_0422_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
+                string servicesFilePath = Path.Combine(folderPath, baseFileName);
+
+                // Check if file exists and rename accordingly
+                int fileCount = 1;
+                string fileExtension = Path.GetExtension(baseFileName);
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(baseFileName);
+
+                // Loop to increment the filename if the file already exists
+                while (File.Exists(servicesFilePath))
+                {
+                    servicesFilePath = Path.Combine(folderPath, $"{fileNameWithoutExtension}_{fileCount}{fileExtension}");
+                    fileCount++;
+                }
+
+                // Now save the file
                 xml.Save(servicesFilePath);
+
+                //// Save the XML to a file
+                //string folderPath = txtPath.Text;
+                //Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist ServiceDetails_0712_0422_11032023_143100.xml
+                //string servicesFileName = $"ServiceDetails_0246_0422_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
+                //string servicesFilePath = Path.Combine(folderPath, servicesFileName);
+                //xml.Save(servicesFilePath);
 
                 DateTime endTime = DateTime.Now;
                 TimeSpan totalTime = endTime - startTime;
@@ -462,6 +481,7 @@ namespace RWDE_UPLOADS_FILES
                 UpdateStatusColumnServices(selectedBatchID, Constants.HCCXMLSTATUSF, startTime, endTime);
                 PopulateDataGridView(new DataTable());//populate data
                 dbHelper.Log(Constants.GeneratetoHCCformatcompletedsuccessfully, Constants.ClientTrack, baseFilename, Constants.uploadct);
+
 
             }
             catch (Exception ex)
@@ -1397,12 +1417,30 @@ namespace RWDE_UPLOADS_FILES
                 //calling Service xml file generation Method               
                 XElement xml = await GenerateXmlClient(data, xmlStructure, selectedBatchID);
 
+                // Save the XML to a file with automatic numbering if the file exists
                 string folderPath = txtPath.Text;
-                Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist  ClientDetails_0427_0689_11032023_143100.xml (ddmmyyyy)
+                Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
 
-                string servicesFileName = $"ClientDetails_0246_0689_ {DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
-                string servicesFilePath = Path.Combine(folderPath, servicesFileName);
+                // Initial filename with the current date in the desired format (ddMMyyyy)
+                string baseFileName = $"ClientDetails_0246_0689_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
+                string servicesFilePath = Path.Combine(folderPath, baseFileName);
+
+                // Check if file exists and rename accordingly
+                int fileCount = 1;
+                string fileExtension = Path.GetExtension(baseFileName);
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(baseFileName);
+
+                // Loop to increment the filename if the file already exists
+                while (File.Exists(servicesFilePath))
+                {
+                    // Append number to the filename (e.g., ClientDetails_0246_0689_ddmmyyyy_143100_2.xml)
+                    servicesFilePath = Path.Combine(folderPath, $"{fileNameWithoutExtension}_{fileCount}{fileExtension}");
+                    fileCount++;
+                }
+
+                // Now save the file
                 xml.Save(servicesFilePath);
+
                 DateTime endedTime = DateTime.Now;
                 TimeSpan TotalTime = endedTime - startTime;
                 string ETime = endedTime.ToString("MM/dd/yyyy HH:mm:ss");

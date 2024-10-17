@@ -500,7 +500,7 @@ namespace RWDE_UPLOADS_FILES
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand("MapCMSClientstest1", connection))
+                    using (SqlCommand command = new SqlCommand("MapCMSClientstest", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
