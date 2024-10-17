@@ -274,23 +274,52 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show("Invalid");
             }
         }
-        private async Task UpdateProgressBar(int totalCount)//This method updates the progress bar to reflect the progress of the operation asynchronously.
+
+        private async Task UpdateProgressBar(int totalCount)
         {
             progressBar.Minimum = 0;
             progressBar.Maximum = totalCount;
             txtProgressbar.Text = "0%";
+            progressBar.Value = 0; // Immediate feedback
             int currentCount = 0;
+            int updateInterval = Math.Max(1, totalCount / 100); // Update every 1% or more frequently
+
+            // Start showing progress immediately
             while (currentCount <= totalCount)
             {
-                int progressPercentage = (int)((double)currentCount / totalCount * 100);
-                string progressInfo = $"{currentCount}/{totalCount} ({progressPercentage}%)";
-                txtProgressbar.Text = progressInfo;
-                progressBar.Value = currentCount;
+                if (currentCount % updateInterval == 0 || currentCount == totalCount)
+                {
+                    int progressPercentage = (int)((double)currentCount / totalCount * 100);
+                    string progressInfo = $"{currentCount}/{totalCount} ({progressPercentage}%)";
+                    txtProgressbar.Text = progressInfo;
+                    progressBar.Value = currentCount;
+                }
 
-                await Task.Delay(1);
                 currentCount++;
+
+                // Minimal delay to allow the UI to update, no need for a fraction like 0.25
+                await Task.Delay(1);
             }
         }
+
+
+        //private async Task UpdateProgressBar(int totalCount)//This method updates the progress bar to reflect the progress of the operation asynchronously.
+        //{
+        //    progressBar.Minimum = 0;
+        //    progressBar.Maximum = totalCount;
+        //    txtProgressbar.Text = "0%";
+        //    int currentCount = 0;
+        //    while (currentCount <= totalCount)
+        //    {
+        //        int progressPercentage = (int)((double)currentCount / totalCount * 100);
+        //        string progressInfo = $"{currentCount}/{totalCount} ({progressPercentage}%)";
+        //        txtProgressbar.Text = progressInfo;
+        //        progressBar.Value = currentCount;
+
+        //        await Task.Delay(1);
+        //        currentCount++;
+        //    }
+        //}
         private void UpdateFileProgressTotal(int currentFileIndex, int totalFiles)// This method updates the file progress to reflect the current file index out of the total number of files.
         {
             if (progressBarfile.InvokeRequired)
