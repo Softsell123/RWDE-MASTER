@@ -4046,6 +4046,17 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 return 0;
             }
         }
+        public static string GetFileName(bool includeClient)
+        {
+            string fileName = DateTime.Now.ToString("yyyyMMdd");
+
+            if (includeClient)
+            {
+                fileName = "Client_" + fileName;
+            }
+
+            return fileName + ".xml";
+        }
 
 
     }
