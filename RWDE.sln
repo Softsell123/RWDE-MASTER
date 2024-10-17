@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RWDE", "RWDE UPLOADS FILES\RWDE.csproj", "{5DA1D67E-2D05-476E-BCFC-B65C26A69243}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RWDECODE", "RWDECODE\RWDECODE.vdproj", "{78BD9F2E-3B63-44EA-A500-DEBEE22656FD}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RWDE EXE", "RWDE EXE\RWDE EXE.vdproj", "{54E56EE5-6C07-4CB9-81F1-75CBCEC90E68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DA1D67E-2D05-476E-BCFC-B65C26A69243}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DA1D67E-2D05-476E-BCFC-B65C26A69243}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DA1D67E-2D05-476E-BCFC-B65C26A69243}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DA1D67E-2D05-476E-BCFC-B65C26A69243}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{78BD9F2E-3B63-44EA-A500-DEBEE22656FD}.Debug|Any CPU.ActiveCfg = Debug
+		{78BD9F2E-3B63-44EA-A500-DEBEE22656FD}.Release|Any CPU.ActiveCfg = Release
+		{78BD9F2E-3B63-44EA-A500-DEBEE22656FD}.Release|Any CPU.Build.0 = Release
+		{54E56EE5-6C07-4CB9-81F1-75CBCEC90E68}.Debug|Any CPU.ActiveCfg = Debug
+		{54E56EE5-6C07-4CB9-81F1-75CBCEC90E68}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF6A1B03-B2BE-489A-80E0-4C11A3B33D37}
+	EndGlobalSection
+EndGlobal
