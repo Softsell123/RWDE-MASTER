@@ -142,7 +142,11 @@ namespace RWDE_UPLOADS_FILES
         }
         private async void btnUpload_Click_1(object sender, EventArgs e)//to upload data into table in database
         {
-            // Get all files in the selected folder
+            if (string.IsNullOrEmpty(txtPath.Text))
+            {
+                MessageBox.Show("The folder path cannot be empty. Please select a valid folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            } // Get all files in the selected folder
             string[] filesempty = Directory.GetFiles(txtPath.Text);
 
             // Check if the folder is empty
