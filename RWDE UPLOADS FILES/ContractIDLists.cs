@@ -16,13 +16,13 @@ using System.Windows.Forms;
 
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
-namespace RWDE_UPLOADS_FILES//
+namespace RWDE_UPLOADS_FILES
 {
     public partial class ContractIDLists : Form
     {
         private readonly DBHelper dbHelper = new DBHelper();
         private DataTable dataTable;
-        private readonly string connectionString;
+        private readonly string connectionString;//CONNECTION
         public ContractIDLists()//Initialize the form or object
         {
             InitializeComponent();
