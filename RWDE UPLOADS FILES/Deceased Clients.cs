@@ -44,7 +44,7 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.Columns.Clear();
             // Add columns to the DataGridView
             this.dataGridView.Columns.Add("HCCID", "HCC ID");
-            this.dataGridView.Columns.Add("ClientName", "Client Name");
+            this.dataGridView.Columns.Add("ClientName", "Client Name");//NEW//
             this.dataGridView.Columns.Add("Status", "Status");
             this.dataGridView.Columns.Add("DateOfDeath", "Date of Death");
             this.dataGridView.Columns.Add("LastServiceDate", "Last Service Date");     
