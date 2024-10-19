@@ -66,10 +66,16 @@ namespace RWDE_UPLOADS_FILES
         private void btnUpload_Click(object sender, EventArgs e)//Uploding CSV files
         {
             try {
+                if (string.IsNullOrEmpty(txtpath.Text))
+                {
+                    MessageBox.Show("The folder path cannot be empty. Please select a valid folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 string[] filesempty = Directory.GetFiles(txtpath.Text);
 
                 // Check if the folder is empty
-
+                
                 if (txtpath.Text == "" || txtpath == null || filesempty.Length == 0)
                 {
                     MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);

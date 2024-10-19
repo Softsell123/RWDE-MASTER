@@ -22,7 +22,7 @@ namespace RWDE_UPLOADS_FILES
     {
         private readonly DBHelper dbHelper = new DBHelper();
         private DataTable dataTable;
-        private readonly string connectionString;
+        private readonly string connectionString;//CONNECTION STRING
         public ContractIDLists()//Initialize the form or object
         {
             InitializeComponent();
