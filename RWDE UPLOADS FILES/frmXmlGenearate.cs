@@ -90,7 +90,7 @@ namespace RWDE_UPLOADS_FILES
                     string excludedBatchIDs = string.Join(",", removedBatchIDs);
                     query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
                 }
-                using (SqlConnection connection = new SqlConnection("Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;"))
+                using (SqlConnection connection = new SqlConnection("Data Source=BSSDEMO;Initial Catalog=RWDE;Integrated Security=True;"))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -1147,7 +1147,7 @@ namespace RWDE_UPLOADS_FILES
                     string excludedBatchIDs = string.Join(",", removedBatchIDs);
                     query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
                 }
-                using (SqlConnection connection = new SqlConnection("Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;"))
+                using (SqlConnection connection = new SqlConnection("Data Source=BSSDEMO;Initial Catalog=RWDE;Integrated Security=True;"))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
