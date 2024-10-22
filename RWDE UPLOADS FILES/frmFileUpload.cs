@@ -90,6 +90,7 @@ namespace RWDE_UPLOADS_FILES
 
         private async void btnUploadXML_Click(object sender, EventArgs e)
         {
+
             if (txtPath.Text == "" || txtPath == null)
             {
                 MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles,Constants.xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
