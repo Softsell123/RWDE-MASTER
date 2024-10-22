@@ -1530,13 +1530,13 @@ namespace RWDE
             string fileName = Path.GetFileName(xmlFilePath);
             int insertedCount = 0;
 
-            using (SqlTransaction trans = conn.BeginTransaction())
-            {
+            //using (SqlTransaction trans = conn.BeginTransaction())
+            //{
                 try
                 {
                     // Create a command for the stored procedure within the transaction
                     SqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = trans; // Assign the transaction to the command
+                    //cmd.Transaction = trans; // Assign the transaction to the command
                     cmd.CommandType = CommandType.StoredProcedure;
                     var procedure = value ? "InsertCTClientsFromXMLPHIMASKINGTEST" : "InsertCTClientsFromXML";
                     cmd.CommandText = procedure;
@@ -1552,7 +1552,7 @@ namespace RWDE
                     cmd.ExecuteNonQuery();
 
                     // Commit the transaction
-                    trans.Commit();
+                    //trans.Commit();
 
                     // Return the number of inserted clients
                     return insertedCount++;
@@ -1560,16 +1560,16 @@ namespace RWDE
                 catch (Exception ex)
                 {
                     // Rollback the transaction if any error occurs
-                    trans.Rollback();
+                    //trans.Rollback();
                     var st = new StackTrace(ex, true);
                     var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                     int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
-                    LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClients), fileName, lineNumber);
-                    LogError($"{ex.Message}", fileName); // Handle the exception within the transaction (e.g., log it)
+                    //LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClients), fileName, lineNumber);
+                  //  LogError($"{ex.Message}", fileName); // Handle the exception within the transaction (e.g., log it)
                     throw;
                 }
             }
-        }
+        
         public int InsertEligibilityDocuments(XmlDocument xmlDoc, int batchId, SqlConnection conn, string xmlFilePath)//insertion of eligibility document from xml file
         {
             int insertedCount = 0;
