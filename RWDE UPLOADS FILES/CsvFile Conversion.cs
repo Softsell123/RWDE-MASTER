@@ -20,14 +20,28 @@ namespace RWDE_UPLOADS_FILES
     {
         private readonly string connectionString;
         private readonly DBHelper dbHelper;
-        public CsvFile_Conversion()
+
+        public CsvFile_Conversion()//to initialize data
         {
+            InitializeComponent();
             dbHelper = new DBHelper();
             connectionString = dbHelper.GetConnectionString();
-            InitializeComponent();
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
-
+            
+            if (File.Exists(Constants.LastFolderPathhcc))
+            {
+                string LastFolderPathhcc = File.ReadAllText(Constants.LastFolderPathhcc).Trim();  // Trim to remove any extra spaces or newlines
+                // Check if the file content is not empty and the directory exists
+                if (!string.IsNullOrEmpty(LastFolderPathhcc) && Directory.Exists(LastFolderPathhcc))
+                {
+                    txtPath.Text = LastFolderPathhcc;
+                }
+                else
+                {
+                    txtPath.Clear();  // Ensure the path is cleared if the file is empty or invalid
+                }
+            }
         }
 
         private void lblStartDate_Click(object sender, EventArgs e)
