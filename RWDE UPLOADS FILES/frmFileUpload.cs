@@ -156,6 +156,7 @@ namespace RWDE_UPLOADS_FILES
                     {
                         // Update the progress display to show the current processed XML file index out of the total number of XML files.
                         UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);
+                        
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.Load(xmlFilePath);
 
@@ -415,10 +416,12 @@ namespace RWDE_UPLOADS_FILES
                 // int batchId = dbHelper.GetNextBatchID();
                 if (btnClose.Text == "Abort")
                 {
-                    DialogResult result = MessageBox.Show("Are you sure you want to abort?", "Abort Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult result = MessageBox.Show("Are you sure you want to abort?","XML File Upload", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     // Check if the user clicked "Yes"
                     UpdateBatch(batchId, fileName, path);
+                    DialogResult result2 = MessageBox.Show("Aborted Successfully","XML File Upload");
+
 
                 }
                 this.WindowState = FormWindowState.Maximized;
