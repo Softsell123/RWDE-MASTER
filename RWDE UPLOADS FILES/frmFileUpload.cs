@@ -160,7 +160,7 @@ namespace RWDE_UPLOADS_FILES
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.Load(xmlFilePath);
 
-                        batchId = dbHelper.NextBatchID();
+                        int batchId = dbHelper.GetNextBatchID();
                         path = xmlFilePath;
                         fileName = Path.GetFileName(xmlFilePath);
                         txtFName.Text = fileName;
@@ -413,7 +413,7 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-                // int batchId = dbHelper.GetNextBatchID();
+                 int batchId = dbHelper.GetNextBatchID();
                 if (btnClose.Text == "Abort")
                 {
                     DialogResult result = MessageBox.Show("Are you sure you want to abort?","XML File Upload", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -442,7 +442,7 @@ namespace RWDE_UPLOADS_FILES
                 DateTime currentTime = DateTime.Now;
                 int successfulRows = 0;
                 // Insert batch details into the database, including batch ID, file name, path, timestamps, row counts, and status.
-                dbHelper.InsertBatch(batchId-1, fileName, path, Constants.ClientTrack, null, currentTime, totalRows, successfulRows, Constants.fileaborted);
+                dbHelper.InsertBatch(batchId+1, fileName, path, Constants.ClientTrack, null, currentTime, totalRows, successfulRows, Constants.fileaborted);
                 ClearTables(batchId);
 
             }

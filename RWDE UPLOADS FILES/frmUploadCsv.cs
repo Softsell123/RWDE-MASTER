@@ -403,7 +403,7 @@ namespace RWDE_UPLOADS_FILES
                                 UpdateBatch(batchid, Constants.csvpath, Constants.HCCDATA);
                                 progressBarfile.Value = 0;
                                 ResetFormControls();
-                                MessageBox.Show(Constants.Abortedsuccessfully,"Upload HCC CSV", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                MessageBox.Show(Constants.Abortedsuccessfully, "Upload HCC CSV");
                                 this.Close();
                                 Application.Restart();
                             }

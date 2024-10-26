@@ -62,6 +62,8 @@
             this.lblEndDate = new System.Windows.Forms.Label();
             this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
             this.lblStartDate = new System.Windows.Forms.Label();
+            this.txtBatchID = new System.Windows.Forms.TextBox();
+            this.lblBatch = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
@@ -305,6 +307,8 @@
             // 
             this.pnl.AutoSize = true;
             this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnl.Controls.Add(this.txtBatchID);
+            this.pnl.Controls.Add(this.lblBatch);
             this.pnl.Controls.Add(this.btnClr);
             this.pnl.Controls.Add(this.btnReport);
             this.pnl.Controls.Add(this.lblHeader);
@@ -326,7 +330,7 @@
             this.btnClr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(125)))), ((int)(((byte)(255)))));
             this.btnClr.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClr.ForeColor = System.Drawing.Color.Black;
-            this.btnClr.Location = new System.Drawing.Point(1281, 88);
+            this.btnClr.Location = new System.Drawing.Point(1533, 84);
             this.btnClr.Name = "btnClr";
             this.btnClr.Size = new System.Drawing.Size(168, 48);
             this.btnClr.TabIndex = 8;
@@ -339,7 +343,7 @@
             this.btnReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnReport.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReport.ForeColor = System.Drawing.Color.Black;
-            this.btnReport.Location = new System.Drawing.Point(1093, 89);
+            this.btnReport.Location = new System.Drawing.Point(1359, 85);
             this.btnReport.Margin = new System.Windows.Forms.Padding(4);
             this.btnReport.Name = "btnReport";
             this.btnReport.Size = new System.Drawing.Size(168, 48);
@@ -434,6 +438,36 @@
             this.lblStartDate.TabIndex = 1;
             this.lblStartDate.Text = "Start Date:";
             // 
+            // txtBatchID
+            // 
+            this.txtBatchID.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.txtBatchID.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBatchID.Location = new System.Drawing.Point(1205, 93);
+            this.txtBatchID.Name = "txtBatchID";
+            this.txtBatchID.Size = new System.Drawing.Size(147, 40);
+            this.txtBatchID.TabIndex = 11;
+            // 
+            // lblBatch
+            // 
+            this.lblBatch.AutoSize = true;
+            this.lblBatch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBatch.ForeColor = System.Drawing.Color.Black;
+            this.lblBatch.Location = new System.Drawing.Point(1092, 96);
+            this.lblBatch.Name = "lblBatch";
+            this.lblBatch.Size = new System.Drawing.Size(107, 35);
+            this.lblBatch.TabIndex = 10;
+            this.lblBatch.Text = "BatchID";
+            // 
             // HCC_Reconciliation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -488,5 +522,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesForITDrops;
         private System.Windows.Forms.DataGridViewTextBoxColumn ManualUpload;
         private System.Windows.Forms.DataGridViewTextBoxColumn Drop;
+        private System.Windows.Forms.TextBox txtBatchID;
+        private System.Windows.Forms.Label lblBatch;
     }
 }
