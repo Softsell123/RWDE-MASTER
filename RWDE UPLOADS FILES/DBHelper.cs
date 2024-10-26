@@ -3396,9 +3396,8 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
-        public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate)//load services provided data
+        public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, int batchID)
         {
-
             DataTable dt = new DataTable();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -3406,15 +3405,39 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 try
                 {
                     conn.Open();
-                    string query = @"select * from vwService_Reconciliation"; // Ordering by the minimum date in each group
+
+                    // Call the stored procedure to update HCCServices
+                    using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
+                    {
+                        updateCmd.CommandType = CommandType.StoredProcedure;
+                        updateCmd.ExecuteNonQuery();
+                    }
+
+                    // Now, load data from vwService_Reconciliation within the specified date range and batch ID
+                    string query = @"
+                SELECT * 
+                FROM vwService_Reconciliation
+                WHERE ServiceDate BETWEEN @StartDate AND @EndDate
+                  AND BatchID = @Batchid";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
+                        // Add parameters for filtering dates and BatchID
                         cmd.Parameters.AddWithValue("@StartDate", startDate);
                         cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue("@Batchid", batchID);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
+
+                        // Check if the result is empty, which means no matching rows were found
+                        if (dt.Rows.Count == 0)
+                        {
+                            MessageBox.Show(Constants.nobatchid, "Service Reconciliation Report");
+                            return dt;
+                           
+                        }
+                        
                     }
                 }
                 catch (Exception ex)
@@ -3426,6 +3449,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
+
         public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate)//to fetch hccreconciliation data
         {
             DataTable dt = new DataTable();
