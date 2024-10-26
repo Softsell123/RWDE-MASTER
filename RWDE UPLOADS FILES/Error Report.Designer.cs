@@ -35,10 +35,9 @@
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.grdError = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lblMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlFilter = new System.Windows.Forms.Panel();
+            this.txtFileName = new System.Windows.Forms.TextBox();
             this.btnClr = new System.Windows.Forms.Button();
             this.lblFileName = new System.Windows.Forms.Label();
             this.bnClear = new System.Windows.Forms.Button();
@@ -47,7 +46,10 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnUpload = new System.Windows.Forms.Button();
-            this.txtFileName = new System.Windows.Forms.TextBox();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Sourceid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SourceFileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.pnlFilter.SuspendLayout();
@@ -93,6 +95,8 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -105,8 +109,10 @@
             this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.grdError,
-            this.lblMessage});
+            this.Status,
+            this.Message,
+            this.Sourceid,
+            this.SourceFileName});
             this.dataGridView.GridColor = System.Drawing.Color.Black;
             this.dataGridView.Location = new System.Drawing.Point(278, 344);
             this.dataGridView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -121,26 +127,6 @@
             this.dataGridView.Size = new System.Drawing.Size(1509, 438);
             this.dataGridView.TabIndex = 10;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
-            // 
-            // grdError
-            // 
-            this.grdError.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.grdError.DataPropertyName = "BatchID";
-            this.grdError.HeaderText = "              Error Status";
-            this.grdError.MinimumWidth = 6;
-            this.grdError.Name = "grdError";
-            this.grdError.ReadOnly = true;
-            this.grdError.Width = 300;
-            // 
-            // lblMessage
-            // 
-            this.lblMessage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.lblMessage.DataPropertyName = "BatchID";
-            this.lblMessage.HeaderText = "         Error Message";
-            this.lblMessage.MinimumWidth = 6;
-            this.lblMessage.Name = "lblMessage";
-            this.lblMessage.ReadOnly = true;
-            this.lblMessage.Width = 350;
             // 
             // panel1
             // 
@@ -168,6 +154,14 @@
             this.pnlFilter.Name = "pnlFilter";
             this.pnlFilter.Size = new System.Drawing.Size(1418, 58);
             this.pnlFilter.TabIndex = 7;
+            // 
+            // txtFileName
+            // 
+            this.txtFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFileName.Location = new System.Drawing.Point(234, 10);
+            this.txtFileName.Name = "txtFileName";
+            this.txtFileName.Size = new System.Drawing.Size(594, 38);
+            this.txtFileName.TabIndex = 24;
             // 
             // btnClr
             // 
@@ -271,13 +265,43 @@
             this.btnUpload.UseVisualStyleBackColor = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
-            // txtFileName
+            // Status
             // 
-            this.txtFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFileName.Location = new System.Drawing.Point(234, 10);
-            this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(594, 38);
-            this.txtFileName.TabIndex = 24;
+            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Status.DataPropertyName = "BatchID";
+            this.Status.HeaderText = "HCC Tables";
+            this.Status.MinimumWidth = 6;
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Width = 350;
+            // 
+            // Message
+            // 
+            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Message.DataPropertyName = "BatchID";
+            this.Message.HeaderText = "Error Message";
+            this.Message.MinimumWidth = 6;
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            this.Message.Width = 350;
+            // 
+            // Sourceid
+            // 
+            this.Sourceid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Sourceid.HeaderText = "Sourceid";
+            this.Sourceid.MinimumWidth = 6;
+            this.Sourceid.Name = "Sourceid";
+            this.Sourceid.ReadOnly = true;
+            this.Sourceid.Width = 350;
+            // 
+            // SourceFileName
+            // 
+            this.SourceFileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.SourceFileName.HeaderText = "SourceFileName";
+            this.SourceFileName.MinimumWidth = 6;
+            this.SourceFileName.Name = "SourceFileName";
+            this.SourceFileName.ReadOnly = true;
+            this.SourceFileName.Width = 350;
             // 
             // LOAD
             // 
@@ -317,10 +341,12 @@
         private System.Windows.Forms.Button btnSubmit;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Button btnClr;
-        private System.Windows.Forms.DataGridViewTextBoxColumn grdError;
-        private System.Windows.Forms.DataGridViewTextBoxColumn lblMessage;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnUpload;
         private System.Windows.Forms.TextBox txtFileName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Sourceid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SourceFileName;
     }
 }

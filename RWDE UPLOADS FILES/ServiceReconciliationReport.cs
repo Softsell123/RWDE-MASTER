@@ -84,9 +84,12 @@ namespace RWDE_UPLOADS_FILES
             dataGridView.Columns.Add("Lag", "Lag");
             dataGridView.Columns.Add("Grade", "Grade");
             dataGridView.Columns.Add("HCCExportFailureReason", "HCC Export Failure Reason");
+            dataGridView.Columns.Add("Status", "Status");
+            dataGridView.Columns.Add("ErrorMessage", "ErrorMessage");
+               
 
-            // Set primary key for hccClients if it's not already set
-            if (hccClients.PrimaryKey.Length == 0)
+                // Set primary key for hccClients if it's not already set
+                if (hccClients.PrimaryKey.Length == 0)
             {
                 hccClients.PrimaryKey = new DataColumn[] { hccClients.Columns["Clnt_id"] };
             }
@@ -127,6 +130,8 @@ namespace RWDE_UPLOADS_FILES
      serviceRow["ServiceID"],
      serviceRow["MappedToHCC"] != DBNull.Value && Convert.ToBoolean(serviceRow["MappedToHCC"]) ? "Yes" : "", // Convert MappedToHCC to Yes/No
      serviceRow["Service_date"],
+      serviceRow["Status"],
+       serviceRow["ErrorMessage"],
      createdOnDate,
      lag.Days,
      grade,
@@ -157,50 +162,55 @@ namespace RWDE_UPLOADS_FILES
 
         private string selectedFilterType;
 
-        private void btnReport_Click(object sender, EventArgs e)//to load data in the grid
+        private void btnReport_Click(object sender, EventArgs e)
         {
-            // Ensure that the DateTimePickers have valid dates
             try
             {
-               
-                DBHelper dbHelper = new DBHelper();
-                dataGridView.AutoGenerateColumns = true;
-                dataGridView.Columns.Clear();
                 // Ensure the date pickers are properly set
                 DateTime startDate = dtpStartDate.Value;
                 DateTime endDate = dtpEndDate.Value;
 
+                // Validate that the end date is greater than the start date
+                if (endDate <= startDate)
+                {
+                    MessageBox.Show(Constants.StartdatemustbelessthanEnddate);
+                    return;
+                }
+
+                // Validate BatchID input
+                if (!int.TryParse(txtBatchID.Text, out int BatchID))
+                {
+                    MessageBox.Show("Please enter a valid Batch ID.","ServiceReconciliationReport");
+                    return;
+                }
+               
+
+                // Set up the DataGridView
+                dataGridView.AutoGenerateColumns = true;
+                dataGridView.Columns.Clear();
+                dataGridView.ForeColor = Color.Black;
+
+                // Fetch data using DBHelper
+                DBHelper dbHelper = new DBHelper();
+
                 try
                 {
                     // Call the LoadData method to fetch the data
-                    if (endDate <= startDate)
-                    {
-                        MessageBox.Show(Constants.StartdatemustbelessthanEnddate);
+                    DataTable result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, BatchID);
 
-
-                    }
-                 
-                    dataGridView.ForeColor = Color.Black;
-
-
-                    DataTable result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate);//load the filtered data
-
-                    // Now you can use the result, e.g., bind it to a DataGridView or process it
+                    // Bind the result to the DataGridView
                     dataGridView.DataSource = result;
-                    // PopulateMonthYearGrid(startDate, endDate);
                 }
                 catch (Exception ex)
                 {
                     // Handle exceptions, such as logging the error
-                    MessageBox.Show(ex.Message);
-
+                    MessageBox.Show($"An error occurred while loading data: {ex.Message}");
                 }
             }
             catch (Exception ex)
             {
-                // Handle exceptions
-                MessageBox.Show(ex.Message);
-
+                // Handle exceptions related to DateTimePicker values or other issues
+                MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
 
@@ -304,6 +314,7 @@ namespace RWDE_UPLOADS_FILES
                 dtpEndDate.Value = DateTime.Now;
                 dtpEndDate.CustomFormat = "MM-dd-yyyy";
                 dtpDateFilter.Text = Constants.CreatedDate;
+                txtBatchID.Text = null;
                 // Clear the DataTable bound to the DataGridView
                 if (dataGridView.DataSource is DataTable dt)
                 {

@@ -79,6 +79,8 @@ namespace Rwde
         public const int HCCABORT = 19;
         public const string Abort = "A";
         public const string CMSClients = "Client_20240523";
+        public const string nobatchid = "No data exists for this batchid";
+        public const string batchidnull = "Batch ID Cannot be null";
         public const string XMLUPLOADSTARTED = "XML Upload Started";
         public const string XMLUPLOADCompleted = "XMl Upload Completed";
         public const int CreatedBy = 100;
