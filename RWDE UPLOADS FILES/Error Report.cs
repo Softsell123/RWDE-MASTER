@@ -407,7 +407,13 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show(Constants.theservicefilenamecannotbenull, "Download HCC Errors");
                 return;
             }
-            
+            if (!txtFileName.Text.ToUpper().Contains("SERVICE") &&
+    !txtFileName.Text.ToUpper().Contains("CLIENT"))
+            {
+                MessageBox.Show(Constants.nodataavailableforthissourcefilename, "Download HCC Errors");
+                return;
+            }
+
             dataGridView.AutoGenerateColumns = false;
             dataGridView.Columns.Clear();
             string sourceFileName = txtFileName.Text; // Text box for SourceFileName
@@ -442,12 +448,7 @@ namespace RWDE_UPLOADS_FILES
                                 Console.WriteLine("Error: " + ex.Message);
                             }
                             command.ExecuteNonQuery();
-                            if (!txtFileName.Text.ToUpper().Contains("SERVICE") &&
-     !txtFileName.Text.ToUpper().Contains("CLIENTS"))
-                            {
-                                MessageBox.Show(Constants.nodataavailableforthissourcefilename, "Download HCC Errors");
-                                return;
-                            }
+                           
 
                             // Execute the SQL command to insert client data
 
