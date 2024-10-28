@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Media.Animation;
 using static Spire.Pdf.General.Render.Decode.Jpeg2000.j2k.codestream.HeaderInfo;
 
 namespace RWDE_UPLOADS_FILES
@@ -165,12 +166,12 @@ namespace RWDE_UPLOADS_FILES
                         }
 
                         transaction.Commit();
-                        MessageBox.Show("Data processed and inserted into the database successfully.", "Success");
+                        MessageBox.Show("Data processed and inserted into the database successfully.", "Download HCC Errors");
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show("Error inserting data into the database: " + ex.Message, "Error");
+                        MessageBox.Show("Error inserting data into the database: " + ex.Message, "Download HCC Errors");
                     }
                 }
             }
@@ -372,7 +373,7 @@ namespace RWDE_UPLOADS_FILES
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+           
             Application.Restart();
         }
 
@@ -383,7 +384,11 @@ namespace RWDE_UPLOADS_FILES
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
-           
+            if (txtPath.Text == "") { 
+                MessageBox.Show(Constants.nodatatoinsertintotable, "Download HCC Errors");
+                return;
+            }
+
             string selectedFilePath = txtPath.Text;
                        
                         // Validate the selected file is an Excel file
@@ -392,20 +397,24 @@ namespace RWDE_UPLOADS_FILES
                             // Process the selected Excel file
                             ProcessExcelData(selectedFilePath);
                         }
-                        else
-                        {
-                            MessageBox.Show("Please select a valid Excel (.xlsx) file.", "Download HCC Errors");
-                        }
+                       
         }
         
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+            if (txtFileName.Text == "")
+            {
+                MessageBox.Show(Constants.theservicefilenamecannotbenull, "Download HCC Errors");
+                return;
+            }
+            
             dataGridView.AutoGenerateColumns = false;
             dataGridView.Columns.Clear();
             string sourceFileName = txtFileName.Text; // Text box for SourceFileName
             DataTable dt = new DataTable();
             try
             {
+               
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand("FILTERSOURCEFILENAME", conn))
@@ -432,7 +441,15 @@ namespace RWDE_UPLOADS_FILES
                                 // Handle exceptions (e.g., logging)
                                 Console.WriteLine("Error: " + ex.Message);
                             }
-                            command.ExecuteNonQuery(); // Execute the SQL command to insert client data
+                            command.ExecuteNonQuery();
+                            if (!txtFileName.Text.ToUpper().Contains("SERVICE") &&
+     !txtFileName.Text.ToUpper().Contains("CLIENTS"))
+                            {
+                                MessageBox.Show(Constants.nodataavailableforthissourcefilename, "Download HCC Errors");
+                                return;
+                            }
+
+                            // Execute the SQL command to insert client data
 
                         }
                     }
@@ -703,7 +720,8 @@ namespace RWDE_UPLOADS_FILES
         private void btnClr_Click(object sender, EventArgs e)
         {
             InitializeDataGridView();
-           
+           dataGridView.Rows.Clear();
+            
             txtPath.Text = "";
             txtFileName.Text = "";
 
