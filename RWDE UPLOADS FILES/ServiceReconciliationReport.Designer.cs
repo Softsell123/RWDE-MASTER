@@ -51,23 +51,26 @@ namespace RWDE_UPLOADS_FILES
             this.dtpDateFilter = new System.Windows.Forms.ComboBox();
             this.btnReport = new System.Windows.Forms.Button();
             this.pnl = new System.Windows.Forms.Panel();
+            this.txtBatchID = new System.Windows.Forms.TextBox();
+            this.lblBatch = new System.Windows.Forms.Label();
             this.btnClr = new System.Windows.Forms.Button();
             this.lblHeader = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.rwdeDataSet2 = new RWDE_UPLOADS_FILES.RWDEDataSet();
+            this.BatchId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Agency_client_2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Program = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Classification = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesConsentExprireDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RWEligibilityExpiryDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CaseManager = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceCodeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesContractId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UnitsOfService = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ActualMinutesSpent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceCodeExportToAries = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceIDdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceExportedToAries = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Service_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EntryDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -77,6 +80,7 @@ namespace RWDE_UPLOADS_FILES
             ((System.ComponentModel.ISupportInitialize)(this.rwdeDataSet1)).BeginInit();
             this.pnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rwdeDataSet2)).BeginInit();
             this.SuspendLayout();
             // 
             // rwdeDataSet1
@@ -209,7 +213,7 @@ namespace RWDE_UPLOADS_FILES
             this.btnReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnReport.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReport.ForeColor = System.Drawing.Color.Black;
-            this.btnReport.Location = new System.Drawing.Point(1093, 89);
+            this.btnReport.Location = new System.Drawing.Point(1365, 92);
             this.btnReport.Margin = new System.Windows.Forms.Padding(4);
             this.btnReport.Name = "btnReport";
             this.btnReport.Size = new System.Drawing.Size(168, 48);
@@ -222,6 +226,8 @@ namespace RWDE_UPLOADS_FILES
             // 
             this.pnl.AutoSize = true;
             this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnl.Controls.Add(this.txtBatchID);
+            this.pnl.Controls.Add(this.lblBatch);
             this.pnl.Controls.Add(this.btnClr);
             this.pnl.Controls.Add(this.btnReport);
             this.pnl.Controls.Add(this.lblHeader);
@@ -238,12 +244,42 @@ namespace RWDE_UPLOADS_FILES
             this.pnl.TabIndex = 0;
             this.pnl.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_Paint);
             // 
+            // txtBatchID
+            // 
+            this.txtBatchID.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.txtBatchID.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBatchID.Location = new System.Drawing.Point(1211, 95);
+            this.txtBatchID.Name = "txtBatchID";
+            this.txtBatchID.Size = new System.Drawing.Size(147, 40);
+            this.txtBatchID.TabIndex = 9;
+            // 
+            // lblBatch
+            // 
+            this.lblBatch.AutoSize = true;
+            this.lblBatch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBatch.ForeColor = System.Drawing.Color.Black;
+            this.lblBatch.Location = new System.Drawing.Point(1098, 98);
+            this.lblBatch.Name = "lblBatch";
+            this.lblBatch.Size = new System.Drawing.Size(107, 35);
+            this.lblBatch.TabIndex = 8;
+            this.lblBatch.Text = "BatchID";
+            // 
             // btnClr
             // 
             this.btnClr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(125)))), ((int)(((byte)(255)))));
             this.btnClr.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClr.ForeColor = System.Drawing.Color.Black;
-            this.btnClr.Location = new System.Drawing.Point(1290, 89);
+            this.btnClr.Location = new System.Drawing.Point(1540, 93);
             this.btnClr.Name = "btnClr";
             this.btnClr.Size = new System.Drawing.Size(168, 48);
             this.btnClr.TabIndex = 7;
@@ -268,6 +304,7 @@ namespace RWDE_UPLOADS_FILES
             // dataGridView
             // 
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -279,20 +316,20 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.ColumnHeadersHeight = 70;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.BatchId,
             this.ServiceId,
             this.Column1,
             this.Agency_client_2,
-            this.Program,
-            this.Classification,
             this.Status,
             this.AriesConsentExprireDate,
-            this.RWEligibilityExpiryDate,
             this.CaseManager,
             this.ServiceGroup,
+            this.ServiceCodeID,
             this.AriesContractId,
             this.UnitsOfService,
             this.ActualMinutesSpent,
             this.ServiceCodeExportToAries,
+            this.ServiceIDdata,
             this.ServiceExportedToAries,
             this.Service_date,
             this.EntryDate,
@@ -301,7 +338,7 @@ namespace RWDE_UPLOADS_FILES
             this.AriesExportFailureReason});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
@@ -325,11 +362,24 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
+            // rwdeDataSet2
+            // 
+            this.rwdeDataSet2.DataSetName = "RWDEDataSet";
+            this.rwdeDataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // BatchId
+            // 
+            this.BatchId.HeaderText = "BatchID";
+            this.BatchId.MinimumWidth = 6;
+            this.BatchId.Name = "BatchId";
+            this.BatchId.ReadOnly = true;
+            this.BatchId.Width = 136;
+            // 
             // ServiceId
             // 
             this.ServiceId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.ServiceId.FillWeight = 56.76642F;
-            this.ServiceId.HeaderText = "Staff Data";
+            this.ServiceId.HeaderText = "Staff ";
             this.ServiceId.MinimumWidth = 6;
             this.ServiceId.Name = "ServiceId";
             this.ServiceId.ReadOnly = true;
@@ -353,26 +403,6 @@ namespace RWDE_UPLOADS_FILES
             this.Agency_client_2.ReadOnly = true;
             this.Agency_client_2.Width = 180;
             // 
-            // Program
-            // 
-            this.Program.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Program.FillWeight = 132.0245F;
-            this.Program.HeaderText = "Program";
-            this.Program.MinimumWidth = 6;
-            this.Program.Name = "Program";
-            this.Program.ReadOnly = true;
-            this.Program.Width = 180;
-            // 
-            // Classification
-            // 
-            this.Classification.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Classification.FillWeight = 148.3916F;
-            this.Classification.HeaderText = "Classification";
-            this.Classification.MinimumWidth = 6;
-            this.Classification.Name = "Classification";
-            this.Classification.ReadOnly = true;
-            this.Classification.Width = 180;
-            // 
             // Status
             // 
             this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -393,16 +423,6 @@ namespace RWDE_UPLOADS_FILES
             this.AriesConsentExprireDate.ReadOnly = true;
             this.AriesConsentExprireDate.Width = 350;
             // 
-            // RWEligibilityExpiryDate
-            // 
-            this.RWEligibilityExpiryDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.RWEligibilityExpiryDate.FillWeight = 136.2435F;
-            this.RWEligibilityExpiryDate.HeaderText = "RW Eligibility Expiry Date";
-            this.RWEligibilityExpiryDate.MinimumWidth = 6;
-            this.RWEligibilityExpiryDate.Name = "RWEligibilityExpiryDate";
-            this.RWEligibilityExpiryDate.ReadOnly = true;
-            this.RWEligibilityExpiryDate.Width = 350;
-            // 
             // CaseManager
             // 
             this.CaseManager.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -417,11 +437,19 @@ namespace RWDE_UPLOADS_FILES
             // 
             this.ServiceGroup.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.ServiceGroup.FillWeight = 83.60087F;
-            this.ServiceGroup.HeaderText = "Service Group";
+            this.ServiceGroup.HeaderText = "Service ";
             this.ServiceGroup.MinimumWidth = 6;
             this.ServiceGroup.Name = "ServiceGroup";
             this.ServiceGroup.ReadOnly = true;
             this.ServiceGroup.Width = 300;
+            // 
+            // ServiceCodeID
+            // 
+            this.ServiceCodeID.HeaderText = "ServiceCodeID";
+            this.ServiceCodeID.MinimumWidth = 6;
+            this.ServiceCodeID.Name = "ServiceCodeID";
+            this.ServiceCodeID.ReadOnly = true;
+            this.ServiceCodeID.Width = 211;
             // 
             // AriesContractId
             // 
@@ -461,6 +489,14 @@ namespace RWDE_UPLOADS_FILES
             this.ServiceCodeExportToAries.Name = "ServiceCodeExportToAries";
             this.ServiceCodeExportToAries.ReadOnly = true;
             this.ServiceCodeExportToAries.Width = 350;
+            // 
+            // ServiceIDdata
+            // 
+            this.ServiceIDdata.HeaderText = "ServiceID";
+            this.ServiceIDdata.MinimumWidth = 6;
+            this.ServiceIDdata.Name = "ServiceIDdata";
+            this.ServiceIDdata.ReadOnly = true;
+            this.ServiceIDdata.Width = 152;
             // 
             // ServiceExportedToAries
             // 
@@ -539,6 +575,7 @@ namespace RWDE_UPLOADS_FILES
             this.pnl.ResumeLayout(false);
             this.pnl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rwdeDataSet2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -622,21 +659,23 @@ namespace RWDE_UPLOADS_FILES
         {
 
         }
-
+        private TextBox txtBatchID;
+        private Label lblBatch;
+        private RWDEDataSet rwdeDataSet2;
+        private DataGridViewTextBoxColumn BatchId;
         private DataGridViewTextBoxColumn ServiceId;
         private DataGridViewTextBoxColumn Column1;
         private DataGridViewTextBoxColumn Agency_client_2;
-        private DataGridViewTextBoxColumn Program;
-        private DataGridViewTextBoxColumn Classification;
         private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn AriesConsentExprireDate;
-        private DataGridViewTextBoxColumn RWEligibilityExpiryDate;
         private DataGridViewTextBoxColumn CaseManager;
         private DataGridViewTextBoxColumn ServiceGroup;
+        private DataGridViewTextBoxColumn ServiceCodeID;
         private DataGridViewTextBoxColumn AriesContractId;
         private DataGridViewTextBoxColumn UnitsOfService;
         private DataGridViewTextBoxColumn ActualMinutesSpent;
         private DataGridViewTextBoxColumn ServiceCodeExportToAries;
+        private DataGridViewTextBoxColumn ServiceIDdata;
         private DataGridViewTextBoxColumn ServiceExportedToAries;
         private DataGridViewTextBoxColumn Service_date;
         private DataGridViewTextBoxColumn EntryDate;

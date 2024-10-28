@@ -90,6 +90,7 @@ namespace RWDE_UPLOADS_FILES
 
         private async void btnUploadXML_Click(object sender, EventArgs e)
         {
+
             if (txtPath.Text == "" || txtPath == null)
             {
                 MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles,Constants.xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -155,10 +156,11 @@ namespace RWDE_UPLOADS_FILES
                     {
                         // Update the progress display to show the current processed XML file index out of the total number of XML files.
                         UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);
+                        
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.Load(xmlFilePath);
 
-                        batchId = dbHelper.NextBatchID();
+                        int batchId = dbHelper.GetNextBatchID();
                         path = xmlFilePath;
                         fileName = Path.GetFileName(xmlFilePath);
                         txtFName.Text = fileName;
@@ -411,13 +413,15 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-                // int batchId = dbHelper.GetNextBatchID();
+                 int batchId = dbHelper.GetNextBatchID();
                 if (btnClose.Text == "Abort")
                 {
-                    DialogResult result = MessageBox.Show("Are you sure you want to abort?", "Abort Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult result = MessageBox.Show("Are you sure you want to abort?","XML File Upload", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     // Check if the user clicked "Yes"
                     UpdateBatch(batchId, fileName, path);
+                    DialogResult result2 = MessageBox.Show("Aborted Successfully","XML File Upload");
+
 
                 }
                 this.WindowState = FormWindowState.Maximized;
@@ -438,7 +442,7 @@ namespace RWDE_UPLOADS_FILES
                 DateTime currentTime = DateTime.Now;
                 int successfulRows = 0;
                 // Insert batch details into the database, including batch ID, file name, path, timestamps, row counts, and status.
-                dbHelper.InsertBatch(batchId-1, fileName, path, Constants.ClientTrack, null, currentTime, totalRows, successfulRows, Constants.fileaborted);
+                dbHelper.InsertBatch(batchId+1, fileName, path, Constants.ClientTrack, null, currentTime, totalRows, successfulRows, Constants.fileaborted);
                 ClearTables(batchId);
 
             }

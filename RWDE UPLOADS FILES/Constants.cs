@@ -23,6 +23,7 @@ namespace Rwde
     public static class Constants
     {
         public const string CLIENTTrackUploadon = "CLIENT Track Upload on";
+        public const string theservicefilenamecannotbenull = "The Service FileName Cannot be null";
         public const string Batchnotfound = "Batch not found.";
         public const string Conversionhasalreadybeencompletedforthisbatch= "Conversion has already been completed for this batch.";
         public const string Generationhasalreadybeencompletedforthisbatch = "Generation has already been completed for this batch.";
@@ -32,6 +33,8 @@ namespace Rwde
         public const string Areyousureyouwanttoabort = "Are you sure you want to abort";
         public const string abortochindelete = "abortochindelete";
         public const string HCCDATA = "HCC";
+        public const string nodatatoinsertintotable = "No data to insert into table";
+        public const string nodataavailableforthissourcefilename = "No data available for this Sourcefilename";
         public const string csvpath = "Csvpath";
         public const string ochintorwdeconversion = "OCHIN to RWDE Conversion";
         public const string ThesefileshavealreadybeenuploadedCloseandreopentouploadnewfiles="These files have already been uploaded. Close and reopen to upload new files.";
@@ -79,6 +82,8 @@ namespace Rwde
         public const int HCCABORT = 19;
         public const string Abort = "A";
         public const string CMSClients = "Client_20240523";
+        public const string nobatchid = "No data exists for this batchid";
+        public const string batchidnull = "Batch ID Cannot be null";
         public const string XMLUPLOADSTARTED = "XML Upload Started";
         public const string XMLUPLOADCompleted = "XMl Upload Completed";
         public const int CreatedBy = 100;

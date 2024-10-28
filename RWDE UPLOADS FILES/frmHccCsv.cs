@@ -72,10 +72,10 @@ namespace RWDE_UPLOADS_FILES//
                                 // Increment the batch ID
                                 int nextBatchId = currentBatchId + 1;
 
-                                // Update the batch status with the new batch ID
+                            // Update the batch status with the new batch ID
 
-                                // Show confirmation message
-                                MessageBox.Show(Constants.Abortedsuccessfully, "UPLOAD OCHIN CSV", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            // Show confirmation message
+                            MessageBox.Show(Constants.Abortedsuccessfully, "UPLOAD OCHIN CSV");
 
                                 UpdateBatch(nextBatchId, Constants.Ochin, path);
                                 this.Close();
