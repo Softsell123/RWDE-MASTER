@@ -35,6 +35,10 @@
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Sourceid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SourceFileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlFilter = new System.Windows.Forms.Panel();
             this.txtFileName = new System.Windows.Forms.TextBox();
@@ -46,10 +50,6 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnUpload = new System.Windows.Forms.Button();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Sourceid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SourceFileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.pnlFilter.SuspendLayout();
@@ -128,6 +128,44 @@
             this.dataGridView.TabIndex = 10;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
+            // Status
+            // 
+            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Status.DataPropertyName = "BatchID";
+            this.Status.HeaderText = "HCC Tables";
+            this.Status.MinimumWidth = 6;
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Width = 350;
+            // 
+            // Message
+            // 
+            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Message.DataPropertyName = "BatchID";
+            this.Message.HeaderText = "Error Message";
+            this.Message.MinimumWidth = 6;
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            this.Message.Width = 350;
+            // 
+            // Sourceid
+            // 
+            this.Sourceid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Sourceid.HeaderText = "Sourceid";
+            this.Sourceid.MinimumWidth = 6;
+            this.Sourceid.Name = "Sourceid";
+            this.Sourceid.ReadOnly = true;
+            this.Sourceid.Width = 350;
+            // 
+            // SourceFileName
+            // 
+            this.SourceFileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.SourceFileName.HeaderText = "SourceFileName";
+            this.SourceFileName.MinimumWidth = 6;
+            this.SourceFileName.Name = "SourceFileName";
+            this.SourceFileName.ReadOnly = true;
+            this.SourceFileName.Width = 350;
+            // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -157,10 +195,10 @@
             // 
             // txtFileName
             // 
-            this.txtFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFileName.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFileName.Location = new System.Drawing.Point(234, 10);
             this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(594, 38);
+            this.txtFileName.Size = new System.Drawing.Size(594, 40);
             this.txtFileName.TabIndex = 24;
             // 
             // btnClr
@@ -264,44 +302,6 @@
             this.btnUpload.Text = "Submit";
             this.btnUpload.UseVisualStyleBackColor = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
-            // 
-            // Status
-            // 
-            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Status.DataPropertyName = "BatchID";
-            this.Status.HeaderText = "HCC Tables";
-            this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 350;
-            // 
-            // Message
-            // 
-            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Message.DataPropertyName = "BatchID";
-            this.Message.HeaderText = "Error Message";
-            this.Message.MinimumWidth = 6;
-            this.Message.Name = "Message";
-            this.Message.ReadOnly = true;
-            this.Message.Width = 350;
-            // 
-            // Sourceid
-            // 
-            this.Sourceid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Sourceid.HeaderText = "Sourceid";
-            this.Sourceid.MinimumWidth = 6;
-            this.Sourceid.Name = "Sourceid";
-            this.Sourceid.ReadOnly = true;
-            this.Sourceid.Width = 350;
-            // 
-            // SourceFileName
-            // 
-            this.SourceFileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.SourceFileName.HeaderText = "SourceFileName";
-            this.SourceFileName.MinimumWidth = 6;
-            this.SourceFileName.Name = "SourceFileName";
-            this.SourceFileName.ReadOnly = true;
-            this.SourceFileName.Width = 350;
             // 
             // LOAD
             // 
