@@ -1046,7 +1046,57 @@ namespace RWDE
                 throw;
             }
         }
-        public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid, string fileName)//Eligibility table insertion
+        //public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid, string fileName)//Eligibility table insertion
+        //{
+        //    try
+        //    {
+        //        // Parse date values from the CSV data
+        //        DateTime? documentDate = ParseDateTime(GetStringValue(data, 5));
+        //        DateTime? obtainDate = ParseDateTime(GetStringValue(data, 6));
+        //        DateTime? expireDate = ParseDateTime(GetStringValue(data, 7));
+        //        DateTime? eligibilityDocumentExpireDate = ParseDateTime(GetStringValue(data, 12));
+
+        //        string clientLastFirstName = $"{GetStringValue(data, 2)} {GetStringValue(data, 3)}";
+
+        //        using (SqlCommand command = new SqlCommand("InsertDlEligibility", connection))
+        //        {
+        //            command.CommandType = CommandType.StoredProcedure;
+
+        //            command.Parameters.AddWithValue("@BatchID", batchid);
+        //            command.Parameters.AddWithValue("@ClientID", GetStringValue(data, 0)?.Trim('"'));
+        //            command.Parameters.AddWithValue("@AgencyClientID1", GetStringValue(data, 1));
+        //            command.Parameters.AddWithValue("@ClientLastFirstName", clientLastFirstName);
+        //            command.Parameters.AddWithValue("@DocumentType", GetStringValue(data, 4)); // Assuming this is correct
+        //            command.Parameters.AddWithValue("@DocumentDate", (object)documentDate ?? DBNull.Value);
+        //            command.Parameters.AddWithValue("@ObtainDate", (object)obtainDate ?? DBNull.Value);
+        //            command.Parameters.AddWithValue("@ExpireDate", (object)expireDate ?? DBNull.Value);
+        //            command.Parameters.AddWithValue("@Source", GetStringValue(data, 8));
+        //            command.Parameters.AddWithValue("@CreatedSource", GetStringValue(data, 9));
+        //            command.Parameters.AddWithValue("@CreateAgency", GetStringValue(data, 10));
+        //            command.Parameters.AddWithValue("@ClientStatus", GetStringValue(data, 11));
+        //            command.Parameters.AddWithValue("@EligibilityDocumentExpireDate", (object)eligibilityDocumentExpireDate ?? DBNull.Value);
+        //            command.Parameters.AddWithValue("@DownloadDate", DateTime.Now); // Assuming current date/time
+        //            command.Parameters.AddWithValue("@Extracted", Constants.Extracted); // Assuming a value for Extracted
+        //            command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now); // Assuming current date/time
+        //            command.Parameters.AddWithValue("@CMSMatch", Constants.CMSMatchDate); // Assuming a value for CMSMatch
+        //            command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now); // Assuming current date/time
+        //            command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a value for CreatedBy
+        //            command.Parameters.AddWithValue("@CreatedOn", DateTime.Now); // Assuming current date/time
+
+        //            // Execute the query
+        //            command.ExecuteNonQuery();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log or handle the exception
+        //        Console.WriteLine(ex.Message);
+        //        Log($"{ex.Message}", Constants.ERROR, Constants.AriesEligibility, Constants.uploadct); // Assuming fileName is accessible here
+        //        throw; // Rethrow the exception to stop further execution
+        //    }
+        //}
+
+        public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid, string fileName)
         {
             try
             {
@@ -1063,25 +1113,25 @@ namespace RWDE
                     command.CommandType = CommandType.StoredProcedure;
 
                     command.Parameters.AddWithValue("@BatchID", batchid);
-                    command.Parameters.AddWithValue("@ClientID", GetStringValue(data, 0)?.Trim('"'));
-                    command.Parameters.AddWithValue("@AgencyClientID1", GetStringValue(data, 1));
+                    command.Parameters.AddWithValue("@ClientID", GetStringValuedata(data, 0));
+                    command.Parameters.AddWithValue("@AgencyClientID1", GetStringValuedata(data, 1));
                     command.Parameters.AddWithValue("@ClientLastFirstName", clientLastFirstName);
-                    command.Parameters.AddWithValue("@DocumentType", GetStringValue(data, 4)); // Assuming this is correct
+                    command.Parameters.AddWithValue("@DocumentType", GetStringValuedata(data, 4));
                     command.Parameters.AddWithValue("@DocumentDate", (object)documentDate ?? DBNull.Value);
                     command.Parameters.AddWithValue("@ObtainDate", (object)obtainDate ?? DBNull.Value);
                     command.Parameters.AddWithValue("@ExpireDate", (object)expireDate ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Source", GetStringValue(data, 8));
-                    command.Parameters.AddWithValue("@CreatedSource", GetStringValue(data, 9));
-                    command.Parameters.AddWithValue("@CreateAgency", GetStringValue(data, 10));
-                    command.Parameters.AddWithValue("@ClientStatus", GetStringValue(data, 11));
+                    command.Parameters.AddWithValue("@Source", GetStringValuedata(data, 8));
+                    command.Parameters.AddWithValue("@CreatedSource", GetStringValuedata(data, 9));
+                    command.Parameters.AddWithValue("@CreateAgency", GetStringValuedata(data, 10));
+                    command.Parameters.AddWithValue("@ClientStatus", GetStringValuedata(data, 11));
                     command.Parameters.AddWithValue("@EligibilityDocumentExpireDate", (object)eligibilityDocumentExpireDate ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@DownloadDate", DateTime.Now); // Assuming current date/time
-                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted); // Assuming a value for Extracted
-                    command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now); // Assuming current date/time
-                    command.Parameters.AddWithValue("@CMSMatch", Constants.CMSMatchDate); // Assuming a value for CMSMatch
-                    command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now); // Assuming current date/time
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a value for CreatedBy
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now); // Assuming current date/time
+                    command.Parameters.AddWithValue("@DownloadDate", DateTime.Now);
+                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted);
+                    command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now);
+                    command.Parameters.AddWithValue("@CMSMatch", Constants.CMSMatchDate);
+                    command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now);
+                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
+                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
 
                     // Execute the query
                     command.ExecuteNonQuery();
@@ -1089,30 +1139,58 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                // Log or handle the exception
                 Console.WriteLine(ex.Message);
-                Log($"{ex.Message}", Constants.ERROR, Constants.AriesEligibility, Constants.uploadct); // Assuming fileName is accessible here
-                throw; // Rethrow the exception to stop further execution
+                Log($"{ex.Message}", Constants.ERROR, Constants.AriesEligibility, Constants.uploadct);
+                throw;
             }
         }
-        private DateTime? ParseDateTime(string value)//convert to datetime
+        private DateTime? ParseDateTime(string value)
         {
             DateTime? result = null;
             if (!string.IsNullOrEmpty(value))
             {
-                if (DateTime.TryParse(value, out DateTime parsedDate))
+                // Trim any extra quotation marks
+                value = value.Trim('"');
+
+                // Define potential date formats
+                string[] dateFormats = { "MM/dd/yyyy hh:mm:ss tt", "MM-dd-yyyy HH:mm", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd" };
+
+                // Try parsing with specified formats
+                if (DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
                 {
                     result = parsedDate;
                 }
                 else
                 {
-                    // Log or handle parsing failure
                     Console.WriteLine($"Failed to parse date: {value}");
                 }
             }
             return result;
-
         }
+
+        private string GetStringValuedata(string[] data, int index)
+        {
+            return data.Length > index ? data[index].Trim('"') : string.Empty;
+        }
+
+        //private DateTime? ParseDateTime(string value)//convert to datetime
+        //{
+        //    DateTime? result = null;
+        //    if (!string.IsNullOrEmpty(value))
+        //    {
+        //        if (DateTime.TryParse(value, out DateTime parsedDate))
+        //        {
+        //            result = parsedDate;
+        //        }
+        //        else
+        //        {
+        //            // Log or handle parsing failure
+        //            Console.WriteLine($"Failed to parse date: {value}");
+        //        }
+        //    }
+        //    return result;
+
+        //}
         public void InsertDlServices(SqlConnection connection, string[] data, int batchid, string fileName, int rowNumber) // Services table insertion
         {
             try
