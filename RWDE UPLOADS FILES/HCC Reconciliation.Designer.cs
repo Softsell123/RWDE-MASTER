@@ -35,24 +35,9 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Month = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesNotMappedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesSuccessfullyExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesNotExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesPostTimeboxPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesForHCCIDMissing = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesNotEnrolledInProgram = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesForPreRegClients = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesForRWEligibilityExpired = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesForMissingHCCStaffLogin = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesWithZeroUnitOfService = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesForWaiver = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesFor3DayDelayInHCCUpload = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesForITDrops = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ManualUpload = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Drop = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl = new System.Windows.Forms.Panel();
+            this.txtBatchID = new System.Windows.Forms.TextBox();
+            this.lblBatch = new System.Windows.Forms.Label();
             this.btnClr = new System.Windows.Forms.Button();
             this.btnReport = new System.Windows.Forms.Button();
             this.lblHeader = new System.Windows.Forms.Label();
@@ -62,8 +47,19 @@
             this.lblEndDate = new System.Windows.Forms.Label();
             this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
             this.lblStartDate = new System.Windows.Forms.Label();
-            this.txtBatchID = new System.Windows.Forms.TextBox();
-            this.lblBatch = new System.Windows.Forms.Label();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Month = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesSuccessfullyExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesNotExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesPostTimeboxPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesForHCCIDMissing = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesForRWEligibilityExpired = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesForMissingHCCStaffLogin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesWithZeroUnitOfService = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesFor3DayDelayInHCCUpload = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesForITDrops = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ManualUpload = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Drop = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
@@ -125,17 +121,13 @@
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Month,
-            this.ServiceEntriesNotMappedToHCC,
             this.ServiceEntriesSuccessfullyExportedToHCC,
             this.ServiceEntriesNotExportedToHCC,
             this.ServiceEntriesPostTimeboxPeriod,
             this.ServiceEntriesForHCCIDMissing,
-            this.ServiceEntriesNotEnrolledInProgram,
-            this.ServiceEntriesForPreRegClients,
             this.ServiceEntriesForRWEligibilityExpired,
             this.ServiceEntriesForMissingHCCStaffLogin,
             this.ServiceEntriesWithZeroUnitOfService,
-            this.ServiceEntriesForWaiver,
             this.ServiceEntriesFor3DayDelayInHCCUpload,
             this.ServiceEntriesForITDrops,
             this.ManualUpload,
@@ -166,143 +158,6 @@
             this.dataGridView.TabIndex = 7;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "MMM-YYYY";
-            this.Column1.MinimumWidth = 6;
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 184;
-            // 
-            // Month
-            // 
-            this.Month.HeaderText = "Total Service Entries";
-            this.Month.MinimumWidth = 6;
-            this.Month.Name = "Month";
-            this.Month.ReadOnly = true;
-            this.Month.Width = 278;
-            // 
-            // ServiceEntriesNotMappedToHCC
-            // 
-            this.ServiceEntriesNotMappedToHCC.HeaderText = "Service Entries not Mapped To HCC";
-            this.ServiceEntriesNotMappedToHCC.MinimumWidth = 6;
-            this.ServiceEntriesNotMappedToHCC.Name = "ServiceEntriesNotMappedToHCC";
-            this.ServiceEntriesNotMappedToHCC.ReadOnly = true;
-            this.ServiceEntriesNotMappedToHCC.Width = 450;
-            // 
-            // ServiceEntriesSuccessfullyExportedToHCC
-            // 
-            this.ServiceEntriesSuccessfullyExportedToHCC.HeaderText = "Service Entries Successfully Exported To HCC";
-            this.ServiceEntriesSuccessfullyExportedToHCC.MinimumWidth = 6;
-            this.ServiceEntriesSuccessfullyExportedToHCC.Name = "ServiceEntriesSuccessfullyExportedToHCC";
-            this.ServiceEntriesSuccessfullyExportedToHCC.ReadOnly = true;
-            this.ServiceEntriesSuccessfullyExportedToHCC.Width = 558;
-            // 
-            // ServiceEntriesNotExportedToHCC
-            // 
-            this.ServiceEntriesNotExportedToHCC.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ServiceEntriesNotExportedToHCC.HeaderText = "Service Entries Not Exported To HCC";
-            this.ServiceEntriesNotExportedToHCC.MinimumWidth = 6;
-            this.ServiceEntriesNotExportedToHCC.Name = "ServiceEntriesNotExportedToHCC";
-            this.ServiceEntriesNotExportedToHCC.ReadOnly = true;
-            this.ServiceEntriesNotExportedToHCC.Width = 500;
-            // 
-            // ServiceEntriesPostTimeboxPeriod
-            // 
-            this.ServiceEntriesPostTimeboxPeriod.HeaderText = "Service Entries Post Timebox Period";
-            this.ServiceEntriesPostTimeboxPeriod.MinimumWidth = 6;
-            this.ServiceEntriesPostTimeboxPeriod.Name = "ServiceEntriesPostTimeboxPeriod";
-            this.ServiceEntriesPostTimeboxPeriod.ReadOnly = true;
-            this.ServiceEntriesPostTimeboxPeriod.Width = 459;
-            // 
-            // ServiceEntriesForHCCIDMissing
-            // 
-            this.ServiceEntriesForHCCIDMissing.HeaderText = "Service Entries For HCCID Missing";
-            this.ServiceEntriesForHCCIDMissing.MinimumWidth = 6;
-            this.ServiceEntriesForHCCIDMissing.Name = "ServiceEntriesForHCCIDMissing";
-            this.ServiceEntriesForHCCIDMissing.ReadOnly = true;
-            this.ServiceEntriesForHCCIDMissing.Width = 431;
-            // 
-            // ServiceEntriesNotEnrolledInProgram
-            // 
-            this.ServiceEntriesNotEnrolledInProgram.HeaderText = "Service Entries Not Enrolled In Program";
-            this.ServiceEntriesNotEnrolledInProgram.MinimumWidth = 6;
-            this.ServiceEntriesNotEnrolledInProgram.Name = "ServiceEntriesNotEnrolledInProgram";
-            this.ServiceEntriesNotEnrolledInProgram.ReadOnly = true;
-            this.ServiceEntriesNotEnrolledInProgram.Width = 499;
-            // 
-            // ServiceEntriesForPreRegClients
-            // 
-            this.ServiceEntriesForPreRegClients.HeaderText = "Service Entries For PreReg Clients";
-            this.ServiceEntriesForPreRegClients.MinimumWidth = 6;
-            this.ServiceEntriesForPreRegClients.Name = "ServiceEntriesForPreRegClients";
-            this.ServiceEntriesForPreRegClients.ReadOnly = true;
-            this.ServiceEntriesForPreRegClients.Width = 431;
-            // 
-            // ServiceEntriesForRWEligibilityExpired
-            // 
-            this.ServiceEntriesForRWEligibilityExpired.HeaderText = "Service Entries For RWEligibility Expired";
-            this.ServiceEntriesForRWEligibilityExpired.MinimumWidth = 6;
-            this.ServiceEntriesForRWEligibilityExpired.Name = "ServiceEntriesForRWEligibilityExpired";
-            this.ServiceEntriesForRWEligibilityExpired.ReadOnly = true;
-            this.ServiceEntriesForRWEligibilityExpired.Width = 506;
-            // 
-            // ServiceEntriesForMissingHCCStaffLogin
-            // 
-            this.ServiceEntriesForMissingHCCStaffLogin.HeaderText = "Service Entries For Missing HCCStaff Login";
-            this.ServiceEntriesForMissingHCCStaffLogin.MinimumWidth = 6;
-            this.ServiceEntriesForMissingHCCStaffLogin.Name = "ServiceEntriesForMissingHCCStaffLogin";
-            this.ServiceEntriesForMissingHCCStaffLogin.ReadOnly = true;
-            this.ServiceEntriesForMissingHCCStaffLogin.Width = 528;
-            // 
-            // ServiceEntriesWithZeroUnitOfService
-            // 
-            this.ServiceEntriesWithZeroUnitOfService.HeaderText = "Service Entries With Zero Unit Of Service";
-            this.ServiceEntriesWithZeroUnitOfService.MinimumWidth = 6;
-            this.ServiceEntriesWithZeroUnitOfService.Name = "ServiceEntriesWithZeroUnitOfService";
-            this.ServiceEntriesWithZeroUnitOfService.ReadOnly = true;
-            this.ServiceEntriesWithZeroUnitOfService.Width = 514;
-            // 
-            // ServiceEntriesForWaiver
-            // 
-            this.ServiceEntriesForWaiver.HeaderText = "Service Entries For Waiver";
-            this.ServiceEntriesForWaiver.MinimumWidth = 6;
-            this.ServiceEntriesForWaiver.Name = "ServiceEntriesForWaiver";
-            this.ServiceEntriesForWaiver.ReadOnly = true;
-            this.ServiceEntriesForWaiver.Width = 346;
-            // 
-            // ServiceEntriesFor3DayDelayInHCCUpload
-            // 
-            this.ServiceEntriesFor3DayDelayInHCCUpload.HeaderText = "Service Entries For 3Day Delay In HCC Upload";
-            this.ServiceEntriesFor3DayDelayInHCCUpload.MinimumWidth = 6;
-            this.ServiceEntriesFor3DayDelayInHCCUpload.Name = "ServiceEntriesFor3DayDelayInHCCUpload";
-            this.ServiceEntriesFor3DayDelayInHCCUpload.ReadOnly = true;
-            this.ServiceEntriesFor3DayDelayInHCCUpload.Width = 565;
-            // 
-            // ServiceEntriesForITDrops
-            // 
-            this.ServiceEntriesForITDrops.HeaderText = "Service Entries For IT Drops";
-            this.ServiceEntriesForITDrops.MinimumWidth = 6;
-            this.ServiceEntriesForITDrops.Name = "ServiceEntriesForITDrops";
-            this.ServiceEntriesForITDrops.ReadOnly = true;
-            this.ServiceEntriesForITDrops.Width = 360;
-            // 
-            // ManualUpload
-            // 
-            this.ManualUpload.HeaderText = "Manual Upload";
-            this.ManualUpload.MinimumWidth = 6;
-            this.ManualUpload.Name = "ManualUpload";
-            this.ManualUpload.ReadOnly = true;
-            this.ManualUpload.Width = 223;
-            // 
-            // Drop
-            // 
-            this.Drop.HeaderText = "%Drop";
-            this.Drop.MinimumWidth = 6;
-            this.Drop.Name = "Drop";
-            this.Drop.ReadOnly = true;
-            this.Drop.Width = 122;
-            // 
             // pnl
             // 
             this.pnl.AutoSize = true;
@@ -324,6 +179,36 @@
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1770, 157);
             this.pnl.TabIndex = 6;
+            // 
+            // txtBatchID
+            // 
+            this.txtBatchID.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.txtBatchID.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBatchID.Location = new System.Drawing.Point(1205, 93);
+            this.txtBatchID.Name = "txtBatchID";
+            this.txtBatchID.Size = new System.Drawing.Size(147, 40);
+            this.txtBatchID.TabIndex = 11;
+            // 
+            // lblBatch
+            // 
+            this.lblBatch.AutoSize = true;
+            this.lblBatch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBatch.ForeColor = System.Drawing.Color.Black;
+            this.lblBatch.Location = new System.Drawing.Point(1092, 96);
+            this.lblBatch.Name = "lblBatch";
+            this.lblBatch.Size = new System.Drawing.Size(107, 35);
+            this.lblBatch.TabIndex = 10;
+            this.lblBatch.Text = "BatchID";
             // 
             // btnClr
             // 
@@ -438,35 +323,110 @@
             this.lblStartDate.TabIndex = 1;
             this.lblStartDate.Text = "Start Date:";
             // 
-            // txtBatchID
+            // Column1
             // 
-            this.txtBatchID.AutoCompleteCustomSource.AddRange(new string[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.txtBatchID.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBatchID.Location = new System.Drawing.Point(1205, 93);
-            this.txtBatchID.Name = "txtBatchID";
-            this.txtBatchID.Size = new System.Drawing.Size(147, 40);
-            this.txtBatchID.TabIndex = 11;
+            this.Column1.HeaderText = "MMM-YYYY";
+            this.Column1.MinimumWidth = 6;
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 184;
             // 
-            // lblBatch
+            // Month
             // 
-            this.lblBatch.AutoSize = true;
-            this.lblBatch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBatch.ForeColor = System.Drawing.Color.Black;
-            this.lblBatch.Location = new System.Drawing.Point(1092, 96);
-            this.lblBatch.Name = "lblBatch";
-            this.lblBatch.Size = new System.Drawing.Size(107, 35);
-            this.lblBatch.TabIndex = 10;
-            this.lblBatch.Text = "BatchID";
+            this.Month.HeaderText = "Total Service Entries";
+            this.Month.MinimumWidth = 6;
+            this.Month.Name = "Month";
+            this.Month.ReadOnly = true;
+            this.Month.Width = 278;
+            // 
+            // ServiceEntriesSuccessfullyExportedToHCC
+            // 
+            this.ServiceEntriesSuccessfullyExportedToHCC.HeaderText = "Service Entries Successfully Exported To HCC";
+            this.ServiceEntriesSuccessfullyExportedToHCC.MinimumWidth = 6;
+            this.ServiceEntriesSuccessfullyExportedToHCC.Name = "ServiceEntriesSuccessfullyExportedToHCC";
+            this.ServiceEntriesSuccessfullyExportedToHCC.ReadOnly = true;
+            this.ServiceEntriesSuccessfullyExportedToHCC.Width = 558;
+            // 
+            // ServiceEntriesNotExportedToHCC
+            // 
+            this.ServiceEntriesNotExportedToHCC.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ServiceEntriesNotExportedToHCC.HeaderText = "Service Entries Not Exported To HCC";
+            this.ServiceEntriesNotExportedToHCC.MinimumWidth = 6;
+            this.ServiceEntriesNotExportedToHCC.Name = "ServiceEntriesNotExportedToHCC";
+            this.ServiceEntriesNotExportedToHCC.ReadOnly = true;
+            this.ServiceEntriesNotExportedToHCC.Width = 500;
+            // 
+            // ServiceEntriesPostTimeboxPeriod
+            // 
+            this.ServiceEntriesPostTimeboxPeriod.HeaderText = "Service Entries Post Timebox Period";
+            this.ServiceEntriesPostTimeboxPeriod.MinimumWidth = 6;
+            this.ServiceEntriesPostTimeboxPeriod.Name = "ServiceEntriesPostTimeboxPeriod";
+            this.ServiceEntriesPostTimeboxPeriod.ReadOnly = true;
+            this.ServiceEntriesPostTimeboxPeriod.Width = 459;
+            // 
+            // ServiceEntriesForHCCIDMissing
+            // 
+            this.ServiceEntriesForHCCIDMissing.HeaderText = "Service Entries For HCCID Missing";
+            this.ServiceEntriesForHCCIDMissing.MinimumWidth = 6;
+            this.ServiceEntriesForHCCIDMissing.Name = "ServiceEntriesForHCCIDMissing";
+            this.ServiceEntriesForHCCIDMissing.ReadOnly = true;
+            this.ServiceEntriesForHCCIDMissing.Width = 431;
+            // 
+            // ServiceEntriesForRWEligibilityExpired
+            // 
+            this.ServiceEntriesForRWEligibilityExpired.HeaderText = "Service Entries For RWEligibility Expired";
+            this.ServiceEntriesForRWEligibilityExpired.MinimumWidth = 6;
+            this.ServiceEntriesForRWEligibilityExpired.Name = "ServiceEntriesForRWEligibilityExpired";
+            this.ServiceEntriesForRWEligibilityExpired.ReadOnly = true;
+            this.ServiceEntriesForRWEligibilityExpired.Width = 506;
+            // 
+            // ServiceEntriesForMissingHCCStaffLogin
+            // 
+            this.ServiceEntriesForMissingHCCStaffLogin.HeaderText = "Service Entries For Missing HCCStaff Login";
+            this.ServiceEntriesForMissingHCCStaffLogin.MinimumWidth = 6;
+            this.ServiceEntriesForMissingHCCStaffLogin.Name = "ServiceEntriesForMissingHCCStaffLogin";
+            this.ServiceEntriesForMissingHCCStaffLogin.ReadOnly = true;
+            this.ServiceEntriesForMissingHCCStaffLogin.Width = 528;
+            // 
+            // ServiceEntriesWithZeroUnitOfService
+            // 
+            this.ServiceEntriesWithZeroUnitOfService.HeaderText = "Service Entries With Zero Unit Of Service";
+            this.ServiceEntriesWithZeroUnitOfService.MinimumWidth = 6;
+            this.ServiceEntriesWithZeroUnitOfService.Name = "ServiceEntriesWithZeroUnitOfService";
+            this.ServiceEntriesWithZeroUnitOfService.ReadOnly = true;
+            this.ServiceEntriesWithZeroUnitOfService.Width = 514;
+            // 
+            // ServiceEntriesFor3DayDelayInHCCUpload
+            // 
+            this.ServiceEntriesFor3DayDelayInHCCUpload.HeaderText = "Service Entries For 3Day Delay In HCC Upload";
+            this.ServiceEntriesFor3DayDelayInHCCUpload.MinimumWidth = 6;
+            this.ServiceEntriesFor3DayDelayInHCCUpload.Name = "ServiceEntriesFor3DayDelayInHCCUpload";
+            this.ServiceEntriesFor3DayDelayInHCCUpload.ReadOnly = true;
+            this.ServiceEntriesFor3DayDelayInHCCUpload.Width = 565;
+            // 
+            // ServiceEntriesForITDrops
+            // 
+            this.ServiceEntriesForITDrops.HeaderText = "Service Entries For IT Drops";
+            this.ServiceEntriesForITDrops.MinimumWidth = 6;
+            this.ServiceEntriesForITDrops.Name = "ServiceEntriesForITDrops";
+            this.ServiceEntriesForITDrops.ReadOnly = true;
+            this.ServiceEntriesForITDrops.Width = 360;
+            // 
+            // ManualUpload
+            // 
+            this.ManualUpload.HeaderText = "Manual Upload";
+            this.ManualUpload.MinimumWidth = 6;
+            this.ManualUpload.Name = "ManualUpload";
+            this.ManualUpload.ReadOnly = true;
+            this.ManualUpload.Width = 223;
+            // 
+            // Drop
+            // 
+            this.Drop.HeaderText = "%Drop";
+            this.Drop.MinimumWidth = 6;
+            this.Drop.Name = "Drop";
+            this.Drop.ReadOnly = true;
+            this.Drop.Width = 122;
             // 
             // HCC_Reconciliation
             // 
@@ -505,24 +465,20 @@
         private System.Windows.Forms.DateTimePicker dtpStartDate;
         private System.Windows.Forms.Label lblStartDate;
         private System.Windows.Forms.Button btnClr;
+        private System.Windows.Forms.TextBox txtBatchID;
+        private System.Windows.Forms.Label lblBatch;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Month;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesNotMappedToHCC;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesSuccessfullyExportedToHCC;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesNotExportedToHCC;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesPostTimeboxPeriod;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesForHCCIDMissing;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesNotEnrolledInProgram;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesForPreRegClients;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesForRWEligibilityExpired;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesForMissingHCCStaffLogin;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesWithZeroUnitOfService;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesForWaiver;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesFor3DayDelayInHCCUpload;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesForITDrops;
         private System.Windows.Forms.DataGridViewTextBoxColumn ManualUpload;
         private System.Windows.Forms.DataGridViewTextBoxColumn Drop;
-        private System.Windows.Forms.TextBox txtBatchID;
-        private System.Windows.Forms.Label lblBatch;
     }
 }
