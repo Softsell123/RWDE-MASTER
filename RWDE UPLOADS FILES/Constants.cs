@@ -218,7 +218,7 @@ namespace Rwde
         public const string EmptyvalueMessage = "Enter The Correct Details";
         public const string FilterTitle = "View All Batches";
         public const string Deletioncancelled = "Deletion cancelled";
-        public const string CMSServices = "Service_Sample_20240726 ";
+        public const string CMSServices = "Service_Sample_20240726";
         public const string Errorfileuplodedsuccessfully = "Error File Uploded Successfully";
         public const string NoFilterDatas = "The filter values you selected do not match any available data for OCHIN.";
         public const string NoFilterDatasHCC = "The filter values you selected do not match any available data.";

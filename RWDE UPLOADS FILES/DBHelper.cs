@@ -3494,9 +3494,9 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     // Now, load data from vwService_Reconciliation within the specified date range and batch ID
                     string query = @"
                 SELECT * 
-                FROM vwService_Reconciliation
-                WHERE ServiceDate BETWEEN @StartDate AND @EndDate
-                  AND BatchID = @Batchid";
+                FROM vwService_Reconciliationtest
+                WHERE ServiceDate BETWEEN @StartDate AND @EndDate and batchID=@Batchid";
+                  
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
