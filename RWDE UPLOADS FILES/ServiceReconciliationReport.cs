@@ -35,6 +35,8 @@ namespace RWDE_UPLOADS_FILES
             this.DoubleBuffered = true;
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
             this.WindowState = FormWindowState.Maximized;
+            txtBatchID.Text = "";
+           
         }
         public void PopulateDataGridView(DataTable hccServices, DataTable hccClients)//populate data
         {
@@ -152,7 +154,7 @@ namespace RWDE_UPLOADS_FILES
             try
             {
                 // Store the selected filter type
-                selectedFilterType = dtpDateFilter.SelectedItem.ToString();
+                //selectedFilterType = dtpDateFilter.SelectedItem.ToString();
             }
             catch (Exception ex)
             {
@@ -162,6 +164,62 @@ namespace RWDE_UPLOADS_FILES
 
         private string selectedFilterType;
 
+        //private void btnReport_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        // Ensure the date pickers are properly set
+        //        DateTime startDate = dtpStartDate.Value;
+        //        DateTime endDate = dtpEndDate.Value;
+
+        //        // Validate that the end date is greater than the start date
+        //        if (endDate <= startDate)
+        //        {
+        //            MessageBox.Show(Constants.StartdatemustbelessthanEnddate);
+        //            return;
+        //        }
+        //        if (dtpDateFilter.SelectedItem ==Constants.createddate)
+        //        {
+        //            MessageBox.Show("Please select a service date from the dropdown.", "Date Selection Required");
+        //            return;
+        //        }
+
+        //        // Validate BatchID input
+        //        //if (!int.TryParse(txtBatchID.Text, out int BatchID))
+        //        //{
+        //        //    MessageBox.Show("Please enter a valid Batch ID.","ServiceReconciliationReport");
+        //        //    return;
+        //        //}
+
+
+        //        // Set up the DataGridView
+        //        dataGridView.AutoGenerateColumns = true;
+        //        dataGridView.Columns.Clear();
+        //        dataGridView.ForeColor = Color.Black;
+
+        //        // Fetch data using DBHelper
+        //        DBHelper dbHelper = new DBHelper();
+
+        //        try
+        //        {
+        //            // Call the LoadData method to fetch the data
+        //            DataTable result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, batchid);//batchid removed
+
+        //            // Bind the result to the DataGridView
+        //            dataGridView.DataSource = result;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Handle exceptions, such as logging the error
+        //            MessageBox.Show($"An error occurred while loading data: {ex.Message}");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle exceptions related to DateTimePicker values or other issues
+        //        MessageBox.Show($"An error occurred: {ex.Message}");
+        //    }
+        //}
         private void btnReport_Click(object sender, EventArgs e)
         {
             try
@@ -169,7 +227,7 @@ namespace RWDE_UPLOADS_FILES
                 // Ensure the date pickers are properly set
                 DateTime startDate = dtpStartDate.Value;
                 DateTime endDate = dtpEndDate.Value;
-
+               
                 // Validate that the end date is greater than the start date
                 if (endDate <= startDate)
                 {
@@ -177,28 +235,62 @@ namespace RWDE_UPLOADS_FILES
                     return;
                 }
 
-                // Validate BatchID input
-                if (!int.TryParse(txtBatchID.Text, out int BatchID))
+                // Create instance of DBHelper
+                DBHelper dbHelper = new DBHelper();
+                dataGridView.Columns.Clear();
+                dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(this.dataGridView_CellFormatting);
+                // Determine filter type
+                string filterType = string.Empty;
+                if (!string.IsNullOrWhiteSpace(txtBatchID.Text) && int.TryParse(txtBatchID.Text, out int batchid))
                 {
-                    MessageBox.Show("Please enter a valid Batch ID.","ServiceReconciliationReport");
+                    filterType = "BatchID";
+                }
+                else if (dtpDateFilter.SelectedItem != null)
+                {
+                    switch (dtpDateFilter.SelectedItem.ToString())
+                    {
+                        case Constants.servicedate:
+                            filterType = "ServiceDate";
+                            break;
+                        case Constants.CreatedDate:
+                            filterType = "CreatedDate";
+                            break;
+                        default:
+                            MessageBox.Show("Please select a valid filter type from the dropdown.", "Filter Selection Required");
+                            return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a valid Batch ID or select a filter type.", "Input Error");
                     return;
                 }
-               
 
-                // Set up the DataGridView
-                dataGridView.AutoGenerateColumns = true;
-                dataGridView.Columns.Clear();
-                dataGridView.ForeColor = Color.Black;
-
-                // Fetch data using DBHelper
-                DBHelper dbHelper = new DBHelper();
-
+                // Fetch data based on selected filter type
+                DataTable result = null;
                 try
                 {
-                    // Call the LoadData method to fetch the data
-                    DataTable result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, BatchID);
+                    if (filterType == "BatchID")
+                    {
+                        result = dbHelper.LoadDatafilterServiceReconbatchid(startDate, endDate, int.Parse(txtBatchID.Text));
+                    }
+                    else
+                    {
+                        result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
+                    }
 
-                    // Bind the result to the DataGridView
+                    // Validate results
+                    //if (result == null || result.Rows.Count == 0)
+                    //{
+                    //    MessageBox.Show("No data found for the specified parameters.", "Data Not Found");
+                    //    return;
+                    //}
+
+                    // Bind data to the DataGridView
+                    dataGridView.AutoGenerateColumns = true;
+                    
+                    
+                    
                     dataGridView.DataSource = result;
                 }
                 catch (Exception ex)
@@ -213,6 +305,26 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
+
+
+
+        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            // Check if the cell value is not null
+            if (e.Value != null)
+            {
+                // Example condition to change color
+                if (e.Value.ToString() == "YourCondition") // Replace with your actual condition
+                {
+                    e.CellStyle.ForeColor = Color.Red; // Set desired color for the condition
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.Black; // Default color for other cases
+                }
+            }
+        }
+
 
         private void btnDownload_Click(object sender, EventArgs e) // to export data to selected folder
         {
@@ -315,6 +427,7 @@ namespace RWDE_UPLOADS_FILES
                 dtpEndDate.CustomFormat = "MM-dd-yyyy";
                 dtpDateFilter.Text = Constants.CreatedDate;
                 txtBatchID.Text = null;
+                dtpDateFilter.Text = null;
                 // Clear the DataTable bound to the DataGridView
                 if (dataGridView.DataSource is DataTable dt)
                 {

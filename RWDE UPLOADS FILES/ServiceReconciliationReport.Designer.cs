@@ -56,7 +56,6 @@ namespace RWDE_UPLOADS_FILES
             this.btnClr = new System.Windows.Forms.Button();
             this.lblHeader = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.rwdeDataSet2 = new RWDE_UPLOADS_FILES.RWDEDataSet();
             this.BatchId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -77,6 +76,7 @@ namespace RWDE_UPLOADS_FILES
             this.Lag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Grade = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesExportFailureReason = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rwdeDataSet2 = new RWDE_UPLOADS_FILES.RWDEDataSet();
             ((System.ComponentModel.ISupportInitialize)(this.rwdeDataSet1)).BeginInit();
             this.pnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -205,7 +205,6 @@ namespace RWDE_UPLOADS_FILES
             this.dtpDateFilter.Name = "dtpDateFilter";
             this.dtpDateFilter.Size = new System.Drawing.Size(247, 41);
             this.dtpDateFilter.TabIndex = 5;
-            this.dtpDateFilter.Text = "Created Date";
             this.dtpDateFilter.SelectedIndexChanged += new System.EventHandler(this.cbDateFilter_SelectedIndexChanged);
             // 
             // btnReport
@@ -307,7 +306,7 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
@@ -362,18 +361,13 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
-            // rwdeDataSet2
-            // 
-            this.rwdeDataSet2.DataSetName = "RWDEDataSet";
-            this.rwdeDataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
             // BatchId
             // 
             this.BatchId.HeaderText = "BatchID";
             this.BatchId.MinimumWidth = 6;
             this.BatchId.Name = "BatchId";
             this.BatchId.ReadOnly = true;
-            this.BatchId.Width = 136;
+            this.BatchId.Width = 116;
             // 
             // ServiceId
             // 
@@ -391,7 +385,7 @@ namespace RWDE_UPLOADS_FILES
             this.Column1.MinimumWidth = 6;
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
-            this.Column1.Width = 137;
+            this.Column1.Width = 118;
             // 
             // Agency_client_2
             // 
@@ -449,7 +443,7 @@ namespace RWDE_UPLOADS_FILES
             this.ServiceCodeID.MinimumWidth = 6;
             this.ServiceCodeID.Name = "ServiceCodeID";
             this.ServiceCodeID.ReadOnly = true;
-            this.ServiceCodeID.Width = 211;
+            this.ServiceCodeID.Width = 180;
             // 
             // AriesContractId
             // 
@@ -478,7 +472,7 @@ namespace RWDE_UPLOADS_FILES
             this.ActualMinutesSpent.MinimumWidth = 6;
             this.ActualMinutesSpent.Name = "ActualMinutesSpent";
             this.ActualMinutesSpent.ReadOnly = true;
-            this.ActualMinutesSpent.Width = 294;
+            this.ActualMinutesSpent.Width = 224;
             // 
             // ServiceCodeExportToAries
             // 
@@ -496,7 +490,7 @@ namespace RWDE_UPLOADS_FILES
             this.ServiceIDdata.MinimumWidth = 6;
             this.ServiceIDdata.Name = "ServiceIDdata";
             this.ServiceIDdata.ReadOnly = true;
-            this.ServiceIDdata.Width = 152;
+            this.ServiceIDdata.Width = 132;
             // 
             // ServiceExportedToAries
             // 
@@ -506,7 +500,7 @@ namespace RWDE_UPLOADS_FILES
             this.ServiceExportedToAries.MinimumWidth = 6;
             this.ServiceExportedToAries.Name = "ServiceExportedToAries";
             this.ServiceExportedToAries.ReadOnly = true;
-            this.ServiceExportedToAries.Width = 350;
+            this.ServiceExportedToAries.Width = 10;
             // 
             // Service_date
             // 
@@ -535,7 +529,7 @@ namespace RWDE_UPLOADS_FILES
             this.Lag.MinimumWidth = 6;
             this.Lag.Name = "Lag";
             this.Lag.ReadOnly = true;
-            this.Lag.Width = 83;
+            this.Lag.Width = 73;
             // 
             // Grade
             // 
@@ -544,7 +538,7 @@ namespace RWDE_UPLOADS_FILES
             this.Grade.MinimumWidth = 6;
             this.Grade.Name = "Grade";
             this.Grade.ReadOnly = true;
-            this.Grade.Width = 162;
+            this.Grade.Width = 126;
             // 
             // AriesExportFailureReason
             // 
@@ -555,6 +549,11 @@ namespace RWDE_UPLOADS_FILES
             this.AriesExportFailureReason.Name = "AriesExportFailureReason";
             this.AriesExportFailureReason.ReadOnly = true;
             this.AriesExportFailureReason.Width = 400;
+            // 
+            // rwdeDataSet2
+            // 
+            this.rwdeDataSet2.DataSetName = "RWDEDataSet";
+            this.rwdeDataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // ServiceReconciliationReport
             // 
