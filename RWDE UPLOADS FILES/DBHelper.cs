@@ -3445,7 +3445,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
             {
                 try
                 {
-                    conn.Open();
+                    conn.Open();//
 
                     // Convert DateTime objects to only include date part (removes time)
                     DateTime startDateOnly = startDate.Date;
