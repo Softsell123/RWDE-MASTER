@@ -3602,9 +3602,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
-
-
-        public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate)//to fetch hccreconciliation data
+        public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate)
         {
             DataTable dt = new DataTable();
 
@@ -3613,27 +3611,45 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 try
                 {
                     conn.Open();
-                    DateTime startDateOnly = startDate.Date;
-                    DateTime endDateOnly = endDate.Date;
 
-                    // Convert to string in 'yyyy-MM-dd' format if your SQL expects date literals
-                    string startDateStr = startDateOnly.ToString("yyyy-MM-dd");
-                    string endDateStr = endDateOnly.ToString("yyyy-MM-dd");
-
-                    string query = @"select * from vwHCC_Reconciliationtest"; // Ordering by the minimum date in each group
+                    string query = @"
+        SELECT
+            FORMAT(CMSServices.ServiceDate, 'MMM-yyyy') AS [MMM-YYYY],
+            COUNT(DISTINCT CMSServices.CMSServiceID) AS [Total Service Entries],
+            COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'YES' THEN HCCServices.ServiceID END) AS [Service Entries Successfully Exported],
+            COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS [Service Entries not Exported],
+            NULL AS [Service Entries Post Timebox Period],
+            NULL AS [Service Entries for HCCID Missing],
+            CASE
+                WHEN COUNT(CMSServices.CMSServiceID) > 0 THEN
+                    FORMAT(
+                        CAST(COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS FLOAT) /
+                        COUNT(DISTINCT CMSServices.CMSServiceID) * 100,
+                        'N2'
+                    ) + '%'
+                ELSE '0%'
+            END AS [% Drop]
+        FROM
+            [dbo].[CMSServices] AS CMSServices
+        LEFT JOIN
+            [dbo].[HCCServices] ON CMSServices.ClientID = HCCServices.Clnt_id
+        WHERE
+            CMSServices.ServiceDate BETWEEN @StartDate AND @EndDate
+        GROUP BY
+            FORMAT(CMSServices.ServiceDate, 'MMM-yyyy')";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@StartDate", startDateStr);
-                        cmd.Parameters.AddWithValue("@EndDate", endDateStr);
+                        cmd.Parameters.AddWithValue("@StartDate", startDate);
+                        cmd.Parameters.AddWithValue("@EndDate", endDate);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
+                       
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Handle exceptions (logging, rethrowing, etc.)
                     MessageBox.Show(ex.Message);
                 }
             }
