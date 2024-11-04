@@ -28,13 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnDownload = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Month = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceEntriesSuccessfullyExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -48,6 +49,7 @@
             this.ServiceEntriesForITDrops = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ManualUpload = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Drop = new System.Windows.Forms.DataGridViewTextBoxColumn();
+
             this.pnl = new System.Windows.Forms.Panel();
             this.btnClr = new System.Windows.Forms.Button();
             this.btnReport = new System.Windows.Forms.Button();
@@ -58,8 +60,18 @@
             this.lblEndDate = new System.Windows.Forms.Label();
             this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
             this.lblStartDate = new System.Windows.Forms.Label();
+
             this.txtBatchID = new System.Windows.Forms.TextBox();
             this.lblBatch = new System.Windows.Forms.Label();
+
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Month = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesSuccessfullyExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesNotExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesPostTimeboxPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesForHCCIDMissing = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Drop = new System.Windows.Forms.DataGridViewTextBoxColumn();
+
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
@@ -109,13 +121,13 @@
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView.ColumnHeadersHeight = 50;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -125,39 +137,42 @@
             this.ServiceEntriesNotExportedToHCC,
             this.ServiceEntriesPostTimeboxPeriod,
             this.ServiceEntriesForHCCIDMissing,
+
             this.ServiceEntriesForRWEligibilityExpired,
             this.ServiceEntriesForMissingHCCStaffLogin,
             this.ServiceEntriesWithZeroUnitOfService,
             this.ServiceEntriesFor3DayDelayInHCCUpload,
             this.ServiceEntriesForITDrops,
             this.ManualUpload,
+
             this.Drop});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView.EnableHeadersVisualStyles = false;
             this.dataGridView.GridColor = System.Drawing.Color.Black;
             this.dataGridView.Location = new System.Drawing.Point(143, 251);
             this.dataGridView.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1770, 500);
             this.dataGridView.TabIndex = 7;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
+
             // Column1
             // 
             this.Column1.HeaderText = "MMM-YYYY";
@@ -263,6 +278,7 @@
             this.Drop.ReadOnly = true;
             this.Drop.Width = 122;
             // 
+
             // pnl
             // 
             this.pnl.AutoSize = true;
@@ -396,6 +412,7 @@
             this.lblStartDate.TabIndex = 1;
             this.lblStartDate.Text = "Start Date:";
             // 
+
             // txtBatchID
             // 
             this.txtBatchID.AutoCompleteCustomSource.AddRange(new string[] {
@@ -425,6 +442,63 @@
             this.lblBatch.Size = new System.Drawing.Size(107, 35);
             this.lblBatch.TabIndex = 10;
             this.lblBatch.Text = "BatchID";
+
+            // Column1
+            // 
+            this.Column1.HeaderText = "MMM-YYYY";
+            this.Column1.MinimumWidth = 6;
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 184;
+            // 
+            // Month
+            // 
+            this.Month.HeaderText = "Total Service Entries";
+            this.Month.MinimumWidth = 6;
+            this.Month.Name = "Month";
+            this.Month.ReadOnly = true;
+            this.Month.Width = 278;
+            // 
+            // ServiceEntriesSuccessfullyExportedToHCC
+            // 
+            this.ServiceEntriesSuccessfullyExportedToHCC.HeaderText = "Service Entries Successfully Exported To HCC";
+            this.ServiceEntriesSuccessfullyExportedToHCC.MinimumWidth = 6;
+            this.ServiceEntriesSuccessfullyExportedToHCC.Name = "ServiceEntriesSuccessfullyExportedToHCC";
+            this.ServiceEntriesSuccessfullyExportedToHCC.ReadOnly = true;
+            this.ServiceEntriesSuccessfullyExportedToHCC.Width = 558;
+            // 
+            // ServiceEntriesNotExportedToHCC
+            // 
+            this.ServiceEntriesNotExportedToHCC.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ServiceEntriesNotExportedToHCC.HeaderText = "Service Entries Not Exported To HCC";
+            this.ServiceEntriesNotExportedToHCC.MinimumWidth = 6;
+            this.ServiceEntriesNotExportedToHCC.Name = "ServiceEntriesNotExportedToHCC";
+            this.ServiceEntriesNotExportedToHCC.ReadOnly = true;
+            this.ServiceEntriesNotExportedToHCC.Width = 500;
+            // 
+            // ServiceEntriesPostTimeboxPeriod
+            // 
+            this.ServiceEntriesPostTimeboxPeriod.HeaderText = "Service Entries Post Timebox Period";
+            this.ServiceEntriesPostTimeboxPeriod.MinimumWidth = 6;
+            this.ServiceEntriesPostTimeboxPeriod.Name = "ServiceEntriesPostTimeboxPeriod";
+            this.ServiceEntriesPostTimeboxPeriod.ReadOnly = true;
+            this.ServiceEntriesPostTimeboxPeriod.Width = 459;
+            // 
+            // ServiceEntriesForHCCIDMissing
+            // 
+            this.ServiceEntriesForHCCIDMissing.HeaderText = "Service Entries For HCCID Missing";
+            this.ServiceEntriesForHCCIDMissing.MinimumWidth = 6;
+            this.ServiceEntriesForHCCIDMissing.Name = "ServiceEntriesForHCCIDMissing";
+            this.ServiceEntriesForHCCIDMissing.ReadOnly = true;
+            this.ServiceEntriesForHCCIDMissing.Width = 431;
+            // 
+            // Drop
+            // 
+            this.Drop.HeaderText = "%Drop";
+            this.Drop.MinimumWidth = 6;
+            this.Drop.Name = "Drop";
+            this.Drop.ReadOnly = true;
+            this.Drop.Width = 122;
             // 
             // HCC_Reconciliation
             // 
