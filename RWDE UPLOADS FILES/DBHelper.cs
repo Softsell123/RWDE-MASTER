@@ -26,6 +26,7 @@ namespace RWDE
         private string error;
         private bool batchIDIncremented = false;// Stores any error messages encountered during database operations
         private bool batchIDIncre;
+        
         // Constructor to initialize the DBHelper class with a connection string
         public DBHelper()
         {
@@ -1045,7 +1046,57 @@ namespace RWDE
                 throw;
             }
         }
-        public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid, string fileName)//Eligibility table insertion
+        //public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid, string fileName)//Eligibility table insertion
+        //{
+        //    try
+        //    {
+        //        // Parse date values from the CSV data
+        //        DateTime? documentDate = ParseDateTime(GetStringValue(data, 5));
+        //        DateTime? obtainDate = ParseDateTime(GetStringValue(data, 6));
+        //        DateTime? expireDate = ParseDateTime(GetStringValue(data, 7));
+        //        DateTime? eligibilityDocumentExpireDate = ParseDateTime(GetStringValue(data, 12));
+
+        //        string clientLastFirstName = $"{GetStringValue(data, 2)} {GetStringValue(data, 3)}";
+
+        //        using (SqlCommand command = new SqlCommand("InsertDlEligibility", connection))
+        //        {
+        //            command.CommandType = CommandType.StoredProcedure;
+
+        //            command.Parameters.AddWithValue("@BatchID", batchid);
+        //            command.Parameters.AddWithValue("@ClientID", GetStringValue(data, 0)?.Trim('"'));
+        //            command.Parameters.AddWithValue("@AgencyClientID1", GetStringValue(data, 1));
+        //            command.Parameters.AddWithValue("@ClientLastFirstName", clientLastFirstName);
+        //            command.Parameters.AddWithValue("@DocumentType", GetStringValue(data, 4)); // Assuming this is correct
+        //            command.Parameters.AddWithValue("@DocumentDate", (object)documentDate ?? DBNull.Value);
+        //            command.Parameters.AddWithValue("@ObtainDate", (object)obtainDate ?? DBNull.Value);
+        //            command.Parameters.AddWithValue("@ExpireDate", (object)expireDate ?? DBNull.Value);
+        //            command.Parameters.AddWithValue("@Source", GetStringValue(data, 8));
+        //            command.Parameters.AddWithValue("@CreatedSource", GetStringValue(data, 9));
+        //            command.Parameters.AddWithValue("@CreateAgency", GetStringValue(data, 10));
+        //            command.Parameters.AddWithValue("@ClientStatus", GetStringValue(data, 11));
+        //            command.Parameters.AddWithValue("@EligibilityDocumentExpireDate", (object)eligibilityDocumentExpireDate ?? DBNull.Value);
+        //            command.Parameters.AddWithValue("@DownloadDate", DateTime.Now); // Assuming current date/time
+        //            command.Parameters.AddWithValue("@Extracted", Constants.Extracted); // Assuming a value for Extracted
+        //            command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now); // Assuming current date/time
+        //            command.Parameters.AddWithValue("@CMSMatch", Constants.CMSMatchDate); // Assuming a value for CMSMatch
+        //            command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now); // Assuming current date/time
+        //            command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a value for CreatedBy
+        //            command.Parameters.AddWithValue("@CreatedOn", DateTime.Now); // Assuming current date/time
+
+        //            // Execute the query
+        //            command.ExecuteNonQuery();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log or handle the exception
+        //        Console.WriteLine(ex.Message);
+        //        Log($"{ex.Message}", Constants.ERROR, Constants.AriesEligibility, Constants.uploadct); // Assuming fileName is accessible here
+        //        throw; // Rethrow the exception to stop further execution
+        //    }
+        //}
+
+        public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid, string fileName)
         {
             try
             {
@@ -1062,25 +1113,25 @@ namespace RWDE
                     command.CommandType = CommandType.StoredProcedure;
 
                     command.Parameters.AddWithValue("@BatchID", batchid);
-                    command.Parameters.AddWithValue("@ClientID", GetStringValue(data, 0)?.Trim('"'));
-                    command.Parameters.AddWithValue("@AgencyClientID1", GetStringValue(data, 1));
+                    command.Parameters.AddWithValue("@ClientID", GetStringValuedata(data, 0));
+                    command.Parameters.AddWithValue("@AgencyClientID1", GetStringValuedata(data, 1));
                     command.Parameters.AddWithValue("@ClientLastFirstName", clientLastFirstName);
-                    command.Parameters.AddWithValue("@DocumentType", GetStringValue(data, 4)); // Assuming this is correct
+                    command.Parameters.AddWithValue("@DocumentType", GetStringValuedata(data, 4));
                     command.Parameters.AddWithValue("@DocumentDate", (object)documentDate ?? DBNull.Value);
                     command.Parameters.AddWithValue("@ObtainDate", (object)obtainDate ?? DBNull.Value);
                     command.Parameters.AddWithValue("@ExpireDate", (object)expireDate ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@Source", GetStringValue(data, 8));
-                    command.Parameters.AddWithValue("@CreatedSource", GetStringValue(data, 9));
-                    command.Parameters.AddWithValue("@CreateAgency", GetStringValue(data, 10));
-                    command.Parameters.AddWithValue("@ClientStatus", GetStringValue(data, 11));
+                    command.Parameters.AddWithValue("@Source", GetStringValuedata(data, 8));
+                    command.Parameters.AddWithValue("@CreatedSource", GetStringValuedata(data, 9));
+                    command.Parameters.AddWithValue("@CreateAgency", GetStringValuedata(data, 10));
+                    command.Parameters.AddWithValue("@ClientStatus", GetStringValuedata(data, 11));
                     command.Parameters.AddWithValue("@EligibilityDocumentExpireDate", (object)eligibilityDocumentExpireDate ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@DownloadDate", DateTime.Now); // Assuming current date/time
-                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted); // Assuming a value for Extracted
-                    command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now); // Assuming current date/time
-                    command.Parameters.AddWithValue("@CMSMatch", Constants.CMSMatchDate); // Assuming a value for CMSMatch
-                    command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now); // Assuming current date/time
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a value for CreatedBy
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now); // Assuming current date/time
+                    command.Parameters.AddWithValue("@DownloadDate", DateTime.Now);
+                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted);
+                    command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now);
+                    command.Parameters.AddWithValue("@CMSMatch", Constants.CMSMatchDate);
+                    command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now);
+                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
+                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
 
                     // Execute the query
                     command.ExecuteNonQuery();
@@ -1088,30 +1139,58 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                // Log or handle the exception
                 Console.WriteLine(ex.Message);
-                Log($"{ex.Message}", Constants.ERROR, Constants.AriesEligibility, Constants.uploadct); // Assuming fileName is accessible here
-                throw; // Rethrow the exception to stop further execution
+                Log($"{ex.Message}", Constants.ERROR, Constants.AriesEligibility, Constants.uploadct);
+                throw;
             }
         }
-        private DateTime? ParseDateTime(string value)//convert to datetime
+        private DateTime? ParseDateTime(string value)
         {
             DateTime? result = null;
             if (!string.IsNullOrEmpty(value))
             {
-                if (DateTime.TryParse(value, out DateTime parsedDate))
+                // Trim any extra quotation marks
+                value = value.Trim('"');
+
+                // Define potential date formats
+                string[] dateFormats = { "MM/dd/yyyy hh:mm:ss tt", "MM-dd-yyyy HH:mm", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd" };
+
+                // Try parsing with specified formats
+                if (DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
                 {
                     result = parsedDate;
                 }
                 else
                 {
-                    // Log or handle parsing failure
                     Console.WriteLine($"Failed to parse date: {value}");
                 }
             }
             return result;
-
         }
+
+        private string GetStringValuedata(string[] data, int index)
+        {
+            return data.Length > index ? data[index].Trim('"') : string.Empty;
+        }
+
+        //private DateTime? ParseDateTime(string value)//convert to datetime
+        //{
+        //    DateTime? result = null;
+        //    if (!string.IsNullOrEmpty(value))
+        //    {
+        //        if (DateTime.TryParse(value, out DateTime parsedDate))
+        //        {
+        //            result = parsedDate;
+        //        }
+        //        else
+        //        {
+        //            // Log or handle parsing failure
+        //            Console.WriteLine($"Failed to parse date: {value}");
+        //        }
+        //    }
+        //    return result;
+
+        //}
         public void InsertDlServices(SqlConnection connection, string[] data, int batchid, string fileName, int rowNumber) // Services table insertion
         {
             try
@@ -3356,6 +3435,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
+
         public DataTable LoadDatafilter(DateTime startDate, DateTime endDate)//load data for monthly dash board
         {
             DataTable dt = new DataTable();
@@ -3364,7 +3444,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
             {
                 try
                 {
-                    conn.Open();
+                    conn.Open();//
 
                     // Convert DateTime objects to only include date part (removes time)
                     DateTime startDateOnly = startDate.Date;
@@ -3374,7 +3454,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     string startDateStr = startDateOnly.ToString("yyyy-MM-dd");
                     string endDateStr = endDateOnly.ToString("yyyy-MM-dd");
 
-                    string query = "sp_Upload_Dashboard";
+                    string query = "sp_Upload_Dashboardtest";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -3395,9 +3475,10 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
-        public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, int batchID)
+
+        public DataTable LoadDatafilterServiceReconbatchid(DateTime startDate, DateTime endDate, int batchID)
         {
-            DataTable dt = new DataTable();
+            DataTable dy = new DataTable();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -3415,9 +3496,9 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     // Now, load data from vwService_Reconciliation within the specified date range and batch ID
                     string query = @"
                 SELECT * 
-                FROM vwService_Reconciliation
-                WHERE ServiceDate BETWEEN @StartDate AND @EndDate
-                  AND BatchID = @Batchid";
+                FROM vwService_Reconciliationtest
+                WHERE ServiceDate BETWEEN @StartDate AND @EndDate and batchID=@Batchid";
+
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -3427,16 +3508,16 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                         cmd.Parameters.AddWithValue("@Batchid", batchID);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                        adapter.Fill(dt);
+                        adapter.Fill(dy);
 
                         // Check if the result is empty, which means no matching rows were found
-                        if (dt.Rows.Count == 0)
+                        if (dy.Rows.Count == 0)
                         {
                             MessageBox.Show(Constants.nobatchid, "Service Reconciliation Report");
-                            return dt;
-                           
+                            return dy;
+
                         }
-                        
+
                     }
                 }
                 catch (Exception ex)
@@ -3446,8 +3527,82 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 }
             }
 
+            return dy;
+        }
+        public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, string filterType)
+        {
+            DataTable dt = new DataTable();
+            string query;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // Execute the stored procedure to update HCCServices if needed
+                    using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
+                    {
+                        updateCmd.CommandType = CommandType.StoredProcedure;
+                        updateCmd.ExecuteNonQuery();
+                    }
+
+                    // Select query based on filter type
+                    if (filterType == "ServiceDate")
+                    {
+                        query = @"
+                    SELECT * 
+                    FROM vwService_Reconciliationdatefilter
+                    WHERE ServiceDate BETWEEN @StartDate AND @EndDate";
+                    }
+                    else if (filterType == "CreatedDate")
+                    {
+                        query = @"
+                    SELECT * 
+                    FROM vwService_ReconciliationCreatedDateFilter
+                    WHERE EntryDate BETWEEN @StartDate AND @EndDate";
+                    }
+                    //else if (filterType == "BatchID")
+                    //{
+                    //    query = @"
+                    //SELECT * 
+                    //FROM vwService_Reconciliationtest
+                    //WHERE BatchID = @BatchID";
+                    //}
+                    else
+                    {
+                        query = @"
+                    SELECT * 
+                    FROM vwService_Reconciliationtest
+                    WHERE BatchID = @BatchID";
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        // Add parameters based on the filter type
+                        if (filterType == "ServiceDate" || filterType == "CreatedDate")
+                        {
+                            cmd.Parameters.AddWithValue("@StartDate", startDate);
+                            cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        }
+                        else if (filterType == "BatchID")
+                        {
+                           // cmd.Parameters.AddWithValue("@BatchID", batchid); // Assuming batchID is passed as an integer or similar
+                        }
+
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        adapter.Fill(dt);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("An error occurred while loading data.", ex);
+                }
+            }
+
             return dt;
         }
+
 
         public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate)//to fetch hccreconciliation data
         {
@@ -3465,7 +3620,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     string startDateStr = startDateOnly.ToString("yyyy-MM-dd");
                     string endDateStr = endDateOnly.ToString("yyyy-MM-dd");
 
-                    string query = @"select * from vwHCC_Reconciliation"; // Ordering by the minimum date in each group
+                    string query = @"select * from vwHCC_Reconciliationtest"; // Ordering by the minimum date in each group
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {

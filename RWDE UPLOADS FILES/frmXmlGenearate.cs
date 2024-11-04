@@ -493,82 +493,6 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        //private async Task<XElement> GenerateXmlService(List<Dictionary<string, string>> data, List<Dictionary<string, string>> xmlStructure)
-        //{
-        //    try
-        //    {
-        //        string rootTag = XmlConstants.TagNumberFive;
-        //        XElement root = CreateRootElement(xmlStructure, rootTag);
-
-        //        XElement sourceSystemElement = CreateSourceSystemElement(xmlStructure, XmlConstants.TagNumberTen);
-
-        //        AddDynamicElements(sourceSystemElement, xmlStructure, rootTag);
-
-        //        string contractServiceTagName = GetContractServiceTagName(xmlStructure, XmlConstants.ContractServicesTagNumber);
-        //        string contractServicesTitle = GetContractServicesTitle(xmlStructure, XmlConstants.ContractServicesTagNumber);
-        //        int totalRows = data.Count;
-        //        int processedRows = 0;
-
-        //        foreach (var dataRow in data)
-        //        {
-        //            XElement contractServicesElement = new XElement(contractServiceTagName);
-
-        //            if (!string.IsNullOrEmpty(contractServicesTitle))
-        //            {
-        //                contractServicesElement.SetAttributeValue(XmlConstants.ContractServicesTitleIdentifier, contractServicesTitle);
-        //            }
-
-        //            foreach (var structureRow in xmlStructure.Where(x => int.Parse(x[XmlConstants.TagNumber]) > 30 && int.Parse(x[XmlConstants.TagNumber]) <= 110))
-        //            {
-        //                (string tagNumber, string tagName, string fieldName, string presetValue, string defaultValue) = GetXmlStructureValues(structureRow);
-
-        //                string value = null;
-
-        //                if (dataRow.ContainsKey(fieldName) && !string.IsNullOrEmpty(dataRow[fieldName]))
-        //                {
-        //                    value = dataRow[fieldName] ?? defaultValue;
-        //                }
-        //                else if (!string.IsNullOrEmpty(presetValue))
-        //                {
-        //                    value = presetValue;
-        //                }
-        //                else
-        //                {
-        //                    value = defaultValue;
-        //                }
-
-        //                contractServicesElement.Add(new XElement(tagName, value));
-        //            }
-
-        //            sourceSystemElement.Add(contractServicesElement);
-
-        //            await Updateprogress(processedRows, totalRows);//progress of lines inserted
-        //            progressServices.Minimum = 0;
-        //            progressServices.Maximum = totalRows;
-
-        //            while (processedRows < totalRows)
-        //            {
-        //                processedRows++;
-        //                await Updateprogress(processedRows, totalRows);//progress of lines inserted
-
-        //                if (processedRows >= totalRows)
-        //                {
-        //                    break;
-        //                }
-        //            }
-        //        }
-        //        root.Add(sourceSystemElement);
-        //        return root;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var st = new StackTrace(ex, true);
-        //        var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-        //        int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
-        //        dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(GenerateXmlService), Constants.ServiceCTTOHCC, lineNumber);
-        //        throw;
-        //    }
-        //}
         private async Task<XElement> GenerateXmlService(List<Dictionary<string, string>> data, List<Dictionary<string, string>> xmlStructure)
         {
             try
@@ -585,58 +509,54 @@ namespace RWDE_UPLOADS_FILES
                 int totalRows = data.Count;
                 int processedRows = 0;
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                foreach (var dataRow in data)
                 {
-                    await connection.OpenAsync();
+                    XElement contractServicesElement = new XElement(contractServiceTagName);
 
-                    foreach (var dataRow in data)
+                    if (!string.IsNullOrEmpty(contractServicesTitle))
                     {
-                        XElement contractServicesElement = new XElement(contractServiceTagName);
+                        contractServicesElement.SetAttributeValue(XmlConstants.ContractServicesTitleIdentifier, contractServicesTitle);
+                    }
 
-                        if (!string.IsNullOrEmpty(contractServicesTitle))
+                    foreach (var structureRow in xmlStructure.Where(x => int.Parse(x[XmlConstants.TagNumber]) > 30 && int.Parse(x[XmlConstants.TagNumber]) <= 110))
+                    {
+                        (string tagNumber, string tagName, string fieldName, string presetValue, string defaultValue) = GetXmlStructureValues(structureRow);
+
+                        string value = null;
+
+                        if (dataRow.ContainsKey(fieldName) && !string.IsNullOrEmpty(dataRow[fieldName]))
                         {
-                            contractServicesElement.SetAttributeValue(XmlConstants.ContractServicesTitleIdentifier, contractServicesTitle);
+                            value = dataRow[fieldName] ?? defaultValue;
+                        }
+                        else if (!string.IsNullOrEmpty(presetValue))
+                        {
+                            value = presetValue;
+                        }
+                        else
+                        {
+                            value = defaultValue;
                         }
 
-                        foreach (var structureRow in xmlStructure.Where(x => int.Parse(x[XmlConstants.TagNumber]) > 30 && int.Parse(x[XmlConstants.TagNumber]) <= 110))
-                        {
-                            (string tagNumber, string tagName, string fieldName, string presetValue, string defaultValue) = GetXmlStructureValues(structureRow);
+                        contractServicesElement.Add(new XElement(tagName, value));
+                    }
 
-                            string value = null;
+                    sourceSystemElement.Add(contractServicesElement);
 
-                            if (dataRow.ContainsKey(fieldName) && !string.IsNullOrEmpty(dataRow[fieldName]))
-                            {
-                                value = dataRow[fieldName] ?? defaultValue;
-                            }
-                            else if (!string.IsNullOrEmpty(presetValue))
-                            {
-                                value = presetValue;
-                            }
-                            else
-                            {
-                                value = defaultValue;
-                            }
+                    await Updateprogress(processedRows, totalRows);//progress of lines inserted
+                    progressServices.Minimum = 0;
+                    progressServices.Maximum = totalRows;
 
-                            contractServicesElement.Add(new XElement(tagName, value));
-                        }
-
-                        sourceSystemElement.Add(contractServicesElement);
-
-                        // Update DateXMLGeneratedOn for each ServiceID
-                        if (dataRow.ContainsKey("ServiceID"))
-                        {
-                            string serviceID = dataRow["ServiceID"];
-                            await UpdateDateXMLGeneratedOn(connection, serviceID);
-                        }
-
-                        await Updateprogress(processedRows, totalRows);// progress of lines inserted
-                        progressServices.Minimum = 0;
-                        progressServices.Maximum = totalRows;
-
+                    while (processedRows < totalRows)
+                    {
                         processedRows++;
+                        await Updateprogress(processedRows, totalRows);//progress of lines inserted
+
+                        if (processedRows >= totalRows)
+                        {
+                            break;
+                        }
                     }
                 }
-
                 root.Add(sourceSystemElement);
                 return root;
             }
@@ -649,6 +569,86 @@ namespace RWDE_UPLOADS_FILES
                 throw;
             }
         }
+        //private async Task<XElement> GenerateXmlService(List<Dictionary<string, string>> data, List<Dictionary<string, string>> xmlStructure)
+        //{
+        //    try
+        //    {
+        //        string rootTag = XmlConstants.TagNumberFive;
+        //        XElement root = CreateRootElement(xmlStructure, rootTag);
+
+        //        XElement sourceSystemElement = CreateSourceSystemElement(xmlStructure, XmlConstants.TagNumberTen);
+
+        //        AddDynamicElements(sourceSystemElement, xmlStructure, rootTag);
+
+        //        string contractServiceTagName = GetContractServiceTagName(xmlStructure, XmlConstants.ContractServicesTagNumber);
+        //        string contractServicesTitle = GetContractServicesTitle(xmlStructure, XmlConstants.ContractServicesTagNumber);
+        //        int totalRows = data.Count;
+        //        int processedRows = 0;
+
+        //        using (SqlConnection connection = new SqlConnection(connectionString))
+        //        {
+        //            await connection.OpenAsync();
+
+        //            foreach (var dataRow in data)
+        //            {
+        //                XElement contractServicesElement = new XElement(contractServiceTagName);
+
+        //                if (!string.IsNullOrEmpty(contractServicesTitle))
+        //                {
+        //                    contractServicesElement.SetAttributeValue(XmlConstants.ContractServicesTitleIdentifier, contractServicesTitle);
+        //                }
+
+        //                foreach (var structureRow in xmlStructure.Where(x => int.Parse(x[XmlConstants.TagNumber]) > 30 && int.Parse(x[XmlConstants.TagNumber]) <= 110))
+        //                {
+        //                    (string tagNumber, string tagName, string fieldName, string presetValue, string defaultValue) = GetXmlStructureValues(structureRow);
+
+        //                    string value = null;
+
+        //                    if (dataRow.ContainsKey(fieldName) && !string.IsNullOrEmpty(dataRow[fieldName]))
+        //                    {
+        //                        value = dataRow[fieldName] ?? defaultValue;
+        //                    }
+        //                    else if (!string.IsNullOrEmpty(presetValue))
+        //                    {
+        //                        value = presetValue;
+        //                    }
+        //                    else
+        //                    {
+        //                        value = defaultValue;
+        //                    }
+
+        //                    contractServicesElement.Add(new XElement(tagName, value));
+        //                }
+
+        //                sourceSystemElement.Add(contractServicesElement);
+
+        //                // Update DateXMLGeneratedOn for each ServiceID
+        //                if (dataRow.ContainsKey("ServiceID"))
+        //                {
+        //                    string serviceID = dataRow["ServiceID"];
+        //                    await UpdateDateXMLGeneratedOn(connection, serviceID);
+        //                }
+
+        //                await Updateprogress(processedRows, totalRows);// progress of lines inserted
+        //                progressServices.Minimum = 0;
+        //                progressServices.Maximum = totalRows;
+
+        //                processedRows++;
+        //            }
+        //        }
+
+        //        root.Add(sourceSystemElement);
+        //        return root;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var st = new StackTrace(ex, true);
+        //        var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+        //        int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
+        //        dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(GenerateXmlService), Constants.ServiceCTTOHCC, lineNumber);
+        //        throw;
+        //    }
+        //}
 
         // Helper method to update DateXMLGeneratedOn
         private async Task UpdateDateXMLGeneratedOn(SqlConnection connection, string serviceID)

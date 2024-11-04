@@ -33,8 +33,8 @@ namespace Rwde
         public const string Areyousureyouwanttoabort = "Are you sure you want to abort";
         public const string abortochindelete = "abortochindelete";
         public const string HCCDATA = "HCC";
-        public const string nodatatoinsertintotable = "No data to insert into table";
-        public const string nodataavailableforthissourcefilename = "No data available for this Sourcefilename";
+        public const string nodatatoinsertintotable = "Please Select an Error File";
+        public const string nodataavailableforthissourcefilename = "NO Records  or check the file name";
         public const string csvpath = "Csvpath";
         public const string ochintorwdeconversion = "OCHIN to RWDE Conversion";
         public const string ThesefileshavealreadybeenuploadedCloseandreopentouploadnewfiles="These files have already been uploaded. Close and reopen to upload new files.";
@@ -70,6 +70,8 @@ namespace Rwde
         public const string Warn = "W";
         public const string Error = "E";
         public const string Fatal = "F";
+        public const string createddate = "Created Date";
+        public const string servicedate = "Service Date";
         public const int Status = 11;
         public const int OCHIN = 23;
         public const int ClientTrack = 24;
@@ -218,7 +220,7 @@ namespace Rwde
         public const string EmptyvalueMessage = "Enter The Correct Details";
         public const string FilterTitle = "View All Batches";
         public const string Deletioncancelled = "Deletion cancelled";
-        public const string CMSServices = "Service_Sample_20240726 ";
+        public const string CMSServices = "Service_Sample_20240726";
         public const string Errorfileuplodedsuccessfully = "Error File Uploded Successfully";
         public const string NoFilterDatas = "The filter values you selected do not match any available data for OCHIN.";
         public const string NoFilterDatasHCC = "The filter values you selected do not match any available data.";
