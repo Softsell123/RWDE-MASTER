@@ -18,6 +18,7 @@
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\AAAASHANMUAGAM\NEW\4-11-2024\</PublishUrl>
     <PublishUrl>C:\Users\megha\Documents\30-10-2024\EXE\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,6 +30,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>64</ApplicationRevision>
     <ApplicationRevision>63</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
@@ -424,6 +426,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HCC Reconciliation.resx">
       <DependentUpon>HCC Reconciliation.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="OCHIN to RWDE Conversion.resx">
       <DependentUpon>OCHIN to RWDE Conversion.cs</DependentUpon>

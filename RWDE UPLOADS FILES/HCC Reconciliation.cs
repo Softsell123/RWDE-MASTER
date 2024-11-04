@@ -193,35 +193,36 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-                DBHelper dbHelper = new DBHelper();
-                dataGridView.AutoGenerateColumns = true;
-                dataGridView.Columns.Clear();
                 // Ensure the date pickers are properly set
                 DateTime startDate = dtpStartDate.Value;
                 DateTime endDate = dtpEndDate.Value;
+                dataGridView.Columns.Clear();
+                // Validate that the end date is greater than the start date
                 if (endDate <= startDate)
                 {
                     MessageBox.Show(Constants.StartdatemustbelessthanEnddate);
+                    return;
                 }
 
-                // Call the LoadData method to fetch the data
-
+                // Create instance of DBHelper
+                DBHelper dbHelper = new DBHelper();
                 dataGridView.ForeColor = Color.Black;
-
 
                 DataTable result = dbHelper.LoadDatafilterhccrecon(startDate, endDate);//to get filtered data 
 
                 // Now you can use the result, e.g., bind it to a DataGridView or process it
+                dataGridView.AutoGenerateColumns = true;
                 dataGridView.DataSource = result;
-                // PopulateMonthYearGrid(startDate, endDate);
+                if (result.Rows.Count < 1) 
+                {
+                    MessageBox.Show(Constants.Nodatafoundbetweenselecteddates);
+                    return;
+                }
             }
             catch (Exception ex)
             {
-                // Handle exceptions, such as logging the error
-                MessageBox.Show(ex.Message);
-
-
-
+                // Handle exceptions related to DateTimePicker values or other issues
+                MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
         private void btnClr_Click(object sender, EventArgs e)//clear the data in the grid
@@ -233,7 +234,7 @@ namespace RWDE_UPLOADS_FILES
             dtpStartDate.CustomFormat = "MM-dd-yyyy";
             dtpEndDate.Value = DateTime.Now;
             dtpEndDate.CustomFormat = "MM-dd-yyyy";
-                cbDateFilter.Text = Constants.CreatedDate;
+            dtpDateFilter.Text = Constants.CreatedDate;
 
             // Clear the DataTable bound to the DataGridView
             if (dataGridView.DataSource is DataTable dt)
