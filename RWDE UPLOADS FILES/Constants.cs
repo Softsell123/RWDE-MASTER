@@ -70,6 +70,8 @@ namespace Rwde
         public const string Warn = "W";
         public const string Error = "E";
         public const string Fatal = "F";
+        public const string createddate = "Created Date";
+        public const string servicedate = "Service Date";
         public const int Status = 11;
         public const int OCHIN = 23;
         public const int ClientTrack = 24;

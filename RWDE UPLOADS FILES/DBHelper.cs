@@ -26,6 +26,7 @@ namespace RWDE
         private string error;
         private bool batchIDIncremented = false;// Stores any error messages encountered during database operations
         private bool batchIDIncre;
+        
         // Constructor to initialize the DBHelper class with a connection string
         public DBHelper()
         {
@@ -3434,6 +3435,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
+
         public DataTable LoadDatafilter(DateTime startDate, DateTime endDate)//load data for monthly dash board
         {
             DataTable dt = new DataTable();
@@ -3442,7 +3444,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
             {
                 try
                 {
-                    conn.Open();
+                    conn.Open();//
 
                     // Convert DateTime objects to only include date part (removes time)
                     DateTime startDateOnly = startDate.Date;
@@ -3452,7 +3454,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     string startDateStr = startDateOnly.ToString("yyyy-MM-dd");
                     string endDateStr = endDateOnly.ToString("yyyy-MM-dd");
 
-                    string query = "sp_Upload_Dashboard";
+                    string query = "sp_Upload_Dashboardtest";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -3473,9 +3475,10 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
-        public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, int batchID)
+
+        public DataTable LoadDatafilterServiceReconbatchid(DateTime startDate, DateTime endDate, int batchID)
         {
-            DataTable dt = new DataTable();
+            DataTable dy = new DataTable();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -3495,7 +3498,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 SELECT * 
                 FROM vwService_Reconciliationtest
                 WHERE ServiceDate BETWEEN @StartDate AND @EndDate and batchID=@Batchid";
-                  
+
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -3505,16 +3508,16 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                         cmd.Parameters.AddWithValue("@Batchid", batchID);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                        adapter.Fill(dt);
+                        adapter.Fill(dy);
 
                         // Check if the result is empty, which means no matching rows were found
-                        if (dt.Rows.Count == 0)
+                        if (dy.Rows.Count == 0)
                         {
                             MessageBox.Show(Constants.nobatchid, "Service Reconciliation Report");
-                            return dt;
-                           
+                            return dy;
+
                         }
-                        
+
                     }
                 }
                 catch (Exception ex)
@@ -3524,8 +3527,82 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 }
             }
 
+            return dy;
+        }
+        public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, string filterType)
+        {
+            DataTable dt = new DataTable();
+            string query;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // Execute the stored procedure to update HCCServices if needed
+                    using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
+                    {
+                        updateCmd.CommandType = CommandType.StoredProcedure;
+                        updateCmd.ExecuteNonQuery();
+                    }
+
+                    // Select query based on filter type
+                    if (filterType == "ServiceDate")
+                    {
+                        query = @"
+                    SELECT * 
+                    FROM vwService_Reconciliationdatefilter
+                    WHERE ServiceDate BETWEEN @StartDate AND @EndDate";
+                    }
+                    else if (filterType == "CreatedDate")
+                    {
+                        query = @"
+                    SELECT * 
+                    FROM vwService_ReconciliationCreatedDateFilter
+                    WHERE EntryDate BETWEEN @StartDate AND @EndDate";
+                    }
+                    //else if (filterType == "BatchID")
+                    //{
+                    //    query = @"
+                    //SELECT * 
+                    //FROM vwService_Reconciliationtest
+                    //WHERE BatchID = @BatchID";
+                    //}
+                    else
+                    {
+                        query = @"
+                    SELECT * 
+                    FROM vwService_Reconciliationtest
+                    WHERE BatchID = @BatchID";
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        // Add parameters based on the filter type
+                        if (filterType == "ServiceDate" || filterType == "CreatedDate")
+                        {
+                            cmd.Parameters.AddWithValue("@StartDate", startDate);
+                            cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        }
+                        else if (filterType == "BatchID")
+                        {
+                           // cmd.Parameters.AddWithValue("@BatchID", batchid); // Assuming batchID is passed as an integer or similar
+                        }
+
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        adapter.Fill(dt);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("An error occurred while loading data.", ex);
+                }
+            }
+
             return dt;
         }
+
 
         public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate)//to fetch hccreconciliation data
         {
@@ -3543,7 +3620,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     string startDateStr = startDateOnly.ToString("yyyy-MM-dd");
                     string endDateStr = endDateOnly.ToString("yyyy-MM-dd");
 
-                    string query = @"select * from vwHCC_Reconciliation"; // Ordering by the minimum date in each group
+                    string query = @"select * from vwHCC_Reconciliationtest"; // Ordering by the minimum date in each group
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
