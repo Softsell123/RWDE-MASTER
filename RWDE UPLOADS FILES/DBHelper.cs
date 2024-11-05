@@ -3450,7 +3450,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
             return dt;
         }
 
-        public DataTable LoadDatafilter(DateTime startDate, DateTime endDate)//load data for monthly dash board
+        public DataTable LoadDatafilter(DateTime startDate, DateTime endDate) // load data for monthly dashboard
         {
             DataTable dt = new DataTable();
 
@@ -3458,23 +3458,17 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
             {
                 try
                 {
-                    conn.Open();//
+                    conn.Open();
 
-                    // Convert DateTime objects to only include date part (removes time)
-                    DateTime startDateOnly = startDate.Date;
-                    DateTime endDateOnly = endDate.Date;
-
-                    // Convert to string in 'yyyy-MM-dd' format if your SQL expects date literals
-                    string startDateStr = startDateOnly.ToString("yyyy-MM-dd");
-                    string endDateStr = endDateOnly.ToString("yyyy-MM-dd");
-
-                    string query = "sp_Upload_Dashboardtest";
+                    string query = "sp_Upload_DashboardREPORT"; // Ensure this is the correct stored procedure name
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure; // Specify that it is a stored procedure
-                        cmd.Parameters.AddWithValue("@StartDate", startDateStr);
-                        cmd.Parameters.AddWithValue("@EndDate", endDateStr);
+
+                        // Add start and end date parameters directly as DateTime
+                        cmd.Parameters.AddWithValue("@StartDate", startDate);
+                        cmd.Parameters.AddWithValue("@EndDate", endDate);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
@@ -3489,6 +3483,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
+
 
         public DataTable LoadDatafilterServiceReconbatchid(DateTime startDate, DateTime endDate, int batchID)
         {
@@ -3624,6 +3619,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
         public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate)//to fetch hccreconciliation data
 
+
         {
             DataTable dt = new DataTable();
             string query;
@@ -3633,6 +3629,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 try
                 {
                     conn.Open();
+
 
                     // Execute the stored procedure to update HCCServices if needed
                     using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
@@ -3672,11 +3669,39 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     WHERE BatchID = @BatchID";
                     }
 
-                    string query = @"select * from vwHCC_Reconciliationtest"; // Ordering by the minimum date in each group
+
+                    string query = @"
+                SELECT 
+                    FORMAT(CMSServices.ServiceDate, 'MMM-yyyy') AS [MMM-YYYY],
+                    COUNT(DISTINCT CMSServices.CMSServiceID) AS [Total Service Entries],
+                    COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'YES' THEN HCCServices.ServiceID END) AS [Service Entries Successfully Exported],
+                    COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS [Service Entries not Exported],
+                    NULL AS [Service Entries Post Timebox Period],
+                    NULL AS [Service Entries for HCCID Missing],
+                    CASE 
+                        WHEN COUNT(CMSServices.CMSServiceID) > 0 THEN 
+                            FORMAT(
+                                CAST(COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS FLOAT) / 
+                                COUNT(DISTINCT CMSServices.CMSServiceID) * 100,
+                                'N2'
+                            ) + '%' 
+                        ELSE '0%'
+                    END AS [% Drop]
+                FROM 
+                    [dbo].[CMSServices] AS CMSServices
+                LEFT JOIN 
+                    [dbo].[HCCServices] ON CMSServices.ClientID = HCCServices.Clnt_id 
+                WHERE 
+                    CMSServices.ServiceDate BETWEEN @StartDate AND @EndDate
+                GROUP BY 
+                    FORMAT(CMSServices.ServiceDate, 'MMM-yyyy')";
 
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
+       cmd.Parameters.AddWithValue("@StartDate", startDate);
+                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+
                         // Add parameters based on the filter type
                         if (filterType == "ServiceDate" || filterType == "CreatedDate")
                         {
@@ -3688,12 +3713,14 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                            // cmd.Parameters.AddWithValue("@BatchID", batchid); // Assuming batchID is passed as an integer or similar
                         }
 
+
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
                     }
                 }
                 catch (Exception ex)
                 {
+
                     throw new Exception("An error occurred while loading data.", ex);
                 }
             }
@@ -3748,12 +3775,20 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 }
                 catch (Exception ex)
                 {
+
                     MessageBox.Show(ex.Message);
                 }
             }
 
             return dt;
         }
+
+    
+
+     
+
+
+
         public DataTable LoadConfigurationfilter(DateTime startDate, DateTime endDate)//to get details of clients applied for services
         {
             DataTable dt = new DataTable();
