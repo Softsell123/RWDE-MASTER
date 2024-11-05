@@ -138,6 +138,8 @@ namespace Rwde
         public const string datasuccessfullysaved = "Data successfully saved in the selected folder";
         public const string Service_ReconciliationReport = "Service_Reconciliation Report";
         public const string Deceased_Clients = "Deceased_Clients";
+        public const string Nodatafoundbetweenselecteddates = "No data found between selected dates";
+        
 
 
 
@@ -216,6 +218,7 @@ namespace Rwde
         public const string SuccessfulRowsHeader = "Successful Rows";
         public const string StatusHeader = "Status";
         public const string CreatedDate = "Created Date";
+        
 
         public const string EmptyvalueMessage = "Enter The Correct Details";
         public const string FilterTitle = "View All Batches";
