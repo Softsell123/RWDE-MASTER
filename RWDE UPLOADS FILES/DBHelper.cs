@@ -16,7 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Diagnostics.Eventing.Reader;
-using ClosedXML.Excel;
+using ClosedXML.Excel;//
 
 namespace RWDE
 {
@@ -31,7 +31,7 @@ namespace RWDE
         public DBHelper()
         {
             // Define the connection string within the DBHelper class
-            connectionString = "Data Source=BSSDEMO;Initial Catalog=RWDE;Integrated Security=True;";
+            connectionString = "Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;";
         }
         public string GetConnectionString()//get connection string
         {
@@ -3539,9 +3539,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
             return dy;
 
         }
-        public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, string filterType)
-
-        }
+        
         public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, string filterType)
         {
             DataTable dt = new DataTable();
@@ -3617,116 +3615,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
         }
 
 
-        public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate)//to fetch hccreconciliation data
-
-
-        {
-            DataTable dt = new DataTable();
-            string query;
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-
-
-                    // Execute the stored procedure to update HCCServices if needed
-                    using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
-                    {
-                        updateCmd.CommandType = CommandType.StoredProcedure;
-                        updateCmd.ExecuteNonQuery();
-                    }
-
-
-                    // Select query based on filter type
-                    if (filterType == "ServiceDate")
-                    {
-                        query = @"
-                    SELECT * 
-                    FROM vwService_Reconciliationdatefilter
-                    WHERE ServiceDate BETWEEN @StartDate AND @EndDate";
-                    }
-                    else if (filterType == "CreatedDate")
-                    {
-                        query = @"
-                    SELECT * 
-                    FROM vwService_ReconciliationCreatedDateFilter
-                    WHERE EntryDate BETWEEN @StartDate AND @EndDate";
-                    }
-                    //else if (filterType == "BatchID")
-                    //{
-                    //    query = @"
-                    //SELECT * 
-                    //FROM vwService_Reconciliationtest
-                    //WHERE BatchID = @BatchID";
-                    //}
-                    else
-                    {
-                        query = @"
-                    SELECT * 
-                    FROM vwService_Reconciliationtest
-                    WHERE BatchID = @BatchID";
-                    }
-
-
-                    string query = @"
-                SELECT 
-                    FORMAT(CMSServices.ServiceDate, 'MMM-yyyy') AS [MMM-YYYY],
-                    COUNT(DISTINCT CMSServices.CMSServiceID) AS [Total Service Entries],
-                    COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'YES' THEN HCCServices.ServiceID END) AS [Service Entries Successfully Exported],
-                    COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS [Service Entries not Exported],
-                    NULL AS [Service Entries Post Timebox Period],
-                    NULL AS [Service Entries for HCCID Missing],
-                    CASE 
-                        WHEN COUNT(CMSServices.CMSServiceID) > 0 THEN 
-                            FORMAT(
-                                CAST(COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS FLOAT) / 
-                                COUNT(DISTINCT CMSServices.CMSServiceID) * 100,
-                                'N2'
-                            ) + '%' 
-                        ELSE '0%'
-                    END AS [% Drop]
-                FROM 
-                    [dbo].[CMSServices] AS CMSServices
-                LEFT JOIN 
-                    [dbo].[HCCServices] ON CMSServices.ClientID = HCCServices.Clnt_id 
-                WHERE 
-                    CMSServices.ServiceDate BETWEEN @StartDate AND @EndDate
-                GROUP BY 
-                    FORMAT(CMSServices.ServiceDate, 'MMM-yyyy')";
-
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-       cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
-
-                        // Add parameters based on the filter type
-                        if (filterType == "ServiceDate" || filterType == "CreatedDate")
-                        {
-                            cmd.Parameters.AddWithValue("@StartDate", startDate);
-                            cmd.Parameters.AddWithValue("@EndDate", endDate);
-                        }
-                        else if (filterType == "BatchID")
-                        {
-                           // cmd.Parameters.AddWithValue("@BatchID", batchid); // Assuming batchID is passed as an integer or similar
-                        }
-
-
-                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                        adapter.Fill(dt);
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw new Exception("An error occurred while loading data.", ex);
-                }
-            }
-
-            return dt;
-        }
+       
         public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate)
         {
             DataTable dt = new DataTable();
