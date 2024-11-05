@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System; //shannu comments
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -18,7 +18,6 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using System.Diagnostics.Eventing.Reader;
 using ClosedXML.Excel;
 
-
 namespace RWDE
 {
     public class DBHelper
@@ -32,7 +31,7 @@ namespace RWDE
         public DBHelper()
         {
             // Define the connection string within the DBHelper class
-            connectionString = "Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;";
+            connectionString = "Data Source=BSSDEMO;Initial Catalog=RWDE;Integrated Security=True;";
         }
         public string GetConnectionString()//get connection string
         {

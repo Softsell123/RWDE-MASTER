@@ -424,6 +424,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HCC Reconciliation.resx">
       <DependentUpon>HCC Reconciliation.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="OCHIN to RWDE Conversion.resx">
       <DependentUpon>OCHIN to RWDE Conversion.cs</DependentUpon>
