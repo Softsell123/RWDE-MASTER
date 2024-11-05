@@ -2890,6 +2890,20 @@ namespace RWDE
                                     }
                                 }
                                 results.Add(row);
+                                using (SqlConnection con = new SqlConnection(connectionString))
+                                {
+                                    using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeClient", con))
+                                    {
+                                        cmd.CommandType = CommandType.StoredProcedure;
+                                        DateTime date = DateTime.Now;
+                                        cmd.Parameters.AddWithValue("@Clientid", Convert.ToInt32(reader[32])); // Convert clientid to int
+                                        cmd.Parameters.AddWithValue("@Datetime", date);
+                                        con.Open();
+                                        // Execute the second command here, after the reader is done with the row data
+                                        cmd.ExecuteNonQuery();
+                                        con.Close();
+                                    }
+                                }
                             }
                         }
                     }
