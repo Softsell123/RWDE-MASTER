@@ -36,33 +36,33 @@ namespace RWDE_UPLOADS_FILES
         {
             dataGridView.AutoGenerateColumns = false;
             //dataGridView.Columns.Clear();
-           // DataGridViewTextBoxColumn SourceFileName = new DataGridViewTextBoxColumn();
-           // //SourceFileName.Name = "Status";
-           // //SourceFileName.HeaderText = "HCC Table";
-           // SourceFileName.Width = 500;
-           // SourceFileName.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-           // dataGridView.Columns.Add(SourceFileName);
-           // DataGridViewTextBoxColumn clientid = new DataGridViewTextBoxColumn();
-           // //clientid.Name = "Message";
-           // //clientid.HeaderText = "Error Message";
-           // clientid.Width = 900;
-           // clientid.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-           // dataGridView.Columns.Add(clientid);
-           // // Create "Status" column
-           // DataGridViewTextBoxColumn statusColumn = new DataGridViewTextBoxColumn();
-           //// statusColumn.Name = "SourceId";
-           // //statusColumn.HeaderText = "SourceId";
-           // statusColumn.Width = 200;
-           // statusColumn.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-           // dataGridView.Columns.Add(statusColumn);
+            // DataGridViewTextBoxColumn SourceFileName = new DataGridViewTextBoxColumn();
+            // //SourceFileName.Name = "Status";
+            // //SourceFileName.HeaderText = "HCC Table";
+            // SourceFileName.Width = 500;
+            // SourceFileName.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            // dataGridView.Columns.Add(SourceFileName);
+            // DataGridViewTextBoxColumn clientid = new DataGridViewTextBoxColumn();
+            // //clientid.Name = "Message";
+            // //clientid.HeaderText = "Error Message";
+            // clientid.Width = 900;
+            // clientid.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            // dataGridView.Columns.Add(clientid);
+            // // Create "Status" column
+            // DataGridViewTextBoxColumn statusColumn = new DataGridViewTextBoxColumn();
+            //// statusColumn.Name = "SourceId";
+            // //statusColumn.HeaderText = "SourceId";
+            // statusColumn.Width = 200;
+            // statusColumn.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            // dataGridView.Columns.Add(statusColumn);
 
-           // // Create "Message" column
-           // DataGridViewTextBoxColumn messageColumn = new DataGridViewTextBoxColumn();
-           // //messageColumn.Name = "SourceFileName";
-           // //messageColumn.HeaderText = "SourceFileName";
-           // messageColumn.Width = 900;
-           // messageColumn.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-           // dataGridView.Columns.Add(messageColumn);
+            // // Create "Message" column
+            // DataGridViewTextBoxColumn messageColumn = new DataGridViewTextBoxColumn();
+            // //messageColumn.Name = "SourceFileName";
+            // //messageColumn.HeaderText = "SourceFileName";
+            // messageColumn.Width = 900;
+            // messageColumn.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            // dataGridView.Columns.Add(messageColumn);
 
         }
 
@@ -121,7 +121,7 @@ namespace RWDE_UPLOADS_FILES
                             string hccTable = row["HccTable"].ToString();
                             string errorMessage = row["ErrorMessage"].ToString();
                             string clientId = row["SourceId"].ToString();
-                        
+
 
 
                             // Replace values in HccTable based on specific cases
@@ -146,7 +146,7 @@ namespace RWDE_UPLOADS_FILES
                                 case "T_CLNT_SITE":
                                     hccTable = "HCCClientAddr";
                                     break;
-                               
+
                                 default:
                                     if (hccTable.Contains("T_SITE"))
                                     {
@@ -292,7 +292,7 @@ namespace RWDE_UPLOADS_FILES
             }
         }
 
-        private void AddRowToGrid(string errorMessage, string hccTable, string clientId,string SourceFileName)
+        private void AddRowToGrid(string errorMessage, string hccTable, string clientId, string SourceFileName)
         {
             // Ensure DataGridView is already created and columns are defined
             if (dataGridView.Columns.Count == 0)
@@ -338,10 +338,10 @@ namespace RWDE_UPLOADS_FILES
                 transaction.Rollback(); // Rollback transaction if needed
             }
         }
-    
 
 
-            private DataTable ReadExcelFile(string filePath)
+
+        private DataTable ReadExcelFile(string filePath)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -373,7 +373,7 @@ namespace RWDE_UPLOADS_FILES
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-           
+
             Application.Restart();
         }
 
@@ -384,22 +384,23 @@ namespace RWDE_UPLOADS_FILES
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
-            if (txtPath.Text == "") { 
+            if (txtPath.Text == "")
+            {
                 MessageBox.Show(Constants.nodatatoinsertintotable, "Download HCC Errors");
                 return;
             }
 
             string selectedFilePath = txtPath.Text;
-                       
-                        // Validate the selected file is an Excel file
-                        if (IsAllowedFileType(selectedFilePath))
-                        {
-                            // Process the selected Excel file
-                            ProcessExcelData(selectedFilePath);
-                        }
-                       
+
+            // Validate the selected file is an Excel file
+            if (IsAllowedFileType(selectedFilePath))
+            {
+                // Process the selected Excel file
+                ProcessExcelData(selectedFilePath);
+            }
+
         }
-        
+
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             if (txtFileName.Text == "")
@@ -420,7 +421,7 @@ namespace RWDE_UPLOADS_FILES
             DataTable dt = new DataTable();
             try
             {
-               
+
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand("FILTERSOURCEFILENAME", conn))
@@ -439,7 +440,7 @@ namespace RWDE_UPLOADS_FILES
                                 dataGridView.DataSource = dt;
                                 dataGridView.AutoGenerateColumns = true;
                                 dataGridView.AllowUserToAddRows = false;
-                               
+
 
                             }
                             catch (Exception ex)
@@ -448,7 +449,7 @@ namespace RWDE_UPLOADS_FILES
                                 Console.WriteLine("Error: " + ex.Message);
                             }
                             command.ExecuteNonQuery();
-                           
+
 
                             // Execute the SQL command to insert client data
 
@@ -458,7 +459,7 @@ namespace RWDE_UPLOADS_FILES
             }
             catch (Exception ex)
             {
-               
+
             }
 
 
@@ -721,13 +722,13 @@ namespace RWDE_UPLOADS_FILES
         private void btnClr_Click(object sender, EventArgs e)
         {
             InitializeDataGridView();
-           dataGridView.Rows.Clear();
-            
+            dataGridView.Rows.Clear();
+
             txtPath.Text = "";
             txtFileName.Text = "";
 
         }
 
-       
+
     }
 }
