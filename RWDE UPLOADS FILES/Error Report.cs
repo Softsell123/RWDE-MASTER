@@ -31,7 +31,6 @@ namespace RWDE_UPLOADS_FILES
 
             InitializeDataGridView();
         }
-
         private void InitializeDataGridView()
         {
             dataGridView.AutoGenerateColumns = false;
@@ -65,8 +64,6 @@ namespace RWDE_UPLOADS_FILES
             // dataGridView.Columns.Add(messageColumn);
 
         }
-
-
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             try
@@ -90,7 +87,6 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show(ex.Message);
             }
         }
-
         private bool IsAllowedFileType(string filePath)
         {
             string extension = Path.GetExtension(filePath).ToLowerInvariant();
@@ -122,8 +118,6 @@ namespace RWDE_UPLOADS_FILES
                             string errorMessage = row["ErrorMessage"].ToString();
                             string clientId = row["SourceId"].ToString();
 
-
-
                             // Replace values in HccTable based on specific cases
                             switch (hccTable)
                             {
@@ -146,7 +140,6 @@ namespace RWDE_UPLOADS_FILES
                                 case "T_CLNT_SITE":
                                     hccTable = "HCCClientAddr";
                                     break;
-
                                 default:
                                     if (hccTable.Contains("T_SITE"))
                                     {
@@ -339,9 +332,8 @@ namespace RWDE_UPLOADS_FILES
             }
         }
 
+            private DataTable ReadExcelFile(string filePath)
 
-
-        private DataTable ReadExcelFile(string filePath)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -373,7 +365,6 @@ namespace RWDE_UPLOADS_FILES
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-
             Application.Restart();
         }
 
@@ -461,9 +452,6 @@ namespace RWDE_UPLOADS_FILES
             {
 
             }
-
-
-
             //string filePath = txtPath.Text; // Text box for file path
 
             // Validate file path
@@ -580,8 +568,6 @@ namespace RWDE_UPLOADS_FILES
                     }
             }
         }
-
-
         //private void ProcessExcelData(string filePath, string sourceFileName)
         //{
         //    DataTable excelData = ReadExcelFile(filePath);
@@ -641,8 +627,6 @@ namespace RWDE_UPLOADS_FILES
         //        AddRowToGrid(errorMessage, hccTable);
         //    }
         //}
-
-
         // Method to add a row to the DataGridView
         private void AddRowToGriddata(string errorMessage, string hccTable)
         {
@@ -713,27 +697,19 @@ namespace RWDE_UPLOADS_FILES
                         errorMessage = string.IsNullOrWhiteSpace(errorMessage) ? "Invalid HCCTABLE value." : errorMessage;
                         break;
                 }
-
                 // Add row to DataGridView with the modified table name and error message
                 AddRowToGrid(errorMessage, hccTable);
             }
         }
-
         private void btnClr_Click(object sender, EventArgs e)
         {
             InitializeDataGridView();
 
-
             dataGridView.Rows.Clear();
-
            dataGridView.Rows.Clear();
-            
 
             txtPath.Text = "";
             txtFileName.Text = "";
-
         }
-
-
     }
 }
