@@ -205,6 +205,7 @@ namespace RWDE_UPLOADS_FILES
             this.dtpDateFilter.Name = "dtpDateFilter";
             this.dtpDateFilter.Size = new System.Drawing.Size(247, 41);
             this.dtpDateFilter.TabIndex = 5;
+            this.dtpDateFilter.Text = "Created Date";
             this.dtpDateFilter.SelectedIndexChanged += new System.EventHandler(this.cbDateFilter_SelectedIndexChanged);
             // 
             // btnReport
