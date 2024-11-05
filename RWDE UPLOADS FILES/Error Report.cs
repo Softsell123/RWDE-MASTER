@@ -722,7 +722,12 @@ namespace RWDE_UPLOADS_FILES
         private void btnClr_Click(object sender, EventArgs e)
         {
             InitializeDataGridView();
+
+
             dataGridView.Rows.Clear();
+
+           dataGridView.Rows.Clear();
+            
 
             txtPath.Text = "";
             txtFileName.Text = "";
