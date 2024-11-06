@@ -4273,8 +4273,6 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return fileName + ".xml";
         }
-
-
     }
 }
 
