@@ -142,7 +142,13 @@ namespace RWDE_UPLOADS_FILES
                                 case "T_CLNT_SITE":
                                     hccTable = "HCCClientAddr";
                                     break;
-                               
+                                case "T_CLNT_HSNG_ASSTNC":
+                                    hccTable = "HCCLvngSttn";
+                                    break;
+                                case "T_CLNT_HSHLD_INCOME":
+                                    hccTable = "HCCClients";
+                                    break;
+
                                 default:
                                     if (hccTable.Contains("T_SITE"))
                                     {
@@ -233,7 +239,12 @@ namespace RWDE_UPLOADS_FILES
                                 case "T_CLNT_SITE":
                                     hccTable = "HCCClientAddr";
                                     break;
-
+                                case "T_CLNT_HSNG_ASSTNC":
+                                    hccTable = "HCCLvngSttn";
+                                    break;
+                                case "T_CLNT_HSHLD_INCOME":
+                                    hccTable = "HCCClients";
+                                    break;
                                 default:
                                     if (hccTable.Contains("T_SITE"))
                                     {
@@ -242,7 +253,7 @@ namespace RWDE_UPLOADS_FILES
                                     else
                                     {
                                         // Handle unexpected cases or set a default value
-                                        hccTable = "";
+                                        hccTable = "HCCClients";
                                     }
                                     break;
                             }
@@ -698,7 +709,7 @@ namespace RWDE_UPLOADS_FILES
                         hccTable = "HCCClientAddr";
                         break;
                     default:
-                        hccTable = "Error";
+                        hccTable = "HCCClients";
                         errorMessage = string.IsNullOrWhiteSpace(errorMessage) ? "Invalid HCCTABLE value." : errorMessage;
                         break;
                 }
