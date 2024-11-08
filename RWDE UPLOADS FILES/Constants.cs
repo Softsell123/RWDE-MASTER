@@ -54,7 +54,7 @@ namespace Rwde
 
         public const string AriesClients = "ARIES_Clients";
         public const string EditColumnName = "Edit";
-        public const string StartdatemustbelessthanEnddate = "Start date must be less than End date";
+        public const string StartdatemustbeearlierthanEnddate = "Start date must be earlier than End date";
         public const string AriesConsent = "ARIES_Consent";
         public const string AriesDeceased = "ARIES_Decased";
         public const string AriesEligibility = "ARIES_Eligibility";

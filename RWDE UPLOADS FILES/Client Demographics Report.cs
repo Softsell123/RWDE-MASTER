@@ -54,7 +54,7 @@ namespace RWDE_UPLOADS_FILES
                 DateTime startDate = dtpStartDate.Value;
                 DateTime endDate = dtpEndDate.Value;
                 if (startDate >=endDate){
-                    MessageBox.Show($"{ Constants.StartdatemustbelessthanEnddate}");
+                    MessageBox.Show($"{ Constants.StartdatemustbeearlierthanEnddate}");
 
                 }
 

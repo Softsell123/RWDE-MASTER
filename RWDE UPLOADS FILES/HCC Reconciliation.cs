@@ -190,7 +190,7 @@ namespace RWDE_UPLOADS_FILES
             }
         }
         private void btnReport_Click(object sender, EventArgs e)//to get the filtered data in the grid
-        {
+            {
             try
             {
                 // Ensure the date pickers are properly set
@@ -200,15 +200,37 @@ namespace RWDE_UPLOADS_FILES
                 // Validate that the end date is greater than the start date
                 if (endDate <= startDate)
                 {
-                    MessageBox.Show(Constants.StartdatemustbelessthanEnddate);
+                    MessageBox.Show(Constants.StartdatemustbeearlierthanEnddate);
                     return;
                 }
 
                 // Create instance of DBHelper
                 DBHelper dbHelper = new DBHelper();
                 dataGridView.ForeColor = Color.Black;
+                string filterType = string.Empty;
+                
+                if (dtpDateFilter.SelectedItem != null)
+                {
+                    switch (dtpDateFilter.SelectedItem.ToString())
+                    {
+                        case Constants.servicedate:
+                            filterType = "ServiceDate";
+                            break;
+                        case Constants.CreatedDate:
+                            filterType = "CreatedDate";
+                            break;
+                        default:
+                            MessageBox.Show("Please select a valid filter type from the dropdown.", "Filter Selection Required");
+                            return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a filter type.", "Input Error");
+                    return;
+                }
 
-                DataTable result = dbHelper.LoadDatafilterhccrecon(startDate, endDate);//to get filtered data 
+                DataTable result = dbHelper.LoadDatafilterhccrecon(startDate, endDate,filterType);//to get filtered data 
 
                 // Now you can use the result, e.g., bind it to a DataGridView or process it
                 dataGridView.AutoGenerateColumns = true;
