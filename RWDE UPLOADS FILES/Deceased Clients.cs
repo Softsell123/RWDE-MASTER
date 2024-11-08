@@ -283,7 +283,7 @@ namespace RWDE_UPLOADS_FILES
             if (startDate > endDate)
             {
                 // Show an error message if the start date is later than the end date
-                MessageBox.Show(Constants.StartdatemustbelessthanEnddate, "Deceased Clients", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Constants.StartdatemustbeearlierthanEnddate, "Deceased Clients", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return; // Exit the method to prevent further processing
             }
 

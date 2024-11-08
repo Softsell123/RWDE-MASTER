@@ -31,7 +31,7 @@ namespace RWDE
         public DBHelper()
         {
             // Define the connection string within the DBHelper class
-            connectionString = "Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;";
+            connectionString = "Data Source=BSSDEMO;Initial Catalog=RWDE;Integrated Security=True;";
         }
         public string GetConnectionString()//get connection string
         {
@@ -2754,23 +2754,23 @@ namespace RWDE
                                     row[reader.GetName(i)] = reader[i].ToString();
                                 }
                                 results.Add(row);
-                                //using (SqlConnection con = new SqlConnection(connectionString))
-                                //{
-                                //    using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", con))
-                                //    {
-                                //        cmd.CommandType = CommandType.StoredProcedure;
-                                //        DateTime date = DateTime.Now;
-                                //        cmd.Parameters.AddWithValue("@Clientid", Convert.ToInt32(reader[5])); // Convert clientid to int
-                                //        cmd.Parameters.AddWithValue("@Datetime", date);
-                                //        con.Open();
-                                //        // Execute the second command here, after the reader is done with the row data
-                                //        cmd.ExecuteNonQuery();
-                                //        con.Close();
-                                //    }
+                                using (SqlConnection con = new SqlConnection(connectionString))
+                                {
+                                    using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", con))
+                                    {
+                                        cmd.CommandType = CommandType.StoredProcedure;
+                                        DateTime date = DateTime.Now;
+                                        cmd.Parameters.AddWithValue("@Clientid", Convert.ToInt32(reader[5])); // Convert clientid to int
+                                        cmd.Parameters.AddWithValue("@Datetime", date);
+                                        con.Open();
+                                        // Execute the second command here, after the reader is done with the row data
+                                        cmd.ExecuteNonQuery();
+                                        con.Close();
+                                    }
                                 }
                             }
                         }
-                    
+                    }
                 }
                 return results;
             }
@@ -3629,8 +3629,8 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
         }
 
 
-       
-        public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate)
+
+        public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate, String filterType)
         {
             DataTable dt = new DataTable();
 
@@ -3640,52 +3640,36 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 {
                     conn.Open();
 
-                    string query = @"
-        SELECT
-            FORMAT(CMSServices.ServiceDate, 'MMM-yyyy') AS [MMM-YYYY],
-            COUNT(DISTINCT CMSServices.CMSServiceID) AS [Total Service Entries],
-            COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'YES' THEN HCCServices.ServiceID END) AS [Service Entries Successfully Exported],
-            COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS [Service Entries not Exported],
-            NULL AS [Service Entries Post Timebox Period],
-            NULL AS [Service Entries for HCCID Missing],
-            CASE
-                WHEN COUNT(CMSServices.CMSServiceID) > 0 THEN
-                    FORMAT(
-                        CAST(COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS FLOAT) /
-                        COUNT(DISTINCT CMSServices.CMSServiceID) * 100,
-                        'N2'
-                    ) + '%'
-                ELSE '0%'
-            END AS [% Drop]
-        FROM
-            [dbo].[CMSServices] AS CMSServices
-        LEFT JOIN
-            [dbo].[HCCServices] ON CMSServices.ClientID = HCCServices.Clnt_id
-        WHERE
-            CMSServices.ServiceDate BETWEEN @StartDate AND @EndDate
-        GROUP BY
-            FORMAT(CMSServices.ServiceDate, 'MMM-yyyy')";
+                    // Choose stored procedure based on filterType
+                    string query = filterType == "CreatedDate" ? "sp_HCCReconCreatedDate" : "sp_HCCReconSERVICEDate";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
+                        cmd.CommandType = CommandType.StoredProcedure; // Specify that it is a stored procedure
+
+                        // Add start and end date parameters directly as DateTime
                         cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue("@EndDate", endDate.Date.AddDays(+1));
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
-                       
                     }
                 }
                 catch (Exception ex)
                 {
-
                     MessageBox.Show(ex.Message);
                 }
             }
 
             return dt;
         }
-      public DataTable LoadConfigurationfilter(DateTime startDate, DateTime endDate)//to get details of clients applied for services
+
+
+
+
+
+
+        public DataTable LoadConfigurationfilter(DateTime startDate, DateTime endDate)//to get details of clients applied for services
         {
             DataTable dt = new DataTable();
 
