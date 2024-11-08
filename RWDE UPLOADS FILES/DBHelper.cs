@@ -2754,23 +2754,23 @@ namespace RWDE
                                     row[reader.GetName(i)] = reader[i].ToString();
                                 }
                                 results.Add(row);
-                                using (SqlConnection con = new SqlConnection(connectionString))
-                                {
-                                    using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", con))
-                                    {
-                                        cmd.CommandType = CommandType.StoredProcedure;
-                                        DateTime date = DateTime.Now;
-                                        cmd.Parameters.AddWithValue("@Clientid", Convert.ToInt32(reader[5])); // Convert clientid to int
-                                        cmd.Parameters.AddWithValue("@Datetime", date);
-                                        con.Open();
-                                        // Execute the second command here, after the reader is done with the row data
-                                        cmd.ExecuteNonQuery();
-                                        con.Close();
-                                    }
+                                //using (SqlConnection con = new SqlConnection(connectionString))
+                                //{
+                                //    using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", con))
+                                //    {
+                                //        cmd.CommandType = CommandType.StoredProcedure;
+                                //        DateTime date = DateTime.Now;
+                                //        cmd.Parameters.AddWithValue("@Clientid", Convert.ToInt32(reader[5])); // Convert clientid to int
+                                //        cmd.Parameters.AddWithValue("@Datetime", date);
+                                //        con.Open();
+                                //        // Execute the second command here, after the reader is done with the row data
+                                //        cmd.ExecuteNonQuery();
+                                //        con.Close();
+                                //    }
                                 }
                             }
                         }
-                    }
+                    
                 }
                 return results;
             }
@@ -3685,14 +3685,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
-
-    
-
-     
-
-
-
-        public DataTable LoadConfigurationfilter(DateTime startDate, DateTime endDate)//to get details of clients applied for services
+      public DataTable LoadConfigurationfilter(DateTime startDate, DateTime endDate)//to get details of clients applied for services
         {
             DataTable dt = new DataTable();
 

@@ -20,6 +20,7 @@ namespace RWDE_UPLOADS_FILES
         public ServiceReconciliationReport()//initialization of data
         {
             InitializeComponent();
+            
             DateTime startTime = DateTime.MinValue; // Or a specific default date
             DateTime endTime = DateTime.MaxValue; // Or a specific default date
                                                   // Fetch data from the database
@@ -36,8 +37,16 @@ namespace RWDE_UPLOADS_FILES
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
             this.WindowState = FormWindowState.Maximized;
             txtBatchID.Text = "";
-           
+            foreach (DataGridViewColumn column in dataGridView.Columns)
+            {
+                column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+           // dataGridView.Columns["Client ID"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+
         }
+
+
         public void PopulateDataGridView(DataTable hccServices, DataTable hccClients)//populate data
         {
             try { 
@@ -229,9 +238,9 @@ namespace RWDE_UPLOADS_FILES
                 DateTime endDate = dtpEndDate.Value;
                
                 // Validate that the end date is greater than the start date
-                if (endDate <= startDate)
+                if (endDate.Date <= startDate.Date)
                 {
-                    MessageBox.Show(Constants.StartdatemustbelessthanEnddate);
+                    MessageBox.Show(Constants.Startdatemustbeearlierthenenddate);
                     return;
                 }
 
