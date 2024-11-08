@@ -228,7 +228,7 @@ namespace RWDE_UPLOADS_FILES
                 {
                     if (endDate <= startDate)
                     {
-                        MessageBox.Show(Constants.StartdatemustbelessthanEnddate);
+                        MessageBox.Show(Constants.StartdatemustbeearlierthanEnddate);
                     }
 
                     // Call the LoadData method to fetch the data
