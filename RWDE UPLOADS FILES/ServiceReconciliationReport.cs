@@ -175,7 +175,7 @@ namespace RWDE_UPLOADS_FILES
         //        // Validate that the end date is greater than the start date
         //        if (endDate <= startDate)
         //        {
-        //            MessageBox.Show(Constants.StartdatemustbelessthanEnddate);
+        //            MessageBox.Show(Constants.StartdatemustbeearlierthanEnddate);
         //            return;
         //        }
         //        if (dtpDateFilter.SelectedItem ==Constants.createddate)
@@ -231,7 +231,7 @@ namespace RWDE_UPLOADS_FILES
                 // Validate that the end date is greater than the start date
                 if (endDate <= startDate)
                 {
-                    MessageBox.Show(Constants.StartdatemustbelessthanEnddate);
+                    MessageBox.Show(Constants.StartdatemustbeearlierthanEnddate);
                     return;
                 }
 
