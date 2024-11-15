@@ -296,7 +296,7 @@ namespace RWDE_UPLOADS_FILES
                         if (baseFilename == Constants.AriesFinanacial)//insertion of AriesFinanacial
                         {
                             dbHelper.InsertDlFinancials(connection, data, batchid, fileNameWithExtension);//insertion of AriesFinanacial
-                            rowsInserted++;
+                            rowsInserted++;//
                             //rowsInserted++;
                         }
                         if (isUploading)

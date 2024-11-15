@@ -117,7 +117,7 @@ namespace RWDE_UPLOADS_FILES
                             string hccTable = row["HccTable"].ToString();
                             string errorMessage = row["ErrorMessage"].ToString();
                             string clientId = row["SourceId"].ToString();
-                        
+
 
 
                             // Replace values in HccTable based on specific cases
@@ -345,10 +345,10 @@ namespace RWDE_UPLOADS_FILES
                 transaction.Rollback(); // Rollback transaction if needed
             }
         }
-    
 
 
-            private DataTable ReadExcelFile(string filePath)
+
+        private DataTable ReadExcelFile(string filePath)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -380,7 +380,7 @@ namespace RWDE_UPLOADS_FILES
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-           
+
             Application.Restart();
         }
 
@@ -721,12 +721,12 @@ namespace RWDE_UPLOADS_FILES
             InitializeDataGridView();
 
             dataGridView.Rows.Clear();
-           dataGridView.Rows.Clear();
-            
+            dataGridView.Rows.Clear();
+
             txtPath.Text = "";
             txtFileName.Text = "";
         }
 
-       
+
     }
 }
