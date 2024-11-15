@@ -406,14 +406,19 @@ namespace RWDE_UPLOADS_FILES//
                 // Insert all client data first
                 foreach (var data in clientData)
                 {
-                    if (chckPHI.Checked == true)
+                    if (chckPHI.Checked == true && chckURN.Checked == false)
                     {
                         dbHelper.InsertClientInformationPHI(connection, data, batchId);//insertion of the client file with PHI DATA MASKING CONDITION
+                    }
+                    else if (chckURN.Checked == true)
+                    {
+                        dbHelper.InsertClientInformationphiurn(connection, data, batchId);//insertion of the client file without PHI DATA MASKING CONDITION
                     }
                     else
                     {
                         dbHelper.InsertClientInformation(connection, data, batchId);//insertion of the client file without PHI DATA MASKING CONDITION
                     }
+                    
                     rowsInserted++;
                     if (isUploading)
                     {

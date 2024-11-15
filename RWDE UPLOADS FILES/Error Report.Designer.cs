@@ -70,7 +70,7 @@
             // 
             this.txtPath.BackColor = System.Drawing.Color.White;
             this.txtPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPath.Location = new System.Drawing.Point(259, 72);
+            this.txtPath.Location = new System.Drawing.Point(258, 72);
             this.txtPath.Margin = new System.Windows.Forms.Padding(4);
             this.txtPath.Name = "txtPath";
             this.txtPath.ReadOnly = true;

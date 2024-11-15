@@ -38,7 +38,16 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Month = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesSuccessfullyExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesNotExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesPostTimeboxPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesForHCCIDMissing = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Drop = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl = new System.Windows.Forms.Panel();
+            this.txtbatchs = new System.Windows.Forms.TextBox();
+            this.lblbatchid = new System.Windows.Forms.Label();
             this.btnClr = new System.Windows.Forms.Button();
             this.btnReport = new System.Windows.Forms.Button();
             this.lblHeader = new System.Windows.Forms.Label();
@@ -50,13 +59,6 @@
             this.lblStartDate = new System.Windows.Forms.Label();
             this.txtBatchID = new System.Windows.Forms.TextBox();
             this.lblBatch = new System.Windows.Forms.Label();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Month = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesSuccessfullyExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesNotExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesPostTimeboxPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesForHCCIDMissing = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Drop = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
@@ -149,169 +151,6 @@
             this.dataGridView.TabIndex = 7;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
-            // pnl
-            // 
-            this.pnl.AutoSize = true;
-            this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnl.Controls.Add(this.btnClr);
-            this.pnl.Controls.Add(this.btnReport);
-            this.pnl.Controls.Add(this.lblHeader);
-            this.pnl.Controls.Add(this.dtpDateFilter);
-            this.pnl.Controls.Add(this.lblDateFilter);
-            this.pnl.Controls.Add(this.dtpEndDate);
-            this.pnl.Controls.Add(this.lblEndDate);
-            this.pnl.Controls.Add(this.dtpStartDate);
-            this.pnl.Controls.Add(this.lblStartDate);
-            this.pnl.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.pnl.Location = new System.Drawing.Point(141, 84);
-            this.pnl.Margin = new System.Windows.Forms.Padding(4);
-            this.pnl.Name = "pnl";
-            this.pnl.Size = new System.Drawing.Size(1770, 157);
-            this.pnl.TabIndex = 6;
-            // 
-            // btnClr
-            // 
-            this.btnClr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(125)))), ((int)(((byte)(255)))));
-            this.btnClr.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClr.ForeColor = System.Drawing.Color.Black;
-            this.btnClr.Location = new System.Drawing.Point(1305, 94);
-            this.btnClr.Name = "btnClr";
-            this.btnClr.Size = new System.Drawing.Size(168, 48);
-            this.btnClr.TabIndex = 8;
-            this.btnClr.Text = "Clear";
-            this.btnClr.UseVisualStyleBackColor = false;
-            this.btnClr.Click += new System.EventHandler(this.btnClr_Click);
-            // 
-            // btnReport
-            // 
-            this.btnReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.btnReport.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReport.ForeColor = System.Drawing.Color.Black;
-            this.btnReport.Location = new System.Drawing.Point(1130, 94);
-            this.btnReport.Margin = new System.Windows.Forms.Padding(4);
-            this.btnReport.Name = "btnReport";
-            this.btnReport.Size = new System.Drawing.Size(168, 48);
-            this.btnReport.TabIndex = 6;
-            this.btnReport.Text = "Submit";
-            this.btnReport.UseVisualStyleBackColor = false;
-            this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
-            // 
-            // lblHeader
-            // 
-            this.lblHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblHeader.AutoSize = true;
-            this.lblHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHeader.ForeColor = System.Drawing.Color.Black;
-            this.lblHeader.Location = new System.Drawing.Point(37, 40);
-            this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(1106, 35);
-            this.lblHeader.TabIndex = 4;
-            this.lblHeader.Text = "This report displays all services for a specified period, filtered by Created Dat" +
-    "e or Service Date.";
-            // 
-            // dtpDateFilter
-            // 
-            this.dtpDateFilter.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpDateFilter.FormattingEnabled = true;
-            this.dtpDateFilter.Items.AddRange(new object[] {
-            "Created Date",
-            "Service Date"});
-            this.dtpDateFilter.Location = new System.Drawing.Point(839, 94);
-            this.dtpDateFilter.Margin = new System.Windows.Forms.Padding(4);
-            this.dtpDateFilter.Name = "dtpDateFilter";
-            this.dtpDateFilter.Size = new System.Drawing.Size(247, 41);
-            this.dtpDateFilter.TabIndex = 5;
-            this.dtpDateFilter.Text = "Created Date";
-            // 
-            // lblDateFilter
-            // 
-            this.lblDateFilter.AutoSize = true;
-            this.lblDateFilter.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDateFilter.ForeColor = System.Drawing.Color.Black;
-            this.lblDateFilter.Location = new System.Drawing.Point(684, 95);
-            this.lblDateFilter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblDateFilter.Name = "lblDateFilter";
-            this.lblDateFilter.Size = new System.Drawing.Size(152, 35);
-            this.lblDateFilter.TabIndex = 4;
-            this.lblDateFilter.Text = "Date Filter :";
-            // 
-            // dtpEndDate
-            // 
-            this.dtpEndDate.CalendarFont = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpEndDate.Location = new System.Drawing.Point(501, 95);
-            this.dtpEndDate.Margin = new System.Windows.Forms.Padding(4);
-            this.dtpEndDate.Name = "dtpEndDate";
-            this.dtpEndDate.Size = new System.Drawing.Size(172, 40);
-            this.dtpEndDate.TabIndex = 1;
-            // 
-            // lblEndDate
-            // 
-            this.lblEndDate.AutoSize = true;
-            this.lblEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEndDate.ForeColor = System.Drawing.Color.Black;
-            this.lblEndDate.Location = new System.Drawing.Point(371, 97);
-            this.lblEndDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblEndDate.Name = "lblEndDate";
-            this.lblEndDate.Size = new System.Drawing.Size(129, 35);
-            this.lblEndDate.TabIndex = 3;
-            this.lblEndDate.Text = "End Date:";
-            // 
-            // dtpStartDate
-            // 
-            this.dtpStartDate.CustomFormat = "";
-            this.dtpStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpStartDate.Location = new System.Drawing.Point(184, 97);
-            this.dtpStartDate.Margin = new System.Windows.Forms.Padding(4);
-            this.dtpStartDate.Name = "dtpStartDate";
-            this.dtpStartDate.Size = new System.Drawing.Size(172, 40);
-            this.dtpStartDate.TabIndex = 0;
-            this.dtpStartDate.Value = new System.DateTime(2024, 6, 5, 15, 21, 59, 0);
-            // 
-            // lblStartDate
-            // 
-            this.lblStartDate.AutoSize = true;
-            this.lblStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStartDate.ForeColor = System.Drawing.Color.Black;
-            this.lblStartDate.Location = new System.Drawing.Point(37, 98);
-            this.lblStartDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblStartDate.Name = "lblStartDate";
-            this.lblStartDate.Size = new System.Drawing.Size(142, 35);
-            this.lblStartDate.TabIndex = 1;
-            this.lblStartDate.Text = "Start Date:";
-            // 
-            // txtBatchID
-            // 
-            this.txtBatchID.AutoCompleteCustomSource.AddRange(new string[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10"});
-            this.txtBatchID.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBatchID.Location = new System.Drawing.Point(1205, 93);
-            this.txtBatchID.Name = "txtBatchID";
-            this.txtBatchID.Size = new System.Drawing.Size(147, 40);
-            this.txtBatchID.TabIndex = 11;
-            // 
-            // lblBatch
-            // 
-            this.lblBatch.AutoSize = true;
-            this.lblBatch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBatch.ForeColor = System.Drawing.Color.Black;
-            this.lblBatch.Location = new System.Drawing.Point(1092, 96);
-            this.lblBatch.Name = "lblBatch";
-            this.lblBatch.Size = new System.Drawing.Size(107, 35);
-            this.lblBatch.TabIndex = 10;
-            this.lblBatch.Text = "BatchID";
-            // 
             // Column1
             // 
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
@@ -374,6 +213,191 @@
             this.Drop.ReadOnly = true;
             this.Drop.Width = 122;
             // 
+            // pnl
+            // 
+            this.pnl.AutoSize = true;
+            this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnl.Controls.Add(this.txtbatchs);
+            this.pnl.Controls.Add(this.lblbatchid);
+            this.pnl.Controls.Add(this.btnClr);
+            this.pnl.Controls.Add(this.btnReport);
+            this.pnl.Controls.Add(this.lblHeader);
+            this.pnl.Controls.Add(this.dtpDateFilter);
+            this.pnl.Controls.Add(this.lblDateFilter);
+            this.pnl.Controls.Add(this.dtpEndDate);
+            this.pnl.Controls.Add(this.lblEndDate);
+            this.pnl.Controls.Add(this.dtpStartDate);
+            this.pnl.Controls.Add(this.lblStartDate);
+            this.pnl.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pnl.Location = new System.Drawing.Point(141, 84);
+            this.pnl.Margin = new System.Windows.Forms.Padding(4);
+            this.pnl.Name = "pnl";
+            this.pnl.Size = new System.Drawing.Size(1770, 157);
+            this.pnl.TabIndex = 6;
+            // 
+            // txtbatchs
+            // 
+            this.txtbatchs.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtbatchs.Location = new System.Drawing.Point(1176, 97);
+            this.txtbatchs.Name = "txtbatchs";
+            this.txtbatchs.Size = new System.Drawing.Size(189, 40);
+            this.txtbatchs.TabIndex = 11;
+            // 
+            // lblbatchid
+            // 
+            this.lblbatchid.AutoSize = true;
+            this.lblbatchid.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblbatchid.Location = new System.Drawing.Point(1034, 98);
+            this.lblbatchid.Name = "lblbatchid";
+            this.lblbatchid.Size = new System.Drawing.Size(127, 35);
+            this.lblbatchid.TabIndex = 10;
+            this.lblbatchid.Text = "Batch ID :";
+            this.lblbatchid.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // btnClr
+            // 
+            this.btnClr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(125)))), ((int)(((byte)(255)))));
+            this.btnClr.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClr.ForeColor = System.Drawing.Color.Black;
+            this.btnClr.Location = new System.Drawing.Point(1558, 95);
+            this.btnClr.Name = "btnClr";
+            this.btnClr.Size = new System.Drawing.Size(168, 48);
+            this.btnClr.TabIndex = 8;
+            this.btnClr.Text = "Clear";
+            this.btnClr.UseVisualStyleBackColor = false;
+            this.btnClr.Click += new System.EventHandler(this.btnClr_Click);
+            // 
+            // btnReport
+            // 
+            this.btnReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.btnReport.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReport.ForeColor = System.Drawing.Color.Black;
+            this.btnReport.Location = new System.Drawing.Point(1383, 96);
+            this.btnReport.Margin = new System.Windows.Forms.Padding(4);
+            this.btnReport.Name = "btnReport";
+            this.btnReport.Size = new System.Drawing.Size(168, 48);
+            this.btnReport.TabIndex = 6;
+            this.btnReport.Text = "Submit";
+            this.btnReport.UseVisualStyleBackColor = false;
+            this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
+            // 
+            // lblHeader
+            // 
+            this.lblHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblHeader.AutoSize = true;
+            this.lblHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblHeader.ForeColor = System.Drawing.Color.Black;
+            this.lblHeader.Location = new System.Drawing.Point(37, 40);
+            this.lblHeader.Name = "lblHeader";
+            this.lblHeader.Size = new System.Drawing.Size(1106, 35);
+            this.lblHeader.TabIndex = 4;
+            this.lblHeader.Text = "This report displays all services for a specified period, filtered by Created Dat" +
+    "e or Service Date.";
+            // 
+            // dtpDateFilter
+            // 
+            this.dtpDateFilter.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpDateFilter.FormattingEnabled = true;
+            this.dtpDateFilter.Items.AddRange(new object[] {
+            "Created Date",
+            "Service Date"});
+            this.dtpDateFilter.Location = new System.Drawing.Point(817, 96);
+            this.dtpDateFilter.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpDateFilter.Name = "dtpDateFilter";
+            this.dtpDateFilter.Size = new System.Drawing.Size(210, 41);
+            this.dtpDateFilter.TabIndex = 5;
+            this.dtpDateFilter.Text = "Created Date";
+            // 
+            // lblDateFilter
+            // 
+            this.lblDateFilter.AutoSize = true;
+            this.lblDateFilter.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDateFilter.ForeColor = System.Drawing.Color.Black;
+            this.lblDateFilter.Location = new System.Drawing.Point(657, 97);
+            this.lblDateFilter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblDateFilter.Name = "lblDateFilter";
+            this.lblDateFilter.Size = new System.Drawing.Size(152, 35);
+            this.lblDateFilter.TabIndex = 4;
+            this.lblDateFilter.Text = "Date Filter :";
+            // 
+            // dtpEndDate
+            // 
+            this.dtpEndDate.CalendarFont = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpEndDate.Location = new System.Drawing.Point(477, 98);
+            this.dtpEndDate.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpEndDate.Name = "dtpEndDate";
+            this.dtpEndDate.Size = new System.Drawing.Size(172, 40);
+            this.dtpEndDate.TabIndex = 1;
+            // 
+            // lblEndDate
+            // 
+            this.lblEndDate.AutoSize = true;
+            this.lblEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEndDate.ForeColor = System.Drawing.Color.Black;
+            this.lblEndDate.Location = new System.Drawing.Point(340, 99);
+            this.lblEndDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblEndDate.Name = "lblEndDate";
+            this.lblEndDate.Size = new System.Drawing.Size(129, 35);
+            this.lblEndDate.TabIndex = 3;
+            this.lblEndDate.Text = "End Date:";
+            // 
+            // dtpStartDate
+            // 
+            this.dtpStartDate.CustomFormat = "";
+            this.dtpStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpStartDate.Location = new System.Drawing.Point(160, 96);
+            this.dtpStartDate.Margin = new System.Windows.Forms.Padding(4);
+            this.dtpStartDate.Name = "dtpStartDate";
+            this.dtpStartDate.Size = new System.Drawing.Size(172, 40);
+            this.dtpStartDate.TabIndex = 0;
+            this.dtpStartDate.Value = new System.DateTime(2024, 6, 5, 15, 21, 59, 0);
+            this.dtpStartDate.ValueChanged += new System.EventHandler(this.dtpStartDate_ValueChanged);
+            // 
+            // lblStartDate
+            // 
+            this.lblStartDate.AutoSize = true;
+            this.lblStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStartDate.ForeColor = System.Drawing.Color.Black;
+            this.lblStartDate.Location = new System.Drawing.Point(10, 98);
+            this.lblStartDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblStartDate.Name = "lblStartDate";
+            this.lblStartDate.Size = new System.Drawing.Size(142, 35);
+            this.lblStartDate.TabIndex = 1;
+            this.lblStartDate.Text = "Start Date:";
+            // 
+            // txtBatchID
+            // 
+            this.txtBatchID.AutoCompleteCustomSource.AddRange(new string[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"});
+            this.txtBatchID.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBatchID.Location = new System.Drawing.Point(1205, 93);
+            this.txtBatchID.Name = "txtBatchID";
+            this.txtBatchID.Size = new System.Drawing.Size(147, 40);
+            this.txtBatchID.TabIndex = 11;
+            // 
+            // lblBatch
+            // 
+            this.lblBatch.AutoSize = true;
+            this.lblBatch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBatch.ForeColor = System.Drawing.Color.Black;
+            this.lblBatch.Location = new System.Drawing.Point(1092, 96);
+            this.lblBatch.Name = "lblBatch";
+            this.lblBatch.Size = new System.Drawing.Size(107, 35);
+            this.lblBatch.TabIndex = 10;
+            this.lblBatch.Text = "BatchID";
+            // 
             // HCC_Reconciliation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -420,5 +444,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesPostTimeboxPeriod;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesForHCCIDMissing;
         private System.Windows.Forms.DataGridViewTextBoxColumn Drop;
+        private System.Windows.Forms.Label lblbatchid;
+        private System.Windows.Forms.TextBox txtbatchs;
     }
 }

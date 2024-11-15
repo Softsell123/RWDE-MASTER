@@ -318,7 +318,7 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO HCC_ErrorLog (HccTable, ErrorMessage, ClientId, SourceFileName) VALUES (@HccTable, @ErrorMessage, @ClientId, @SourceFileName)", conn, transaction))
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO HCC_ErrorLog (HccTable, ErrorMessage, SourceId, SourceFileName) VALUES (@HccTable, @ErrorMessage, @ClientId, @SourceFileName)", conn, transaction))
                 {
                     cmd.Parameters.AddWithValue("@HccTable", hccTable);
                     cmd.Parameters.AddWithValue("@ErrorMessage", errorMessage);

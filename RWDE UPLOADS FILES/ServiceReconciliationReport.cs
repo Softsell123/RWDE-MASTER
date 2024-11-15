@@ -288,9 +288,6 @@ namespace RWDE_UPLOADS_FILES
 
                     // Bind data to the DataGridView
                     dataGridView.AutoGenerateColumns = true;
-                    
-                    
-                    
                     dataGridView.DataSource = result;
                 }
                 catch (Exception ex)

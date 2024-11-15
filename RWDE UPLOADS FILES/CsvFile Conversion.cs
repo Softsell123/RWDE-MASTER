@@ -99,9 +99,7 @@ namespace RWDE_UPLOADS_FILES
 
                         }
                     }
-
                     MessageBox.Show("CSV file has been created successfully at " + filePath);
-
                 }
             }
             catch (UnauthorizedAccessException)
