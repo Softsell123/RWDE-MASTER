@@ -264,7 +264,11 @@ namespace RWDE_UPLOADS_FILES
                     // Handle exceptions related to DateTimePicker values or other issues
                     MessageBox.Show($"An error occurred: {ex.Message}");
                 }
-                if (result.Rows.Count < 1) 
+                if(filterType == "BatchID")
+                {
+                    return;
+                }
+                else if (result.Rows.Count < 1) 
                 {
                     MessageBox.Show(Constants.Nodatafoundbetweenselecteddates);
                     return;
