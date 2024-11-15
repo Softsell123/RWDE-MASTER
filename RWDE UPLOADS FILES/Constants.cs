@@ -108,7 +108,8 @@ namespace Rwde
         public const string UploadStartedMessage = "Upload started for {0} CSV files.";
         public const string UploadedFileMessage = "Uploaded file: {0}";
         public const string ErrorMessage = "Error: {0}";
-        public const string HCC_Reconciliation = "HCC_Reconciliation";  
+        public const string HCC_Reconciliation = "HCC_Reconciliation";
+        public const string NodatafoundfortheseBatchids = "No Data Found For these Batchid(s)";
         public const string UploadSuccessMessage = "CSV data inserted into the database successfully.\n\n" +
                                                     "Time taken: {0} seconds\n" +
                                                     "Total rows inserted: {1}";

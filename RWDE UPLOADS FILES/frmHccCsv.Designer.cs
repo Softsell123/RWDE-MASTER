@@ -209,6 +209,7 @@ namespace RWDE_UPLOADS_FILES
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.chckURN = new System.Windows.Forms.CheckBox();
             this.Next.SuspendLayout();
             this.pnlProgress.SuspendLayout();
             this.pnl.SuspendLayout();
@@ -544,6 +545,7 @@ namespace RWDE_UPLOADS_FILES
             // 
             this.pnl.AutoSize = true;
             this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnl.Controls.Add(this.chckURN);
             this.pnl.Controls.Add(this.chckPHI);
             this.pnl.Controls.Add(this.lblType);
             this.pnl.Controls.Add(this.txtType);
@@ -682,6 +684,16 @@ namespace RWDE_UPLOADS_FILES
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
+            // chckURN
+            // 
+            this.chckURN.AutoSize = true;
+            this.chckURN.Location = new System.Drawing.Point(1193, 188);
+            this.chckURN.Name = "chckURN";
+            this.chckURN.Size = new System.Drawing.Size(251, 39);
+            this.chckURN.TabIndex = 8;
+            this.chckURN.Text = "PHI With URN Data";
+            this.chckURN.UseVisualStyleBackColor = true;
+            // 
             // frmHccCsv
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -756,5 +768,6 @@ namespace RWDE_UPLOADS_FILES
         private TextBox txtFileName;
         private CheckBox chckPHI;
         private Button btnNext;
+        public CheckBox chckURN;
     }
 }
