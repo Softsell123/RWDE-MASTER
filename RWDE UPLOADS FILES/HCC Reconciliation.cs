@@ -208,8 +208,13 @@ namespace RWDE_UPLOADS_FILES
                 DBHelper dbHelper = new DBHelper();
                 dataGridView.ForeColor = Color.Black;
                 string filterType = string.Empty;
-                
-                if (dtpDateFilter.SelectedItem != null)
+                int[] Batchids = null;
+                if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))|| (!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(",")))
+                {
+                    filterType = "BatchID";
+                    Batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();
+                }
+               else if (dtpDateFilter.SelectedItem != null)
                 {
                     switch (dtpDateFilter.SelectedItem.ToString())
                     {
@@ -226,15 +231,39 @@ namespace RWDE_UPLOADS_FILES
                 }
                 else
                 {
-                    MessageBox.Show("Please select a filter type.", "Input Error");
+                    MessageBox.Show("Please enter a valid Batch ID or select a filter type.", "Input Error");
                     return;
                 }
+                DataTable result = null;
+                try
+                {
+                    if (filterType == "BatchID")
+                    {
+                        List<DataTable> allidtables;
+                        allidtables = dbHelper.LoadDatafilterhccreconBatchid(Batchids);
+                        result = dbHelper.CombineAllResults(allidtables);
+                    }
+                    else
+                    {
+                        result = dbHelper.LoadDatafilterhccrecon(startDate, endDate, filterType);
+                    }
 
-                DataTable result = dbHelper.LoadDatafilterhccrecon(startDate, endDate,filterType);//to get filtered data 
+                    // Validate results
+                    //if (result == null || result.Rows.Count == 0)
+                    //{
+                    //    MessageBox.Show("No data found for the specified parameters.", "Data Not Found");
+                    //    return;
+                    //}
 
-                // Now you can use the result, e.g., bind it to a DataGridView or process it
-                dataGridView.AutoGenerateColumns = true;
-                dataGridView.DataSource = result;
+                    // Bind data to the DataGridView
+                    dataGridView.AutoGenerateColumns = true;
+                    dataGridView.DataSource = result;
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions related to DateTimePicker values or other issues
+                    MessageBox.Show($"An error occurred: {ex.Message}");
+                }
                 if (result.Rows.Count < 1) 
                 {
                     MessageBox.Show(Constants.Nodatafoundbetweenselecteddates);
@@ -257,6 +286,7 @@ namespace RWDE_UPLOADS_FILES
             dtpEndDate.Value = DateTime.Now;
             dtpEndDate.CustomFormat = "MM-dd-yyyy";
             dtpDateFilter.Text = Constants.CreatedDate;
+            txtbatchs.Text = null;
 
             // Clear the DataTable bound to the DataGridView
             if (dataGridView.DataSource is DataTable dt)
@@ -272,6 +302,16 @@ namespace RWDE_UPLOADS_FILES
         }
 
         private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dtpStartDate_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }
