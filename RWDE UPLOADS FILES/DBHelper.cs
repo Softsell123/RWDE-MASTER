@@ -31,7 +31,7 @@ namespace RWDE
         public DBHelper()
         {
             // Define the connection string within the DBHelper class
-            connectionString = "Data Source=BSSDEMO;Initial Catalog=RWDE;Integrated Security=True;";
+            connectionString = "Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;";
         }
         public string GetConnectionString()//get connection string
         {
