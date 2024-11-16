@@ -84,7 +84,7 @@ namespace Rwde
         public const int HCCABORT = 19;
         public const string Abort = "A";
         public const string CMSClients = "Client_20240523";
-        public const string nobatchid = "No data exists for this batchid";
+        public const string nobatchid = "No data exists for this Batch ID";
         public const string batchidnull = "Batch ID Cannot be null";
         public const string XMLUPLOADSTARTED = "XML Upload Started";
         public const string XMLUPLOADCompleted = "XMl Upload Completed";
@@ -109,7 +109,7 @@ namespace Rwde
         public const string UploadedFileMessage = "Uploaded file: {0}";
         public const string ErrorMessage = "Error: {0}";
         public const string HCC_Reconciliation = "HCC_Reconciliation";
-        public const string NodatafoundfortheseBatchids = "No Data Found For these Batchid(s)";
+        public const string NodatafoundfortheseBatchids = " No Data Found For these Batchid(s)";
         public const string UploadSuccessMessage = "CSV data inserted into the database successfully.\n\n" +
                                                     "Time taken: {0} seconds\n" +
                                                     "Total rows inserted: {1}";
@@ -135,7 +135,7 @@ namespace Rwde
     public const string xmlselect = "Please select a batch to generate XML.";
         public const string ContractsSetup = "Contracts Setup";
         public const string selecrthefoldertosave  = "Select the folder to save the data";
-        public const string Startdatemustbelessthenenddate = "Start date must be less then end date";
+        public const string Startdatemustbeearlierthenenddate = "Start date must be earlier than End date.";
         public const string datasuccessfullysaved = "Data successfully saved in the selected folder";
         public const string Service_ReconciliationReport = "Service_Reconciliation Report";
         public const string Deceased_Clients = "Deceased_Clients";

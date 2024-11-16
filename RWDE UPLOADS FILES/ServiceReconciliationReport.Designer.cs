@@ -36,7 +36,9 @@ namespace RWDE_UPLOADS_FILES
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            
+        
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.rwdeDataSet1 = new RWDE_UPLOADS_FILES.RWDEDataSet();
@@ -640,7 +642,7 @@ namespace RWDE_UPLOADS_FILES
         }
         private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            
         }
         private void ServiceReconciliationReport_Load(object sender, EventArgs e)
         {
