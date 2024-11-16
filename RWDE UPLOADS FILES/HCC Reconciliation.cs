@@ -57,32 +57,32 @@ namespace RWDE_UPLOADS_FILES
                 dt.Columns.Add("%Drop", typeof(decimal));  // Percentage fields are often decimal
 
                 // Fetch data from the database
-                DataRow dr = dt.NewRow();
-                dr["Month"] = DateTime.Now.ToString("MMMM");
+                //DataRow dr = dt.NewRow();
+                //dr["Month"] = DateTime.Now.ToString("MMMM");
 
-                dr["TotalServiceEntries"] = dbHelper.GetTotalServiceEntries();
-                dr["ServiceEntriesNotMappedToHCC"] = dbHelper.GetServiceEntriesNotMappedToHCC();
-                dr["ServiceEntriesSuccessfullyExportedToHCC"] = dbHelper.GetServiceEntriesSuccessfullyExportedToHCC();
-                dr["ServiceEntriesNotExportedToHCC"] = dbHelper.GetServiceEntriesNotExportedToHCC();
-                dr["ServiceEntriesForMHServicesOnlyClients"] = dbHelper.GetServiceEntriesForMHServicesOnlyClients();
-                // dr["ServiceEntriesPostTimeboxPeriod"] = dbHelper.GetServiceEntriesPostTimeboxPeriod();
-                //dr["ServiceEntriesForExpiredMissingHCCConsent"] = dbHelper.GetServiceEntriesForExpiredMissingHCCConsent();
-                dr["ServiceEntriesForHCCIDMissing"] = dbHelper.GetServiceEntriesForHCCIDMissing();
-                dr["ServiceEntriesNotEnrolledInProgram"] = dbHelper.GetServiceEntriesNotEnrolledInProgram();
-                //dr["ServiceEntriesForPreRegClients"] = dbHelper.GetServiceEntriesForPreRegClients();
-                dr["ServiceEntriesForRWEligibilityExpired"] = dbHelper.GetServiceEntriesForRWEligibilityExpired();
-                dr["ServiceEntriesForMissingHCCStaffLogin"] = dbHelper.GetServiceEntriesForMissingHCCStaffLogin();
-                // dr["ServiceEntriesWithZeroUnitOfService"] = dbHelper.GetServiceEntriesWithZeroUnitOfService();
-                dr["ServiceEntriesForWaiver"] = dbHelper.GetServiceEntriesForWaiver();
-                //dr["ServiceEntriesFor//3DayDelayInHCCUpload"] = dbHelper.GetServiceEntriesFor3DayDelayInHCCUpload();
-                dr["ServiceEntriesForITDrops"] = dbHelper.GetServiceEntriesForITDrops();
+                //dr["TotalServiceEntries"] = dbHelper.GetTotalServiceEntries();
+                //dr["ServiceEntriesNotMappedToHCC"] = dbHelper.GetServiceEntriesNotMappedToHCC();
+                //dr["ServiceEntriesSuccessfullyExportedToHCC"] = dbHelper.GetServiceEntriesSuccessfullyExportedToHCC();
+                //dr["ServiceEntriesNotExportedToHCC"] = dbHelper.GetServiceEntriesNotExportedToHCC();
+                //dr["ServiceEntriesForMHServicesOnlyClients"] = dbHelper.GetServiceEntriesForMHServicesOnlyClients();
+                //// dr["ServiceEntriesPostTimeboxPeriod"] = dbHelper.GetServiceEntriesPostTimeboxPeriod();
+                ////dr["ServiceEntriesForExpiredMissingHCCConsent"] = dbHelper.GetServiceEntriesForExpiredMissingHCCConsent();
+                //dr["ServiceEntriesForHCCIDMissing"] = dbHelper.GetServiceEntriesForHCCIDMissing();
+                //dr["ServiceEntriesNotEnrolledInProgram"] = dbHelper.GetServiceEntriesNotEnrolledInProgram();
+                ////dr["ServiceEntriesForPreRegClients"] = dbHelper.GetServiceEntriesForPreRegClients();
+                //dr["ServiceEntriesForRWEligibilityExpired"] = dbHelper.GetServiceEntriesForRWEligibilityExpired();
+                //dr["ServiceEntriesForMissingHCCStaffLogin"] = dbHelper.GetServiceEntriesForMissingHCCStaffLogin();
+                //// dr["ServiceEntriesWithZeroUnitOfService"] = dbHelper.GetServiceEntriesWithZeroUnitOfService();
+                //dr["ServiceEntriesForWaiver"] = dbHelper.GetServiceEntriesForWaiver();
+                ////dr["ServiceEntriesFor//3DayDelayInHCCUpload"] = dbHelper.GetServiceEntriesFor3DayDelayInHCCUpload();
+                //dr["ServiceEntriesForITDrops"] = dbHelper.GetServiceEntriesForITDrops();
 
-                // Calculate % Drop
-                int expiredMissingHCCConsent = dbHelper.GetServiceEntriesForExpiredMissingHCCConsent();
-                int totalNotMappedToHCC = dbHelper.GetTotalServiceEntries() - dbHelper.GetServiceEntriesNotMappedToHCC();
-                dr["%Drop"] = totalNotMappedToHCC == 0 ? 0 : (decimal)expiredMissingHCCConsent / totalNotMappedToHCC;
+                //// Calculate % Drop
+                //int expiredMissingHCCConsent = dbHelper.GetServiceEntriesForExpiredMissingHCCConsent();
+                //int totalNotMappedToHCC = dbHelper.GetTotalServiceEntries() - dbHelper.GetServiceEntriesNotMappedToHCC();
+                //dr["%Drop"] = totalNotMappedToHCC == 0 ? 0 : (decimal)expiredMissingHCCConsent / totalNotMappedToHCC;
 
-                dt.Rows.Add(dr);
+                //dt.Rows.Add(dr);
 
                 // Clear existing columns and rows
 
@@ -209,7 +209,7 @@ namespace RWDE_UPLOADS_FILES
                 dataGridView.ForeColor = Color.Black;
                 string filterType = string.Empty;
                 int[] Batchids = null;
-                if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))|| (!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(",")))
+                if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))|| (!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(","))|| (!string.IsNullOrWhiteSpace(txtbatchs.Text)))
                 {
                     filterType = "BatchID";
                     Batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();
@@ -261,6 +261,7 @@ namespace RWDE_UPLOADS_FILES
                 }
                 catch (Exception ex)
                 {
+                    PopulateDataGridView();
                     // Handle exceptions related to DateTimePicker values or other issues
                     MessageBox.Show($"An error occurred: {ex.Message}");
                 }
@@ -276,6 +277,7 @@ namespace RWDE_UPLOADS_FILES
             }
             catch (Exception ex)
             {
+                PopulateDataGridView();
                 // Handle exceptions related to DateTimePicker values or other issues
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
