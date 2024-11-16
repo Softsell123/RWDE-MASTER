@@ -3773,7 +3773,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                         DataTable table = new DataTable();
                         table.Load(reader);
                         result.Add(table);  // Add the DataTable to the result list
-                        if(Array.IndexOf(Batchids,onebatch) == Batchids.Length-1)
+                        if(Array.IndexOf(Batchids,onebatch) == Batchids.Length-1 && NoDataIds.Count!=0)
                         {
                             MessageBox.Show(string.Join(",", NoDataIds.ToArray()) + Constants.NodatafoundfortheseBatchids);
                         }
