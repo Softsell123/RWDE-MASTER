@@ -3706,6 +3706,56 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
+        public List<DataTable> LoadDatafilterhccreconBatchid(int[] Batchids)
+        {
+            List<DataTable> result = new List<DataTable>();
+            List<int> NoDataIds = new List<int>(); 
+            
+            foreach (int onebatch in Batchids)
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_HCCReconBatchID", conn);
+                    cmd.Parameters.AddWithValue("@BatchID", onebatch);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    conn.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows==false)
+                        {
+                            NoDataIds.Add(onebatch);
+                        }
+                        // Read each result set into a DataTable
+                        DataTable table = new DataTable();
+                        table.Load(reader);
+                        result.Add(table);  // Add the DataTable to the result list
+                        if(Array.IndexOf(Batchids,onebatch) == Batchids.Length-1 && NoDataIds.Count!=0)//
+                        {
+                            MessageBox.Show(string.Join(",", NoDataIds.ToArray()) + Constants.NodatafoundfortheseBatchids);
+                        }
+                    }
+                    conn.Close();
+                }
+            }
+            return result;
+        }
+        public DataTable CombineAllResults(List<DataTable> result)
+        {
+            DataTable dt = result[0].Clone();  // Create an empty table with the same structure
+
+            foreach (var table in result)
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    dt.ImportRow(row);  // Add each row from the result set
+                }
+            }
+
+
+            return dt;
+        }
 
 
 
