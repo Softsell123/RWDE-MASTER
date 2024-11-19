@@ -37,6 +37,13 @@ namespace RWDE_UPLOADS_FILES
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Monthyear = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesUploaded = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UnitsOfServiceUploaded = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CostOfServicesUploaded = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesFailed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UnitsOfServiceFailed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CostOfServicesFailed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl = new System.Windows.Forms.Panel();
             this.lblDateRange = new System.Windows.Forms.Label();
             this.cbDateFilter = new System.Windows.Forms.ComboBox();
@@ -47,13 +54,6 @@ namespace RWDE_UPLOADS_FILES
             this.lblEndDate = new System.Windows.Forms.Label();
             this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
             this.lblStartDate = new System.Windows.Forms.Label();
-            this.Monthyear = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesUploaded = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UnitsOfServiceUploaded = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CostOfServicesUploaded = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesFailed = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UnitsOfServiceFailed = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CostOfServicesFailed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
@@ -143,7 +143,62 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1784, 562);
             this.dataGridView.TabIndex = 12;
-           // this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
+            // 
+            // Monthyear
+            // 
+            this.Monthyear.HeaderText = "MMM-YYYY";
+            this.Monthyear.MinimumWidth = 6;
+            this.Monthyear.Name = "Monthyear";
+            this.Monthyear.ReadOnly = true;
+            this.Monthyear.Width = 184;
+            // 
+            // ServiceEntriesUploaded
+            // 
+            this.ServiceEntriesUploaded.HeaderText = "Service Entries Uploaded";
+            this.ServiceEntriesUploaded.MinimumWidth = 6;
+            this.ServiceEntriesUploaded.Name = "ServiceEntriesUploaded";
+            this.ServiceEntriesUploaded.ReadOnly = true;
+            this.ServiceEntriesUploaded.Width = 333;
+            // 
+            // UnitsOfServiceUploaded
+            // 
+            this.UnitsOfServiceUploaded.HeaderText = "Units Of Service Uploaded";
+            this.UnitsOfServiceUploaded.MinimumWidth = 6;
+            this.UnitsOfServiceUploaded.Name = "UnitsOfServiceUploaded";
+            this.UnitsOfServiceUploaded.ReadOnly = true;
+            this.UnitsOfServiceUploaded.Width = 347;
+            // 
+            // CostOfServicesUploaded
+            // 
+            this.CostOfServicesUploaded.HeaderText = "Cost Of Services Uploaded";
+            this.CostOfServicesUploaded.MinimumWidth = 6;
+            this.CostOfServicesUploaded.Name = "CostOfServicesUploaded";
+            this.CostOfServicesUploaded.ReadOnly = true;
+            this.CostOfServicesUploaded.Width = 348;
+            // 
+            // ServiceEntriesFailed
+            // 
+            this.ServiceEntriesFailed.HeaderText = "Service Entries Failed";
+            this.ServiceEntriesFailed.MinimumWidth = 6;
+            this.ServiceEntriesFailed.Name = "ServiceEntriesFailed";
+            this.ServiceEntriesFailed.ReadOnly = true;
+            this.ServiceEntriesFailed.Width = 289;
+            // 
+            // UnitsOfServiceFailed
+            // 
+            this.UnitsOfServiceFailed.HeaderText = "Units Of Service Failed";
+            this.UnitsOfServiceFailed.MinimumWidth = 6;
+            this.UnitsOfServiceFailed.Name = "UnitsOfServiceFailed";
+            this.UnitsOfServiceFailed.ReadOnly = true;
+            this.UnitsOfServiceFailed.Width = 303;
+            // 
+            // CostOfServicesFailed
+            // 
+            this.CostOfServicesFailed.HeaderText = "Cost Of Services Failed";
+            this.CostOfServicesFailed.MinimumWidth = 6;
+            this.CostOfServicesFailed.Name = "CostOfServicesFailed";
+            this.CostOfServicesFailed.ReadOnly = true;
+            this.CostOfServicesFailed.Width = 304;
             // 
             // pnl
             // 
@@ -272,62 +327,6 @@ namespace RWDE_UPLOADS_FILES
             this.lblStartDate.Size = new System.Drawing.Size(142, 35);
             this.lblStartDate.TabIndex = 1;
             this.lblStartDate.Text = "Start Date:";
-            // 
-            // Monthyear
-            // 
-            this.Monthyear.HeaderText = "MMM-YYYY";
-            this.Monthyear.MinimumWidth = 6;
-            this.Monthyear.Name = "Monthyear";
-            this.Monthyear.ReadOnly = true;
-            this.Monthyear.Width = 184;
-            // 
-            // ServiceEntriesUploaded
-            // 
-            this.ServiceEntriesUploaded.HeaderText = "Service Entries Uploaded";
-            this.ServiceEntriesUploaded.MinimumWidth = 6;
-            this.ServiceEntriesUploaded.Name = "ServiceEntriesUploaded";
-            this.ServiceEntriesUploaded.ReadOnly = true;
-            this.ServiceEntriesUploaded.Width = 333;
-            // 
-            // UnitsOfServiceUploaded
-            // 
-            this.UnitsOfServiceUploaded.HeaderText = "Units Of Service Uploaded";
-            this.UnitsOfServiceUploaded.MinimumWidth = 6;
-            this.UnitsOfServiceUploaded.Name = "UnitsOfServiceUploaded";
-            this.UnitsOfServiceUploaded.ReadOnly = true;
-            this.UnitsOfServiceUploaded.Width = 347;
-            // 
-            // CostOfServicesUploaded
-            // 
-            this.CostOfServicesUploaded.HeaderText = "Cost Of Services Uploaded";
-            this.CostOfServicesUploaded.MinimumWidth = 6;
-            this.CostOfServicesUploaded.Name = "CostOfServicesUploaded";
-            this.CostOfServicesUploaded.ReadOnly = true;
-            this.CostOfServicesUploaded.Width = 348;
-            // 
-            // ServiceEntriesFailed
-            // 
-            this.ServiceEntriesFailed.HeaderText = "Service Entries Failed";
-            this.ServiceEntriesFailed.MinimumWidth = 6;
-            this.ServiceEntriesFailed.Name = "ServiceEntriesFailed";
-            this.ServiceEntriesFailed.ReadOnly = true;
-            this.ServiceEntriesFailed.Width = 289;
-            // 
-            // UnitsOfServiceFailed
-            // 
-            this.UnitsOfServiceFailed.HeaderText = "Units Of Service Failed";
-            this.UnitsOfServiceFailed.MinimumWidth = 6;
-            this.UnitsOfServiceFailed.Name = "UnitsOfServiceFailed";
-            this.UnitsOfServiceFailed.ReadOnly = true;
-            this.UnitsOfServiceFailed.Width = 303;
-            // 
-            // CostOfServicesFailed
-            // 
-            this.CostOfServicesFailed.HeaderText = "Cost Of Services Failed";
-            this.CostOfServicesFailed.MinimumWidth = 6;
-            this.CostOfServicesFailed.Name = "CostOfServicesFailed";
-            this.CostOfServicesFailed.ReadOnly = true;
-            this.CostOfServicesFailed.Width = 304;
             // 
             // Upload_dashboard
             // 

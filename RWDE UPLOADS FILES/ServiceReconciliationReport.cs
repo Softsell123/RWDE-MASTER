@@ -3,10 +3,12 @@ using OfficeOpenXml;
 using Rwde;
 using RWDE;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
@@ -263,6 +265,8 @@ namespace RWDE_UPLOADS_FILES
                 else
                 {
                     MessageBox.Show("Please enter a valid Batch ID or select a filter type.", "Input Error");
+                    dataGridView.AutoGenerateColumns = true;
+                    
                     return;
                 }
 
@@ -270,15 +274,29 @@ namespace RWDE_UPLOADS_FILES
                 DataTable result = null;
                 try
                 {
-                    if (filterType == "BatchID")
+                    if (filterType == "BatchID" || txtBatchID.Text != null)
                     {
-                        result = dbHelper.LoadDatafilterServiceReconbatchid(startDate, endDate, int.Parse(txtBatchID.Text));
-                    }
-                    else
-                    {
-                        result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
-                    }
+                        // Assuming you have a TextBox (txtBatchID) where multiple batch IDs can be entered, separated by commas
+                        string batchIdText = txtBatchID.Text;
 
+                        // Split the input string into an array of batch IDs (assuming they're comma-separated)
+                        List<int> batchIDs = batchIdText.Split(',')
+                                                        .Select(id => int.TryParse(id.Trim(), out int parsedId) ? parsedId : 0)
+                                                        .Where(id => id > 0)  // Only add valid batch IDs
+                                                        .ToList();
+
+                        // Now pass the list of batchIDs to the LoadDatafilterServiceReconbatchid method
+                        if (batchIDs.Count > 0)
+                        {
+                            result = dbHelper.LoadDatafilterServiceReconbatchid(batchIDs);
+                        }
+
+
+                        else if (filterType == "ServiceDate" || filterType == "CreatedDate")
+                        {
+                            result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
+                        }
+                    }
                     // Validate results
                     //if (result == null || result.Rows.Count == 0)
                     //{

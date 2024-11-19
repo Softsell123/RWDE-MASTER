@@ -36,9 +36,7 @@ namespace RWDE_UPLOADS_FILES
         /// </summary>
         private void InitializeComponent()
         {
-            
-        
-        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.rwdeDataSet1 = new RWDE_UPLOADS_FILES.RWDEDataSet();
@@ -64,7 +62,6 @@ namespace RWDE_UPLOADS_FILES
             this.Agency_client_2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesConsentExprireDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CaseManager = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceCodeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesContractId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -272,9 +269,9 @@ namespace RWDE_UPLOADS_FILES
             this.lblBatch.ForeColor = System.Drawing.Color.Black;
             this.lblBatch.Location = new System.Drawing.Point(1098, 98);
             this.lblBatch.Name = "lblBatch";
-            this.lblBatch.Size = new System.Drawing.Size(107, 35);
+            this.lblBatch.Size = new System.Drawing.Size(113, 35);
             this.lblBatch.TabIndex = 8;
-            this.lblBatch.Text = "BatchID";
+            this.lblBatch.Text = "Batch ID";
             // 
             // btnClr
             // 
@@ -324,7 +321,6 @@ namespace RWDE_UPLOADS_FILES
             this.Agency_client_2,
             this.Status,
             this.AriesConsentExprireDate,
-            this.CaseManager,
             this.ServiceGroup,
             this.ServiceCodeID,
             this.AriesContractId,
@@ -419,16 +415,6 @@ namespace RWDE_UPLOADS_FILES
             this.AriesConsentExprireDate.Name = "AriesConsentExprireDate";
             this.AriesConsentExprireDate.ReadOnly = true;
             this.AriesConsentExprireDate.Width = 350;
-            // 
-            // CaseManager
-            // 
-            this.CaseManager.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.CaseManager.FillWeight = 88.62742F;
-            this.CaseManager.HeaderText = "Case Manager";
-            this.CaseManager.MinimumWidth = 6;
-            this.CaseManager.Name = "CaseManager";
-            this.CaseManager.ReadOnly = true;
-            this.CaseManager.Width = 300;
             // 
             // ServiceGroup
             // 
@@ -670,7 +656,6 @@ namespace RWDE_UPLOADS_FILES
         private DataGridViewTextBoxColumn Agency_client_2;
         private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn AriesConsentExprireDate;
-        private DataGridViewTextBoxColumn CaseManager;
         private DataGridViewTextBoxColumn ServiceGroup;
         private DataGridViewTextBoxColumn ServiceCodeID;
         private DataGridViewTextBoxColumn AriesContractId;
