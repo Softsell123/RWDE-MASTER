@@ -1247,7 +1247,7 @@ namespace RWDE_UPLOADS_FILES
 
                     adapter.Fill(dataTable);
 
-                    dataGridView.AutoGenerateColumns = false;
+                    dataGridView.AutoGenerateColumns = false;//
                     dataGridView.Columns.Clear();
 
                     dataGridView.Columns.Add("BatchID", "Batch ID");
