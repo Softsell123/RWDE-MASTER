@@ -31,7 +31,7 @@ namespace RWDE
         public DBHelper()
         {
             // Define the connection string within the DBHelper class
-            connectionString = "Data Source=BSSDEMO\\MSSQLSERVER01;Initial Catalog=RWDE;Integrated Security=True;";
+            connectionString = "Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;";
         }
         public string GetConnectionString()//get connection string
         {
@@ -570,128 +570,6 @@ namespace RWDE
                 Console.WriteLine(ex.Message);
             }
         }
-
-        public void InsertClientInformationphiurn(SqlConnection connection, string[] data, int batchid)//cms client insertion
-        {
-            try
-            {
-                using (SqlCommand command = new SqlCommand("InsertClientInfoPHIWithURN", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    // Add parameters with appropriate conversion and null handling
-                    command.Parameters.AddWithValue("@BatchID", batchid);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                    command.Parameters.AddWithValue("@clnt_id", ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@first_nm", data[1] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@last_nm", data[2] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mi", data[3] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@chsn_nm", data[4] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@dob", ConvertToDateTimeOrNull(data[5]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@is_decd", ConvertToIntOrNull(data[6]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@dt_of_death", ConvertToDateTimeOrNull(data[7]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@place_of_death", data[8] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@SSN", data[9] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@homeless_flg", ConvertToIntOrNull(data[10]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@gndr_cd", data[11] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sex_cd", data[12] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@lang_pref_cd", data[13] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mrtl_stat_cd", data[14] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sexual_ornt_type_cd", data[15] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@edu_lvl", data[16] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@veteran", ConvertTo(data[17]) ?? (object)DBNull.Value);//17 MISSING
-                    command.Parameters.AddWithValue("@email", data[18] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_cntct_email_ind", ConvertToIntOrNull(data[19]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@prsn_mobile_phn", data[20] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_cntct_mobile_ind", ConvertToIntOrNull(data[21]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_msgs_mobile_ind", ConvertToIntOrNull(data[22]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_vm_mobile_ind", ConvertToIntOrNull(data[23]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@emergency_cntct_nm", data[24] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@emergency_cntct_rltnshp", data[25] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@emergency_prsn_mobile_phn", data[26] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_emergency_cntct_ind", ConvertToIntOrNull(data[27]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_emergency_cntct_msgs_ind", ConvertToIntOrNull(data[28]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_emergency_cntct_vm_ind", ConvertToIntOrNull(data[29]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@agency_id", ConvertToIntOrNull(data[30]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@regstrn_dt", ConvertToDateTimeOrNull(data[31]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@agency_client_1", data[32] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@agency_client_2", data[33] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_agency_status_cd", data[34] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@agency_status_dt", ConvertToDateTimeOrNull(data[35]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@reloc_fk_state_cd", data[36] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@reloc_fk_county_cd", data[37] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_addr_type_cd", data[38] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@address_line_1", data[39] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@address_line_2", data[40] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@city", data[41] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_state_cd", data[42] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@county", data[43] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@zip", data[44] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@AddressSince", data[45] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mail_allw_ind", ConvertToIntOrNull(data[46]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@client_income_year", ConvertToIntOrNull(data[47]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@client_no_income_fin_res_ind", ConvertToIntOrNull(data[48]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@client_total_mth_incm", ConvertToDecimalOrNull(data[49]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hh_income_year", ConvertToIntOrNull(data[50]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hh_no_income_fin_res_ind", ConvertToIntOrNull(data[51]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@earn_incm_frm_emplmnt", ConvertToDecimalOrNull(data[52]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@retirement_incm", ConvertToDecimalOrNull(data[53]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sup_sec_incm", ConvertToDecimalOrNull(data[54]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@soc_dis_ins_incm", ConvertToDecimalOrNull(data[55]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@othr_wlfr_asst_incm", ConvertToDecimalOrNull(data[56]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@pvt_disab_ins_incm", ConvertToDecimalOrNull(data[57]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@vtrn_dis_pymt_incm", ConvertToDecimalOrNull(data[58]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@reg_cntbr_othr_incm", ConvertToDecimalOrNull(data[59]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@wrkr_comp_incm", ConvertToDecimalOrNull(data[60]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@gnrl_asst_incm", ConvertToDecimalOrNull(data[61]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@unempl_ins_incm", ConvertToDecimalOrNull(data[62]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@othr_src_incm", ConvertToDecimalOrNull(data[63]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hshld_size", ConvertToIntOrNull(data[64]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_emplymnt_stat_cd", data[65] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_race_cd", data[66] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_race_dtl_cd", data[67] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_ethn_cd", data[68] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_ethn_dtl_cd", data[69] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@curr_hiv_stat_cd", data[70] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hiv_dx_dt", ConvertToDateTimeOrNull(data[71]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hiv_dx_src_txt", data[72] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@aids_dx_dt", ConvertToDateTimeOrNull(data[73]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@aids_dx_src_txt", data[74] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@perinatal_transmission", ConvertToIntOrNull(data[75]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@male_to_male_sexual_contact", ConvertToIntOrNull(data[76]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@high_risk_heterosexual_contact", ConvertToIntOrNull(data[77]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@injection_drug_use", ConvertToIntOrNull(data[78]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hemophilia_coagulation_disorder", ConvertToIntOrNull(data[79]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@receipt_of_blood_transfusion", ConvertToIntOrNull(data[80]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@risk_factor_not_reported_identifier", ConvertToIntOrNull(data[81]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hiv_test_dt", ConvertToDateTimeOrNull(data[82]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hiv_rslt_stat_cd", data[83] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_ins_type_cd", data[84] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_ins_sub_type_cd", data[85] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@new_covrg_cvrs_old_cvrg_ind", ConvertToIntOrNull(data[86]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@start_date", ConvertToDateTimeOrNull(data[87]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@end_date", ConvertToDateTimeOrNull(data[88]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@notes", data[89] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hsng_asstnc_cd", data[90] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@asstnc_start_dt", ConvertToDateTimeOrNull(data[91]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@asstnc_end_dt", ConvertToDateTimeOrNull(data[92]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_lvng_sttn_cd", data[93] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_lvng_sttn_dtl_cd", data[94] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@housing_status", data[95] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@asof_dt", ConvertToDateTimeOrNull(data[96]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
-                    command.Parameters.AddWithValue("@SourceSystemName", Constants.Ochin);
-                    command.Parameters.AddWithValue("@UserID", Constants.userid);
-                    command.Parameters.AddWithValue("@AgencyID", Constants.agencyid);
-                    command.Parameters.AddWithValue("@sourceid", DBNull.Value);
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
         private int? ConvertToIntOrNull(string input)//convert to int
         {
             try
@@ -928,6 +806,7 @@ namespace RWDE
                 Console.WriteLine(ex.Message);
             }
         }
+       
         private int? ConvertToNullableInt(string value)//parse data to int
         {
             if (int.TryParse(value, out int result))
@@ -1882,6 +1761,8 @@ namespace RWDE
             // Check if the current client's AriesID matches the eligible client's AriesID
             return currentAriesID == eligibleAriesID;
         }
+
+
         public int InsertServiceLineItems(XmlDocument xmlDoc, int batchId, SqlConnection conn, string xmlFilePath)//insertion of service table from xml file
         {
             int insertedCount = 0;
@@ -1906,7 +1787,7 @@ namespace RWDE
                         }
                         // Set parameters for the stored procedure based on node attributes
                         //insertCmd.Parameters.AddWithValue("@ClientAriesID", GetAttributeValue(serviceNode, "_clientAriesID"));
-                       // insertCmd.Parameters.AddWithValue("@ClientURNExt", GetAttributeValue(serviceNode, "_clientURNExt"));
+                        insertCmd.Parameters.AddWithValue("@ClientURNExt", GetAttributeValue(serviceNode, "_clientURNExt"));
                         insertCmd.Parameters.AddWithValue("@SiteName", GetAttributeValue(serviceNode, "_siteName"));
                         insertCmd.Parameters.AddWithValue("@StaffLogin", GetAttributeValue(serviceNode, "_staffLogin"));
                         insertCmd.Parameters.AddWithValue("@ContractName", GetAttributeValue(serviceNode, "_contractName"));
@@ -1947,10 +1828,10 @@ namespace RWDE
 
                 // Return zero inserted count to indicate failure
             }
-            finally
-            {
-                conn.Close(); // Close connection in case of any exception
-            }
+            //finally
+            //{
+            //    conn.Close(); // Close connection in case of any exception
+            //}
 
             return insertedCount;
         }
@@ -3621,7 +3502,58 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
         }
 
 
-        public DataTable LoadDatafilterServiceReconbatchid(DateTime startDate, DateTime endDate, int batchID)
+        //public DataTable LoadDatafilterServiceReconbatchid(DateTime startDate, DateTime endDate, int batchID)
+        //{
+        //    DataTable dy = new DataTable();
+
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        try
+        //        {
+        //            conn.Open();
+
+        //            // Call the stored procedure to update HCCServices
+        //            // Call the stored procedure to update HCCServices
+        //            using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
+        //            {
+        //                updateCmd.CommandType = CommandType.StoredProcedure;
+        //                updateCmd.ExecuteNonQuery();
+        //            }
+
+        //            // Now, load data from vwService_Reconciliationtest within the specified batch ID
+        //            string query = @"
+        //SELECT * 
+        //FROM vwService_Reconciliationtest
+        //WHERE batchID = @Batchid";
+
+        //            using (SqlCommand cmd = new SqlCommand(query, conn))
+        //            {
+        //                // Add parameter for filtering by BatchID only
+        //                cmd.Parameters.AddWithValue("@Batchid", batchID);
+
+        //                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+        //                adapter.Fill(dy);
+
+        //                // Check if the result is empty, meaning no matching rows were found
+        //                if (dy.Rows.Count == 0)
+        //                {
+        //                    MessageBox.Show(Constants.nobatchid, "Service Reconciliation Report");
+        //                    return dy;
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Handle exceptions (logging, rethrowing, etc.)
+        //            throw new Exception("An error occurred while loading data.", ex);
+        //        }
+        //    }
+
+        //    return dy;
+
+        //}
+
+        public DataTable LoadDatafilterServiceReconbatchid(List<int> batchIDs)
         {
             DataTable dy = new DataTable();
 
@@ -3638,44 +3570,69 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                         updateCmd.ExecuteNonQuery();
                     }
 
-                    // Now, load data from vwService_Reconciliation within the specified date range and batch ID
-                    string query = @"
-                SELECT * 
-                FROM vwService_Reconciliationtest
-                WHERE ServiceDate BETWEEN @StartDate AND @EndDate and batchID=@Batchid";
+                    // Validate batch IDs against the database
+                    List<int> validBatchIDs = new List<int>();
+                    string validationQuery = "SELECT DISTINCT BatchID FROM vwService_Reconciliationtest WHERE BatchID IN (" +
+                                             string.Join(",", batchIDs.Select((_, i) => "@BatchID" + i)) + ")";
 
+                    using (SqlCommand validateCmd = new SqlCommand(validationQuery, conn))
+                    {
+                        for (int i = 0; i < batchIDs.Count; i++)
+                        {
+                            validateCmd.Parameters.AddWithValue("@BatchID" + i, batchIDs[i]);
+                        }
+
+                        using (SqlDataReader reader = validateCmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                validBatchIDs.Add(reader.GetInt32(0));
+                            }
+                        }
+                    }
+
+                    // Check for invalid batch IDs
+                    var invalidBatchIDs = batchIDs.Except(validBatchIDs).ToList();
+                    if (invalidBatchIDs.Any())
+                    {
+                        MessageBox.Show($"The following Batch ID(s) do not exist: {string.Join(", ", invalidBatchIDs)}",
+                                        "Invalid Batch ID(s)");
+                       
+                        return dy;
+                    }
+
+                    // Construct the main query for valid batch IDs
+                    string query = "SELECT * FROM vwService_Reconciliationtest WHERE BatchID IN (" +
+                                   string.Join(",", validBatchIDs.Select((_, i) => "@ValidBatchID" + i)) + ")";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        // Add parameters for filtering dates and BatchID
-                        cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
-                        cmd.Parameters.AddWithValue("@Batchid", batchID);
+                        for (int i = 0; i < validBatchIDs.Count; i++)
+                        {
+                            cmd.Parameters.AddWithValue("@ValidBatchID" + i, validBatchIDs[i]);
+                        }
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dy);
 
-                        // Check if the result is empty, which means no matching rows were found
                         if (dy.Rows.Count == 0)
                         {
                             MessageBox.Show(Constants.nobatchid, "Service Reconciliation Report");
                             return dy;
-
                         }
-
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Handle exceptions (logging, rethrowing, etc.)
                     throw new Exception("An error occurred while loading data.", ex);
                 }
             }
 
             return dy;
-
         }
-        
+
+
+
         public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, string filterType)
         {
             DataTable dt = new DataTable();
@@ -3746,57 +3703,10 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     throw new Exception("An error occurred while loading data.", ex);
                 }
             }
-            return dt;
-        }
-        public List<DataTable> LoadDatafilterhccreconBatchid(int[] Batchids)
-        {
-            List<DataTable> result = new List<DataTable>();
-            List<int> NoDataIds = new List<int>(); 
-            
-            foreach (int onebatch in Batchids)
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    SqlCommand cmd = new SqlCommand("sp_HCCReconBatchID", conn);
-                    cmd.Parameters.AddWithValue("@BatchID", onebatch);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    conn.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows==false)
-                        {
-                            NoDataIds.Add(onebatch);
-                        }
-                        // Read each result set into a DataTable
-                        DataTable table = new DataTable();
-                        table.Load(reader);
-                        result.Add(table);  // Add the DataTable to the result list
-                        if(Array.IndexOf(Batchids,onebatch) == Batchids.Length-1 && NoDataIds.Count!=0)//
-                        {
-                            MessageBox.Show(string.Join(",", NoDataIds.ToArray()) + Constants.NodatafoundfortheseBatchids);
-                        }
-                    }
-                    conn.Close();
-                }
-            }
-            return result;
-        }
-        public DataTable CombineAllResults(List<DataTable> result)
-        {
-            DataTable dt = result[0].Clone();  // Create an empty table with the same structure
-
-            foreach (var table in result)
-            {
-                foreach (DataRow row in table.Rows)
-                {
-                    dt.ImportRow(row);  // Add each row from the result set
-                }
-            }
 
             return dt;
         }
+
 
 
         public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate, String filterType)
@@ -3810,7 +3720,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     conn.Open();
 
                     // Choose stored procedure based on filterType
-                    string query = filterType == "CreatedDate" ? "sp_HCCReconCreatedDate" : "sp_HCCReconSERVICE";
+                    string query = filterType == "CreatedDate" ? "sp_HCCReconCreatedDate" : "sp_HCCReconSERVICEDate";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -3832,6 +3742,12 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
             return dt;
         }
+
+
+
+
+
+
         public DataTable LoadConfigurationfilter(DateTime startDate, DateTime endDate)//to get details of clients applied for services
         {
             DataTable dt = new DataTable();
