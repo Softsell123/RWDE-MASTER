@@ -31,7 +31,7 @@ namespace RWDE
         public DBHelper()
         {
             // Define the connection string within the DBHelper class
-            connectionString = "Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;";
+            connectionString = "Data Source=BSSDEMO\\MSSQLSERVER01;Initial Catalog=RWDE;Integrated Security=True;";
         }
         public string GetConnectionString()//get connection string
         {
@@ -4086,8 +4086,6 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                         dt.ImportRow(row);  // Add each row from the result set
                     }
                 }
-
-                
             }
             catch (Exception ex)
             {
