@@ -568,12 +568,20 @@ namespace RWDE_UPLOADS_FILES
             // 
             this.chckURN.AutoSize = true;
             this.chckURN.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.chckURN.Location = new System.Drawing.Point(1357, 141);
+
+            this.chckURN.Location = new System.Drawing.Point(1312, 143);
+
             this.chckURN.Name = "chckURN";
             this.chckURN.Size = new System.Drawing.Size(260, 39);
             this.chckURN.TabIndex = 8;
             this.chckURN.Text = "PHI With URN Data";
             this.chckURN.UseVisualStyleBackColor = true;
+
+
+            this.chckURN.CheckedChanged += new System.EventHandler(this.chckURN_CheckedChanged);
+
             // 
             // chckPHI
             // 
@@ -581,7 +589,9 @@ namespace RWDE_UPLOADS_FILES
             this.chckPHI.Checked = true;
             this.chckPHI.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chckPHI.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
             this.chckPHI.Location = new System.Drawing.Point(1092, 139);
+
             this.chckPHI.Name = "chckPHI";
             this.chckPHI.Size = new System.Drawing.Size(242, 39);
             this.chckPHI.TabIndex = 7;
