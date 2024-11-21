@@ -346,8 +346,6 @@ namespace RWDE_UPLOADS_FILES
             }
         }
 
-
-
         private DataTable ReadExcelFile(string filePath)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
