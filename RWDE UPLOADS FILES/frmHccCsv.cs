@@ -589,6 +589,11 @@ namespace RWDE_UPLOADS_FILES//
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void chckURN_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
      
 }

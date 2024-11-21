@@ -209,7 +209,7 @@ namespace RWDE_UPLOADS_FILES
                 dataGridView.ForeColor = Color.Black;
                 string filterType = string.Empty;
                 int[] Batchids = null;
-                if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))|| (!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(","))|| (!string.IsNullOrWhiteSpace(txtbatchs.Text)))
+                if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))||(!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(","))||(!string.IsNullOrWhiteSpace(txtbatchs.Text)))
                 {
                     filterType = "BatchID";
                     Batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();

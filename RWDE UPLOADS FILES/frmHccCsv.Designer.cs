@@ -199,6 +199,7 @@ namespace RWDE_UPLOADS_FILES
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.btnUpload = new System.Windows.Forms.Button();
             this.pnl = new System.Windows.Forms.Panel();
+            this.chckURN = new System.Windows.Forms.CheckBox();
             this.chckPHI = new System.Windows.Forms.CheckBox();
             this.lblType = new System.Windows.Forms.Label();
             this.txtType = new System.Windows.Forms.TextBox();
@@ -209,7 +210,6 @@ namespace RWDE_UPLOADS_FILES
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.chckURN = new System.Windows.Forms.CheckBox();
             this.Next.SuspendLayout();
             this.pnlProgress.SuspendLayout();
             this.pnl.SuspendLayout();
@@ -564,13 +564,25 @@ namespace RWDE_UPLOADS_FILES
             this.pnl.TabIndex = 8;
             this.pnl.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_Paint);
             // 
+            // chckURN
+            // 
+            this.chckURN.AutoSize = true;
+            this.chckURN.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chckURN.Location = new System.Drawing.Point(1312, 143);
+            this.chckURN.Name = "chckURN";
+            this.chckURN.Size = new System.Drawing.Size(260, 39);
+            this.chckURN.TabIndex = 8;
+            this.chckURN.Text = "PHI With URN Data";
+            this.chckURN.UseVisualStyleBackColor = true;
+            this.chckURN.CheckedChanged += new System.EventHandler(this.chckURN_CheckedChanged);
+            // 
             // chckPHI
             // 
             this.chckPHI.AutoSize = true;
             this.chckPHI.Checked = true;
             this.chckPHI.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chckPHI.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chckPHI.Location = new System.Drawing.Point(1114, 143);
+            this.chckPHI.Location = new System.Drawing.Point(1071, 143);
             this.chckPHI.Name = "chckPHI";
             this.chckPHI.Size = new System.Drawing.Size(242, 39);
             this.chckPHI.TabIndex = 7;
@@ -683,16 +695,6 @@ namespace RWDE_UPLOADS_FILES
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
-            // chckURN
-            // 
-            this.chckURN.AutoSize = true;
-            this.chckURN.Location = new System.Drawing.Point(1193, 188);
-            this.chckURN.Name = "chckURN";
-            this.chckURN.Size = new System.Drawing.Size(251, 39);
-            this.chckURN.TabIndex = 8;
-            this.chckURN.Text = "PHI With URN Data";
-            this.chckURN.UseVisualStyleBackColor = true;
             // 
             // frmHccCsv
             // 
