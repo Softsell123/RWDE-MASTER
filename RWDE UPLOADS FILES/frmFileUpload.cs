@@ -33,7 +33,7 @@ namespace RWDE_UPLOADS_FILES
         {
             get
             {
-                return pnlCsvXml;
+                return pnlCsvXml;//
             }
         }
         public btnCT()
@@ -190,6 +190,7 @@ namespace RWDE_UPLOADS_FILES
 
                         DateTime endTime = DateTime.Now;
                         TimeSpan totalTime = endTime - startTime;
+
                         double totalSeconds = totalTime.TotalSeconds;
                         string ETime = endTime.ToString("MM/dd/yyyy HH:mm:ss");
                         txtUploadEnded.Text = ETime;

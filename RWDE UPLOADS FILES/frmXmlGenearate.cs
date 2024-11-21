@@ -40,10 +40,10 @@ namespace RWDE_UPLOADS_FILES
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             dataGridView.CellFormatting += dataGridView_CellFormatting;
-            dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;
+            dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;//
             //Handle BatchType Values
             List<string> batchTypes = dbHelper.GetAllBatchTypesHCC();
-            dtpStartDate.Value = DateTime.Now.AddYears(-1);
+            dtpStartDate.Value = DateTime.Now.AddYears(-1);//
             dtpStartDate.CustomFormat = "MM-dd-yyyy";
             dtpEndDate.CustomFormat = "MM-dd-yyyy";
             // Assuming you have another DateTimePicker for the End Date
@@ -90,7 +90,7 @@ namespace RWDE_UPLOADS_FILES
                     string excludedBatchIDs = string.Join(",", removedBatchIDs);
                     query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
                 }
-                using (SqlConnection connection = new SqlConnection("Data Source=BSSDEMO\\MSSQLSERVER01;Initial Catalog=RWDE;Integrated Security=True;"))
+                using (SqlConnection connection = new SqlConnection("Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;"))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -383,11 +383,11 @@ namespace RWDE_UPLOADS_FILES
                 // Check if ConversionStartedAt and ConversionEndedAt are not null
                 if (batchDetails.GenerationStartedAt != null && batchDetails.GenerationEndedAt != null)
                 {
-                    MessageBox.Show(Constants.Generationhasalreadybeencompletedforthisbatch,Constants.GenerateXML,MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    MessageBox.Show(Constants.Generationhasalreadybeencompletedforthisbatch, Constants.GenerateXML, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     txtProgressBar.Text = "0%";
                     txtClient.Text = "0%";
                     txtBatchid.Text = null;
-                    txtUploadStarted.Text = null;
+                    txtUploadStarted.Text = null;//
                     txtUploadEnded.Text = null;
                     txtTotaltime.Text = null;
 
@@ -429,60 +429,122 @@ namespace RWDE_UPLOADS_FILES
                 txtBatchid.Text = selectedBatchID.ToString();
                 string Time = startTime.ToString("MM/dd/yyyy HH:mm:ss");
                 txtUploadStarted.Text = Time;
-
-               //update status of service
-                List<Dictionary<string, string>> data = dbHelper.getServices(selectedBatchID);
-
-                //calling XmlStructure Function
-                List<Dictionary<string, string>> xmlStructure = dbHelper.getXmlStructure();//generate xml
-
-                //UpdateGridStatus(Constants.HCCXMLSTATUSF);
-                string baseFilename = Constants.ServiceCTTOHCC;
-                dbHelper.Log(Constants.GeneratetoHCCforbatchIDStarted, Constants.ClientTrack, baseFilename, Constants.uploadct);
-
-                // DateTime startTime = DateTime.Now;
-                //calling Service xml file generation Method
-                XElement xml = await GenerateXmlService(data, xmlStructure);//generate xml
-                                                                            // Save the XML to a file with automatic numbering if the file exists
-                string folderPath = txtPath.Text;
-                Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
-                string baseFileName = $"ServiceDetails_0246_0422_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
-                string servicesFilePath = Path.Combine(folderPath, baseFileName);
-
-                // Check if file exists and rename accordingly
-                int fileCount = 1;
-                string fileExtension = Path.GetExtension(baseFileName);
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(baseFileName);
-
-                // Loop to increment the filename if the file already exists
-                while (File.Exists(servicesFilePath))
+                List<Dictionary<string, string>> data;
+                if (chkError.Checked)
                 {
-                    servicesFilePath = Path.Combine(folderPath, $"{fileNameWithoutExtension}_{fileCount}{fileExtension}");
-                    fileCount++;
+                    // Update status of service and fetch error data
+                    data = dbHelper.getServiceserror(selectedBatchID);//
+                    //calling XmlStructure Function
+                    List<Dictionary<string, string>> xmlStructure = dbHelper.getXmlStructure();//generate xml
+
+                    //UpdateGridStatus(Constants.HCCXMLSTATUSF);
+                    string baseFilename = Constants.ServiceCTTOHCC;
+                    dbHelper.Log(Constants.GeneratetoHCCforbatchIDStarted, Constants.ClientTrack, baseFilename, Constants.uploadct);
+
+                    // DateTime startTime = DateTime.Now;
+                    //calling Service xml file generation Method
+                    XElement xml = await GenerateXmlService(data, xmlStructure);//generate xml
+                                                                                // Save the XML to a file with automatic numbering if the file exists
+                    string folderPath = txtPath.Text;
+                    Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
+                    string baseFileName = $"ServiceDetails_0246_0422_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
+                    string servicesFilePath = Path.Combine(folderPath, baseFileName);
+
+                    // Check if file exists and rename accordingly
+                    int fileCount = 1;
+                    string fileExtension = Path.GetExtension(baseFileName);
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(baseFileName);
+
+                    // Loop to increment the filename if the file already exists
+                    while (File.Exists(servicesFilePath))
+                    {
+                        servicesFilePath = Path.Combine(folderPath, $"{fileNameWithoutExtension}_{fileCount}{fileExtension}");
+                        fileCount++;
+                    }
+
+                    // Now save the file
+                    xml.Save(servicesFilePath);
+
+                    //// Save the XML to a file
+                    //string folderPath = txtPath.Text;
+                    //Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist ServiceDetails_0712_0422_11032023_143100.xml
+                    //string servicesFileName = $"ServiceDetails_0246_0422_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
+                    //string servicesFilePath = Path.Combine(folderPath, servicesFileName);
+                    //xml.Save(servicesFilePath);
+
+                    DateTime endTime = DateTime.Now;
+                    TimeSpan totalTime = endTime - startTime;
+                    string ETime = endTime.ToString("MM/dd/yyyy HH:mm:ss");
+                    double totalSeconds = totalTime.TotalSeconds;
+                    txtUploadEnded.Text = ETime;
+                    txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
+                    btnClose.Text = Constants.close;
+                    UpdateStatusColumnServices(selectedBatchID, Constants.HCCXMLSTATUSF, startTime, endTime);
+                    PopulateDataGridView(new DataTable());//populate data
+                    dbHelper.Log(Constants.GeneratetoHCCformatcompletedsuccessfully, Constants.ClientTrack, baseFilename, Constants.uploadct);
+
+
                 }
-
-                // Now save the file
-                xml.Save(servicesFilePath);
-
-                //// Save the XML to a file
-                //string folderPath = txtPath.Text;
-                //Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist ServiceDetails_0712_0422_11032023_143100.xml
-                //string servicesFileName = $"ServiceDetails_0246_0422_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
-                //string servicesFilePath = Path.Combine(folderPath, servicesFileName);
-                //xml.Save(servicesFilePath);
-
-                DateTime endTime = DateTime.Now;
-                TimeSpan totalTime = endTime - startTime;
-                string ETime = endTime.ToString("MM/dd/yyyy HH:mm:ss");
-                double totalSeconds = totalTime.TotalSeconds;
-                txtUploadEnded.Text = ETime;
-                txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
-                btnClose.Text = Constants.close;
-                UpdateStatusColumnServices(selectedBatchID, Constants.HCCXMLSTATUSF, startTime, endTime);
-                PopulateDataGridView(new DataTable());//populate data
-                dbHelper.Log(Constants.GeneratetoHCCformatcompletedsuccessfully, Constants.ClientTrack, baseFilename, Constants.uploadct);
+            
+                else
+                {
+                    // Update status of service and fetch standard service data
+                    data = dbHelper.getServices(selectedBatchID);
 
 
+
+
+                    //calling XmlStructure Function
+                    List<Dictionary<string, string>> xmlStructure = dbHelper.getXmlStructure();//generate xml
+
+                    //UpdateGridStatus(Constants.HCCXMLSTATUSF);
+                    string baseFilename = Constants.ServiceCTTOHCC;
+                    dbHelper.Log(Constants.GeneratetoHCCforbatchIDStarted, Constants.ClientTrack, baseFilename, Constants.uploadct);
+
+                    // DateTime startTime = DateTime.Now;
+                    //calling Service xml file generation Method
+                    XElement xml = await GenerateXmlService(data, xmlStructure);//generate xml
+                                                                                // Save the XML to a file with automatic numbering if the file exists
+                    string folderPath = txtPath.Text;
+                    Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
+                    string baseFileName = $"ServiceDetails_0246_0422_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
+                    string servicesFilePath = Path.Combine(folderPath, baseFileName);
+
+                    // Check if file exists and rename accordingly
+                    int fileCount = 1;
+                    string fileExtension = Path.GetExtension(baseFileName);
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(baseFileName);
+
+                    // Loop to increment the filename if the file already exists
+                    while (File.Exists(servicesFilePath))
+                    {
+                        servicesFilePath = Path.Combine(folderPath, $"{fileNameWithoutExtension}_{fileCount}{fileExtension}");
+                        fileCount++;
+                    }
+
+                    // Now save the file
+                    xml.Save(servicesFilePath);
+
+                    //// Save the XML to a file
+                    //string folderPath = txtPath.Text;
+                    //Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist ServiceDetails_0712_0422_11032023_143100.xml
+                    //string servicesFileName = $"ServiceDetails_0246_0422_{DateTime.Now.ToString("ddMMyyyy")}_143100.xml";
+                    //string servicesFilePath = Path.Combine(folderPath, servicesFileName);
+                    //xml.Save(servicesFilePath);
+
+                    DateTime endTime = DateTime.Now;
+                    TimeSpan totalTime = endTime - startTime;
+                    string ETime = endTime.ToString("MM/dd/yyyy HH:mm:ss");
+                    double totalSeconds = totalTime.TotalSeconds;
+                    txtUploadEnded.Text = ETime;
+                    txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
+                    btnClose.Text = Constants.close;
+                    UpdateStatusColumnServices(selectedBatchID, Constants.HCCXMLSTATUSF, startTime, endTime);
+                    PopulateDataGridView(new DataTable());//populate data
+                    dbHelper.Log(Constants.GeneratetoHCCformatcompletedsuccessfully, Constants.ClientTrack, baseFilename, Constants.uploadct);
+
+
+                }
             }
             catch (Exception ex)
             {
@@ -1239,7 +1301,7 @@ namespace RWDE_UPLOADS_FILES
                     string excludedBatchIDs = string.Join(",", removedBatchIDs);
                     query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
                 }
-                using (SqlConnection connection = new SqlConnection("Data Source=BSSDEMO\\MSSQLSERVER01;Initial Catalog=RWDE;Integrated Security=True;"))
+                using (SqlConnection connection = new SqlConnection("Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;"))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -1247,7 +1309,7 @@ namespace RWDE_UPLOADS_FILES
 
                     adapter.Fill(dataTable);
 
-                    dataGridView.AutoGenerateColumns = false;//
+                    dataGridView.AutoGenerateColumns = false;
                     dataGridView.Columns.Clear();
 
                     dataGridView.Columns.Add("BatchID", "Batch ID");
@@ -1908,6 +1970,11 @@ namespace RWDE_UPLOADS_FILES
         }
 
         private void pnlProgress_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void chkError_CheckedChanged(object sender, EventArgs e)
         {
 
         }
