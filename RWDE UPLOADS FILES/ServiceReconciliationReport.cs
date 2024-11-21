@@ -38,7 +38,9 @@ namespace RWDE_UPLOADS_FILES
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
             this.WindowState = FormWindowState.Maximized;
             txtBatchID.Text = "";
-           
+            dtpDateFilter.Text = "Created Date";
+
+
         }
         public void PopulateDataGridView(DataTable hccServices, DataTable hccClients)//populate data
         {
@@ -68,7 +70,7 @@ namespace RWDE_UPLOADS_FILES
             dataGridView.Columns.Add("HCCConsentExpiryDate", "HCC Consent Expiry Date");
             dataGridView.Columns.Add("RWEligibilityExpiryDate", "RW Eligibility Expiry Date");
             dataGridView.Columns.Add("CaseManager", "Case Manager");
-            dataGridView.Columns.Add("ServiceGroup", "Service Group");
+            dataGridView.Columns.Add("ServiceCodeID", "ServiceCodeID");
             dataGridView.Columns.Add("HCCContractID", "HCC Contract ID");
             dataGridView.Columns["HCCContractID"].DataPropertyName = "Contract_name";
             dataGridView.Columns.Add("UnitsOfServices", "Units of Services");
@@ -229,7 +231,7 @@ namespace RWDE_UPLOADS_FILES
                 // Ensure the date pickers are properly set
                 DateTime startDate = dtpStartDate.Value;
                 DateTime endDate = dtpEndDate.Value;
-               
+
                 // Validate that the end date is greater than the start date
                 if (endDate <= startDate)
                 {
@@ -241,9 +243,10 @@ namespace RWDE_UPLOADS_FILES
                 DBHelper dbHelper = new DBHelper();
                 dataGridView.Columns.Clear();
                 dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(this.dataGridView_CellFormatting);
+
                 // Determine filter type
                 string filterType = string.Empty;
-                if (!string.IsNullOrWhiteSpace(txtBatchID.Text) && int.TryParse(txtBatchID.Text, out int batchid))
+                if (!string.IsNullOrWhiteSpace(txtBatchID.Text))
                 {
                     filterType = "BatchID";
                 }
@@ -265,60 +268,91 @@ namespace RWDE_UPLOADS_FILES
                 else
                 {
                     MessageBox.Show("Please enter a valid Batch ID or select a filter type.", "Input Error");
-                    dataGridView.AutoGenerateColumns = true;
-                    
+                    DisplayHeadersOnly();
                     return;
                 }
 
                 // Fetch data based on selected filter type
                 DataTable result = null;
-                try
+                if (filterType == "BatchID")
                 {
-                    if (filterType == "BatchID" || txtBatchID.Text != null)
+                    // Get and validate batch IDs
+                    string batchIdText = txtBatchID.Text;
+                    List<int> batchIDs = batchIdText.Split(',')
+                                                     .Select(id => int.TryParse(id.Trim(), out int parsedId) ? parsedId : 0)
+                                                     .Where(id => id > 0)
+                                                     .ToList();
+
+                    if (batchIDs.Count > 0)
                     {
-                        // Assuming you have a TextBox (txtBatchID) where multiple batch IDs can be entered, separated by commas
-                        string batchIdText = txtBatchID.Text;
+                        result = dbHelper.LoadDatafilterServiceReconbatchid(batchIDs); //
 
-                        // Split the input string into an array of batch IDs (assuming they're comma-separated)
-                        List<int> batchIDs = batchIdText.Split(',')
-                                                        .Select(id => int.TryParse(id.Trim(), out int parsedId) ? parsedId : 0)
-                                                        .Where(id => id > 0)  // Only add valid batch IDs
-                                                        .ToList();
-
-                        // Now pass the list of batchIDs to the LoadDatafilterServiceReconbatchid method
-                        if (batchIDs.Count > 0)
+                        if (result.Rows.Count == 0)
                         {
-                            result = dbHelper.LoadDatafilterServiceReconbatchid(batchIDs);
-                        }
-
-
-                        else if (filterType == "ServiceDate" || filterType == "CreatedDate")
-                        {
-                            result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
+                            DisplayHeadersOnly();
+                            return;
                         }
                     }
-                    // Validate results
-                    //if (result == null || result.Rows.Count == 0)
-                    //{
-                    //    MessageBox.Show("No data found for the specified parameters.", "Data Not Found");
-                    //    return;
-                    //}
-
-                    // Bind data to the DataGridView
-                    dataGridView.AutoGenerateColumns = true;
-                    dataGridView.DataSource = result;
+                    else
+                    {
+                        MessageBox.Show("Please enter valid Batch IDs.", "Invalid Input");
+                        DisplayHeadersOnly();
+                        return;
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    // Handle exceptions, such as logging the error
-                    MessageBox.Show($"An error occurred while loading data: {ex.Message}");
+                    result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
                 }
+
+                // Add a 'Sl No' column for serial number
+                DataGridViewTextBoxColumn slNoColumn = new DataGridViewTextBoxColumn();
+               
+                 // Insert at the first position
+
+                // Add serial numbers (Sl No) to the DataTable before binding
+                int serialNumber = 1;
+                foreach (DataRow row in result.Rows)
+                {
+                    row["Sl No"] = serialNumber++; // Assign the serial number
+                }
+
+                // Bind the data to the DataGridView
+                dataGridView.AutoGenerateColumns = true;
+                dataGridView.DataSource = result;
             }
             catch (Exception ex)
             {
-                // Handle exceptions related to DateTimePicker values or other issues
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
+        }
+
+        // Helper method to show only headers
+        private void DisplayHeadersOnly()
+        {
+            dataGridView.DataSource = null;
+            dataGridView.Columns.Clear();
+            dataGridView.Columns.Add("Sl No", "Sl No");
+            dataGridView.Columns.Add("BatchID", "Batch ID");
+            dataGridView.Columns.Add("Staff", "Staff");
+            //dataGridView.Columns.Add("ClientID", "Client ID");
+            dataGridView.Columns.Add("HCCID", "HCC ID");
+            dataGridView.Columns.Add("HCCConsentExpiryDate", "HCC Consent Expiry Date");
+            dataGridView.Columns.Add("RWEligibilityExpiryDate", "RW Eligibility Expiry Date");
+            dataGridView.Columns.Add("Service", "Service");
+            dataGridView.Columns.Add("ServiceCodeID", "Service Code ID");
+            dataGridView.Columns.Add("HCCContractID", "HCC Contract ID");
+            dataGridView.Columns.Add("UnitsOfServices", "Units of Services");
+            dataGridView.Columns.Add("ActualMinutesSpent", "Actual Minutes Spent");
+            dataGridView.Columns.Add("ServiceID", "Service ID");
+            dataGridView.Columns.Add("ServiceExportedToHCC", "Service Exported to HCC");
+            dataGridView.Columns.Add("ServiceDate", "Service Date");
+            dataGridView.Columns.Add("EntryDate", "Entry Date");
+            dataGridView.Columns.Add("Lag", "Lag");
+            dataGridView.Columns.Add("Lag Status", "Lag Status");
+            dataGridView.Columns.Add("HCCExportFailureReason", "HCC Export Failure Reason");
+
+            dataGridView.AutoGenerateColumns = false;
         }
 
 
@@ -442,7 +476,7 @@ namespace RWDE_UPLOADS_FILES
                 dtpEndDate.CustomFormat = "MM-dd-yyyy";
                 dtpDateFilter.Text = Constants.CreatedDate;
                 txtBatchID.Text = null;
-                dtpDateFilter.Text = null;
+                dtpDateFilter.Text = "Created Date";
                 // Clear the DataTable bound to the DataGridView
                 if (dataGridView.DataSource is DataTable dt)
                 {

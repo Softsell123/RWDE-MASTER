@@ -103,7 +103,7 @@ namespace RWDE_UPLOADS_FILES
 
         }
 
-        private void txtProgressbar_TextChanged(object sender, EventArgs e)
+        private void txtProgressbar_TextChanged(object sender, EventArgs e)//
         {
 
         }
@@ -568,13 +568,20 @@ namespace RWDE_UPLOADS_FILES
             // 
             this.chckURN.AutoSize = true;
             this.chckURN.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
+            this.chckURN.Location = new System.Drawing.Point(1357, 141);
+
             this.chckURN.Location = new System.Drawing.Point(1312, 143);
+
             this.chckURN.Name = "chckURN";
             this.chckURN.Size = new System.Drawing.Size(260, 39);
             this.chckURN.TabIndex = 8;
             this.chckURN.Text = "PHI With URN Data";
             this.chckURN.UseVisualStyleBackColor = true;
+
+
             this.chckURN.CheckedChanged += new System.EventHandler(this.chckURN_CheckedChanged);
+
             // 
             // chckPHI
             // 
@@ -582,7 +589,9 @@ namespace RWDE_UPLOADS_FILES
             this.chckPHI.Checked = true;
             this.chckPHI.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chckPHI.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chckPHI.Location = new System.Drawing.Point(1071, 143);
+
+            this.chckPHI.Location = new System.Drawing.Point(1092, 139);
+
             this.chckPHI.Name = "chckPHI";
             this.chckPHI.Size = new System.Drawing.Size(242, 39);
             this.chckPHI.TabIndex = 7;
@@ -653,7 +662,7 @@ namespace RWDE_UPLOADS_FILES
             // 
             this.lblPath.AutoSize = true;
             this.lblPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPath.Location = new System.Drawing.Point(175, 143);
+            this.lblPath.Location = new System.Drawing.Point(171, 143);
             this.lblPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPath.Name = "lblPath";
             this.lblPath.Size = new System.Drawing.Size(118, 35);
@@ -665,7 +674,7 @@ namespace RWDE_UPLOADS_FILES
             // 
             this.txtPath.BackColor = System.Drawing.Color.White;
             this.txtPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPath.Location = new System.Drawing.Point(317, 140);
+            this.txtPath.Location = new System.Drawing.Point(313, 140);
             this.txtPath.Margin = new System.Windows.Forms.Padding(4);
             this.txtPath.Name = "txtPath";
             this.txtPath.ReadOnly = true;
@@ -678,7 +687,7 @@ namespace RWDE_UPLOADS_FILES
             this.btnBrowse.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBrowse.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowse.Image")));
             this.btnBrowse.ImageAlign = System.Drawing.ContentAlignment.TopRight;
-            this.btnBrowse.Location = new System.Drawing.Point(915, 139);
+            this.btnBrowse.Location = new System.Drawing.Point(912, 139);
             this.btnBrowse.Margin = new System.Windows.Forms.Padding(4);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -700,7 +709,7 @@ namespace RWDE_UPLOADS_FILES
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1712, 935);
+            this.ClientSize = new System.Drawing.Size(1829, 935);
             this.Controls.Add(this.Next);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmHccCsv";

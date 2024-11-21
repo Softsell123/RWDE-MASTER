@@ -56,26 +56,25 @@ namespace RWDE_UPLOADS_FILES
             this.btnClr = new System.Windows.Forms.Button();
             this.lblHeader = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.rwdeDataSet2 = new RWDE_UPLOADS_FILES.RWDEDataSet();
+            this.SerialNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BatchId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Agency_client_2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesConsentExprireDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CaseManager = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceCodeID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesContractId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UnitsOfService = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ActualMinutesSpent = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceCodeExportToAries = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceIDdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceExportedToAries = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Service_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EntryDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Lag = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Grade = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Lagstatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesExportFailureReason = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rwdeDataSet2 = new RWDE_UPLOADS_FILES.RWDEDataSet();
             ((System.ComponentModel.ISupportInitialize)(this.rwdeDataSet1)).BeginInit();
             this.pnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -269,9 +268,9 @@ namespace RWDE_UPLOADS_FILES
             this.lblBatch.ForeColor = System.Drawing.Color.Black;
             this.lblBatch.Location = new System.Drawing.Point(1098, 98);
             this.lblBatch.Name = "lblBatch";
-            this.lblBatch.Size = new System.Drawing.Size(113, 35);
+            this.lblBatch.Size = new System.Drawing.Size(107, 35);
             this.lblBatch.TabIndex = 8;
-            this.lblBatch.Text = "Batch ID";
+            this.lblBatch.Text = "BatchID";
             // 
             // btnClr
             // 
@@ -315,24 +314,23 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.ColumnHeadersHeight = 70;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.SerialNo,
             this.BatchId,
             this.ServiceId,
-            this.Column1,
             this.Agency_client_2,
-            this.Status,
             this.AriesConsentExprireDate,
+            this.CaseManager,
             this.ServiceGroup,
             this.ServiceCodeID,
             this.AriesContractId,
             this.UnitsOfService,
             this.ActualMinutesSpent,
-            this.ServiceCodeExportToAries,
             this.ServiceIDdata,
             this.ServiceExportedToAries,
             this.Service_date,
             this.EntryDate,
             this.Lag,
-            this.Grade,
+            this.Lagstatus,
             this.AriesExportFailureReason});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
@@ -360,13 +358,28 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
+            // rwdeDataSet2
+            // 
+            this.rwdeDataSet2.DataSetName = "RWDEDataSet";
+            this.rwdeDataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // SerialNo
+            // 
+            this.SerialNo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.SerialNo.HeaderText = "Sl No";
+            this.SerialNo.MinimumWidth = 6;
+            this.SerialNo.Name = "SerialNo";
+            this.SerialNo.ReadOnly = true;
+            this.SerialNo.Width = 120;
+            // 
             // BatchId
             // 
+            this.BatchId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.BatchId.HeaderText = "BatchID";
             this.BatchId.MinimumWidth = 6;
             this.BatchId.Name = "BatchId";
             this.BatchId.ReadOnly = true;
-            this.BatchId.Width = 116;
+            this.BatchId.Width = 125;
             // 
             // ServiceId
             // 
@@ -376,15 +389,7 @@ namespace RWDE_UPLOADS_FILES
             this.ServiceId.MinimumWidth = 6;
             this.ServiceId.Name = "ServiceId";
             this.ServiceId.ReadOnly = true;
-            this.ServiceId.Width = 200;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "ClientID";
-            this.Column1.MinimumWidth = 6;
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 118;
+            this.ServiceId.Width = 125;
             // 
             // Agency_client_2
             // 
@@ -394,17 +399,7 @@ namespace RWDE_UPLOADS_FILES
             this.Agency_client_2.MinimumWidth = 6;
             this.Agency_client_2.Name = "Agency_client_2";
             this.Agency_client_2.ReadOnly = true;
-            this.Agency_client_2.Width = 180;
-            // 
-            // Status
-            // 
-            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Status.FillWeight = 114.0359F;
-            this.Status.HeaderText = "Status";
-            this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 180;
+            this.Agency_client_2.Width = 110;
             // 
             // AriesConsentExprireDate
             // 
@@ -414,7 +409,17 @@ namespace RWDE_UPLOADS_FILES
             this.AriesConsentExprireDate.MinimumWidth = 6;
             this.AriesConsentExprireDate.Name = "AriesConsentExprireDate";
             this.AriesConsentExprireDate.ReadOnly = true;
-            this.AriesConsentExprireDate.Width = 350;
+            this.AriesConsentExprireDate.Width = 200;
+            // 
+            // CaseManager
+            // 
+            this.CaseManager.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.CaseManager.FillWeight = 88.62742F;
+            this.CaseManager.HeaderText = "RWEligibility ExpiryDate";
+            this.CaseManager.MinimumWidth = 6;
+            this.CaseManager.Name = "CaseManager";
+            this.CaseManager.ReadOnly = true;
+            this.CaseManager.Width = 200;
             // 
             // ServiceGroup
             // 
@@ -424,7 +429,7 @@ namespace RWDE_UPLOADS_FILES
             this.ServiceGroup.MinimumWidth = 6;
             this.ServiceGroup.Name = "ServiceGroup";
             this.ServiceGroup.ReadOnly = true;
-            this.ServiceGroup.Width = 300;
+            this.ServiceGroup.Width = 125;
             // 
             // ServiceCodeID
             // 
@@ -442,7 +447,7 @@ namespace RWDE_UPLOADS_FILES
             this.AriesContractId.MinimumWidth = 6;
             this.AriesContractId.Name = "AriesContractId";
             this.AriesContractId.ReadOnly = true;
-            this.AriesContractId.Width = 300;
+            this.AriesContractId.Width = 200;
             // 
             // UnitsOfService
             // 
@@ -452,7 +457,7 @@ namespace RWDE_UPLOADS_FILES
             this.UnitsOfService.MinimumWidth = 6;
             this.UnitsOfService.Name = "UnitsOfService";
             this.UnitsOfService.ReadOnly = true;
-            this.UnitsOfService.Width = 300;
+            this.UnitsOfService.Width = 200;
             // 
             // ActualMinutesSpent
             // 
@@ -462,16 +467,6 @@ namespace RWDE_UPLOADS_FILES
             this.ActualMinutesSpent.Name = "ActualMinutesSpent";
             this.ActualMinutesSpent.ReadOnly = true;
             this.ActualMinutesSpent.Width = 224;
-            // 
-            // ServiceCodeExportToAries
-            // 
-            this.ServiceCodeExportToAries.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ServiceCodeExportToAries.FillWeight = 114.8595F;
-            this.ServiceCodeExportToAries.HeaderText = "Service Mapped to HCC";
-            this.ServiceCodeExportToAries.MinimumWidth = 6;
-            this.ServiceCodeExportToAries.Name = "ServiceCodeExportToAries";
-            this.ServiceCodeExportToAries.ReadOnly = true;
-            this.ServiceCodeExportToAries.Width = 350;
             // 
             // ServiceIDdata
             // 
@@ -489,7 +484,7 @@ namespace RWDE_UPLOADS_FILES
             this.ServiceExportedToAries.MinimumWidth = 6;
             this.ServiceExportedToAries.Name = "ServiceExportedToAries";
             this.ServiceExportedToAries.ReadOnly = true;
-            this.ServiceExportedToAries.Width = 10;
+            this.ServiceExportedToAries.Width = 200;
             // 
             // Service_date
             // 
@@ -499,7 +494,7 @@ namespace RWDE_UPLOADS_FILES
             this.Service_date.MinimumWidth = 6;
             this.Service_date.Name = "Service_date";
             this.Service_date.ReadOnly = true;
-            this.Service_date.Width = 250;
+            this.Service_date.Width = 200;
             // 
             // EntryDate
             // 
@@ -509,7 +504,7 @@ namespace RWDE_UPLOADS_FILES
             this.EntryDate.MinimumWidth = 6;
             this.EntryDate.Name = "EntryDate";
             this.EntryDate.ReadOnly = true;
-            this.EntryDate.Width = 350;
+            this.EntryDate.Width = 200;
             // 
             // Lag
             // 
@@ -520,14 +515,13 @@ namespace RWDE_UPLOADS_FILES
             this.Lag.ReadOnly = true;
             this.Lag.Width = 73;
             // 
-            // Grade
+            // Lagstatus
             // 
-            this.Grade.FillWeight = 43.0996F;
-            this.Grade.HeaderText = "Lag Status";
-            this.Grade.MinimumWidth = 6;
-            this.Grade.Name = "Grade";
-            this.Grade.ReadOnly = true;
-            this.Grade.Width = 126;
+            this.Lagstatus.HeaderText = "Lag Status";
+            this.Lagstatus.MinimumWidth = 6;
+            this.Lagstatus.Name = "Lagstatus";
+            this.Lagstatus.ReadOnly = true;
+            this.Lagstatus.Width = 126;
             // 
             // AriesExportFailureReason
             // 
@@ -537,12 +531,7 @@ namespace RWDE_UPLOADS_FILES
             this.AriesExportFailureReason.MinimumWidth = 6;
             this.AriesExportFailureReason.Name = "AriesExportFailureReason";
             this.AriesExportFailureReason.ReadOnly = true;
-            this.AriesExportFailureReason.Width = 400;
-            // 
-            // rwdeDataSet2
-            // 
-            this.rwdeDataSet2.DataSetName = "RWDEDataSet";
-            this.rwdeDataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            this.AriesExportFailureReason.Width = 200;
             // 
             // ServiceReconciliationReport
             // 
@@ -650,24 +639,23 @@ namespace RWDE_UPLOADS_FILES
         private TextBox txtBatchID;
         private Label lblBatch;
         private RWDEDataSet rwdeDataSet2;
+        private DataGridViewTextBoxColumn SerialNo;
         private DataGridViewTextBoxColumn BatchId;
         private DataGridViewTextBoxColumn ServiceId;
-        private DataGridViewTextBoxColumn Column1;
         private DataGridViewTextBoxColumn Agency_client_2;
-        private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn AriesConsentExprireDate;
+        private DataGridViewTextBoxColumn CaseManager;
         private DataGridViewTextBoxColumn ServiceGroup;
         private DataGridViewTextBoxColumn ServiceCodeID;
         private DataGridViewTextBoxColumn AriesContractId;
         private DataGridViewTextBoxColumn UnitsOfService;
         private DataGridViewTextBoxColumn ActualMinutesSpent;
-        private DataGridViewTextBoxColumn ServiceCodeExportToAries;
         private DataGridViewTextBoxColumn ServiceIDdata;
         private DataGridViewTextBoxColumn ServiceExportedToAries;
         private DataGridViewTextBoxColumn Service_date;
         private DataGridViewTextBoxColumn EntryDate;
         private DataGridViewTextBoxColumn Lag;
-        private DataGridViewTextBoxColumn Grade;
+        private DataGridViewTextBoxColumn Lagstatus;
         private DataGridViewTextBoxColumn AriesExportFailureReason;
     }
     }

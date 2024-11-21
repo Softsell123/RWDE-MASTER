@@ -32,7 +32,10 @@ namespace Rwde
         public const string LastFolderPathxml = "LastFolderPathxml";
         public const string Areyousureyouwanttoabort = "Are you sure you want to abort";
         public const string abortochindelete = "abortochindelete";
+        public const string norecordsfound = "No Records Found";
+        public const string uploadfailed = "Upload Failed";
         public const string HCCDATA = "HCC";
+        public const string ServicegeneratorERROR = "ServicegeneratorERROR";
         public const string nodatatoinsertintotable = "Please Select an Error File";
         public const string nodataavailableforthissourcefilename = "NO Records  or check the file name";
         public const string csvpath = "Csvpath";
@@ -109,7 +112,7 @@ namespace Rwde
         public const string UploadedFileMessage = "Uploaded file: {0}";
         public const string ErrorMessage = "Error: {0}";
         public const string HCC_Reconciliation = "HCC_Reconciliation";
-        public const string NodatafoundfortheseBatchids = " No Data Found For these Batchid(s)";
+        public const string NodatafoundfortheseBatchids = "No Data Found For these Batchid(s)";
         public const string UploadSuccessMessage = "CSV data inserted into the database successfully.\n\n" +
                                                     "Time taken: {0} seconds\n" +
                                                     "Total rows inserted: {1}";

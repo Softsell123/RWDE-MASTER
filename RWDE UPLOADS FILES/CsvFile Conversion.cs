@@ -65,7 +65,7 @@ namespace RWDE_UPLOADS_FILES
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    int batchid =  dbHelper.Getxmlbatchid();
+                    int batchid = dbHelper.NextBatchID();
                     // Call the stored procedure
                     using (SqlCommand cmd = new SqlCommand("ctclientsmapping", conn))
                     {
@@ -99,7 +99,7 @@ namespace RWDE_UPLOADS_FILES
 
                         }
                     }
-                    MessageBox.Show("CSV file has been created successfully at " + filePath);
+                    MessageBox.Show("CSV file has been created successfully at " + filePath);//
                 }
             }
             catch (UnauthorizedAccessException)
@@ -124,9 +124,8 @@ namespace RWDE_UPLOADS_FILES
                     return;
                 }
 
-
                 // SQL query to execute the stored procedure
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection(connectionString))//
                 {
                     conn.Open();
 

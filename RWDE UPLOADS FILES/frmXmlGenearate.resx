@@ -546,6 +546,9 @@
         srCwyBo0AdXzjxUrVqxkVq7U/3/l1QvndFD2aAAAAABJRU5ErkJggg==
 </value>
   </data>
+  <metadata name="rWDEDataSet.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <metadata name="batchTableAdapter.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>361, 17</value>
   </metadata>
