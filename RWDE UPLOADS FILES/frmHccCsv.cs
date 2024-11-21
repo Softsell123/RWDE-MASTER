@@ -60,32 +60,30 @@ namespace RWDE_UPLOADS_FILES//
                 {
                     if (btnClose.Text == Constants.abort)
                     {
-                      
-                            DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, "UPLOAD OCHIN CSV", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, "UPLOAD OCHIN CSV", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
                         if (result == DialogResult.Yes)
                         {
-                           
-                             
-                                dbHelper.DeleteBatchochin(batchid.ToString());// Get the current batch ID from the database
-                                int currentBatchId = dbHelper.GetNextBatchIdabort(connection);
+                            // If the user chooses "Yes" to abort the process
+                            dbHelper.DeleteBatchochin(batchid.ToString()); // Delete the current batch ID from the database
+                            int currentBatchId = dbHelper.GetNextBatchIdabort(connection);
 
-                                // Increment the batch ID
-                                int nextBatchId = currentBatchId + 1;
+                            // Increment the batch ID
+                            int nextBatchId = currentBatchId + 1;
 
                             // Update the batch status with the new batch ID
 
                             // Show confirmation message
                             MessageBox.Show(Constants.Abortedsuccessfully, "UPLOAD OCHIN CSV");
 
-                                UpdateBatch(nextBatchId, Constants.Ochin, path);
-                                this.Close();
-
-                            
+                            UpdateBatch(nextBatchId, Constants.Ochin, path);
+                            this.Close();
                         }
+                        // No action needed if result is "No"
                     }
 
-                    // Restart the application
-                    Application.Restart();
+                    // Optionally restart the application if needed
+                    // Application.Restart();
                 }
                 catch (Exception ex)
                 {
@@ -94,6 +92,7 @@ namespace RWDE_UPLOADS_FILES//
                 }
             }
         }
+
 
         private void ClearTables(int batchId)//to clear data in tables
         {
