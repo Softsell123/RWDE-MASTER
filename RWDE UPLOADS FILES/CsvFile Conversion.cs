@@ -65,7 +65,7 @@ namespace RWDE_UPLOADS_FILES
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    int batchid = dbHelper.NextBatchID();
+                    int batchid = dbHelper.GetNextBatchID();
                     // Call the stored procedure
                     using (SqlCommand cmd = new SqlCommand("ctclientsmapping", conn))
                     {
