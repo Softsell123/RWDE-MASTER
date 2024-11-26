@@ -31,7 +31,7 @@ namespace RWDE
         public DBHelper()
         {
             // Define the connection string within the DBHelper class
-            connectionString = "Data Source=SOFTSELL;Initial Catalog=RWDE;Integrated Security=True;";
+            connectionString = "Data Source=BSSDEMO\\MSSQLSERVER01;Initial Catalog=RWDE;Integrated Security=True;";
         }
         public string GetConnectionString()//get connection string
         {
@@ -338,7 +338,7 @@ namespace RWDE
                         else
                         {
                             // Increment the last batch ID to get the next available batch ID
-                            nextBatchID = lastBatchIDFromDB + 1;
+                            nextBatchID = lastBatchIDFromDB;
                         }
 
                         // Set batchIDIncremented to true to indicate that the batch ID has been incremented
@@ -1019,7 +1019,6 @@ namespace RWDE
         }
 
 
-       
 
         private int? ConvertToNullableInt(string value)//parse data to int
         {
@@ -3005,7 +3004,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand(Constants.ServicegeneratorERROR, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@batchId", batchId);//
+                        command.Parameters.AddWithValue("@BatchId", batchId);//
                         connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -3910,8 +3909,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
                         conn.Open();
 
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows == false)
                             {
@@ -3931,12 +3929,14 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     }
                 }
             }
+
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
             return result;
         }
+
         public DataTable CombineAllResults(List<DataTable> result)
         {
             DataTable dt = result[0].Clone();
@@ -3951,19 +3951,13 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                         dt.ImportRow(row);  // Add each row from the result set
                     }
                 }
-
-                
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-
             return dt;
         }
-
-
         public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate, String filterType)
         {
             DataTable dt = new DataTable();
@@ -4023,7 +4017,6 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     MessageBox.Show(ex.Message);
                 }
             }
-
             return dt;
         }
         public DataTable LoadERRORLOG(DateTime startDate, DateTime endDate)//load the error obtained while processing
@@ -4052,9 +4045,9 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     MessageBox.Show(ex.Message);
                 }
             }
-
             return dt;
         }
+        
         public DataTable GetHccServices()
         {
             try
@@ -4081,8 +4074,6 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
         {
             try
             {
-
-
                 DataTable hccClients = new DataTable();
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -4130,7 +4121,6 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                         adapter.Fill(hccClients);
                     }
                 }
-
                 return hccClients;
             }
             catch (Exception ex)
@@ -4139,7 +4129,6 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 return null;
             }
         }
-
         public DataTable GetServicecodesetup()//to get export data
         {
             try
@@ -4153,7 +4142,6 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
                     adapter.Fill(hccServicecodesetup);
                 }
-
                 return hccServicecodesetup;
             }
             catch (Exception ex)
@@ -4162,7 +4150,6 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 return null;
             }
         }
-
         public List<string> GetClientsIds()//to retrive agency client data
         {
             try

@@ -3,12 +3,10 @@ using OfficeOpenXml;
 using Rwde;
 using RWDE;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
@@ -38,115 +36,114 @@ namespace RWDE_UPLOADS_FILES
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
             this.WindowState = FormWindowState.Maximized;
             txtBatchID.Text = "";
-            dtpDateFilter.Text = "Created Date";
-
 
         }
         public void PopulateDataGridView(DataTable hccServices, DataTable hccClients)//populate data
         {
-            try { 
-            this.dataGridView.RowTemplate.Height = 40;
+            try
+            {
+                this.dataGridView.RowTemplate.Height = 40;
 
-            // Set default cell style
-            this.dataGridView.ForeColor = Color.Black;
-            this.dataGridView.DefaultCellStyle.ForeColor = Color.Black; // Text color
-            this.dataGridView.DefaultCellStyle.Font = new Font("Calibre", 14, FontStyle.Regular);// Clear existing columns and rows
-            dataGridView.Columns.Clear();
-            dataGridView.Rows.Clear();
+                // Set default cell style
+                this.dataGridView.ForeColor = Color.Black;
+                this.dataGridView.DefaultCellStyle.ForeColor = Color.Black; // Text color
+                this.dataGridView.DefaultCellStyle.Font = new Font("Calibre", 14, FontStyle.Regular);// Clear existing columns and rows
+                dataGridView.Columns.Clear();
+                dataGridView.Rows.Clear();
 
-            // Add columns to the DataGridView
-            dataGridView.Columns.Add("User", "User");
-            dataGridView.Columns["User"].DataPropertyName = "Staff_id";
+                // Add columns to the DataGridView
+                dataGridView.Columns.Add("User", "User");
+                dataGridView.Columns["User"].DataPropertyName = "Staff_id";
 
-            dataGridView.Columns.Add("ClientID", "Client ID");
-            dataGridView.Columns["ClientID"].DataPropertyName = "Agncy_client_1";
+                dataGridView.Columns.Add("ClientID", "Client ID");
+                dataGridView.Columns["ClientID"].DataPropertyName = "Agncy_client_1";
 
-            dataGridView.Columns.Add("HCCID", "HCC ID");
-            dataGridView.Columns["HCCID"].DataPropertyName = "Clnt_id";
+                dataGridView.Columns.Add("HCCID", "HCC ID");
+                dataGridView.Columns["HCCID"].DataPropertyName = "Clnt_id";
 
-            dataGridView.Columns.Add("Program", "Program");
-            dataGridView.Columns.Add("Classification", "Classification");
-            dataGridView.Columns.Add("Status", "Status");
-            dataGridView.Columns.Add("HCCConsentExpiryDate", "HCC Consent Expiry Date");
-            dataGridView.Columns.Add("RWEligibilityExpiryDate", "RW Eligibility Expiry Date");
-            dataGridView.Columns.Add("CaseManager", "Case Manager");
-            dataGridView.Columns.Add("ServiceCodeID", "ServiceCodeID");
-            dataGridView.Columns.Add("HCCContractID", "HCC Contract ID");
-            dataGridView.Columns["HCCContractID"].DataPropertyName = "Contract_name";
-            dataGridView.Columns.Add("UnitsOfServices", "Units of Services");
-            dataGridView.Columns["UnitsOfServices"].DataPropertyName = "Quantity_served";
-            dataGridView.Columns.Add("ActualMinutesSpent", "Actual Minutes Spent");
-            dataGridView.Columns["ActualMinutesSpent"].DataPropertyName = "Actual_minutes_spent";
-            dataGridView.Columns.Add("ServiceCodeMappedToHCC", "Service Code Mapped to HCC");
-            dataGridView.Columns["ServiceCodeMappedToHCC"].DataPropertyName = "MappedToHCC";
-            dataGridView.Columns.Add("ServiceID", "Service ID");
-            dataGridView.Columns["ServiceID"].DataPropertyName = "ServiceID";
-            dataGridView.Columns.Add("ServiceExportedToHCC", "Service Exported to HCC");
-            dataGridView.Columns["ServiceExportedToHCC"].DataPropertyName = "MappedToHCC";
-            dataGridView.Columns.Add("ServiceDate", "Service Date");
-            dataGridView.Columns["ServiceDate"].DataPropertyName = "Service_date";
-            dataGridView.Columns.Add("EntryDate", "Entry Date");
-            dataGridView.Columns["EntryDate"].DataPropertyName = "CreatedOn";
-            dataGridView.Columns.Add("Lag", "Lag");
-            dataGridView.Columns.Add("Grade", "Grade");
-            dataGridView.Columns.Add("HCCExportFailureReason", "HCC Export Failure Reason");
-            dataGridView.Columns.Add("Status", "Status");
-            dataGridView.Columns.Add("ErrorMessage", "ErrorMessage");
-               
+                dataGridView.Columns.Add("Program", "Program");
+                dataGridView.Columns.Add("Classification", "Classification");
+                dataGridView.Columns.Add("Status", "Status");
+                dataGridView.Columns.Add("HCCConsentExpiryDate", "HCC Consent Expiry Date");
+                dataGridView.Columns.Add("RWEligibilityExpiryDate", "RW Eligibility Expiry Date");
+                dataGridView.Columns.Add("CaseManager", "Case Manager");
+                dataGridView.Columns.Add("ServiceGroup", "Service Group");
+                dataGridView.Columns.Add("HCCContractID", "HCC Contract ID");
+                dataGridView.Columns["HCCContractID"].DataPropertyName = "Contract_name";
+                dataGridView.Columns.Add("UnitsOfServices", "Units of Services");
+                dataGridView.Columns["UnitsOfServices"].DataPropertyName = "Quantity_served";
+                dataGridView.Columns.Add("ActualMinutesSpent", "Actual Minutes Spent");
+                dataGridView.Columns["ActualMinutesSpent"].DataPropertyName = "Actual_minutes_spent";
+                dataGridView.Columns.Add("ServiceCodeMappedToHCC", "Service Code Mapped to HCC");
+                dataGridView.Columns["ServiceCodeMappedToHCC"].DataPropertyName = "MappedToHCC";
+                dataGridView.Columns.Add("ServiceID", "Service ID");
+                dataGridView.Columns["ServiceID"].DataPropertyName = "ServiceID";
+                dataGridView.Columns.Add("ServiceExportedToHCC", "Service Exported to HCC");
+                dataGridView.Columns["ServiceExportedToHCC"].DataPropertyName = "MappedToHCC";
+                dataGridView.Columns.Add("ServiceDate", "Service Date");
+                dataGridView.Columns["ServiceDate"].DataPropertyName = "Service_date";
+                dataGridView.Columns.Add("EntryDate", "Entry Date");
+                dataGridView.Columns["EntryDate"].DataPropertyName = "CreatedOn";
+                dataGridView.Columns.Add("Lag", "Lag");
+                dataGridView.Columns.Add("Grade", "Grade");
+                dataGridView.Columns.Add("HCCExportFailureReason", "HCC Export Failure Reason");
+                dataGridView.Columns.Add("Status", "Status");
+                dataGridView.Columns.Add("ErrorMessage", "ErrorMessage");
+
 
                 // Set primary key for hccClients if it's not already set
                 if (hccClients.PrimaryKey.Length == 0)
-            {
-                hccClients.PrimaryKey = new DataColumn[] { hccClients.Columns["Clnt_id"] };
-            }
+                {
+                    hccClients.PrimaryKey = new DataColumn[] { hccClients.Columns["Clnt_id"] };
+                }
 
-            // Populate rows
-            foreach (DataRow serviceRow in hccServices.Rows)
-            {
-                DataRow clientRow = hccClients.Rows.Find(serviceRow["Clnt_id"]);
+                // Populate rows
+                foreach (DataRow serviceRow in hccServices.Rows)
+                {
+                    DataRow clientRow = hccClients.Rows.Find(serviceRow["Clnt_id"]);
 
-                DateTime serviceDate = serviceRow["Service_date"] != DBNull.Value ? Convert.ToDateTime(serviceRow["Service_date"]) : DateTime.MinValue;
-                DateTime createdOnDate = serviceRow["CreatedOn"] != DBNull.Value ? Convert.ToDateTime(serviceRow["CreatedOn"]).AddDays(-1) : DateTime.MinValue; // Subtract 1 day from CreatedOn
-                TimeSpan lag = createdOnDate - serviceDate;
+                    DateTime serviceDate = serviceRow["Service_date"] != DBNull.Value ? Convert.ToDateTime(serviceRow["Service_date"]) : DateTime.MinValue;
+                    DateTime createdOnDate = serviceRow["CreatedOn"] != DBNull.Value ? Convert.ToDateTime(serviceRow["CreatedOn"]).AddDays(-1) : DateTime.MinValue; // Subtract 1 day from CreatedOn
+                    TimeSpan lag = createdOnDate - serviceDate;
 
-                string grade = lag.Days < 1 ? "Early" :
-                               lag.Days >= 0 && lag.Days <= 5 ? "On Time" : "Late";
-                string hccExportFailureReason = string.Empty;
+                    string grade = lag.Days < 1 ? "Early" :
+                                   lag.Days >= 0 && lag.Days <= 5 ? "On Time" : "Late";
+                    string hccExportFailureReason = string.Empty;
 
                     int quantityServed = 0;
-                // Check if Contract_id is null
-              
+                    // Check if Contract_id is null
 
-                // Check if Map
-                dataGridView.Rows.Add(
-     serviceRow["Staff_id"],
-     clientRow != null ? clientRow["Agency_client_1"] : DBNull.Value,
-     serviceRow["Clnt_id"],
-     DBNull.Value,
-     DBNull.Value,
-     DBNull.Value,
-     DBNull.Value,
-     DBNull.Value,
-     DBNull.Value,
-     DBNull.Value,
-     serviceRow["Contract_id"],
-     serviceRow["Quantity_served"],
-     serviceRow["Actual_minutes_spent"],
-     serviceRow["MappedToHCC"],
-     serviceRow["ServiceID"],
-     serviceRow["MappedToHCC"] != DBNull.Value && Convert.ToBoolean(serviceRow["MappedToHCC"]) ? "Yes" : "", // Convert MappedToHCC to Yes/No
-     serviceRow["Service_date"],
-      serviceRow["Status"],
-       serviceRow["ErrorMessage"],
-     createdOnDate,
-     lag.Days,
-     grade,
-     hccExportFailureReason
- );
-            }
 
-            // Auto-size columns to fit content
-            dataGridView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+                    // Check if Map
+                    dataGridView.Rows.Add(
+         serviceRow["Staff_id"],
+         clientRow != null ? clientRow["Agency_client_1"] : DBNull.Value,
+         serviceRow["Clnt_id"],
+         DBNull.Value,
+         DBNull.Value,
+         DBNull.Value,
+         DBNull.Value,
+         DBNull.Value,
+         DBNull.Value,
+         DBNull.Value,
+         serviceRow["Contract_id"],
+         serviceRow["Quantity_served"],
+         serviceRow["Actual_minutes_spent"],
+         serviceRow["MappedToHCC"],
+         serviceRow["ServiceID"],
+         serviceRow["MappedToHCC"] != DBNull.Value && Convert.ToBoolean(serviceRow["MappedToHCC"]) ? "Yes" : "", // Convert MappedToHCC to Yes/No
+         serviceRow["Service_date"],
+          serviceRow["Status"],
+           serviceRow["ErrorMessage"],
+         createdOnDate,
+         lag.Days,
+         grade,
+         hccExportFailureReason
+     );
+                }
+
+                // Auto-size columns to fit content
+                dataGridView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             }
             catch (Exception ex)
             {
@@ -243,10 +240,9 @@ namespace RWDE_UPLOADS_FILES
                 DBHelper dbHelper = new DBHelper();
                 dataGridView.Columns.Clear();
                 dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(this.dataGridView_CellFormatting);
-
                 // Determine filter type
                 string filterType = string.Empty;
-                if (!string.IsNullOrWhiteSpace(txtBatchID.Text))
+                if (!string.IsNullOrWhiteSpace(txtBatchID.Text) && int.TryParse(txtBatchID.Text, out int batchid))
                 {
                     filterType = "BatchID";
                 }
@@ -268,91 +264,44 @@ namespace RWDE_UPLOADS_FILES
                 else
                 {
                     MessageBox.Show("Please enter a valid Batch ID or select a filter type.", "Input Error");
-                    DisplayHeadersOnly();
                     return;
                 }
 
                 // Fetch data based on selected filter type
                 DataTable result = null;
-                if (filterType == "BatchID")
+                try
                 {
-                    // Get and validate batch IDs
-                    string batchIdText = txtBatchID.Text;
-                    List<int> batchIDs = batchIdText.Split(',')
-                                                     .Select(id => int.TryParse(id.Trim(), out int parsedId) ? parsedId : 0)
-                                                     .Where(id => id > 0)
-                                                     .ToList();
-
-                    if (batchIDs.Count > 0)
+                    if (filterType == "BatchID")
                     {
-                        result = dbHelper.LoadDatafilterServiceReconbatchid(batchIDs); //
-
-                        if (result.Rows.Count == 0)
-                        {
-                            DisplayHeadersOnly();
-                            return;
-                        }
+                        result = dbHelper.LoadDatafilterServiceReconbatchid(startDate, endDate, int.Parse(txtBatchID.Text));
                     }
                     else
                     {
-                        MessageBox.Show("Please enter valid Batch IDs.", "Invalid Input");
-                        DisplayHeadersOnly();
-                        return;
+                        result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
                     }
+
+                    // Validate results
+                    //if (result == null || result.Rows.Count == 0)
+                    //{
+                    //    MessageBox.Show("No data found for the specified parameters.", "Data Not Found");
+                    //    return;
+                    //}
+
+                    // Bind data to the DataGridView
+                    dataGridView.AutoGenerateColumns = true;
+                    dataGridView.DataSource = result;
                 }
-                else
+                catch (Exception ex)
                 {
-                    result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
+                    // Handle exceptions, such as logging the error
+                    MessageBox.Show($"An error occurred while loading data: {ex.Message}");
                 }
-
-                // Add a 'Sl No' column for serial number
-                DataGridViewTextBoxColumn slNoColumn = new DataGridViewTextBoxColumn();
-               
-                 // Insert at the first position
-
-                // Add serial numbers (Sl No) to the DataTable before binding
-                int serialNumber = 1;
-                foreach (DataRow row in result.Rows)
-                {
-                    row["Sl No"] = serialNumber++; // Assign the serial number
-                }
-
-                // Bind the data to the DataGridView
-                dataGridView.AutoGenerateColumns = true;
-                dataGridView.DataSource = result;
             }
             catch (Exception ex)
             {
+                // Handle exceptions related to DateTimePicker values or other issues
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Helper method to show only headers
-        private void DisplayHeadersOnly()
-        {
-            dataGridView.DataSource = null;
-            dataGridView.Columns.Clear();
-            dataGridView.Columns.Add("Sl No", "Sl No");
-            dataGridView.Columns.Add("BatchID", "Batch ID");
-            dataGridView.Columns.Add("Staff", "Staff");
-            //dataGridView.Columns.Add("ClientID", "Client ID");
-            dataGridView.Columns.Add("HCCID", "HCC ID");
-            dataGridView.Columns.Add("HCCConsentExpiryDate", "HCC Consent Expiry Date");
-            dataGridView.Columns.Add("RWEligibilityExpiryDate", "RW Eligibility Expiry Date");
-            dataGridView.Columns.Add("Service", "Service");
-            dataGridView.Columns.Add("ServiceCodeID", "Service Code ID");
-            dataGridView.Columns.Add("HCCContractID", "HCC Contract ID");
-            dataGridView.Columns.Add("UnitsOfServices", "Units of Services");
-            dataGridView.Columns.Add("ActualMinutesSpent", "Actual Minutes Spent");
-            dataGridView.Columns.Add("ServiceID", "Service ID");
-            dataGridView.Columns.Add("ServiceExportedToHCC", "Service Exported to HCC");
-            dataGridView.Columns.Add("ServiceDate", "Service Date");
-            dataGridView.Columns.Add("EntryDate", "Entry Date");
-            dataGridView.Columns.Add("Lag", "Lag");
-            dataGridView.Columns.Add("Lag Status", "Lag Status");
-            dataGridView.Columns.Add("HCCExportFailureReason", "HCC Export Failure Reason");
-
-            dataGridView.AutoGenerateColumns = false;
         }
 
 
@@ -476,7 +425,7 @@ namespace RWDE_UPLOADS_FILES
                 dtpEndDate.CustomFormat = "MM-dd-yyyy";
                 dtpDateFilter.Text = Constants.CreatedDate;
                 txtBatchID.Text = null;
-                dtpDateFilter.Text = "Created Date";
+                dtpDateFilter.Text = null;
                 // Clear the DataTable bound to the DataGridView
                 if (dataGridView.DataSource is DataTable dt)
                 {
@@ -489,4 +438,4 @@ namespace RWDE_UPLOADS_FILES
             }
         }
     }
-    }
+}
