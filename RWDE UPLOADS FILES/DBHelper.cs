@@ -1019,7 +1019,7 @@ namespace RWDE
         }
 
 
-        
+
         private int? ConvertToNullableInt(string value)//parse data to int
         {
             if (int.TryParse(value, out int result))
@@ -3909,7 +3909,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
                         conn.Open();
 
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows == false)
                             {

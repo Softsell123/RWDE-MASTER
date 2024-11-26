@@ -59,6 +59,7 @@ namespace RWDE_UPLOADS_FILES
             this.rwdeDataSet2 = new RWDE_UPLOADS_FILES.RWDEDataSet();
             this.SerialNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BatchId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceIDdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Agency_client_2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesConsentExprireDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -68,7 +69,6 @@ namespace RWDE_UPLOADS_FILES
             this.AriesContractId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UnitsOfService = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ActualMinutesSpent = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceIDdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceExportedToAries = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Service_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EntryDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -316,6 +316,7 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SerialNo,
             this.BatchId,
+            this.ServiceIDdata,
             this.ServiceId,
             this.Agency_client_2,
             this.AriesConsentExprireDate,
@@ -325,7 +326,6 @@ namespace RWDE_UPLOADS_FILES
             this.AriesContractId,
             this.UnitsOfService,
             this.ActualMinutesSpent,
-            this.ServiceIDdata,
             this.ServiceExportedToAries,
             this.Service_date,
             this.EntryDate,
@@ -380,6 +380,14 @@ namespace RWDE_UPLOADS_FILES
             this.BatchId.Name = "BatchId";
             this.BatchId.ReadOnly = true;
             this.BatchId.Width = 125;
+            // 
+            // ServiceIDdata
+            // 
+            this.ServiceIDdata.HeaderText = "ServiceID";
+            this.ServiceIDdata.MinimumWidth = 6;
+            this.ServiceIDdata.Name = "ServiceIDdata";
+            this.ServiceIDdata.ReadOnly = true;
+            this.ServiceIDdata.Width = 132;
             // 
             // ServiceId
             // 
@@ -467,14 +475,6 @@ namespace RWDE_UPLOADS_FILES
             this.ActualMinutesSpent.Name = "ActualMinutesSpent";
             this.ActualMinutesSpent.ReadOnly = true;
             this.ActualMinutesSpent.Width = 224;
-            // 
-            // ServiceIDdata
-            // 
-            this.ServiceIDdata.HeaderText = "ServiceID";
-            this.ServiceIDdata.MinimumWidth = 6;
-            this.ServiceIDdata.Name = "ServiceIDdata";
-            this.ServiceIDdata.ReadOnly = true;
-            this.ServiceIDdata.Width = 132;
             // 
             // ServiceExportedToAries
             // 
@@ -641,6 +641,7 @@ namespace RWDE_UPLOADS_FILES
         private RWDEDataSet rwdeDataSet2;
         private DataGridViewTextBoxColumn SerialNo;
         private DataGridViewTextBoxColumn BatchId;
+        private DataGridViewTextBoxColumn ServiceIDdata;
         private DataGridViewTextBoxColumn ServiceId;
         private DataGridViewTextBoxColumn Agency_client_2;
         private DataGridViewTextBoxColumn AriesConsentExprireDate;
@@ -650,7 +651,6 @@ namespace RWDE_UPLOADS_FILES
         private DataGridViewTextBoxColumn AriesContractId;
         private DataGridViewTextBoxColumn UnitsOfService;
         private DataGridViewTextBoxColumn ActualMinutesSpent;
-        private DataGridViewTextBoxColumn ServiceIDdata;
         private DataGridViewTextBoxColumn ServiceExportedToAries;
         private DataGridViewTextBoxColumn Service_date;
         private DataGridViewTextBoxColumn EntryDate;
