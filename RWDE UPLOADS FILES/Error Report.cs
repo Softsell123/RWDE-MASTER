@@ -724,7 +724,5 @@ namespace RWDE_UPLOADS_FILES
             txtPath.Text = "";
             txtFileName.Text = "";
         }
-
-
     }
 }

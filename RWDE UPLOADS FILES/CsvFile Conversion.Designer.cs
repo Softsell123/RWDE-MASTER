@@ -96,9 +96,9 @@
             this.lblStartDate.Location = new System.Drawing.Point(488, 210);
             this.lblStartDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblStartDate.Name = "lblStartDate";
-            this.lblStartDate.Size = new System.Drawing.Size(180, 35);
+            this.lblStartDate.Size = new System.Drawing.Size(161, 35);
             this.lblStartDate.TabIndex = 11;
-            this.lblStartDate.Text = "CT Cients CSV:";
+            this.lblStartDate.Text = "CT CSV Files:";
             this.lblStartDate.Click += new System.EventHandler(this.lblStartDate_Click);
             // 
             // CsvFile_Conversion

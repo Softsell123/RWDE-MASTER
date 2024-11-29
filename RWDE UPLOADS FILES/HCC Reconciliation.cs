@@ -212,7 +212,6 @@ namespace RWDE_UPLOADS_FILES
 
 
                 if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))||(!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(","))||(!string.IsNullOrWhiteSpace(txtbatchs.Text)))
-
                 {
                     filterType = "BatchID";
                     Batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();

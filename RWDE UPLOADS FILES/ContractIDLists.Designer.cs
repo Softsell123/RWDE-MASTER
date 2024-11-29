@@ -297,13 +297,9 @@ namespace RWDE_UPLOADS_FILES
         private DataGridViewTextBoxColumn Column1;
 
         private DataGridViewTextBoxColumn Column3;
-
-
         private void lblContract_Click(object sender, EventArgs e)
         {
 
         }
-
-
     }
 }

@@ -62,6 +62,7 @@ namespace RWDE_UPLOADS_FILES
             this.ServiceIDdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Agency_client_2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesConsentExprireDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CaseManager = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -319,6 +320,7 @@ namespace RWDE_UPLOADS_FILES
             this.ServiceIDdata,
             this.ServiceId,
             this.Agency_client_2,
+            this.Status,
             this.AriesConsentExprireDate,
             this.CaseManager,
             this.ServiceGroup,
@@ -408,6 +410,13 @@ namespace RWDE_UPLOADS_FILES
             this.Agency_client_2.Name = "Agency_client_2";
             this.Agency_client_2.ReadOnly = true;
             this.Agency_client_2.Width = 110;
+            // 
+            // Status
+            // 
+            this.Status.HeaderText = "Status";
+            this.Status.MinimumWidth = 6;
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
             // 
             // AriesConsentExprireDate
             // 
@@ -644,6 +653,7 @@ namespace RWDE_UPLOADS_FILES
         private DataGridViewTextBoxColumn ServiceIDdata;
         private DataGridViewTextBoxColumn ServiceId;
         private DataGridViewTextBoxColumn Agency_client_2;
+        private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn AriesConsentExprireDate;
         private DataGridViewTextBoxColumn CaseManager;
         private DataGridViewTextBoxColumn ServiceGroup;
