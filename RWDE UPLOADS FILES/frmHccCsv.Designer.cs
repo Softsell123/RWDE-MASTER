@@ -138,10 +138,7 @@ namespace RWDE_UPLOADS_FILES
 
         }
 
-        private void lblHeading_Click(object sender, EventArgs e)
-        {
-
-        }
+     
 
         private void lblPath_Click(object sender, EventArgs e)
         {
@@ -296,6 +293,7 @@ namespace RWDE_UPLOADS_FILES
             this.pnlProgress.Controls.Add(this.lblLines);
             this.pnlProgress.Controls.Add(this.txtProgressfile);
             this.pnlProgress.Controls.Add(this.progressBar);
+            this.pnlProgress.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlProgress.Location = new System.Drawing.Point(97, 425);
             this.pnlProgress.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlProgress.Name = "pnlProgress";
@@ -308,7 +306,7 @@ namespace RWDE_UPLOADS_FILES
             this.lblFname.AutoSize = true;
             this.lblFname.Font = new System.Drawing.Font("Calibri", 17.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFname.ForeColor = System.Drawing.Color.Black;
-            this.lblFname.Location = new System.Drawing.Point(125, 207);
+            this.lblFname.Location = new System.Drawing.Point(122, 207);
             this.lblFname.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFname.Name = "lblFname";
             this.lblFname.Size = new System.Drawing.Size(148, 36);
@@ -319,7 +317,7 @@ namespace RWDE_UPLOADS_FILES
             // txtFileName
             // 
             this.txtFileName.BackColor = System.Drawing.Color.White;
-            this.txtFileName.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFileName.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFileName.Location = new System.Drawing.Point(287, 207);
             this.txtFileName.Margin = new System.Windows.Forms.Padding(4);
             this.txtFileName.Name = "txtFileName";
@@ -332,7 +330,7 @@ namespace RWDE_UPLOADS_FILES
             // txtTotaltime
             // 
             this.txtTotaltime.BackColor = System.Drawing.Color.White;
-            this.txtTotaltime.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTotaltime.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTotaltime.Location = new System.Drawing.Point(1193, 229);
             this.txtTotaltime.Margin = new System.Windows.Forms.Padding(4);
             this.txtTotaltime.Name = "txtTotaltime";
@@ -345,7 +343,7 @@ namespace RWDE_UPLOADS_FILES
             // txtUploadEnded
             // 
             this.txtUploadEnded.BackColor = System.Drawing.Color.White;
-            this.txtUploadEnded.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUploadEnded.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUploadEnded.Location = new System.Drawing.Point(1193, 172);
             this.txtUploadEnded.Margin = new System.Windows.Forms.Padding(4);
             this.txtUploadEnded.Name = "txtUploadEnded";
@@ -358,7 +356,7 @@ namespace RWDE_UPLOADS_FILES
             // txtUploadStarted
             // 
             this.txtUploadStarted.BackColor = System.Drawing.Color.White;
-            this.txtUploadStarted.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUploadStarted.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUploadStarted.Location = new System.Drawing.Point(1193, 119);
             this.txtUploadStarted.Margin = new System.Windows.Forms.Padding(4);
             this.txtUploadStarted.Name = "txtUploadStarted";
@@ -396,7 +394,7 @@ namespace RWDE_UPLOADS_FILES
             this.lblTotaltime.AutoSize = true;
             this.lblTotaltime.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotaltime.ForeColor = System.Drawing.Color.Black;
-            this.lblTotaltime.Location = new System.Drawing.Point(947, 229);
+            this.lblTotaltime.Location = new System.Drawing.Point(951, 229);
             this.lblTotaltime.Name = "lblTotaltime";
             this.lblTotaltime.Size = new System.Drawing.Size(212, 35);
             this.lblTotaltime.TabIndex = 32;
@@ -408,7 +406,7 @@ namespace RWDE_UPLOADS_FILES
             this.lblUploadEnded.AutoSize = true;
             this.lblUploadEnded.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUploadEnded.ForeColor = System.Drawing.Color.Black;
-            this.lblUploadEnded.Location = new System.Drawing.Point(947, 175);
+            this.lblUploadEnded.Location = new System.Drawing.Point(950, 175);
             this.lblUploadEnded.Name = "lblUploadEnded";
             this.lblUploadEnded.Size = new System.Drawing.Size(214, 35);
             this.lblUploadEnded.TabIndex = 31;
@@ -420,7 +418,7 @@ namespace RWDE_UPLOADS_FILES
             this.lblUploadStarts.AutoSize = true;
             this.lblUploadStarts.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUploadStarts.ForeColor = System.Drawing.Color.Black;
-            this.lblUploadStarts.Location = new System.Drawing.Point(936, 122);
+            this.lblUploadStarts.Location = new System.Drawing.Point(941, 122);
             this.lblUploadStarts.Name = "lblUploadStarts";
             this.lblUploadStarts.Size = new System.Drawing.Size(224, 35);
             this.lblUploadStarts.TabIndex = 30;
@@ -495,7 +493,7 @@ namespace RWDE_UPLOADS_FILES
             this.lblLines.AutoSize = true;
             this.lblLines.Font = new System.Drawing.Font("Calibri", 17.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLines.ForeColor = System.Drawing.Color.Black;
-            this.lblLines.Location = new System.Drawing.Point(165, 81);
+            this.lblLines.Location = new System.Drawing.Point(166, 81);
             this.lblLines.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLines.Name = "lblLines";
             this.lblLines.Size = new System.Drawing.Size(103, 36);
@@ -543,6 +541,7 @@ namespace RWDE_UPLOADS_FILES
             // 
             // pnl
             // 
+            this.pnl.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pnl.AutoSize = true;
             this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnl.Controls.Add(this.chckURN);
@@ -568,20 +567,12 @@ namespace RWDE_UPLOADS_FILES
             // 
             this.chckURN.AutoSize = true;
             this.chckURN.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-
-            this.chckURN.Location = new System.Drawing.Point(1357, 141);
-
-            this.chckURN.Location = new System.Drawing.Point(1312, 143);
-
+            this.chckURN.Location = new System.Drawing.Point(1342, 143);
             this.chckURN.Name = "chckURN";
             this.chckURN.Size = new System.Drawing.Size(260, 39);
             this.chckURN.TabIndex = 8;
             this.chckURN.Text = "PHI With URN Data";
             this.chckURN.UseVisualStyleBackColor = true;
-
-
-            this.chckURN.CheckedChanged += new System.EventHandler(this.chckURN_CheckedChanged);
-
             // 
             // chckPHI
             // 
@@ -589,9 +580,7 @@ namespace RWDE_UPLOADS_FILES
             this.chckPHI.Checked = true;
             this.chckPHI.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chckPHI.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-
-            this.chckPHI.Location = new System.Drawing.Point(1092, 139);
-
+            this.chckPHI.Location = new System.Drawing.Point(1092, 143);
             this.chckPHI.Name = "chckPHI";
             this.chckPHI.Size = new System.Drawing.Size(242, 39);
             this.chckPHI.TabIndex = 7;
@@ -602,9 +591,10 @@ namespace RWDE_UPLOADS_FILES
             // lblType
             // 
             this.lblType.AutoSize = true;
+            this.lblType.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblType.Location = new System.Drawing.Point(141, 240);
             this.lblType.Name = "lblType";
-            this.lblType.Size = new System.Drawing.Size(148, 35);
+            this.lblType.Size = new System.Drawing.Size(151, 35);
             this.lblType.TabIndex = 0;
             this.lblType.Text = "Batch Type:";
             this.lblType.Click += new System.EventHandler(this.lblType_Click);
@@ -612,6 +602,7 @@ namespace RWDE_UPLOADS_FILES
             // txtType
             // 
             this.txtType.BackColor = System.Drawing.Color.White;
+            this.txtType.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtType.Location = new System.Drawing.Point(317, 238);
             this.txtType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtType.Name = "txtType";
@@ -633,7 +624,6 @@ namespace RWDE_UPLOADS_FILES
             this.lblHeading.Size = new System.Drawing.Size(1725, 70);
             this.lblHeading.TabIndex = 4;
             this.lblHeading.Text = resources.GetString("lblHeading.Text");
-            this.lblHeading.Click += new System.EventHandler(this.lblHeading_Click);
             // 
             // txtDesc
             // 
@@ -649,11 +639,11 @@ namespace RWDE_UPLOADS_FILES
             // lblDesc
             // 
             this.lblDesc.AutoSize = true;
-            this.lblDesc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDesc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDesc.Location = new System.Drawing.Point(659, 244);
             this.lblDesc.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDesc.Name = "lblDesc";
-            this.lblDesc.Size = new System.Drawing.Size(224, 35);
+            this.lblDesc.Size = new System.Drawing.Size(229, 35);
             this.lblDesc.TabIndex = 5;
             this.lblDesc.Text = "Batch Description:";
             this.lblDesc.Click += new System.EventHandler(this.lblDesc_Click);
@@ -661,11 +651,11 @@ namespace RWDE_UPLOADS_FILES
             // lblPath
             // 
             this.lblPath.AutoSize = true;
-            this.lblPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPath.Location = new System.Drawing.Point(171, 143);
             this.lblPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPath.Name = "lblPath";
-            this.lblPath.Size = new System.Drawing.Size(118, 35);
+            this.lblPath.Size = new System.Drawing.Size(123, 35);
             this.lblPath.TabIndex = 6;
             this.lblPath.Text = "File Path:";
             this.lblPath.Click += new System.EventHandler(this.lblPath_Click);

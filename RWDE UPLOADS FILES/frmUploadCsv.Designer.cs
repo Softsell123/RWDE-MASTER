@@ -27,10 +27,6 @@ namespace RWDE_UPLOADS_FILES
         {
 
         }
-        private void lblDesc_Click(object sender, EventArgs e)
-        {
-
-        }
         private void pnlProgress_Paint(object sender, PaintEventArgs e)
         {
 
@@ -495,9 +491,10 @@ namespace RWDE_UPLOADS_FILES
             // lblLabelType
             // 
             this.lblLabelType.AutoSize = true;
+            this.lblLabelType.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLabelType.Location = new System.Drawing.Point(131, 268);
             this.lblLabelType.Name = "lblLabelType";
-            this.lblLabelType.Size = new System.Drawing.Size(148, 35);
+            this.lblLabelType.Size = new System.Drawing.Size(151, 35);
             this.lblLabelType.TabIndex = 1;
             this.lblLabelType.Text = "Batch Type:";
             // 
@@ -530,23 +527,22 @@ namespace RWDE_UPLOADS_FILES
             // lblDesc
             // 
             this.lblDesc.AutoSize = true;
-            this.lblDesc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDesc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDesc.Location = new System.Drawing.Point(659, 273);
             this.lblDesc.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDesc.Name = "lblDesc";
-            this.lblDesc.Size = new System.Drawing.Size(224, 35);
+            this.lblDesc.Size = new System.Drawing.Size(229, 35);
             this.lblDesc.TabIndex = 4;
             this.lblDesc.Text = "Batch Description:";
-            this.lblDesc.Click += new System.EventHandler(this.lblDesc_Click);
             // 
             // lblPath
             // 
             this.lblPath.AutoSize = true;
-            this.lblPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPath.Location = new System.Drawing.Point(157, 172);
             this.lblPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPath.Name = "lblPath";
-            this.lblPath.Size = new System.Drawing.Size(118, 35);
+            this.lblPath.Size = new System.Drawing.Size(123, 35);
             this.lblPath.TabIndex = 5;
             this.lblPath.Text = "File Path:";
             // 

@@ -3,10 +3,12 @@ using OfficeOpenXml;
 using Rwde;
 using RWDE;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
@@ -221,6 +223,33 @@ namespace RWDE_UPLOADS_FILES
         //        MessageBox.Show($"An error occurred: {ex.Message}");
         //    }
         //}
+        private void DisplayHeadersOnly()
+        {
+            dataGridView.DataSource = null;
+            dataGridView.Columns.Clear();
+            dataGridView.Columns.Add("Sl No", "Sl No");
+            dataGridView.Columns.Add("BatchID", "Batch ID");
+            dataGridView.Columns.Add("Staff", "Staff");
+            //dataGridView.Columns.Add("ClientID", "Client ID");
+            dataGridView.Columns.Add("HCCID", "HCC ID");
+            dataGridView.Columns.Add("HCCConsentExpiryDate", "HCC Consent Expiry Date");
+            dataGridView.Columns.Add("RWEligibilityExpiryDate", "RW Eligibility Expiry Date");
+            dataGridView.Columns.Add("Service", "Service");
+            dataGridView.Columns.Add("ServiceCodeID", "Service Code ID");
+            dataGridView.Columns.Add("HCCContractID", "HCC Contract ID");
+            dataGridView.Columns.Add("UnitsOfServices", "Units of Services");
+            dataGridView.Columns.Add("ActualMinutesSpent", "Actual Minutes Spent");
+            dataGridView.Columns.Add("ServiceID", "Service ID");
+            dataGridView.Columns.Add("ServiceExportedToHCC", "Service Exported to HCC");
+            dataGridView.Columns.Add("ServiceDate", "Service Date");
+            dataGridView.Columns.Add("EntryDate", "Entry Date");
+            dataGridView.Columns.Add("Lag", "Lag");
+            dataGridView.Columns.Add("Lag Status", "Lag Status");
+            dataGridView.Columns.Add("HCCExportFailureReason", "HCC Export Failure Reason");
+
+            dataGridView.AutoGenerateColumns = false;
+        }
+
         private void btnReport_Click(object sender, EventArgs e)
         {
             try
@@ -240,6 +269,7 @@ namespace RWDE_UPLOADS_FILES
                 DBHelper dbHelper = new DBHelper();
                 dataGridView.Columns.Clear();
                 dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(this.dataGridView_CellFormatting);
+
                 // Determine filter type
                 string filterType = string.Empty;
                 if (!string.IsNullOrWhiteSpace(txtBatchID.Text) && int.TryParse(txtBatchID.Text, out int batchid))
@@ -264,43 +294,64 @@ namespace RWDE_UPLOADS_FILES
                 else
                 {
                     MessageBox.Show("Please enter a valid Batch ID or select a filter type.", "Input Error");
+                    DisplayHeadersOnly();
                     return;
                 }
 
                 // Fetch data based on selected filter type
                 DataTable result = null;
-                try
+                if (filterType == "BatchID")
                 {
-                    if (filterType == "BatchID")
+                    // Get and validate batch IDs
+                    string batchIdText = txtBatchID.Text;
+                    List<int> batchIDs = batchIdText.Split(',')
+                                                     .Select(id => int.TryParse(id.Trim(), out int parsedId) ? parsedId : 0)
+                                                     .Where(id => id > 0)
+                                                     .ToList();
+
+                    if (batchIDs.Count > 0)
                     {
-                        result = dbHelper.LoadDatafilterServiceReconbatchid(startDate, endDate, int.Parse(txtBatchID.Text));
+                        result = dbHelper.LoadDatafilterServiceReconbatchid(batchIDs); //
+
+                        if (result.Rows.Count == 0)
+                        {
+                            DisplayHeadersOnly();
+                            return;
+                        }
                     }
                     else
                     {
-                        result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
+                        MessageBox.Show("Please enter valid Batch IDs.", "Invalid Input");
+                        DisplayHeadersOnly();
+                        return;
                     }
-
-                    // Validate results
-                    //if (result == null || result.Rows.Count == 0)
-                    //{
-                    //    MessageBox.Show("No data found for the specified parameters.", "Data Not Found");
-                    //    return;
-                    //}
-
-                    // Bind data to the DataGridView
-                    dataGridView.AutoGenerateColumns = true;
-                    dataGridView.DataSource = result;
                 }
-                catch (Exception ex)
+                else
                 {
-                    // Handle exceptions, such as logging the error
-                    MessageBox.Show($"An error occurred while loading data: {ex.Message}");
+                    result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
                 }
+
+                // Add a 'Sl No' column for serial number
+                DataGridViewTextBoxColumn slNoColumn = new DataGridViewTextBoxColumn();
+
+                // Insert at the first position
+
+                // Add serial numbers (Sl No) to the DataTable before binding
+                int serialNumber = 1;
+                foreach (DataRow row in result.Rows)
+                {
+                    row["Sl No"] = serialNumber++; // Assign the serial number
+                }
+
+                // Bind the data to the DataGridView
+                dataGridView.AutoGenerateColumns = true;
+                dataGridView.DataSource = result;
             }
             catch (Exception ex)
             {
-                // Handle exceptions related to DateTimePicker values or other issues
+                DisplayHeadersOnly();
                 MessageBox.Show($"An error occurred: {ex.Message}");
+
             }
         }
 
