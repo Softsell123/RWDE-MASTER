@@ -32,7 +32,6 @@ namespace RWDE_UPLOADS_FILES
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,6 +67,7 @@ namespace RWDE_UPLOADS_FILES
             this.oCHINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateHCCXmlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadHCCErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cSVFILESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serviceReconciliationReportDotNotUseToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.deceasedClientsReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,8 +91,7 @@ namespace RWDE_UPLOADS_FILES
             this.btnOCHINHCCConversion = new System.Windows.Forms.ToolStripButton();
             this.btnConversion = new System.Windows.Forms.ToolStripButton();
             this.btnGenerator = new System.Windows.Forms.ToolStripButton();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.cSVFILESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manualUploadReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -409,6 +408,14 @@ namespace RWDE_UPLOADS_FILES
             this.downloadHCCErrorsToolStripMenuItem.Text = "Download HCC Errors";
             this.downloadHCCErrorsToolStripMenuItem.Click += new System.EventHandler(this.downloadHCCErrorsToolStripMenuItem_Click);
             // 
+            // cSVFILESToolStripMenuItem
+            // 
+            this.cSVFILESToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("cSVFILESToolStripMenuItem.Image")));
+            this.cSVFILESToolStripMenuItem.Name = "cSVFILESToolStripMenuItem";
+            this.cSVFILESToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
+            this.cSVFILESToolStripMenuItem.Text = "CSV FILES";
+            this.cSVFILESToolStripMenuItem.Click += new System.EventHandler(this.cSVFILESToolStripMenuItem_Click);
+            // 
             // reportsToolStripMenuItem
             // 
             this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -417,7 +424,8 @@ namespace RWDE_UPLOADS_FILES
             this.uploadDashboardToolStripMenuItem,
             this.hCCRECONToolStripMenuItem,
             this.clientDemographicsReportToolStripMenuItem,
-            this.errorLogReportToolStripMenuItem});
+            this.errorLogReportToolStripMenuItem,
+            this.manualUploadReportToolStripMenuItem});
             this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
             this.reportsToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
             this.reportsToolStripMenuItem.Text = "Reports";
@@ -470,6 +478,14 @@ namespace RWDE_UPLOADS_FILES
             this.errorLogReportToolStripMenuItem.Size = new System.Drawing.Size(290, 26);
             this.errorLogReportToolStripMenuItem.Text = "Error Log Report";
             this.errorLogReportToolStripMenuItem.Click += new System.EventHandler(this.errorLogReportToolStripMenuItem_Click);
+            // 
+            // manualUploadReportToolStripMenuItem
+            // 
+            this.manualUploadReportToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("errorLogReportToolStripMenuItem.Image")));
+            this.manualUploadReportToolStripMenuItem.Name = "manualUploadReportToolStripMenuItem";
+            this.manualUploadReportToolStripMenuItem.Size = new System.Drawing.Size(290, 26);
+            this.manualUploadReportToolStripMenuItem.Text = "Manual Upload Report";
+            this.manualUploadReportToolStripMenuItem.Click += new System.EventHandler(this.manualUploadReportToolStripMenuItem_Click);
             // 
             // jjToolStripMenuItem
             // 
@@ -626,14 +642,7 @@ namespace RWDE_UPLOADS_FILES
             this.btnGenerator.Size = new System.Drawing.Size(29, 24);
             this.btnGenerator.Text = "Generate HCC xml files";
             this.btnGenerator.Click += new System.EventHandler(this.btnGenerator_Click);
-            // 
-            // cSVFILESToolStripMenuItem
-            // 
-            this.cSVFILESToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("cSVFILESToolStripMenuItem.Image")));
-            this.cSVFILESToolStripMenuItem.Name = "cSVFILESToolStripMenuItem";
-            this.cSVFILESToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.cSVFILESToolStripMenuItem.Text = "CSV FILES";
-            this.cSVFILESToolStripMenuItem.Click += new System.EventHandler(this.cSVFILESToolStripMenuItem_Click);
+           
             // 
             // frmMain
             // 
@@ -751,7 +760,6 @@ namespace RWDE_UPLOADS_FILES
         private System.Windows.Forms.ToolStripButton printToolStripButton;
         private System.Windows.Forms.ToolStripButton printPreviewToolStripButton;
         private System.Windows.Forms.ToolStripButton helpToolStripButton;
-        private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.ToolStripButton btnXml;
         private System.Windows.Forms.ToolStripButton btnHccCsv;
         private System.Windows.Forms.ToolStripButton btnGenerator;
@@ -775,6 +783,7 @@ namespace RWDE_UPLOADS_FILES
         private ToolStripMenuItem errorLogReportToolStripMenuItem;
         private ToolStripMenuItem downloadHCCErrorsToolStripMenuItem;
         private ToolStripMenuItem cSVFILESToolStripMenuItem;
+        private ToolStripMenuItem manualUploadReportToolStripMenuItem;
     }
 }
 

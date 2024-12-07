@@ -44,6 +44,32 @@ namespace RWDE_UPLOADS_FILES
             PopulateGrid();
            // Setup the DataTable and DataGridView when the form loads
             SetupDataGridView();
+            RegisterEvents(this);
+        }
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
+
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
+            }
         }
         private void DataGridView_KeyDown(object sender, KeyEventArgs e)//Your custom code for handling key down events goes here
         {

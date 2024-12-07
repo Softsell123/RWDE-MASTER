@@ -29,6 +29,7 @@ namespace RWDE_UPLOADS_FILES//
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             descriptionformat();
+            RegisterEvents(this);
             if (File.Exists(Constants.LastFolderPathhcc))
             {
                 string LastFolderPathhcc = File.ReadAllText(Constants.LastFolderPathhcc).Trim();  // Trim to remove any extra spaces or newlines
@@ -51,6 +52,31 @@ namespace RWDE_UPLOADS_FILES//
         public string path;
         private int totalCsvFiles;
         private int currentCsvFileIndex;
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
+
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
+            }
+        }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -64,20 +90,20 @@ namespace RWDE_UPLOADS_FILES//
                             DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, "UPLOAD OCHIN CSV", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (result == DialogResult.Yes)
                         {
-                           
-                             
-                                dbHelper.DeleteBatchochin(batchid.ToString());// Get the current batch ID from the database
-                                int currentBatchId = dbHelper.GetNextBatchIdabort(connection);
+                            int currentBatchId = dbHelper.GetNextBatchIdabort(connection); // Get the current batch ID from the database
 
-                                // Increment the batch ID
-                                int nextBatchId = currentBatchId + 1;
+                            string fileName = txtFileName.Text;
+                            
+                            // Increment the batch ID
+                            int nextBatchId = currentBatchId + 1;
+                            dbHelper.DeleteBatchochin(nextBatchId.ToString());
 
                             // Update the batch status with the new batch ID
 
                             // Show confirmation message
                             MessageBox.Show(Constants.Abortedsuccessfully, "UPLOAD OCHIN CSV");
 
-                                UpdateBatch(nextBatchId, Constants.Ochin, path);
+                                UpdateBatch(nextBatchId, fileName, path);
                                 this.Close();
 
                             
@@ -255,7 +281,7 @@ namespace RWDE_UPLOADS_FILES//
                                 }
                             }
 
-                            if (baseFilename == Constants.CMSClients)
+                            if (baseFilename.Contains(Constants.Clients))
                             {
                                 //btnClose.Text = Constants.close;
                                 TimeSpan elapsedTime = DateTime.Now - startTime;
@@ -265,7 +291,7 @@ namespace RWDE_UPLOADS_FILES//
                                 // batchid++;
                             }
 
-                            if (baseFilename == Constants.CMSServices)
+                            if (baseFilename.Contains(Constants.Services))
                             {
                                 //btnClose.Text = Constants.close;
                                 TimeSpan elapsedTime = DateTime.Now - startTime;
@@ -375,7 +401,7 @@ namespace RWDE_UPLOADS_FILES//
 
                         string[] data = line.Split('|');
 
-                        if (baseFilename == Constants.CMSClients)
+                        if (baseFilename.Contains(Constants.Clients))
                         {
                             clientData.Add(data);
 
@@ -385,7 +411,7 @@ namespace RWDE_UPLOADS_FILES//
                                 hasLoggedClient = true;
                             }
                         }
-                        else if (baseFilename == Constants.CMSServices)
+                        else if (baseFilename.Contains(Constants.Services))
                         {
                             serviceData.Add(data);
 
@@ -423,7 +449,7 @@ namespace RWDE_UPLOADS_FILES//
                     if (isUploading)
                     {
                         await UpdateProgress(rowsInserted, totalRows); // Await the progress update
-                        await Task.Delay(500); // Adding delay of 500 milliseconds
+                        //await Task.Delay(500); // Adding delay of 500 milliseconds
                     }
                 }
 
@@ -442,7 +468,7 @@ namespace RWDE_UPLOADS_FILES//
 
                     rowsInserted++;
                     await UpdateProgress(rowsInserted, totalRows); // Await the progress update
-                    await Task.Delay(500); // Adding delay of 500 milliseconds
+                    //await Task.Delay(500); // Adding delay of 500 milliseconds
                 }
                 if (isUploading)
                 {

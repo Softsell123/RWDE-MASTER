@@ -28,16 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnDownload = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Month = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesSuccessfullyExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesNotExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MissingPrimaryService = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MissingSecondaryService = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MissingSubService = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesPostTimeboxPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServiceEntriesForHCCIDMissing = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Drop = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnl = new System.Windows.Forms.Panel();
             this.txtbatchs = new System.Windows.Forms.TextBox();
             this.lblbatchid = new System.Windows.Forms.Label();
@@ -52,16 +62,6 @@
             this.lblStartDate = new System.Windows.Forms.Label();
             this.txtBatchID = new System.Windows.Forms.TextBox();
             this.lblBatch = new System.Windows.Forms.Label();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Month = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesSuccessfullyExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesNotExportedToHCC = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MissingPrimaryService = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MissingSecondaryService = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MissingSubService = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesPostTimeboxPeriod = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ServiceEntriesForHCCIDMissing = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Drop = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
@@ -111,13 +111,13 @@
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeight = 50;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -131,31 +131,117 @@
             this.ServiceEntriesPostTimeboxPeriod,
             this.ServiceEntriesForHCCIDMissing,
             this.Drop});
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView.EnableHeadersVisualStyles = false;
             this.dataGridView.GridColor = System.Drawing.Color.Black;
             this.dataGridView.Location = new System.Drawing.Point(143, 251);
             this.dataGridView.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1770, 500);
             this.dataGridView.TabIndex = 7;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
+            // 
+            // Column1
+            // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Column1.HeaderText = "MMM-YYYY";
+            this.Column1.MinimumWidth = 6;
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 184;
+            // 
+            // Month
+            // 
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.Month.DefaultCellStyle = dataGridViewCellStyle3;
+            this.Month.HeaderText = "Total Service Entries";
+            this.Month.MinimumWidth = 6;
+            this.Month.Name = "Month";
+            this.Month.ReadOnly = true;
+            this.Month.Width = 278;
+            // 
+            // ServiceEntriesSuccessfullyExportedToHCC
+            // 
+            this.ServiceEntriesSuccessfullyExportedToHCC.HeaderText = "Service Entries Successfully Exported To HCC";
+            this.ServiceEntriesSuccessfullyExportedToHCC.MinimumWidth = 6;
+            this.ServiceEntriesSuccessfullyExportedToHCC.Name = "ServiceEntriesSuccessfullyExportedToHCC";
+            this.ServiceEntriesSuccessfullyExportedToHCC.ReadOnly = true;
+            this.ServiceEntriesSuccessfullyExportedToHCC.Width = 558;
+            // 
+            // ServiceEntriesNotExportedToHCC
+            // 
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            this.ServiceEntriesNotExportedToHCC.DefaultCellStyle = dataGridViewCellStyle4;
+            this.ServiceEntriesNotExportedToHCC.HeaderText = "Service Entries Not Exported To HCC";
+            this.ServiceEntriesNotExportedToHCC.MinimumWidth = 6;
+            this.ServiceEntriesNotExportedToHCC.Name = "ServiceEntriesNotExportedToHCC";
+            this.ServiceEntriesNotExportedToHCC.ReadOnly = true;
+            this.ServiceEntriesNotExportedToHCC.Width = 462;
+            // 
+            // MissingPrimaryService
+            // 
+            this.MissingPrimaryService.HeaderText = "Missing Primary Service";
+            this.MissingPrimaryService.MinimumWidth = 6;
+            this.MissingPrimaryService.Name = "MissingPrimaryService";
+            this.MissingPrimaryService.ReadOnly = true;
+            this.MissingPrimaryService.Width = 319;
+            // 
+            // MissingSecondaryService
+            // 
+            this.MissingSecondaryService.HeaderText = "Missing Secondary Service";
+            this.MissingSecondaryService.MinimumWidth = 6;
+            this.MissingSecondaryService.Name = "MissingSecondaryService";
+            this.MissingSecondaryService.ReadOnly = true;
+            this.MissingSecondaryService.Width = 348;
+            // 
+            // MissingSubService
+            // 
+            this.MissingSubService.HeaderText = "Missing SubService";
+            this.MissingSubService.MinimumWidth = 6;
+            this.MissingSubService.Name = "MissingSubService";
+            this.MissingSubService.ReadOnly = true;
+            this.MissingSubService.Width = 264;
+            // 
+            // ServiceEntriesPostTimeboxPeriod
+            // 
+            this.ServiceEntriesPostTimeboxPeriod.HeaderText = "Service Entries Post Timebox Period";
+            this.ServiceEntriesPostTimeboxPeriod.MinimumWidth = 6;
+            this.ServiceEntriesPostTimeboxPeriod.Name = "ServiceEntriesPostTimeboxPeriod";
+            this.ServiceEntriesPostTimeboxPeriod.ReadOnly = true;
+            this.ServiceEntriesPostTimeboxPeriod.Width = 459;
+            // 
+            // ServiceEntriesForHCCIDMissing
+            // 
+            this.ServiceEntriesForHCCIDMissing.HeaderText = "Service Entries For HCCID Missing";
+            this.ServiceEntriesForHCCIDMissing.MinimumWidth = 6;
+            this.ServiceEntriesForHCCIDMissing.Name = "ServiceEntriesForHCCIDMissing";
+            this.ServiceEntriesForHCCIDMissing.ReadOnly = true;
+            this.ServiceEntriesForHCCIDMissing.Width = 431;
+            // 
+            // Drop
+            // 
+            this.Drop.HeaderText = "%Drop";
+            this.Drop.MinimumWidth = 6;
+            this.Drop.Name = "Drop";
+            this.Drop.ReadOnly = true;
+            this.Drop.Width = 122;
             // 
             // pnl
             // 
@@ -241,6 +327,7 @@
             // 
             // dtpDateFilter
             // 
+            this.dtpDateFilter.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpDateFilter.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpDateFilter.FormattingEnabled = true;
             this.dtpDateFilter.Items.AddRange(new object[] {
@@ -342,92 +429,6 @@
             this.lblBatch.Size = new System.Drawing.Size(107, 35);
             this.lblBatch.TabIndex = 10;
             this.lblBatch.Text = "BatchID";
-            // 
-            // Column1
-            // 
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle8;
-            this.Column1.HeaderText = "MMM-YYYY";
-            this.Column1.MinimumWidth = 6;
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 184;
-            // 
-            // Month
-            // 
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.Month.DefaultCellStyle = dataGridViewCellStyle9;
-            this.Month.HeaderText = "Total Service Entries";
-            this.Month.MinimumWidth = 6;
-            this.Month.Name = "Month";
-            this.Month.ReadOnly = true;
-            this.Month.Width = 278;
-            // 
-            // ServiceEntriesSuccessfullyExportedToHCC
-            // 
-            this.ServiceEntriesSuccessfullyExportedToHCC.HeaderText = "Service Entries Successfully Exported To HCC";
-            this.ServiceEntriesSuccessfullyExportedToHCC.MinimumWidth = 6;
-            this.ServiceEntriesSuccessfullyExportedToHCC.Name = "ServiceEntriesSuccessfullyExportedToHCC";
-            this.ServiceEntriesSuccessfullyExportedToHCC.ReadOnly = true;
-            this.ServiceEntriesSuccessfullyExportedToHCC.Width = 558;
-            // 
-            // ServiceEntriesNotExportedToHCC
-            // 
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            this.ServiceEntriesNotExportedToHCC.DefaultCellStyle = dataGridViewCellStyle10;
-            this.ServiceEntriesNotExportedToHCC.HeaderText = "Service Entries Not Exported To HCC";
-            this.ServiceEntriesNotExportedToHCC.MinimumWidth = 6;
-            this.ServiceEntriesNotExportedToHCC.Name = "ServiceEntriesNotExportedToHCC";
-            this.ServiceEntriesNotExportedToHCC.ReadOnly = true;
-            this.ServiceEntriesNotExportedToHCC.Width = 462;
-            // 
-            // MissingPrimaryService
-            // 
-            this.MissingPrimaryService.HeaderText = "Missing Primary Service";
-            this.MissingPrimaryService.MinimumWidth = 6;
-            this.MissingPrimaryService.Name = "MissingPrimaryService";
-            this.MissingPrimaryService.ReadOnly = true;
-            this.MissingPrimaryService.Width = 319;
-            // 
-            // MissingSecondaryService
-            // 
-            this.MissingSecondaryService.HeaderText = "Missing Secondary Service";
-            this.MissingSecondaryService.MinimumWidth = 6;
-            this.MissingSecondaryService.Name = "MissingSecondaryService";
-            this.MissingSecondaryService.ReadOnly = true;
-            this.MissingSecondaryService.Width = 348;
-            // 
-            // MissingSubService
-            // 
-            this.MissingSubService.HeaderText = "Missing SubService";
-            this.MissingSubService.MinimumWidth = 6;
-            this.MissingSubService.Name = "MissingSubService";
-            this.MissingSubService.ReadOnly = true;
-            this.MissingSubService.Width = 264;
-            // 
-            // ServiceEntriesPostTimeboxPeriod
-            // 
-            this.ServiceEntriesPostTimeboxPeriod.HeaderText = "Service Entries Post Timebox Period";
-            this.ServiceEntriesPostTimeboxPeriod.MinimumWidth = 6;
-            this.ServiceEntriesPostTimeboxPeriod.Name = "ServiceEntriesPostTimeboxPeriod";
-            this.ServiceEntriesPostTimeboxPeriod.ReadOnly = true;
-            this.ServiceEntriesPostTimeboxPeriod.Width = 459;
-            // 
-            // ServiceEntriesForHCCIDMissing
-            // 
-            this.ServiceEntriesForHCCIDMissing.HeaderText = "Service Entries For HCCID Missing";
-            this.ServiceEntriesForHCCIDMissing.MinimumWidth = 6;
-            this.ServiceEntriesForHCCIDMissing.Name = "ServiceEntriesForHCCIDMissing";
-            this.ServiceEntriesForHCCIDMissing.ReadOnly = true;
-            this.ServiceEntriesForHCCIDMissing.Width = 431;
-            // 
-            // Drop
-            // 
-            this.Drop.HeaderText = "%Drop";
-            this.Drop.MinimumWidth = 6;
-            this.Drop.Name = "Drop";
-            this.Drop.ReadOnly = true;
-            this.Drop.Width = 122;
             // 
             // HCC_Reconciliation
             // 

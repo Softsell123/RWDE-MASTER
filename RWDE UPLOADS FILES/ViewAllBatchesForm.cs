@@ -39,10 +39,36 @@ namespace RWDE_UPLOADS_FILES
                 dtpStartDate.Value = DateTime.Today.AddDays(-1);
                 dtpStartDate.CustomFormat = Constants.DateTimeFormat;
                 dtpEndDate.CustomFormat = Constants.DateTimeFormat;
+                RegisterEvents(this);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"{Constants.ErrorInitializingForm}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
+
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
             }
         }
         // Populates the DataGridView with data from the Batch table

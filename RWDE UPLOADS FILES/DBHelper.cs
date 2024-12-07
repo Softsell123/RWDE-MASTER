@@ -14,6 +14,7 @@ using System.Web.UI.DataVisualization.Charting;
 using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Configuration;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Diagnostics.Eventing.Reader;
 using ClosedXML.Excel;//
@@ -31,7 +32,7 @@ namespace RWDE
         public DBHelper()
         {
             // Define the connection string within the DBHelper class
-            connectionString = "Data Source=BSSDEMO\\MSSQLSERVER01;Initial Catalog=RWDE;Integrated Security=True;";
+            connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
         }
         public string GetConnectionString()//get connection string
         {
@@ -337,7 +338,7 @@ namespace RWDE
                         else
                         {
                             // Increment the last batch ID to get the next available batch ID
-                            nextBatchID = lastBatchIDFromDB;
+                            nextBatchID = ++lastBatchIDFromDB;
                         }
 
                         // Set batchIDIncremented to true to indicate that the batch ID has been incremented
@@ -349,6 +350,30 @@ namespace RWDE
                         nextBatchID = lastBatchIDFromDB;
                     }
                     return nextBatchID;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return 0;
+            }
+        }
+        public int GetMaxXMLBatchID()//Getting BatchId for particular file insertion
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    SqlCommand command = new SqlCommand("SELECT ISNULL(MAX(BatchID), 0) FROM CTClients", connection);
+
+                    // Get the last batch ID from the database
+                    object result = command.ExecuteScalar();
+                    int maxBatchIDFromDB = result == DBNull.Value ? 0 : Convert.ToInt32(result);
+
+                  
+                    return maxBatchIDFromDB;
                 }
             }
             catch (Exception ex)
@@ -394,6 +419,7 @@ namespace RWDE
             }
         }
         public void InsertBatch(int batchId, string fileName, string path, int type, string description, DateTime startedAt, int totalRowsInCurrentFile, int successfulRows, int status)//update batch status in database
+        
         {
             try
             {
@@ -649,6 +675,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@SourceSystemName", Constants.Ochin);
                     command.Parameters.AddWithValue("@UserID", Constants.userid);
                     command.Parameters.AddWithValue("@AgencyID", Constants.agencyid);
+                    command.Parameters.AddWithValue("@sourceid", DBNull.Value);
                     command.ExecuteNonQuery();
                 }
             }
@@ -3813,7 +3840,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
             }
             return dt;
         }
-        public List<DataTable> LoadDatafilterhccreconBatchid(int[] Batchids)
+        public List<DataTable> LoadDatafilterhccreconBatchid(DateTime startDate, DateTime endDate, int[] Batchids, String filterType)
         {
             List<DataTable> result = new List<DataTable>();
             List<int> NoDataIds = new List<int>();
@@ -3824,9 +3851,13 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        SqlCommand cmd = new SqlCommand("sp_HCCReconBatchID", conn);
-                        cmd.Parameters.AddWithValue("@BatchID", onebatch);
+                        SqlCommand cmd = new SqlCommand("sp_HCCRecon", conn);
+                        
                         cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@StartDate", startDate);
+                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue("@BatchID", onebatch);
+                        cmd.Parameters.AddWithValue("@Type", filterType);
 
                         conn.Open();
 
@@ -3890,7 +3921,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     conn.Open();
 
                     // Choose stored procedure based on filterType
-                    string query = filterType == "CreatedDate" ? "sp_HCCReconCreatedDate" : "sp_HCCReconSERVICE";
+                    string query = "sp_HCCRecon";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -3899,6 +3930,8 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                         // Add start and end date parameters directly as DateTime
                         cmd.Parameters.AddWithValue("@StartDate", startDate);
                         cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue("@BatchID", 0);
+                        cmd.Parameters.AddWithValue("@Type", filterType);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
@@ -3925,6 +3958,35 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
+                        cmd.Parameters.AddWithValue("@StartDate", startDate);
+                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        adapter.Fill(dt);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions (logging, rethrowing, etc.)
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            return dt;
+        }
+        public DataTable LoadManualUploadReport(DateTime startDate, DateTime endDate)//to get details of clients applied for services
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "ManualUploadReport"; // Ordering by the minimum date in each group
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@StartDate", startDate);
                         cmd.Parameters.AddWithValue("@EndDate", endDate);
 

@@ -86,7 +86,7 @@ namespace Rwde
         public const int HCCENDCON = 18;
         public const int HCCABORT = 19;
         public const string Abort = "A";
-        public const string CMSClients = "Client_20240523";
+        public const string Clients = "Client_";
         public const string nobatchid = "No data exists for this Batch ID";
         public const string batchidnull = "Batch ID Cannot be null";
         public const string XMLUPLOADSTARTED = "XML Upload Started";
@@ -143,7 +143,8 @@ namespace Rwde
         public const string Service_ReconciliationReport = "Service_Reconciliation Report";
         public const string Deceased_Clients = "Deceased_Clients";
         public const string Nodatafoundbetweenselecteddates = "No data found between selected dates";
-        
+
+
 
 
 
@@ -227,7 +228,7 @@ namespace Rwde
         public const string EmptyvalueMessage = "Enter The Correct Details";
         public const string FilterTitle = "View All Batches";
         public const string Deletioncancelled = "Deletion cancelled";
-        public const string CMSServices = "Service_Sample_20240726";
+        public const string Services = "Service_Sample";
         public const string Errorfileuplodedsuccessfully = "Error File Uploded Successfully";
         public const string NoFilterDatas = "The filter values you selected do not match any available data for OCHIN.";
         public const string NoFilterDatasHCC = "The filter values you selected do not match any available data.";
@@ -350,6 +351,23 @@ namespace Rwde
 
 
         // Example error message
+
+
+    }
+    public static class ManualUploadConstants
+    {
+        public const string NoManualUploadsbetweenselecteddates = "No Manual Uploads between selected dates";
+        public const string ManualUploadClientsReport = "Manual Upload Clients Report";
+        public const string Information = "Information";
+        public const string Nodataavailabletodownload = "No data available to download";
+        public const string Sheet1 = "Sheet1";
+        public const string DateCustomFormat = "MM-dd-yyyy";
+        public const string Warning = "Warning";
+        public const string xlsx_extention = ".xlsx";
+
+
+
+
 
 
     }
