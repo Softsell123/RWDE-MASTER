@@ -29,6 +29,7 @@ namespace RWDE_UPLOADS_FILES
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             dtpEndDate.Value = DateTime.Now;
+            RegisterEvents(this);
         }
         private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
@@ -169,6 +170,31 @@ namespace RWDE_UPLOADS_FILES
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
+
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
             }
         }
 

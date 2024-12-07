@@ -29,12 +29,16 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LOAD));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblName = new System.Windows.Forms.Label();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Sourceid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SourceFileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnlFilter = new System.Windows.Forms.Panel();
             this.txtFileName = new System.Windows.Forms.TextBox();
@@ -46,10 +50,6 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnUpload = new System.Windows.Forms.Button();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Sourceid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SourceFileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.panel1.SuspendLayout();
             this.pnlFilter.SuspendLayout();
@@ -99,14 +99,14 @@
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Status,
@@ -119,14 +119,52 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
+            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView.RowTemplate.Height = 24;
             this.dataGridView.ShowCellErrors = false;
             this.dataGridView.Size = new System.Drawing.Size(1509, 438);
             this.dataGridView.TabIndex = 10;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
+            // 
+            // Status
+            // 
+            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Status.DataPropertyName = "BatchID";
+            this.Status.HeaderText = "HCC Tables";
+            this.Status.MinimumWidth = 6;
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Width = 350;
+            // 
+            // Message
+            // 
+            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Message.DataPropertyName = "BatchID";
+            this.Message.HeaderText = "Error Message";
+            this.Message.MinimumWidth = 6;
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            this.Message.Width = 350;
+            // 
+            // Sourceid
+            // 
+            this.Sourceid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Sourceid.HeaderText = "SourceId";
+            this.Sourceid.MinimumWidth = 6;
+            this.Sourceid.Name = "Sourceid";
+            this.Sourceid.ReadOnly = true;
+            this.Sourceid.Width = 350;
+            // 
+            // SourceFileName
+            // 
+            this.SourceFileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.SourceFileName.HeaderText = "Source File Name";
+            this.SourceFileName.MinimumWidth = 6;
+            this.SourceFileName.Name = "SourceFileName";
+            this.SourceFileName.ReadOnly = true;
+            this.SourceFileName.Width = 350;
             // 
             // panel1
             // 
@@ -265,56 +303,21 @@
             this.btnUpload.UseVisualStyleBackColor = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
-            // Status
-            // 
-            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Status.DataPropertyName = "BatchID";
-            this.Status.HeaderText = "HCC Tables";
-            this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 350;
-            // 
-            // Message
-            // 
-            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Message.DataPropertyName = "BatchID";
-            this.Message.HeaderText = "Error Message";
-            this.Message.MinimumWidth = 6;
-            this.Message.Name = "Message";
-            this.Message.ReadOnly = true;
-            this.Message.Width = 350;
-            // 
-            // Sourceid
-            // 
-            this.Sourceid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Sourceid.HeaderText = "SourceId";
-            this.Sourceid.MinimumWidth = 6;
-            this.Sourceid.Name = "Sourceid";
-            this.Sourceid.ReadOnly = true;
-            this.Sourceid.Width = 350;
-            // 
-            // SourceFileName
-            // 
-            this.SourceFileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.SourceFileName.HeaderText = "Source File Name";
-            this.SourceFileName.MinimumWidth = 6;
-            this.SourceFileName.Name = "SourceFileName";
-            this.SourceFileName.ReadOnly = true;
-            this.SourceFileName.Width = 350;
-            // 
             // LOAD
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1838, 894);
+            this.ControlBox = false;
             this.Controls.Add(this.btnUpload);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dataGridView);
             this.ForeColor = System.Drawing.Color.Black;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "LOAD";
             this.Text = "Download HCC Errors";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();

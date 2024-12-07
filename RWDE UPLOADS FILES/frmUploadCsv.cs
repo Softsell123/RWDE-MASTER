@@ -31,7 +31,8 @@ namespace RWDE_UPLOADS_FILES
             string date = currenttime.ToString("MM/dd/yyyy");
             string time = currenttime.ToString("HH:mm:ss");
             txtDesc.Text = $"HCC CSV Upload on {date} at {time}";
-            string pathFile = Constants.LastFolderPathOCHIN;           
+            string pathFile = Constants.LastFolderPathOCHIN;
+            RegisterEvents(this);
             // Check if the file exists
             if (File.Exists(pathFile))
             {
@@ -63,6 +64,32 @@ namespace RWDE_UPLOADS_FILES
         public int batchid;
         bool isUploading = false;
         bool batchId = false;
+
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
+
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
+            }
+        }
         private void btnUpload_Click(object sender, EventArgs e)//Uploding CSV files
         {
             try {

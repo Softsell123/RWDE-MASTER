@@ -141,6 +141,8 @@ namespace RWDE_UPLOADS_FILES
             this.cbMask.Text = "PHI Data Masking";
             this.cbMask.UseVisualStyleBackColor = true;
             this.cbMask.CheckedChanged += new System.EventHandler(this.cbMask_CheckedChanged_2);
+            this.cbMask.MouseLeave += new System.EventHandler(this.cbMask_MouseLeave);
+            this.cbMask.MouseHover += new System.EventHandler(this.cbMask_MouseHover);
             // 
             // lblBatchtype
             // 

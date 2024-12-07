@@ -19,6 +19,7 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml.Office.Word;
+using ComboBox = System.Windows.Forms.ComboBox;
 
 namespace RWDE_UPLOADS_FILES
 {
@@ -31,12 +32,12 @@ namespace RWDE_UPLOADS_FILES
         public frmXMLGenerator()
         {
             InitializeComponent();
+            dbHelper = new DBHelper();
+            connectionString = dbHelper.GetConnectionString();
             LoadBatchStatus();
             PopulateDataGridView();
             //PopulateDataGridViewstartedstatus();
-            dbHelper = new DBHelper();
             xmlPath = txtPath.Text;
-            connectionString = dbHelper.GetConnectionString();         
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             dataGridView.CellFormatting += dataGridView_CellFormatting;
@@ -49,6 +50,7 @@ namespace RWDE_UPLOADS_FILES
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
             cbBatchType.Items.Clear();
+            RegisterEvents(this);
             // Clear existing items
             foreach (string batchType in batchTypes)
             {
@@ -76,6 +78,31 @@ namespace RWDE_UPLOADS_FILES
                 txtPath.Clear();  // Clear the text box if the file doesn't exist
             }
         }
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
+
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
+            }
+        }
         private void LoadBatchStatus()//load data
         {
             PopulateDataGridViewstartedstatus();
@@ -90,7 +117,7 @@ namespace RWDE_UPLOADS_FILES
                     string excludedBatchIDs = string.Join(",", removedBatchIDs);
                     query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
                 }
-                using (SqlConnection connection = new SqlConnection("Data Source=BSSDEMO\\MSSQLSERVER01;Initial Catalog=RWDE;Integrated Security=True;"))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -1301,7 +1328,7 @@ namespace RWDE_UPLOADS_FILES
                     string excludedBatchIDs = string.Join(",", removedBatchIDs);
                     query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
                 }
-                using (SqlConnection connection = new SqlConnection("Data Source=BSSDEMO\\MSSQLSERVER01;Initial Catalog=RWDE;Integrated Security=True;"))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);

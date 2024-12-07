@@ -33,6 +33,7 @@ namespace RWDE_UPLOADS_FILES
             this.WindowState = FormWindowState.Maximized;
             btnConversion.Visible = false;
             this.IsMdiContainer = true;
+            RegisterEvents(this);
         }
         private void MainForm_Load(object sender, EventArgs e)//to load main form
         {
@@ -50,6 +51,31 @@ namespace RWDE_UPLOADS_FILES
             ServiceReconciliationReport service = new ServiceReconciliationReport();
             service.MdiParent = this;
             service.Show();
+        }
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
+
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
+            }
         }
 
         private bool IsAnotherControlActive()//to control the files
@@ -724,6 +750,21 @@ namespace RWDE_UPLOADS_FILES
             CsvFile_Conversion CsvFile_Conversion = new CsvFile_Conversion();
             CsvFile_Conversion.MdiParent = this;
             CsvFile_Conversion.Show();
+        }
+
+        private void manualUploadReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                frmManualUpload frmManualUpload = new frmManualUpload();
+                frmManualUpload.MdiParent = this;
+                frmManualUpload.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
     }
 }

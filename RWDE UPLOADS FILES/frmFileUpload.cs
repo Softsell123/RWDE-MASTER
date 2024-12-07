@@ -56,6 +56,7 @@ namespace RWDE_UPLOADS_FILES
                 txtProgressbar.Text = "0%";
                 txtProgressfile.Text = "0/0 (0%)";
                 string pathFile = "LastFolderPath.txt";
+                RegisterEvents(this);
 
                 // Check if the file exists
                 if (File.Exists(pathFile))
@@ -413,7 +414,7 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-                 int batchId = dbHelper.GetNextBatchID();
+                int batchId = dbHelper.GetNextBatchID();
                 if (btnClose.Text == "Abort")
                 {
                     DialogResult result = MessageBox.Show("Are you sure you want to abort?","XML File Upload", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -443,7 +444,7 @@ namespace RWDE_UPLOADS_FILES
                 int successfulRows = 0;
                 // Insert batch details into the database, including batch ID, file name, path, timestamps, row counts, and status.
                 dbHelper.InsertBatch(batchId+1, fileName, path, Constants.ClientTrack, null, currentTime, totalRows, successfulRows, Constants.fileaborted);
-                ClearTables(batchId);
+                ClearTables(batchId+1);
 
             }
             catch (Exception ex)
@@ -517,6 +518,41 @@ namespace RWDE_UPLOADS_FILES
         private void cbMask_CheckedChanged_2(object sender, EventArgs e)
         {
 
+        }
+
+        private void cbMask_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void cbMask_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
+
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
+            }
         }
     }
 }

@@ -28,7 +28,8 @@ namespace RWDE_UPLOADS_FILES
             connectionString = dbHelper.GetConnectionString();
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
-            
+            RegisterEvents(this);
+
             if (File.Exists(Constants.LastFolderPathhcc))
             {
                 string LastFolderPathhcc = File.ReadAllText(Constants.LastFolderPathhcc).Trim();  // Trim to remove any extra spaces or newlines
@@ -43,7 +44,31 @@ namespace RWDE_UPLOADS_FILES
                 }
             }
         }
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
 
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
+            }
+        }
         private void lblStartDate_Click(object sender, EventArgs e)
         {
 
@@ -51,7 +76,7 @@ namespace RWDE_UPLOADS_FILES
 
         private void btnReport_Click(object sender, EventArgs e)
         {
-            string filePath = Path.Combine(txtPath.Text, "CTClientsData.csv"); // Ensure the full file path includes a filename
+            string filePath = Path.Combine(txtPath.Text, $"Client_{DateTime.Now.ToString("yyyyMMdd")}.csv"); // Ensure the full file path includes a filename
 
             try
             {
@@ -65,7 +90,7 @@ namespace RWDE_UPLOADS_FILES
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    int batchid = dbHelper.GetNextBatchID();
+                    int batchid = dbHelper.GetMaxXMLBatchID();
                     // Call the stored procedure
                     using (SqlCommand cmd = new SqlCommand("ctclientsmapping", conn))
                     {
@@ -114,7 +139,7 @@ namespace RWDE_UPLOADS_FILES
         public void GetServicedataCSV(int batchid)
         {
             
-            string filePath = Path.Combine(txtPath.Text, "CTServicesData.csv"); // Ensure the full file path includes a filename
+            string filePath = Path.Combine(txtPath.Text, $"Service_Sample_{DateTime.Now.ToString("yyyyMMdd")}.csv"); // Ensure the full file path includes a filename
 
             try
             {
@@ -188,9 +213,10 @@ namespace RWDE_UPLOADS_FILES
 
                 if (folderDialog.ShowDialog() == DialogResult.OK)
                 {
+                    string selectedPath="";
                     try
                     {
-                        string selectedPath = folderDialog.SelectedPath;
+                        selectedPath = folderDialog.SelectedPath;
                         txtPath.Text = selectedPath;
 
                         // Test writing permission by creating a temporary file
@@ -204,6 +230,8 @@ namespace RWDE_UPLOADS_FILES
                     {
                         MessageBox.Show("Access to the selected folder is denied. Please choose a different folder.", "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    // Save the folder path (you only need to save it once)
+                    File.WriteAllText(Constants.LastFolderPathhcc, selectedPath);
                 }
             }
         }

@@ -27,7 +27,6 @@ namespace RWDE_UPLOADS_FILES
             get
             {
                 return pnlOCHINConversion;
-
             }
         }
         public OCHIN_to_RWDE_Conversion()
@@ -53,6 +52,32 @@ namespace RWDE_UPLOADS_FILES
             dtpEndDate.CustomFormat = "MM-dd-yyyy";
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
+            RegisterEvents(this);
+        }
+        private void Control_MouseHover(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+        private void RegisterEvents(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker ||control is ComboBox)
+                {
+                    control.MouseHover += Control_MouseHover;
+                    control.MouseLeave += Control_MouseLeave;
+                }
+
+                // Check for child controls in containers
+                if (control.HasChildren)
+                {
+                    RegisterEvents(control);
+                }
+            }
         }
         private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)// Formats the cell value for the "Status" column based on the corresponding value in the database.
         {
