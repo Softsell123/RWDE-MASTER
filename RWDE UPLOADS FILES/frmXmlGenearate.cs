@@ -1717,9 +1717,10 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-                int batchId = dbHelper.GetNextBatchID();
-
-
+               // int batchId = dbHelper.GetNextBatchID();
+                int selectedRowIndex = dataGridView.SelectedRows[0].Index;
+                int batchID = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
+                String filename = Convert.ToString(dataGridView.Rows[selectedRowIndex].Cells["FileName"].Value.ToString());
                 if (btnClose.Text == "Abort")
                 {
                     // Prompt the user with a confirmation message
@@ -1739,7 +1740,7 @@ namespace RWDE_UPLOADS_FILES
                         //  MessageBox.Show(Constants.Abortedsuccessfully);
 
                         // Update the status of the selected batch to Status "19" (Abort)
-                        UpdateBatchStatusabort(batchId, Constants.xmlabort, selectedFolderPath);
+                        UpdateBatchStatusabort(batchID, Constants.xmlabort, selectedFolderPath, filename);
                     }
                     Application.Restart();
                 }
@@ -1747,11 +1748,6 @@ namespace RWDE_UPLOADS_FILES
                 System.Windows.Forms.Application.Restart();
 
                 // User clicked "No" or closed the message box, do nothing
-
-
-
-
-
             }
 
             catch (Exception ex)
@@ -1760,7 +1756,7 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void UpdateBatchStatusabort(int batchId, int status, string xmlDirectoryPath)//for abort status 
+        private void UpdateBatchStatusabort(int batchId, int status, string xmlDirectoryPath,String filename)//for abort status 
         {
             try
             {
@@ -1778,6 +1774,7 @@ namespace RWDE_UPLOADS_FILES
                         // Add parameters to the command
                         command.Parameters.AddWithValue("@Status", status);
                         command.Parameters.AddWithValue("@BatchID", batchId);
+                        command.Parameters.AddWithValue("@Filename", filename);
 
                         // Execute the update query
                         int rowsAffected = command.ExecuteNonQuery();

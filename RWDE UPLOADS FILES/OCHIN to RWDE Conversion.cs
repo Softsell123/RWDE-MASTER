@@ -205,8 +205,11 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-                int batchId = dbHelper.GetNextBatchID();
-               
+               // int batchId = dbHelper.GetNextBatchID();
+                int selectedRowIndex = dataGridView.SelectedRows[0].Index;
+                int batchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
+                string fileName = dataGridView.Rows[selectedRowIndex].Cells["fileName"].Value.ToString();
+
                 if (btncloseHCC.Text == Constants.abort)
                 {
                     DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, "Abort Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -228,7 +231,7 @@ namespace RWDE_UPLOADS_FILES
                         MessageBox.Show(Constants.Abortedsuccessfully);
 
                         // Update the status of the selected batch to Status "19" (Abort)
-                        UpdateBatchStatusabort(batchId, 19);
+                        UpdateBatchStatusabort(batchId, 19, fileName);
                         this.Close();
                     }
                     this.Close();
@@ -246,7 +249,7 @@ namespace RWDE_UPLOADS_FILES
             }
             }
 
-                private void UpdateBatchStatusabort(int batchId, int status)//for abort status 
+                private void UpdateBatchStatusabort(int batchId, int status,String Filename)//for abort status 
                 {
                     try
                     {
@@ -264,9 +267,11 @@ namespace RWDE_UPLOADS_FILES
                                 // Add parameters to the command
                                 command.Parameters.AddWithValue("@Status", status);
                                 command.Parameters.AddWithValue("@BatchID", batchId);
+                                command.Parameters.AddWithValue("@Filename", Filename);
 
-                                // Execute the update query
-                                int rowsAffected = command.ExecuteNonQuery();
+
+                        // Execute the update query
+                        int rowsAffected = command.ExecuteNonQuery();
 
                                 // Check if any rows were affected (optional)
                                 if (rowsAffected > 0)
