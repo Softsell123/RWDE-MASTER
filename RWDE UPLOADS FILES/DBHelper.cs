@@ -370,10 +370,10 @@ namespace RWDE
 
                     // Get the last batch ID from the database
                     object result = command.ExecuteScalar();
-                    int maxBatchIDFromDB = result == DBNull.Value ? 0 : Convert.ToInt32(result);
+                    int maxBatchXMLIDFromDB = result == DBNull.Value ? 0 : Convert.ToInt32(result);
 
                   
-                    return maxBatchIDFromDB;
+                    return maxBatchXMLIDFromDB;
                 }
             }
             catch (Exception ex)
@@ -382,7 +382,7 @@ namespace RWDE
                 return 0;
             }
         }
-        public int NextBatchID()//Getting BatchId for particular file insertion
+        public int GetMaxBatchID()//Getting BatchId for particular file insertion
         {
             try
             {
@@ -407,7 +407,7 @@ namespace RWDE
                     else
                     {
                         // Increment the last batch ID to get the next available batch ID
-                        nextBatchID = lastBatchIDFromDB + 1;
+                        nextBatchID = lastBatchIDFromDB;
                     }
                     return nextBatchID;
                 }
@@ -428,10 +428,10 @@ namespace RWDE
                     connection.Open();
 
                     // Loop until a unique batchId is found
-                    while (BatchExists(connection, batchId, fileName))
-                    {
-                        batchId++;
-                    }
+                    //while (BatchExists(connection, batchId, fileName))
+                    //{
+                    //    batchId++;
+                    //}
 
                     // Proceed with inserting the new batch record
                     SqlCommand command = new SqlCommand("insertbatchtable", connection);

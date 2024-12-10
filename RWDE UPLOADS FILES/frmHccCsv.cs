@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -86,32 +87,30 @@ namespace RWDE_UPLOADS_FILES//
                 {
                     if (btnClose.Text == Constants.abort)
                     {
-                      
-                            DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, "UPLOAD OCHIN CSV", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, "UPLOAD OCHIN CSV", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (result == DialogResult.Yes)
                         {
-                            int currentBatchId = dbHelper.GetNextBatchIdabort(connection); // Get the current batch ID from the database
+                            int BatchId = Convert.ToInt32(txtBatchid.Text);
+                            //int currentBatchId = dbHelper.GetNextBatchIdabort(connection); // Get the current batch ID from the database
 
                             string fileName = txtFileName.Text;
-                            
+                        
                             // Increment the batch ID
-                            int nextBatchId = currentBatchId + 1;
-                            dbHelper.DeleteBatchochin(nextBatchId.ToString());
-
-                            // Update the batch status with the new batch ID
+                            //int nextBatchId = currentBatchId + 1;
 
                             // Show confirmation message
                             MessageBox.Show(Constants.Abortedsuccessfully, "UPLOAD OCHIN CSV");
 
-                                UpdateBatch(nextBatchId, fileName, path);
+                                UpdateBatch(BatchId, fileName, path);
                                 this.Close();
-
-                            
+                                dbHelper.DeleteBatchochin(BatchId.ToString());
+                                Application.Restart();
                         }
-                    }
 
+                        
+                    }
                     // Restart the application
-                    Application.Restart();
+                   
                 }
                 catch (Exception ex)
                 {
@@ -154,11 +153,10 @@ namespace RWDE_UPLOADS_FILES//
                 {
                     string description = Constants.abortedfile;
                     DateTime startTime = DateTime.Now;
-                    
+                   
                     dbHelper.InsertBatch(batchid, filename, path, Constants.OCHIN, description, startTime, 0, 0, Constants.fileaborted);
-                    ClearTables(batchid);//to clear data in tables
-
-
+                    
+                //ClearTables(batchid);//to clear data in tables
                 }
                 catch (Exception ex)
                 {
@@ -168,6 +166,7 @@ namespace RWDE_UPLOADS_FILES//
         }
         private async void btnUpload_Click_1(object sender, EventArgs e)//to upload data into table in database
         {
+           
             if (string.IsNullOrEmpty(txtPath.Text))
             {
                 MessageBox.Show("The folder path cannot be empty. Please select a valid folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -192,17 +191,9 @@ namespace RWDE_UPLOADS_FILES//
             string[] files = Directory.GetFiles(txtPath.Text);
             bool allFilesAreCsv = files.All(file => Path.GetExtension(file).Equals(".csv", StringComparison.OrdinalIgnoreCase));
 
-            bool allFilesAreXml = files.All(file => Path.GetExtension(file).Equals(".csv", StringComparison.OrdinalIgnoreCase));
-
-            if (!allFilesAreXml)
-            {
-                MessageBox.Show(Constants.ThefoldercontainsnonCSVfilesUploadisallowedonlyforCSVfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             if (!allFilesAreCsv)
             {
-                MessageBox.Show(Constants.Areyousureyouwanttoabort, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Constants.ThefoldercontainsnonCSVfilesUploadisallowedonlyforCSVfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             btnClose.Text = Constants.abort;
@@ -239,7 +230,7 @@ namespace RWDE_UPLOADS_FILES//
 
                         DateTime startTime = DateTime.Now;
 
-                        int batchid = GetNextBatchId(connection);// Initialize the first batch ID to 1
+                        int batchid = dbHelper.GetNextBatchID(); // Initialize the first batch ID to 1
 
                         foreach (string csvFilePath in csvFiles)
                         {
@@ -311,7 +302,7 @@ namespace RWDE_UPLOADS_FILES//
                     else
                     {
                         btnUpload.Enabled = true;
-                        //btnClose.Text = "Close";
+                        btnClose.Text = "Close";
                     }
                 }
                 catch (Exception ex)
@@ -320,7 +311,7 @@ namespace RWDE_UPLOADS_FILES//
                     ResetUI();
                 }
             }
-        }
+            }
         private int GetNextBatchId(SqlConnection connection)//to get next batch id
         {
             try
@@ -357,7 +348,7 @@ namespace RWDE_UPLOADS_FILES//
                 progressBar.Value = currentCsvFileIndex;
                 txtProgressfile.Text = $"{currentCsvFileIndex}/{totalCsvFiles} ({progressPercentage}%)";
 
-                await Task.Delay(100); // Slow down progress bar update
+                await Task.Delay(50); // Slow down progress bar update
             }
             catch (Exception ex)
             {
@@ -380,8 +371,6 @@ namespace RWDE_UPLOADS_FILES//
             try
             {
                 error = null;
-
-
                 using (StreamReader reader = new StreamReader(csvFilePath))
                 {
                     string headerLine = reader.ReadLine();
@@ -424,10 +413,10 @@ namespace RWDE_UPLOADS_FILES//
                     }
                 }
                 // Loop until a unique batchId is found
-                while (BatchExists(connection, batchId))
-                {
-                    batchId++;
-                }
+                //while (BatchExists(connection, batchId))
+                //{
+                //    batchId++;
+                //}
 
                 // Insert all client data first
                 foreach (var data in clientData)
@@ -456,14 +445,14 @@ namespace RWDE_UPLOADS_FILES//
                 // Insert all service data next
                 foreach (var data in serviceData)
                 {
-                    int batchid = batchId - 1;
+                    //int batchid = batchId - 1;
                     if (chckPHI.Checked == true)//InsertClientServiceDataPHI
                     {
-                        dbHelper.InsertClientServiceData(connection, data, batchid);//insertion of the services file with PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientServiceData(connection, data, batchId);//insertion of the services file with PHI DATA MASKING CONDITION
                     }
                     else
                     {
-                        dbHelper.InsertClientServiceData(connection, data, batchid);//insertion of the services file with PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientServiceData(connection, data, batchId);//insertion of the services file with PHI DATA MASKING CONDITION
                     }
 
                     rowsInserted++;
@@ -518,7 +507,7 @@ namespace RWDE_UPLOADS_FILES//
                     lastProgress = currentRowIndex;
 
                     // Slow down the progress update
-                    await Task.Delay(100); // Adding asynchronous delay of 100 milliseconds
+                    await Task.Delay(50); // Adding asynchronous delay of 100 milliseconds
                 }
             }
             catch (Exception ex)

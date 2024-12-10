@@ -298,7 +298,7 @@ namespace RWDE_UPLOADS_FILES
 
                 // Determine filter type
                 string filterType = string.Empty;
-                if (!string.IsNullOrWhiteSpace(txtBatchID.Text) && int.TryParse(txtBatchID.Text, out int batchid))
+                if (!string.IsNullOrWhiteSpace(txtBatchID.Text) && int.TryParse(txtBatchID.Text, out int batchid) || (!string.IsNullOrWhiteSpace(txtBatchID.Text) && txtBatchID.Text.Contains(",")) || (!string.IsNullOrWhiteSpace(txtBatchID.Text)))
                 {
                     filterType = "BatchID";
                 }
