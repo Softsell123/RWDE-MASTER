@@ -580,8 +580,16 @@ namespace RWDE_UPLOADS_FILES
         }
         private void btnClose_Click_1(object sender, EventArgs e)//to close the form
         {
-            this.Close();
-            Application.Restart();
+            try
+            {
+                // Close the current form (dispose it)
+                this.Close();
+                Application.Restart();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)//to display the drop down
         {

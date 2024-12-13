@@ -85,6 +85,12 @@ namespace RWDE_UPLOADS_FILES//
             {
                 try
                 {
+                    if (btnClose.Text == "Close")
+                    {
+                        this.Close();
+                        Application.Restart();
+                        return;
+                    }
                     if (btnClose.Text == Constants.abort)
                     {
                         DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, "UPLOAD OCHIN CSV", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -180,9 +186,13 @@ namespace RWDE_UPLOADS_FILES//
             {
                 MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-
             }
-           
+            if (filesempty.Length>2)
+            {
+                MessageBox.Show(Constants.Thefolderhasmorethantwofileorduplicatefiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(txtPath.Text))
             {
                 MessageBox.Show(Constants.Selectafilebeforeuploading);

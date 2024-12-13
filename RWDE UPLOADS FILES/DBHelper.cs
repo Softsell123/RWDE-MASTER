@@ -2893,19 +2893,24 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
                 return null;
             }
-        } 
-        public List<Dictionary<string, string>> getServices(int batchId) //Get All Service Values from ServiceGenerator Procedure
+        }
+
+        public List<Dictionary<string, string>> getServices(int batchId)
         {
             try
             {
                 var results = new List<Dictionary<string, string>>();
+                var insertData = new List<SqlParameter[]>();
+
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand(Constants.ServiceXmlGenerationQuery, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@batchId", batchId);//
+                        command.Parameters.AddWithValue("@BatchId", batchId);
+                        command.CommandTimeout = 120; // Extend timeout
                         connection.Open();
+
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -2916,24 +2921,44 @@ namespace RWDE
                                     row[reader.GetName(i)] = reader[i].ToString();
                                 }
                                 results.Add(row);
-                                using (SqlConnection con = new SqlConnection(connectionString))
+
+                                // Collect data for batch insert
+                                int clientId = Convert.ToInt32(reader["Clnt_id"]); // Replace with actual column name
+                                DateTime date = DateTime.Now;
+
+                                insertData.Add(new SqlParameter[]
                                 {
-                                    using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", con))
-                                    {
-                                        cmd.CommandType = CommandType.StoredProcedure;
-                                        DateTime date = DateTime.Now;
-                                        cmd.Parameters.AddWithValue("@Clientid", Convert.ToInt32(reader[5])); // Convert clientid to int
-                                        cmd.Parameters.AddWithValue("@Datetime", date);
-                                        con.Open();
-                                        // Execute the second command here, after the reader is done with the row data
-                                        cmd.ExecuteNonQuery();
-                                        con.Close();
-                                    }
-                                }
+                            new SqlParameter("@Clientid", clientId),
+                            new SqlParameter("@Datetime", date)
+                                });
                             }
                         }
                     }
                 }
+
+                // Batch insert collected data
+                if (insertData.Count > 0)
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        using (SqlTransaction transaction = connection.BeginTransaction())
+                        {
+                            foreach (var parameters in insertData)
+                            {
+                                using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", connection, transaction))
+                                {
+                                    cmd.CommandType = CommandType.StoredProcedure;
+                                    cmd.Parameters.AddRange(parameters);
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+                            transaction.Commit();
+                        }
+                    }
+                }
+
                 return results;
             }
             catch (Exception ex)
@@ -2942,17 +2967,21 @@ namespace RWDE
                 return null;
             }
         }
+
         public List<Dictionary<string, string>> getServiceserror(int batchId) //Get All Service Values from ServiceGenerator Procedure
         {
             try
             {
                 var results = new List<Dictionary<string, string>>();
+                var insertData = new List<SqlParameter[]>();
+
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand(Constants.ServicegeneratorERROR, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@BatchId", batchId);//
+                        command.CommandTimeout = 120;
                         connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -2964,24 +2993,44 @@ namespace RWDE
                                     row[reader.GetName(i)] = reader[i].ToString();
                                 }
                                 results.Add(row);
-                                using (SqlConnection con = new SqlConnection(connectionString))
+
+                                // Collect data for batch insert
+                                int clientId = Convert.ToInt32(reader["Clnt_id"]); // Replace with actual column name
+                                DateTime date = DateTime.Now;
+
+                                insertData.Add(new SqlParameter[]
                                 {
-                                    using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", con))
-                                    {
-                                        cmd.CommandType = CommandType.StoredProcedure;
-                                        DateTime date = DateTime.Now;
-                                        cmd.Parameters.AddWithValue("@Clientid", Convert.ToInt32(reader[5])); // Convert clientid to int
-                                        cmd.Parameters.AddWithValue("@Datetime", date);
-                                        con.Open();
-                                        // Execute the second command here, after the reader is done with the row data
-                                        cmd.ExecuteNonQuery();
-                                        con.Close();
-                                    }
-                                }
+                                    new SqlParameter("@Clientid", clientId),
+                                    new SqlParameter("@Datetime", date)
+                                });
                             }
                         }
                     }
                 }
+
+                // Batch insert collected data
+                if (insertData.Count > 0)
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        connection.Open();
+
+                        using (SqlTransaction transaction = connection.BeginTransaction())
+                        {
+                            foreach (var parameters in insertData)
+                            {
+                                using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", connection, transaction))
+                                {
+                                    cmd.CommandType = CommandType.StoredProcedure;
+                                    cmd.Parameters.AddRange(parameters);
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+                            transaction.Commit();
+                        }
+                    }
+                }
+
                 return results;
             }
             catch (Exception ex)

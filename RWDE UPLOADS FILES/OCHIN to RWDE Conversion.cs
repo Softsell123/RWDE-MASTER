@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Application = System.Windows.Forms.Application;
 
 namespace RWDE_UPLOADS_FILES
 {
@@ -62,11 +63,19 @@ namespace RWDE_UPLOADS_FILES
         {
             Cursor = Cursors.Default;
         }
+        private void dataGridView_Scroll(object sender, ScrollEventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+        private void dataGridViewHCC_Scroll(object sender, ScrollEventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
         private void RegisterEvents(Control parent)
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker ||control is ComboBox)
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker ||control is ComboBox || control is ScrollBar || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -205,7 +214,13 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-               // int batchId = dbHelper.GetNextBatchID();
+                if (btncloseHCC.Text == "Close")
+                {
+                    this.Close();
+                    Application.Restart();
+                    return;
+                }
+                // int batchId = dbHelper.GetNextBatchID();
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int batchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
                 string fileName = dataGridView.Rows[selectedRowIndex].Cells["fileName"].Value.ToString();
@@ -225,82 +240,69 @@ namespace RWDE_UPLOADS_FILES
                             row.Cells["Status"].Value = Constants.xmlabort;
                             break; // Abort after updating the first row
                         }
-                        DialogResult resultmsg = MessageBox.Show(Constants.Abortedsuccessfully, Constants.GenerateXML);
 
                         // Show a message box indicating successful abort
-                        MessageBox.Show(Constants.Abortedsuccessfully);
+                        MessageBox.Show(Constants.Abortedsuccessfully, Constants.GenerateXML);
 
                         // Update the status of the selected batch to Status "19" (Abort)
                         UpdateBatchStatusabort(batchId, 19, fileName);
                         this.Close();
                     }
+
                     this.Close();
-                    
-
                 }
-
                 this.Close();
                 System.Windows.Forms.Application.Restart();
             }
-           
-  
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);
             }
-            }
+        }
 
-                private void UpdateBatchStatusabort(int batchId, int status,String Filename)//for abort status 
+        private void UpdateBatchStatusabort(int batchId, int status,String Filename)//for abort status 
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    try
-                    {
-                        using (SqlConnection connection = new SqlConnection(connectionString))
-                        {
-                            connection.Open();
+                    connection.Open();
 
-                            // Construct the SQL UPDATE statement
-                            string query = "countxmlrows";
+                    // Construct the SQL UPDATE statement
+                    string query = "countxmlrows"; 
                     dbHelper.DeleteHCCABORTED(batchId);
                     // Create and execute the SqlCommand
                     using (SqlCommand command = new SqlCommand(query, connection))
-                            {
-                                command.CommandType = CommandType.StoredProcedure;
-                                // Add parameters to the command
-                                command.Parameters.AddWithValue("@Status", status);
-                                command.Parameters.AddWithValue("@BatchID", batchId);
-                                command.Parameters.AddWithValue("@Filename", Filename);
-
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        // Add parameters to the command
+                        command.Parameters.AddWithValue("@Status", status);
+                        command.Parameters.AddWithValue("@BatchID", batchId);
+                        command.Parameters.AddWithValue("@Filename", Filename);
 
                         // Execute the update query
                         int rowsAffected = command.ExecuteNonQuery();
 
-                                // Check if any rows were affected (optional)
-                                if (rowsAffected > 0)
-                                {
-                                    Console.WriteLine(Constants.Batchstatusupdatedsuccessfully);
-                                }
-                                else
-                                {
-                                    Console.WriteLine(Constants.NobatchwasfoundwiththegivenID);
-                                }
-                            }
+                        // Check if any rows were affected (optional)
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine(Constants.Batchstatusupdatedsuccessfully);
                         }
-
-                      // Delete XML files in the specified directory
-                              
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(Constants.Errorupdatingbatchstatus, ex.Message);
-                        // Log or handle the exception appropriately
+                        else
+                        {
+                            Console.WriteLine(Constants.NobatchwasfoundwiththegivenID);
+                        }
                     }
                 }
+                // Delete XML files in the specified directory
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(Constants.Errorupdatingbatchstatus, ex.Message);
+                // Log or handle the exception appropriately
+            }
+        }
 
-
-                // System.Windows.Forms.Application.Restart();
-
-            
-          
-
+        // System.Windows.Forms.Application.Restart();
 
         public void PopulateDataGridView(DataTable dt)///Populate values in the database
         {
@@ -397,43 +399,44 @@ namespace RWDE_UPLOADS_FILES
         private async void btncthcc_Click_1(object sender, EventArgs e)//Insertion of Client and Eligibility into HCC tables
         {
             try {
+                    if (dataGridView.SelectedRows.Count == 0)
+                    {
+                        MessageBox.Show(Constants.PleaseselectarowwithaBatchIDtoproceed,Constants.ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return; // Exit the method early if no row is selected
+                    }
+                    int selectedRowCount = dataGridView.SelectedRows.Count;
+                    int HccselectedRowCount = dataGridViewHCC.SelectedRows.Count;
+                if (selectedRowCount != 1 || (HccselectedRowCount>0 && selectedRowCount>0))
+                    {
+                        MessageBox.Show(Constants.Pleaseselectonlyonebatchatatime, Constants.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return; // Exit the method early
+                    }
+                    int selectedRowIndex = dataGridView.SelectedRows[0].Index;
+                if (dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value == null ||!int.TryParse(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString(), out int batchId) || batchId == 0)
+                {
+                    MessageBox.Show(Constants.Pleaseselectavalidrowtoproceed, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                int selectedBatchID = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
+                    string fileName = dataGridView.Rows[selectedRowIndex].Cells["fileName"].Value.ToString();
 
-            //    if (dataGridView.Rows.Count > 0)
-            //    {
-            //        MessageBox.Show("The generation process for HCC data is still in progress. Please wait until it's completed.",
-            //                        Constants.ochintorwdeconversion,
-            //                        MessageBoxButtons.OK,
-            //                        MessageBoxIcon.Warning);
-
-            //        return;
-            //    }
-
-                if (dataGridView.SelectedRows.Count == 0)
-            {
-                MessageBox.Show(Constants.PleaseselectarowwithaBatchIDtoproceed,Constants.ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return; // Exit the method early if no row is selected
-            }
-            int selectedRowIndex = dataGridView.SelectedRows[0].Index;
-            int selectedBatchID = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
-            string fileName = dataGridView.Rows[selectedRowIndex].Cells["fileName"].Value.ToString();
-
-            if (fileName.Contains("Client"))
-            {
+                    if (fileName.Contains("Client"))
+                    {
                 
-                _ = GetclientssAsync(selectedBatchID);//to get client data mapping
-            }
+                        _ = GetclientssAsync(selectedBatchID);//to get client data mapping
+                    }
 
-            if (fileName.Contains("Service"))
-            {
-                _ = GetservicesAsync(selectedBatchID);//to get service data mapping
-
-            }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                    if (fileName.Contains("Service"))
+                    {
+                        _ = GetservicesAsync(selectedBatchID);//to get service data mapping
+        
+                    }
+                    }
+                            catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
                
-            }
+                 }
         }
         public async Task GetclientssAsync(int selectedBatchID)//Insertion of Client and Eligibility into HCC tables
         {
@@ -462,7 +465,9 @@ namespace RWDE_UPLOADS_FILES
             }
             btncloseHCC.Text = Constants.abort;
             btnochintorwde.Enabled = false;
-            int batchid = dbHelper.GetNextBatchID();
+            txtUploadEnded.Text = null;
+            txtTotaltime.Text = null;
+            //int batchid = dbHelper.GetNextBatchID();
             RefreshValues();
             try
             {
@@ -624,7 +629,7 @@ namespace RWDE_UPLOADS_FILES
         }
         private async Task GetservicesAsync(int selectedBatchID)//Mapping from CTServices to HCCServices
         {
-            //lblclose.Text = "Abort";
+            //btncloseHCC.Text = "Abort";
             try
             {
                 //progressbarHcc.Visible = false;
@@ -634,28 +639,28 @@ namespace RWDE_UPLOADS_FILES
                 var batchDetails = await dbHelper.GetBatchDetailsFromSPAsync(selectedBatchID);//to check whether the conversion completed or not
 
                 if (batchDetails == null)
-                    {
+                {
                         Console.WriteLine(Constants.Batchnotfound);
                         return;
-                    }
-
+                }
                     // Check if ConversionStartedAt and ConversionEndedAt are not null
                     if (batchDetails.ConversionStartedAt!= null && batchDetails.ConversionEndedAt != null)
                     {
                        MessageBox.Show(Constants.Conversionhasalreadybeencompletedforthisbatch,Constants.ochintorwdeconversion,MessageBoxButtons.OK,MessageBoxIcon.Information);
-                    txtProgresshcc.Text = "0%";
-                    txtProgressServices.Text = "0%";
-                    txtBatchid.Text = null;
-                    txtUploadStarted.Text = null;
-                    txtUploadEnded.Text = null;
-                    txtTotaltime.Text = null;
-                    return;
+                        txtProgresshcc.Text = "0%";
+                        txtProgressServices.Text = "0%";
+                        txtBatchid.Text = null;
+                        txtUploadStarted.Text = null;
+                        txtUploadEnded.Text = null;
+                        txtTotaltime.Text = null;
+                        return;
                     }
-                   
                     btncloseHCC.Text = Constants.abort;
                     txtBatchid.Text = selectedBatchID.ToString();
                     DateTime starttime = DateTime.Now;
-
+                    txtUploadEnded.Text = null;
+                    txtTotaltime.Text = null;
+                    btnochintorwde.Enabled = false;
                     txtUploadStarted.Text = starttime.ToString("MM/dd/yyyy HH:mm:ss");
                     // Check if a batch has been selected
                     if (selectedBatchID >= 0)
@@ -680,7 +685,7 @@ namespace RWDE_UPLOADS_FILES
                                 // Initialize progress variables
                                 int insertedRows = 0;
 
-                                string baseFilename = Constants.CTClients;
+                                string baseFilename = Constants.CTServices;
                                 dbHelper.Log($"Convert to HCC  for batch ID Started.", Constants.HCC, baseFilename, Constants.uploadhcc);
 
                                 DateTime startTime = DateTime.Now;

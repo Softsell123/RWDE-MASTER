@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using ScrollBar = System.Windows.Forms.ScrollBar;
 
 
 namespace RWDE_UPLOADS_FILES
@@ -72,11 +73,15 @@ namespace RWDE_UPLOADS_FILES
         {
             Cursor = Cursors.Default;
         }
+        private void dataGridView_Scroll(object sender, ScrollEventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
         private void RegisterEvents(Control parent)
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -903,8 +908,12 @@ namespace RWDE_UPLOADS_FILES
 
             try
             {
-
-
+                if (btncloseHCC.Text=="Close")
+                {
+                    this.Close();
+                    Application.Restart();
+                    return;
+                }
                 if (btncloseHCC.Text == "Abort")
                 {
                     DialogResult result = MessageBox.Show("Are you sure you want to abort?", "Abort Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -1091,38 +1100,31 @@ namespace RWDE_UPLOADS_FILES
         {
 
         }
-
         private void dtpEndDate_ValueChanged(object sender, EventArgs e)
         {
             dtpEndDate.CustomFormat = "MM-dd-yyyy";
             dtpEndDate.Format = DateTimePickerFormat.Custom;
         }
-
         private void lblEndTo_Click(object sender, EventArgs e)
         {
 
         }
-
         private void lblBatchType_Click(object sender, EventArgs e)
         {
 
         }
-
         private void txtTotaltime_TextChanged(object sender, EventArgs e)
         {
 
         }
-
         private void txtUploadStarted_TextChanged(object sender, EventArgs e)
         {
 
         }
-
         private void txtBatchid_TextChanged(object sender, EventArgs e)
         {
 
         }
-
         private void lblTotaltime_Click(object sender, EventArgs e)
         {
 
@@ -1137,7 +1139,6 @@ namespace RWDE_UPLOADS_FILES
         {
 
         }
-
         private void lblServices_Click(object sender, EventArgs e)
         {
 
@@ -1147,17 +1148,14 @@ namespace RWDE_UPLOADS_FILES
         {
 
         }
-
         private void prsHeading_Click(object sender, EventArgs e)
         {
 
         }
-
         private void progressbarHcc_Click_1(object sender, EventArgs e)
         {
 
         }
-
         private void button4_Click(object sender, EventArgs e)
         {
 

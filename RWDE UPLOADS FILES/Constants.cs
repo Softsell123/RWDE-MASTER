@@ -46,6 +46,8 @@ namespace Rwde
         public const string HCCCSVFILES = "HCC File Upload";
         public const string GenerateXML = "Generate HCC XML Files";
         public const string ThefolderisemptyPleaseuploadfiles = "The folder is empty. Please upload files.";
+        public const string Thefolderhasmorethanonefileorduplicatefiles = "The folder has more than one file or duplicate files.";
+        public const string Thefolderhasmorethantwofileorduplicatefiles = "The folder has more than two files or duplicate files.";
         public const string PleaseselectarowwithaBatchIDtoproceed = "Please select a row with a Batch ID to proceed";
         public const string Pleaseselectabatchbeforestartingtheconversion="Please select a batch before starting the conversion";
        
@@ -128,6 +130,7 @@ namespace Rwde
         public const string abort = "Abort";
        // public const string Pleaseselectabatchbeforestartingtheconversion = "Please select a batch before starting the conversion";
         public const string Pleaseselectonlyonebatchatatime = "Please select only one batch at a time";
+        public const string Pleaseselectavalidrowtoproceed = "Please select a valid row to proceed(It seems selected row is an empty row)";
         public const string ConverttoHCCforbatchIDStarted = "Convert to HCC  for batch ID Started";
         public const string ConverttoHCCformatcompletedsuccessfully = "Convert to HCC format completed successfully";
         public const string StartTime = "Start Time";

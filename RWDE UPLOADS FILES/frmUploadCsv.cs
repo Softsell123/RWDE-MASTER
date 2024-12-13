@@ -404,6 +404,12 @@ namespace RWDE_UPLOADS_FILES
             {
                 try
                 {
+                    if (btnClose.Text == "Close")
+                    {
+                        this.Close();
+                        Application.Restart();
+                        return;
+                    }
 
                     // Show the main form
                     if (btnClose.Text == Constants.close)

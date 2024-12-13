@@ -186,6 +186,7 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.Size = new System.Drawing.Size(1684, 174);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
+            this.dataGridView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView_Scroll);
             // 
             // Column1
             // 
@@ -392,6 +393,7 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridViewHCC.Size = new System.Drawing.Size(1685, 137);
             this.dataGridViewHCC.TabIndex = 9;
             this.dataGridViewHCC.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewHCC_CellContentClick);
+            this.dataGridViewHCC.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridViewHCC_Scroll);
             // 
             // Column7
             // 
