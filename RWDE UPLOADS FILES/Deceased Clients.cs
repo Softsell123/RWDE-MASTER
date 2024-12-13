@@ -49,7 +49,7 @@ namespace RWDE_UPLOADS_FILES
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;

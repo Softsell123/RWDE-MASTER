@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml.Office.Word;
 using ComboBox = System.Windows.Forms.ComboBox;
+using ScrollBar = System.Windows.Forms.ScrollBar;
 
 namespace RWDE_UPLOADS_FILES
 {
@@ -86,11 +87,15 @@ namespace RWDE_UPLOADS_FILES
         {
             Cursor = Cursors.Default;
         }
+        private void dataGridView_Scroll(object sender, ScrollEventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
         private void RegisterEvents(Control parent)
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox)
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -312,6 +317,11 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
+                if (dataGridView.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show(Constants.PleaseselectarowwithaBatchIDtoproceed, Constants.ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return; // Exit the method early if no row is selected
+                }
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int selectedBatchID = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
                 int selectedRowCount = dataGridView.SelectedRows.Count;
@@ -393,12 +403,12 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show(ex.Message);
             }
         }
-        private int selectedBatchID = 0;
+        //private int selectedBatchID = 0;
         public async Task GenerateXMLForServicesAsync(int batchID)//Handle the Service Xml File Process
         {
             try
             {
-                progressClient.Value = 0;
+                //progressClient.Value = 0;
                 var batchDetails = await dbHelper.GetBatchDetailsFromSPAgenearationservices(batchID);//to check whether the generation completed or not
 
                 if (batchDetails == null)
@@ -420,9 +430,14 @@ namespace RWDE_UPLOADS_FILES
 
                     return;
                 }
+                btnClose.Text = "Abort";
                 txtBatchid.Text = batchID.ToString();
-                DateTime starttime = DateTime.Now;
-                btnClose.Text = Constants.abort;
+                DateTime startTime = DateTime.Now;
+                string Time = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+                txtUploadStarted.Text = Time;
+                txtUploadEnded.Text = null;
+                txtTotaltime.Text = null;
+
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int selectedBatchID = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
 
@@ -452,10 +467,10 @@ namespace RWDE_UPLOADS_FILES
                 }
                 // Update the DataGridView
                 int totalRows = GetTotalRowsForBatch(selectedBatchID);
-                DateTime startTime = DateTime.Now;
-                txtBatchid.Text = selectedBatchID.ToString();
-                string Time = startTime.ToString("MM/dd/yyyy HH:mm:ss");
-                txtUploadStarted.Text = Time;
+               // DateTime startTime = DateTime.Now;
+                //txtBatchid.Text = selectedBatchID.ToString();
+                //string Time = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+                //txtUploadStarted.Text = Time;
                 List<Dictionary<string, string>> data;
                 if (chkError.Checked)
                 {
@@ -509,8 +524,6 @@ namespace RWDE_UPLOADS_FILES
                     UpdateStatusColumnServices(selectedBatchID, Constants.HCCXMLSTATUSF, startTime, endTime);
                     PopulateDataGridView(new DataTable());//populate data
                     dbHelper.Log(Constants.GeneratetoHCCformatcompletedsuccessfully, Constants.ClientTrack, baseFilename, Constants.uploadct);
-
-
                 }
             
                 else
@@ -600,6 +613,9 @@ namespace RWDE_UPLOADS_FILES
 
                 foreach (var dataRow in data)
                 {
+                    processedRows++;
+                    await Updateprogress(processedRows, totalRows);//progress of lines inserted
+
                     XElement contractServicesElement = new XElement(contractServiceTagName);
 
                     if (!string.IsNullOrEmpty(contractServicesTitle))
@@ -635,16 +651,13 @@ namespace RWDE_UPLOADS_FILES
                     progressServices.Minimum = 0;
                     progressServices.Maximum = totalRows;
 
-                    while (processedRows < totalRows)
-                    {
-                        processedRows++;
-                        await Updateprogress(processedRows, totalRows);//progress of lines inserted
-
-                        if (processedRows >= totalRows)
-                        {
-                            break;
-                        }
-                    }
+                    //while (processedRows < totalRows)
+                    //{
+                    //    if (processedRows >= totalRows)
+                    //    {
+                    //        break;
+                    //    }
+                    //}
                 }
                 root.Add(sourceSystemElement);
                 return root;
@@ -769,9 +782,14 @@ namespace RWDE_UPLOADS_FILES
 
                 int totalRows = data.Count;
                 int processedRows = 0;
+                await Updateprogressclient(processedRows, totalRows);
+                progressClient.Minimum = 0;
+                progressClient.Maximum = totalRows;
 
-                foreach (var dataRow in data)
+                var tasks = data.Select(async (dataRow, index) =>
                 {
+                    processedRows++;
+                    await Updateprogressclient(processedRows, totalRows);
                     XElement clientProfileElement = new XElement(contractServiceTagName);
 
                     // Set title attribute if present
@@ -872,21 +890,19 @@ namespace RWDE_UPLOADS_FILES
                     // Add the client profile element to the source system element
                     sourceSystemElement.Add(clientProfileElement);
 
-                    await Updateprogressclient(processedRows, totalRows);
-                    progressClient.Minimum = 0;
-                    progressClient.Maximum = totalRows;
+
 
                     // Processing rows and updating progress until the condition is false
-                    while (processedRows < totalRows)
-                    {
-                        processedRows++;
-                        await Updateprogressclient(processedRows, totalRows);//progress of lines inserted
-                        if (processedRows >= totalRows)
-                        {
-                            break;
-                        }
-                    }
-                }
+                    //while (processedRows < totalRows)
+                    //{
+                    //    //progress of lines inserted
+                    //    if (processedRows >= totalRows)
+                    //    {
+                    //        break;
+                    //    }
+                    //}
+                }).ToArray();
+                await Task.WhenAll(tasks);
 
                 root.Add(sourceSystemElement);
                 return root;
@@ -1532,7 +1548,7 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-                progressServices.Value = 0;
+               // progressServices.Value = 0;
                  var batchDetails = await dbHelper.GetBatchDetailsFromSPAgenearationlients(batchId);//to check whether the generation completed or not
 
                 if (batchDetails == null)
@@ -1546,7 +1562,7 @@ namespace RWDE_UPLOADS_FILES
                 {
                     MessageBox.Show(Constants.Generationhasalreadybeencompletedforthisbatch,Constants.GenerateXML,MessageBoxButtons.OK,MessageBoxIcon.Information);
                     txtProgressBar.Text = "0%";
-                   txtClient.Text= "0%";
+                    txtClient.Text= "0%";
                     txtBatchid.Text = null;
                     txtUploadStarted.Text = null;
                     txtUploadEnded.Text = null;
@@ -1555,8 +1571,17 @@ namespace RWDE_UPLOADS_FILES
                     return;
                 }
                 btnClose.Text = "Abort";
+                txtUploadEnded.Text = null;
+                txtTotaltime.Text = null;
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int selectedBatchID = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
+
+                int totalRows = GetTotalRowsForBatchclient(batchId);
+                DateTime startTime = DateTime.Now;
+
+                txtBatchid.Text = batchId.ToString();
+                string Time = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+                txtUploadStarted.Text = Time;
 
                 bool batchExists = false;
                 DateTime? GenerationStartedAt = null;
@@ -1581,13 +1606,6 @@ namespace RWDE_UPLOADS_FILES
                         }
                     }
                 }
-
-                int totalRows = GetTotalRowsForBatchclient(batchId);
-                DateTime startTime = DateTime.Now;
-               
-                txtBatchid.Text = batchId.ToString();
-                string Time = startTime.ToString("MM/dd/yyyy HH:mm:ss");
-                txtUploadStarted.Text = Time;
 
                 //calling Store Procedure Function
                 List<Dictionary<string, string>> data = dbHelper.getClients(selectedBatchID);
@@ -1653,7 +1671,6 @@ namespace RWDE_UPLOADS_FILES
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-               
             }
         }
         private int GetTotalRowsForBatch(int selectedBatchID)//Getting total rows from particular table
@@ -1673,8 +1690,8 @@ namespace RWDE_UPLOADS_FILES
                         totalRows = (int)command.ExecuteScalar();
                     }
 
-                    int successfulRows = totalRows;
-                    int batchId = dbHelper.GetNextBatchID();
+                    //int successfulRows = totalRows;
+                    //int batchId = dbHelper.GetNextBatchID();
                 }
             }
             catch (Exception ex)
@@ -1717,7 +1734,13 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-               // int batchId = dbHelper.GetNextBatchID();
+                if (btnClose.Text == "Close")
+                {
+                    this.Close();
+                    Application.Restart();
+                    return;
+                }
+                // int batchId = dbHelper.GetNextBatchID();
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int batchID = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
                 String filename = Convert.ToString(dataGridView.Rows[selectedRowIndex].Cells["FileName"].Value.ToString());
@@ -1828,7 +1851,7 @@ namespace RWDE_UPLOADS_FILES
             try { 
             if (e.RowIndex >= 0)
             {
-                selectedBatchID = Convert.ToInt32(dataGridView.Rows[e.RowIndex].Cells["BatchID"].Value);
+                 int  selectedBatchID = Convert.ToInt32(dataGridView.Rows[e.RowIndex].Cells["BatchID"].Value);
                 Console.WriteLine("Selected BatchID: " + selectedBatchID);
             }
             }
@@ -1932,6 +1955,11 @@ namespace RWDE_UPLOADS_FILES
                 {
                     cbBatchType.Items.Add(batchType);
                 }
+
+                txtUploadStarted.Text = "";
+                txtUploadEnded.Text = "";
+                txtBatchid.Text = "";
+                txtTotaltime.Text = "";
             }
             catch (Exception ex)
             {

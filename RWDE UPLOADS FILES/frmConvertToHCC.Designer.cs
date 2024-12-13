@@ -195,6 +195,7 @@ namespace RWDE_UPLOADS_FILES
             this.dataGridView.RowTemplate.Height = 24;
             this.dataGridView.Size = new System.Drawing.Size(1681, 287);
             this.dataGridView.TabIndex = 21;
+            this.dataGridView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView_Scroll);
             // 
             // dataGridViewTextBoxColumn1
             // 

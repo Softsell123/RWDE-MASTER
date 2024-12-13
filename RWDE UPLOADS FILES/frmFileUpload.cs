@@ -88,6 +88,8 @@ namespace RWDE_UPLOADS_FILES
         public string path;
         public int batchId;
         public int totalRows;
+        // Define a class-level variable to store the default path.
+        private string defaultPath = null;
 
         private async void btnUploadXML_Click(object sender, EventArgs e)
         {
@@ -107,12 +109,19 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles, Constants.xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            if (files.Length >1)
+            {
+                MessageBox.Show(Constants.Thefolderhasmorethanonefileorduplicatefiles, Constants.xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            // Check if all files have the .xml extension
             if (!allFilesAreXml)
             {
                 MessageBox.Show(Constants.ThefoldercontainsnonXMLfilesorfolderisemptyUploadisallowedonlyforXMLfiles, Constants.xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
+            // Continue with the upload process if all files are XML
             btnClose.Text = Constants.abort;
      
             if (string.IsNullOrWhiteSpace(txtPath.Text))
@@ -120,13 +129,6 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show("Select a file before uploading.");
                 return; // Exit the method if the path is empty
             }
-
-         
-            // Check if all files have the .xml extension
-           
-            // Continue with the upload process if all files are XML
-
-
 
             btnUploadXML.Enabled = false;
 
@@ -185,19 +187,15 @@ namespace RWDE_UPLOADS_FILES
 
                             processedXmlFiles++;
                             UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);
-
                         }
-
                         DateTime endTime = DateTime.Now;
                         TimeSpan totalTime = endTime - startTime;
-
                         double totalSeconds = totalTime.TotalSeconds;
                         string ETime = endTime.ToString("MM/dd/yyyy HH:mm:ss");
                         txtUploadEnded.Text = ETime;
                         txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
                         btnClose.Text = Constants.close;
                     }
-
                     btnUploadXML.Enabled = true;
                     btnClose.Text = Constants.close;
                 }
@@ -350,8 +348,7 @@ namespace RWDE_UPLOADS_FILES
         {
             pnlCsvXml.Visible = false;
         }
-        // Define a class-level variable to store the default path.
-        private string defaultPath = null;
+        
 
         // Event handler for the Browse button click event.
         private void btnBrowse_Click(object sender, EventArgs e)
@@ -414,7 +411,13 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-                int batchId = dbHelper.GetNextBatchID();
+                if (btnClose.Text == "Close")
+                {
+                    this.Close();
+                    Application.Restart();
+                    return;
+                }
+                int batchId = Convert.ToInt32(txtBatchid.Text);
                 if (btnClose.Text == "Abort")
                 {
                     DialogResult result = MessageBox.Show("Are you sure you want to abort?","XML File Upload", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);

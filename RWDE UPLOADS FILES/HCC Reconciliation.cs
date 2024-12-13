@@ -44,7 +44,7 @@ namespace RWDE_UPLOADS_FILES
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox)
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -204,7 +204,6 @@ namespace RWDE_UPLOADS_FILES
         {
             try
             {
-
                 // Close the current form (dispose it)
                 this.Close();
                 Application.Restart();

@@ -39,7 +39,6 @@ namespace RWDE_UPLOADS_FILES
             this.WindowState = FormWindowState.Maximized;
             txtBatchID.Text = "";
             RegisterEvents(this);
-
         }
         private void Control_MouseHover(object sender, EventArgs e)
         {
@@ -53,7 +52,7 @@ namespace RWDE_UPLOADS_FILES
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox)
+                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -118,7 +117,6 @@ namespace RWDE_UPLOADS_FILES
                 dataGridView.Columns.Add("Status", "Status");
                 dataGridView.Columns.Add("ErrorMessage", "ErrorMessage");
 
-
                 // Set primary key for hccClients if it's not already set
                 if (hccClients.PrimaryKey.Length == 0)
                 {
@@ -141,35 +139,32 @@ namespace RWDE_UPLOADS_FILES
                     int quantityServed = 0;
                     // Check if Contract_id is null
 
-
                     // Check if Map
                     dataGridView.Rows.Add(
-         serviceRow["Staff_id"],
-         clientRow != null ? clientRow["Agency_client_1"] : DBNull.Value,
-         serviceRow["Clnt_id"],
-         DBNull.Value,
-         DBNull.Value,
-         DBNull.Value,
-         DBNull.Value,
-         DBNull.Value,
-         DBNull.Value,
-         DBNull.Value,
-         serviceRow["Contract_id"],
-         serviceRow["Quantity_served"],
-         serviceRow["Actual_minutes_spent"],
-         serviceRow["MappedToHCC"],
-         serviceRow["ServiceID"],
-         serviceRow["MappedToHCC"] != DBNull.Value && Convert.ToBoolean(serviceRow["MappedToHCC"]) ? "Yes" : "", // Convert MappedToHCC to Yes/No
-         serviceRow["Service_date"],
-          serviceRow["Status"],
-           serviceRow["ErrorMessage"],
-         createdOnDate,
-         lag.Days,
-         grade,
-         hccExportFailureReason
-     );
+                     serviceRow["Staff_id"],
+                     clientRow != null ? clientRow["Agency_client_1"] : DBNull.Value,
+                     serviceRow["Clnt_id"],
+                     DBNull.Value,
+                     DBNull.Value,
+                     DBNull.Value,
+                     DBNull.Value,
+                     DBNull.Value,
+                     DBNull.Value,
+                     DBNull.Value,
+                     serviceRow["Contract_id"],
+                     serviceRow["Quantity_served"],
+                     serviceRow["Actual_minutes_spent"],
+                     serviceRow["MappedToHCC"],
+                     serviceRow["ServiceID"],
+                     serviceRow["MappedToHCC"] != DBNull.Value && Convert.ToBoolean(serviceRow["MappedToHCC"]) ? "Yes" : "", // Convert MappedToHCC to Yes/No
+                     serviceRow["Service_date"],
+                     serviceRow["Status"],
+                     serviceRow["ErrorMessage"],
+                     createdOnDate,
+                     lag.Days,
+                     grade,
+                     hccExportFailureReason);
                 }
-
                 // Auto-size columns to fit content
                 dataGridView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             }
@@ -212,28 +207,22 @@ namespace RWDE_UPLOADS_FILES
         //            MessageBox.Show("Please select a service date from the dropdown.", "Date Selection Required");
         //            return;
         //        }
-
         //        // Validate BatchID input
         //        //if (!int.TryParse(txtBatchID.Text, out int BatchID))
         //        //{
         //        //    MessageBox.Show("Please enter a valid Batch ID.","ServiceReconciliationReport");
         //        //    return;
         //        //}
-
-
         //        // Set up the DataGridView
         //        dataGridView.AutoGenerateColumns = true;
         //        dataGridView.Columns.Clear();
         //        dataGridView.ForeColor = Color.Black;
-
         //        // Fetch data using DBHelper
         //        DBHelper dbHelper = new DBHelper();
-
         //        try
         //        {
         //            // Call the LoadData method to fetch the data
         //            DataTable result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, batchid);//batchid removed
-
         //            // Bind the result to the DataGridView
         //            dataGridView.DataSource = result;
         //        }
@@ -272,10 +261,8 @@ namespace RWDE_UPLOADS_FILES
             dataGridView.Columns.Add("Lag", "Lag");
             dataGridView.Columns.Add("Lag Status", "Lag Status");
             dataGridView.Columns.Add("HCCExportFailureReason", "HCC Export Failure Reason");
-
             dataGridView.AutoGenerateColumns = false;
         }
-
         private void btnReport_Click(object sender, EventArgs e)
         {
             try
@@ -334,7 +321,6 @@ namespace RWDE_UPLOADS_FILES
                                                      .Select(id => int.TryParse(id.Trim(), out int parsedId) ? parsedId : 0)
                                                      .Where(id => id > 0)
                                                      .ToList();
-
                     if (batchIDs.Count > 0)
                     {
                         result = dbHelper.LoadDatafilterServiceReconbatchid(batchIDs); //
@@ -380,9 +366,6 @@ namespace RWDE_UPLOADS_FILES
 
             }
         }
-
-
-
         private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             // Check if the cell value is not null
@@ -399,8 +382,6 @@ namespace RWDE_UPLOADS_FILES
                 }
             }
         }
-
-
         private void btnDownload_Click(object sender, EventArgs e) // to export data to selected folder
         {
             try
@@ -477,7 +458,6 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
             try
