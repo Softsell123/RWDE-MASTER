@@ -1,4 +1,4 @@
-﻿namespace RWDE_UPLOADS_FILES
+﻿namespace RWDE
 {
     partial class CsvFile_Conversion
     {

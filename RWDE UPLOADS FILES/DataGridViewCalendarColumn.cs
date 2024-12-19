@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     internal class DataGridViewCalendarColumn
     {

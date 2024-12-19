@@ -4,7 +4,7 @@
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
       <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
-          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="RWDEConnectionString1" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="RWDEConnectionString1 (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.RWDE_UPLOADS_FILES.Properties.Settings.GlobalReference.Default.RWDEConnectionString1" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="RWDEConnectionString1" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="RWDEConnectionString1 (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.RWDE.Properties.Settings.GlobalReference.Default.RWDEConnectionString1" Provider="System.Data.SqlClient" />
         </Connections>
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ContractsSetupTableAdapter" GeneratorDataComponentClassName="ContractsSetupTableAdapter" Name="ContractsSetup" UserDataComponentName="ContractsSetupTableAdapter">
@@ -91,37 +91,37 @@ SELECT ContractID, ContractName, StartedDateTime, EndedDateTime, Status, Created
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="RWDEDataSet2" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_UserDSName="RWDEDataSet2" msprop:Generator_DataSetName="RWDEDataSet2">
+  <xs:element name="RWDEDataSet2" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="RWDEDataSet2" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="RWDEDataSet2">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="ContractsSetup" msprop:Generator_RowEvHandlerName="ContractsSetupRowChangeEventHandler" msprop:Generator_RowDeletedName="ContractsSetupRowDeleted" msprop:Generator_RowDeletingName="ContractsSetupRowDeleting" msprop:Generator_RowEvArgName="ContractsSetupRowChangeEvent" msprop:Generator_TablePropName="ContractsSetup" msprop:Generator_RowChangedName="ContractsSetupRowChanged" msprop:Generator_RowChangingName="ContractsSetupRowChanging" msprop:Generator_TableClassName="ContractsSetupDataTable" msprop:Generator_RowClassName="ContractsSetupRow" msprop:Generator_TableVarName="tableContractsSetup" msprop:Generator_UserTableName="ContractsSetup">
+        <xs:element name="ContractsSetup" msprop:Generator_RowClassName="ContractsSetupRow" msprop:Generator_RowEvHandlerName="ContractsSetupRowChangeEventHandler" msprop:Generator_RowDeletedName="ContractsSetupRowDeleted" msprop:Generator_RowDeletingName="ContractsSetupRowDeleting" msprop:Generator_RowEvArgName="ContractsSetupRowChangeEvent" msprop:Generator_TablePropName="ContractsSetup" msprop:Generator_RowChangedName="ContractsSetupRowChanged" msprop:Generator_UserTableName="ContractsSetup" msprop:Generator_RowChangingName="ContractsSetupRowChanging" msprop:Generator_TableClassName="ContractsSetupDataTable" msprop:Generator_TableVarName="tableContractsSetup">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="ContractID" msprop:Generator_ColumnPropNameInRow="ContractID" msprop:Generator_ColumnPropNameInTable="ContractIDColumn" msprop:Generator_ColumnVarNameInTable="columnContractID" msprop:Generator_UserColumnName="ContractID" type="xs:int" />
-              <xs:element name="ContractName" msprop:Generator_ColumnPropNameInRow="ContractName" msprop:Generator_ColumnPropNameInTable="ContractNameColumn" msprop:Generator_ColumnVarNameInTable="columnContractName" msprop:Generator_UserColumnName="ContractName">
+              <xs:element name="ContractID" msprop:Generator_UserColumnName="ContractID" msprop:Generator_ColumnPropNameInTable="ContractIDColumn" msprop:Generator_ColumnPropNameInRow="ContractID" msprop:Generator_ColumnVarNameInTable="columnContractID" type="xs:int" />
+              <xs:element name="ContractName" msprop:Generator_UserColumnName="ContractName" msprop:Generator_ColumnPropNameInTable="ContractNameColumn" msprop:Generator_ColumnPropNameInRow="ContractName" msprop:Generator_ColumnVarNameInTable="columnContractName">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="StartedDateTime" msprop:Generator_ColumnPropNameInRow="StartedDateTime" msprop:Generator_ColumnPropNameInTable="StartedDateTimeColumn" msprop:Generator_ColumnVarNameInTable="columnStartedDateTime" msprop:Generator_UserColumnName="StartedDateTime" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="EndedDateTime" msprop:Generator_ColumnPropNameInRow="EndedDateTime" msprop:Generator_ColumnPropNameInTable="EndedDateTimeColumn" msprop:Generator_ColumnVarNameInTable="columnEndedDateTime" msprop:Generator_UserColumnName="EndedDateTime" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="Status" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_UserColumnName="Status" minOccurs="0">
+              <xs:element name="StartedDateTime" msprop:Generator_UserColumnName="StartedDateTime" msprop:Generator_ColumnPropNameInTable="StartedDateTimeColumn" msprop:Generator_ColumnPropNameInRow="StartedDateTime" msprop:Generator_ColumnVarNameInTable="columnStartedDateTime" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="EndedDateTime" msprop:Generator_UserColumnName="EndedDateTime" msprop:Generator_ColumnPropNameInTable="EndedDateTimeColumn" msprop:Generator_ColumnPropNameInRow="EndedDateTime" msprop:Generator_ColumnVarNameInTable="columnEndedDateTime" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Status" msprop:Generator_UserColumnName="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="CreatedBy" msprop:Generator_ColumnPropNameInRow="CreatedBy" msprop:Generator_ColumnPropNameInTable="CreatedByColumn" msprop:Generator_ColumnVarNameInTable="columnCreatedBy" msprop:Generator_UserColumnName="CreatedBy">
+              <xs:element name="CreatedBy" msprop:Generator_UserColumnName="CreatedBy" msprop:Generator_ColumnPropNameInTable="CreatedByColumn" msprop:Generator_ColumnPropNameInRow="CreatedBy" msprop:Generator_ColumnVarNameInTable="columnCreatedBy">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="CreatedOn" msprop:Generator_ColumnPropNameInRow="CreatedOn" msprop:Generator_ColumnPropNameInTable="CreatedOnColumn" msprop:Generator_ColumnVarNameInTable="columnCreatedOn" msprop:Generator_UserColumnName="CreatedOn" type="xs:dateTime" />
+              <xs:element name="CreatedOn" msprop:Generator_UserColumnName="CreatedOn" msprop:Generator_ColumnPropNameInTable="CreatedOnColumn" msprop:Generator_ColumnPropNameInRow="CreatedOn" msprop:Generator_ColumnVarNameInTable="columnCreatedOn" type="xs:dateTime" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

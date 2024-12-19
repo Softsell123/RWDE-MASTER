@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class frmXMLGenerator
     {
@@ -70,7 +70,7 @@ namespace RWDE_UPLOADS_FILES
             this.endedAtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.batchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.rWDEDataSet = new RWDE_UPLOADS_FILES.RWDEDataSet();
+            this.rWDEDataSet = new RWDE.RWDEDataSet();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlProgress = new System.Windows.Forms.Panel();
@@ -94,8 +94,8 @@ namespace RWDE_UPLOADS_FILES
             this.btnGeneration = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnNext = new System.Windows.Forms.Button();
-            this.batchTableAdapter = new RWDE_UPLOADS_FILES.RWDEDataSetTableAdapters.BatchTableAdapter();
-            this.batchTableAdapter1 = new RWDE_UPLOADS_FILES.RWDEDataSet1TableAdapters.BatchTableAdapter();
+            this.batchTableAdapter = new RWDE.RWDEDataSetTableAdapters.BatchTableAdapter();
+            this.batchTableAdapter1 = new RWDE.RWDEDataSet1TableAdapters.BatchTableAdapter();
             this.panel1.SuspendLayout();
             this.pnl.SuspendLayout();
             this.pnlFilter.SuspendLayout();

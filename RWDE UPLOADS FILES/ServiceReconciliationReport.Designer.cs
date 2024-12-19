@@ -1,10 +1,7 @@
-﻿using RWDE_UPLOADS_FILES.Properties;
-using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
+﻿using System;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class ServiceReconciliationReport
     {
@@ -39,7 +36,7 @@ namespace RWDE_UPLOADS_FILES
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.rwdeDataSet1 = new RWDE_UPLOADS_FILES.RWDEDataSet();
+            this.rwdeDataSet1 = new RWDE.RWDEDataSet();
             this.btnClose = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnDownload = new System.Windows.Forms.Button();
@@ -56,7 +53,7 @@ namespace RWDE_UPLOADS_FILES
             this.btnClr = new System.Windows.Forms.Button();
             this.lblHeader = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.rwdeDataSet2 = new RWDE_UPLOADS_FILES.RWDEDataSet();
+            this.rwdeDataSet2 = new RWDE.RWDEDataSet();
             this.SerialNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BatchId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceIDdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -372,7 +369,7 @@ namespace RWDE_UPLOADS_FILES
             this.SerialNo.MinimumWidth = 6;
             this.SerialNo.Name = "SerialNo";
             this.SerialNo.ReadOnly = true;
-            this.SerialNo.Width = 120;
+            this.SerialNo.Width = 90;
             // 
             // BatchId
             // 
@@ -381,7 +378,7 @@ namespace RWDE_UPLOADS_FILES
             this.BatchId.MinimumWidth = 6;
             this.BatchId.Name = "BatchId";
             this.BatchId.ReadOnly = true;
-            this.BatchId.Width = 125;
+            this.BatchId.Width = 110;
             // 
             // ServiceIDdata
             // 
@@ -394,17 +391,15 @@ namespace RWDE_UPLOADS_FILES
             // ServiceId
             // 
             this.ServiceId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ServiceId.FillWeight = 56.76642F;
             this.ServiceId.HeaderText = "Staff ";
             this.ServiceId.MinimumWidth = 6;
             this.ServiceId.Name = "ServiceId";
             this.ServiceId.ReadOnly = true;
-            this.ServiceId.Width = 125;
+            this.ServiceId.Width = 80;
             // 
             // Agency_client_2
             // 
             this.Agency_client_2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Agency_client_2.FillWeight = 141.0864F;
             this.Agency_client_2.HeaderText = "HCC ID";
             this.Agency_client_2.MinimumWidth = 6;
             this.Agency_client_2.Name = "Agency_client_2";
@@ -421,7 +416,6 @@ namespace RWDE_UPLOADS_FILES
             // AriesConsentExprireDate
             // 
             this.AriesConsentExprireDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.AriesConsentExprireDate.FillWeight = 149.8768F;
             this.AriesConsentExprireDate.HeaderText = "HCC Consent Expiry Date";
             this.AriesConsentExprireDate.MinimumWidth = 6;
             this.AriesConsentExprireDate.Name = "AriesConsentExprireDate";
@@ -431,7 +425,6 @@ namespace RWDE_UPLOADS_FILES
             // CaseManager
             // 
             this.CaseManager.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.CaseManager.FillWeight = 88.62742F;
             this.CaseManager.HeaderText = "RWEligibility ExpiryDate";
             this.CaseManager.MinimumWidth = 6;
             this.CaseManager.Name = "CaseManager";
@@ -441,7 +434,6 @@ namespace RWDE_UPLOADS_FILES
             // ServiceGroup
             // 
             this.ServiceGroup.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ServiceGroup.FillWeight = 83.60087F;
             this.ServiceGroup.HeaderText = "Service ";
             this.ServiceGroup.MinimumWidth = 6;
             this.ServiceGroup.Name = "ServiceGroup";
@@ -459,17 +451,15 @@ namespace RWDE_UPLOADS_FILES
             // AriesContractId
             // 
             this.AriesContractId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.AriesContractId.FillWeight = 78.961F;
             this.AriesContractId.HeaderText = "HCC Contract Name";
             this.AriesContractId.MinimumWidth = 6;
             this.AriesContractId.Name = "AriesContractId";
             this.AriesContractId.ReadOnly = true;
-            this.AriesContractId.Width = 200;
+            this.AriesContractId.Width = 180;
             // 
             // UnitsOfService
             // 
             this.UnitsOfService.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.UnitsOfService.FillWeight = 74.67796F;
             this.UnitsOfService.HeaderText = "Units Of Service";
             this.UnitsOfService.MinimumWidth = 6;
             this.UnitsOfService.Name = "UnitsOfService";
@@ -478,7 +468,6 @@ namespace RWDE_UPLOADS_FILES
             // 
             // ActualMinutesSpent
             // 
-            this.ActualMinutesSpent.FillWeight = 113.1591F;
             this.ActualMinutesSpent.HeaderText = "Actual Minutes Spent";
             this.ActualMinutesSpent.MinimumWidth = 6;
             this.ActualMinutesSpent.Name = "ActualMinutesSpent";
@@ -488,7 +477,6 @@ namespace RWDE_UPLOADS_FILES
             // ServiceExportedToAries
             // 
             this.ServiceExportedToAries.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ServiceExportedToAries.FillWeight = 97.54325F;
             this.ServiceExportedToAries.HeaderText = "Service Exported to HCC";
             this.ServiceExportedToAries.MinimumWidth = 6;
             this.ServiceExportedToAries.Name = "ServiceExportedToAries";
@@ -498,26 +486,23 @@ namespace RWDE_UPLOADS_FILES
             // Service_date
             // 
             this.Service_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Service_date.FillWeight = 48.4783F;
             this.Service_date.HeaderText = "Service Date";
             this.Service_date.MinimumWidth = 6;
             this.Service_date.Name = "Service_date";
             this.Service_date.ReadOnly = true;
-            this.Service_date.Width = 200;
+            this.Service_date.Width = 140;
             // 
             // EntryDate
             // 
             this.EntryDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.EntryDate.FillWeight = 46.54013F;
             this.EntryDate.HeaderText = "Entry Date";
             this.EntryDate.MinimumWidth = 6;
             this.EntryDate.Name = "EntryDate";
             this.EntryDate.ReadOnly = true;
-            this.EntryDate.Width = 200;
+            this.EntryDate.Width = 135;
             // 
             // Lag
             // 
-            this.Lag.FillWeight = 44.75106F;
             this.Lag.HeaderText = "Lag";
             this.Lag.MinimumWidth = 6;
             this.Lag.Name = "Lag";
@@ -535,7 +520,6 @@ namespace RWDE_UPLOADS_FILES
             // AriesExportFailureReason
             // 
             this.AriesExportFailureReason.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.AriesExportFailureReason.FillWeight = 74.8353F;
             this.AriesExportFailureReason.HeaderText = "HCC Export Failure Reason";
             this.AriesExportFailureReason.MinimumWidth = 6;
             this.AriesExportFailureReason.Name = "AriesExportFailureReason";
@@ -598,12 +582,6 @@ namespace RWDE_UPLOADS_FILES
         {
 
         }
-
-
-
-
-
-
         #endregion
         private RWDEDataSet rwdeDataSet1;
         private System.Windows.Forms.Button btnClose;

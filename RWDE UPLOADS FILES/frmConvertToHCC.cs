@@ -1,25 +1,16 @@
-﻿using Rwde;
-using RWDE;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using ScrollBar = System.Windows.Forms.ScrollBar;
 
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     public partial class frmConvertToHCC : Form
     {

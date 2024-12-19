@@ -1,18 +1,13 @@
-﻿using ExcelDataReader;//shannu
-using Rwde;
-using RWDE;
+﻿using ExcelDataReader;
 using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Windows.Media.Animation;
-using static Spire.Pdf.General.Render.Decode.Jpeg2000.j2k.codestream.HeaderInfo;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     public partial class LOAD : Form
     {

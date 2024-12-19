@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class OCHIN_to_RWDE_Conversion
     {
@@ -40,8 +40,8 @@ namespace RWDE_UPLOADS_FILES
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.batchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.rWDEDataSet = new RWDE_UPLOADS_FILES.RWDEDataSet();
-            this.batchTableAdapter = new RWDE_UPLOADS_FILES.RWDEDataSetTableAdapters.BatchTableAdapter();
+            this.rWDEDataSet = new RWDE.RWDEDataSet();
+            this.batchTableAdapter = new RWDE.RWDEDataSetTableAdapters.BatchTableAdapter();
             this.pnl = new System.Windows.Forms.Panel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -748,7 +748,7 @@ namespace RWDE_UPLOADS_FILES
             this.btnNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnNext.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnNext.ForeColor = System.Drawing.Color.Black;
-            this.btnNext.Location = new System.Drawing.Point(1786, 861);
+            this.btnNext.Location = new System.Drawing.Point(1793, 861);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(124, 54);
             this.btnNext.TabIndex = 42;

@@ -9,7 +9,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5DA1D67E-2D05-476E-BCFC-B65C26A69243}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>RWDE_UPLOADS_FILES</RootNamespace>
+    <RootNamespace>RWDE</RootNamespace>
     <AssemblyName>RWDE</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -18,7 +18,7 @@
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\RWDE\RWDE EXE\12-12-2024\</PublishUrl>
+    <PublishUrl>C:\RWDE\RWDE EXE\17-12-2024\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -29,7 +29,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>78</ApplicationRevision>
+    <ApplicationRevision>80</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -263,10 +263,8 @@
     <Compile Include="CsvFile Conversion.Designer.cs">
       <DependentUpon>CsvFile Conversion.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataGridViewCalendarCell.cs" />
     <Compile Include="DataGridViewCalendarColumn.cs" />
     <Compile Include="DataGridViewCalendarDateTimePickerCell.cs" />
-    <Compile Include="DataGridViewCalendarEditingControl.cs" />
     <Compile Include="DataGridViewCalendarTextBoxColumn.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="Deceased Clients.cs">
@@ -286,12 +284,6 @@
     </Compile>
     <Compile Include="Error Report.Designer.cs">
       <DependentUpon>Error Report.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="frmConvertToHCC.cs">
       <SubType>Form</SubType>
@@ -343,12 +335,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RWDE File Uploads.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RWDE File Uploads.Designer.cs">
-      <DependentUpon>RWDE File Uploads.cs</DependentUpon>
-    </Compile>
     <Compile Include="RWDEDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -369,12 +355,6 @@
     </Compile>
     <Compile Include="ServiceCode Setup.Designer.cs">
       <DependentUpon>ServiceCode Setup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ServiceIDLists.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ServiceIDLists.Designer.cs">
-      <DependentUpon>ServiceIDLists.cs</DependentUpon>
     </Compile>
     <Compile Include="ServiceReconciliationReport.cs">
       <SubType>Form</SubType>
@@ -418,9 +398,6 @@
     <EmbeddedResource Include="Error Report.resx">
       <DependentUpon>Error Report.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmConvertToHCC.resx">
       <DependentUpon>frmConvertToHCC.cs</DependentUpon>
     </EmbeddedResource>
@@ -447,6 +424,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OCHIN to RWDE Conversion.resx">
       <DependentUpon>OCHIN to RWDE Conversion.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -458,17 +436,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="RWDE File Uploads.resx">
-      <DependentUpon>RWDE File Uploads.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ServiceCode Setup.resx">
       <DependentUpon>ServiceCode Setup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ServiceIDLists.resx">
-      <DependentUpon>ServiceIDLists.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ServiceReconciliationReport.resx">
       <DependentUpon>ServiceReconciliationReport.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Upload dashboard.resx">
       <DependentUpon>Upload dashboard.cs</DependentUpon>

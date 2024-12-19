@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class frmConvertToHCC
     {
@@ -81,8 +81,8 @@ namespace RWDE_UPLOADS_FILES
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.imageList3 = new System.Windows.Forms.ImageList(this.components);
-            this.dummyServiceLineItemsTableAdapter1 = new RWDE_UPLOADS_FILES.RWDEDataSetTableAdapters.dummyServiceLineItemsTableAdapter();
-            this.rwdeDataSet1 = new RWDE_UPLOADS_FILES.RWDEDataSet();
+            this.dummyServiceLineItemsTableAdapter1 = new RWDE.RWDEDataSetTableAdapters.dummyServiceLineItemsTableAdapter();
+            this.rwdeDataSet1 = new RWDE.RWDEDataSet();
             this.pnlHCCConversion.SuspendLayout();
             this.pnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
