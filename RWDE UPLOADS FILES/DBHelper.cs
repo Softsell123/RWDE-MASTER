@@ -1,40 +1,34 @@
-﻿using System; //shannu comments
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Windows.Forms;
-using Rwde;
 using System.Globalization;// Add appropriate using directive
 using System.Xml;
 using System.Data.SqlTypes;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Web.UI.DataVisualization.Charting;
 using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Configuration;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System.Diagnostics.Eventing.Reader;
-using ClosedXML.Excel;//
-
 namespace RWDE
 {
     public class DBHelper
     {
         private readonly string connectionString; // Stores the connection string for the database
         private string error;
-        private bool batchIDIncremented = false;// Stores any error messages encountered during database operations
+        private bool batchIDIncremented = false; // Stores any error messages encountered during database operations
         private bool batchIDIncre;
-        
+
         // Constructor to initialize the DBHelper class with a connection string
         public DBHelper()
         {
             // Define the connection string within the DBHelper class
             connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
         }
-        public string GetConnectionString()//get connection string
+
+        public string GetConnectionString() //get connection string
         {
             return connectionString;
         }
@@ -44,7 +38,9 @@ namespace RWDE
         {
             return false; // Placeholder implementation
         }
-        public async Task<BatchDetails> GetBatchDetailsFromSPAsync(int batchID)//to check whether the conversion completed or not
+
+        public async Task<BatchDetails>
+            GetBatchDetailsFromSPAsync(int batchID) //to check whether the conversion completed or not
         {
             try
             {
@@ -80,7 +76,9 @@ namespace RWDE
                 return null;
             }
         }
-        public async Task<BatchDetails> GetBatchDetailsFromSPAsyncclients(int batchID)//to check whether the generation completed or not
+
+        public async Task<BatchDetails>
+            GetBatchDetailsFromSPAsyncclients(int batchID) //to check whether the generation completed or not
         {
             try
             {
@@ -116,7 +114,9 @@ namespace RWDE
                 return null;
             }
         }
-        public async Task<BatchDetailsgeneration> GetBatchDetailsFromSPAgenearationlients(int batchID)//to check whether the generation completed or not
+
+        public async Task<BatchDetailsgeneration>
+            GetBatchDetailsFromSPAgenearationlients(int batchID) //to check whether the generation completed or not
         {
             try
             {
@@ -152,7 +152,9 @@ namespace RWDE
                 return null;
             }
         }
-        public async Task<BatchDetailsgeneration> GetBatchDetailsFromSPAgenearationservices(int batchID)//to check whether the generation completed or not
+
+        public async Task<BatchDetailsgeneration>
+            GetBatchDetailsFromSPAgenearationservices(int batchID) //to check whether the generation completed or not
         {
             try
             {
@@ -164,7 +166,7 @@ namespace RWDE
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@BatchID", batchID);
 
-                        await conn.OpenAsync();//CONNECTION STRING
+                        await conn.OpenAsync(); //CONNECTION STRING
 
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
@@ -173,7 +175,7 @@ namespace RWDE
                                 return new BatchDetailsgeneration
                                 {
                                     GenerationStartedAt = reader["GenerationStartedAt"] as DateTime?,
-                                    GenerationEndedAt = reader["GenerationEndedAt"] as DateTime?//
+                                    GenerationEndedAt = reader["GenerationEndedAt"] as DateTime? //
                                 };
                             }
                         }
@@ -189,92 +191,89 @@ namespace RWDE
             }
         }
 
-        public DataTable LoadDatafilterServiceReconbatchid(List<int> batchIDs)
+        public DataTable LoadDatafilterServiceReconbatchid(int[] Batchids)
         {
             DataTable dy = new DataTable();
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            List<DataTable> result = new List<DataTable>();
+            List<int> NoDataIds = new List<int>();
+            try
             {
-                try
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-
                     // Call the stored procedure to update HCCServices
                     using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
                     {
                         updateCmd.CommandType = CommandType.StoredProcedure;
                         updateCmd.ExecuteNonQuery();
                     }
+                    conn.Close();
 
-                    // Validate batch IDs against the database
-                    List<int> validBatchIDs = new List<int>();
-                    List<int> invalidBatchIDs = new List<int>(); // To store invalid batch IDs
-                    string validationQuery = "SELECT DISTINCT BatchID FROM vwService_Reconciliationtest WHERE BatchID IN (" +
-                                             string.Join(",", batchIDs.Select((_, i) => "@BatchID" + i)) + ")";
-
-                    using (SqlCommand validateCmd = new SqlCommand(validationQuery, conn))
+                    foreach (int onebatch in Batchids)
                     {
-                        for (int i = 0; i < batchIDs.Count; i++)
+                        using (SqlConnection con = new SqlConnection(connectionString))
                         {
-                            validateCmd.Parameters.AddWithValue("@BatchID" + i, batchIDs[i]);
-                        }
+                            SqlCommand cmd = new SqlCommand("sp_service_reconbatchid", con);
 
-                        using (SqlDataReader reader = validateCmd.ExecuteReader())
-                        {
-                            while (reader.Read())
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@BatchID", onebatch);
+                            con.Open();
+                            using (SqlDataReader reader = cmd.ExecuteReader())
                             {
-                                validBatchIDs.Add(reader.GetInt32(0));
+                                if (reader.HasRows == false)
+                                {
+                                    NoDataIds.Add(onebatch);
+                                }
+
+                                // Read each result set into a DataTable
+                                DataTable table = new DataTable();
+                                table.Load(reader);
+                                result.Add(table); // Add the DataTable to the result list
+                                if (Array.IndexOf(Batchids, onebatch) == Batchids.Length - 1 && NoDataIds.Count != 0)
+                                {
+                                    MessageBox.Show(string.Join(",", NoDataIds.ToArray()) +
+                                                    Constants.NodatafoundfortheseBatchids); //
+                                }
+                            }
+
+                            con.Close();
+                        }
+                    }
+
+                    dy = result[0].Clone();
+                    try
+                    {
+                        // Create an empty table with the same structure
+                        foreach (var table in result)
+                        {
+                            foreach (DataRow row in table.Rows)
+                            {
+                                dy.ImportRow(row); // Add each row from the result set
                             }
                         }
                     }
-
-                    // Check for invalid batch IDs
-                    invalidBatchIDs = batchIDs.Except(validBatchIDs).ToList();
-                    if (invalidBatchIDs.Any())
+                    catch (Exception ex)
                     {
-                        MessageBox.Show($"The following Batch ID(s) do not exist: {string.Join(", ", invalidBatchIDs)}",
-                                         "Invalid Batch ID(s)");
+                        MessageBox.Show(ex.Message);
                     }
 
-                    // Construct the main query for valid batch IDs
-                    if (validBatchIDs.Any())
+                    if (dy.Rows.Count == 0)
                     {
-                        string query = "SELECT * FROM vwService_Reconciliationtest WHERE BatchID IN (" +
-                                       string.Join(",", validBatchIDs.Select((_, i) => "@ValidBatchID" + i)) + ")";
-
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
-                        {
-                            for (int i = 0; i < validBatchIDs.Count; i++)
-                            {
-                                cmd.Parameters.AddWithValue("@ValidBatchID" + i, validBatchIDs[i]);
-                            }
-
-                            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                            adapter.Fill(dy);
-
-                            if (dy.Rows.Count == 0)
-                            {
-                                MessageBox.Show(Constants.nobatchid, "Service Reconciliation Report");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // If no valid batch IDs, return an empty DataTable
                         dy.Columns.Add("BatchID", typeof(int));
                         dy.Columns.Add("ServiceDate", typeof(DateTime));
                         dy.Columns.Add("CreatedDate", typeof(DateTime));
                         dy.Columns.Add("ErrorDetails", typeof(string));
                         dy.Columns.Add("Status", typeof(string));
+                        MessageBox.Show(Constants.Nodataexistsforthisbatchid, "Service Reconciliation Report");
                     }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("An error occurred while loading data.", ex);
+
+                    return dy; // Return the populated DataTable
                 }
             }
-
-            return dy; // Return the populated DataTable
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while loading data.", ex);
+            }
         }
 
         public class BatchDetailsgeneration
@@ -308,7 +307,6 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
                 return false;
             }
-
         }
         public int GetNextBatchID()//Getting BatchId for particular file insertion
         {
@@ -3758,60 +3756,60 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
         }
 
 
-        public DataTable LoadDatafilterServiceReconbatchid(DateTime startDate, DateTime endDate, int batchID)
-        {
-            DataTable dy = new DataTable();
+        //public DataTable LoadDatafilterServiceReconbatchid(DateTime startDate, DateTime endDate, int batchID)
+        //{
+        //    DataTable dy = new DataTable();
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        try
+        //        {
+        //            conn.Open();
 
-                    // Call the stored procedure to update HCCServices
-                    using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
-                    {
-                        updateCmd.CommandType = CommandType.StoredProcedure;
-                        updateCmd.ExecuteNonQuery();
-                    }
+        //            // Call the stored procedure to update HCCServices
+        //            using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
+        //            {
+        //                updateCmd.CommandType = CommandType.StoredProcedure;
+        //                updateCmd.ExecuteNonQuery();
+        //            }
 
-                    // Now, load data from vwService_Reconciliation within the specified date range and batch ID
-                    string query = @"
-                SELECT * 
-                FROM vwService_Reconciliationtest
-                WHERE ServiceDate BETWEEN @StartDate AND @EndDate and batchID=@Batchid";
+        //            // Now, load data from vwService_Reconciliation within the specified date range and batch ID
+        //            string query = @"
+        //        SELECT * 
+        //        FROM vwService_Reconciliationtest
+        //        WHERE ServiceDate BETWEEN @StartDate AND @EndDate and batchID=@Batchid";
 
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        // Add parameters for filtering dates and BatchID
-                        cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
-                        cmd.Parameters.AddWithValue("@Batchid", batchID);
+        //            using (SqlCommand cmd = new SqlCommand(query, conn))
+        //            {
+        //                // Add parameters for filtering dates and BatchID
+        //                cmd.Parameters.AddWithValue("@StartDate", startDate);
+        //                cmd.Parameters.AddWithValue("@EndDate", endDate);
+        //                cmd.Parameters.AddWithValue("@Batchid", batchID);
 
-                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                        adapter.Fill(dy);
+        //                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+        //                adapter.Fill(dy);
 
-                        // Check if the result is empty, which means no matching rows were found
-                        if (dy.Rows.Count == 0)
-                        {
-                            MessageBox.Show(Constants.nobatchid, "Service Reconciliation Report");
-                            return dy;
+        //                // Check if the result is empty, which means no matching rows were found
+        //                if (dy.Rows.Count == 0)
+        //                {
+        //                    MessageBox.Show(Constants.nobatchid, "Service Reconciliation Report");
+        //                    return dy;
 
-                        }
+        //                }
 
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Handle exceptions (logging, rethrowing, etc.)
-                    throw new Exception("An error occurred while loading data.", ex);
-                }
-            }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Handle exceptions (logging, rethrowing, etc.)
+        //            throw new Exception("An error occurred while loading data.", ex);
+        //        }
+        //    }
 
-            return dy;
+        //    return dy;
 
-        }
+        //}
         
         public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, string filterType)
         {
@@ -3910,7 +3908,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
                         conn.Open();
 
-        using (SqlDataReader reader = cmd.ExecuteReader())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows == false)
                             {

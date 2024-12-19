@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class ServiceCodeSetup
     {
@@ -291,7 +291,7 @@ namespace RWDE_UPLOADS_FILES
             // 
             // button1
             // 
-           
+
             // 
             // ServiceCodeSetup
             // 
@@ -369,6 +369,6 @@ namespace RWDE_UPLOADS_FILES
         private DataGridViewTextBoxColumn UnitofMesurement;
         private DataGridViewTextBoxColumn Rate;
         private DataGridViewComboBoxColumn Status;
-       
+
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using System;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class Client_Demographics_Report
     {

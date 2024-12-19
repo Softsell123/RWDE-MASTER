@@ -1,18 +1,12 @@
 ﻿using ClosedXML.Excel;
-using OfficeOpenXml;
-using Rwde;
-using RWDE;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     public partial class ServiceReconciliationReport : Form
     {
@@ -313,17 +307,15 @@ namespace RWDE_UPLOADS_FILES
 
                 // Fetch data based on selected filter type
                 DataTable result = null;
+                int[] Batchids = null;
                 if (filterType == "BatchID")
                 {
                     // Get and validate batch IDs
                     string batchIdText = txtBatchID.Text;
-                    List<int> batchIDs = batchIdText.Split(',')
-                                                     .Select(id => int.TryParse(id.Trim(), out int parsedId) ? parsedId : 0)
-                                                     .Where(id => id > 0)
-                                                     .ToList();
-                    if (batchIDs.Count > 0)
+                    Batchids = txtBatchID.Text.Split(',').Select(int.Parse).Distinct().ToArray();
+                    if (Batchids.Length > 0)
                     {
-                        result = dbHelper.LoadDatafilterServiceReconbatchid(batchIDs); //
+                        result = dbHelper.LoadDatafilterServiceReconbatchid(Batchids); //
 
                         if (result.Rows.Count == 0)
                         {
@@ -350,6 +342,7 @@ namespace RWDE_UPLOADS_FILES
 
                 // Add serial numbers (Sl No) to the DataTable before binding
                 int serialNumber = 1;
+                result.Columns["Sl No"].ReadOnly = false;
                 foreach (DataRow row in result.Rows)
                 {
                     row["Sl No"] = serialNumber++; // Assign the serial number
@@ -493,6 +486,11 @@ namespace RWDE_UPLOADS_FILES
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

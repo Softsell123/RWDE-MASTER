@@ -1,28 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-using System.Configuration;
-using RWDE_UPLOADS_FILES;
-using Rwde;
-using RWDE;
 using System.Xml;
-using System.Data.SqlTypes;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     public partial class btnCT : Form
     {
@@ -393,7 +381,7 @@ namespace RWDE_UPLOADS_FILES
         {
             // Example of saving to application settings (adjust according to your actual settings mechanism).
             //Properties.Settings.Default.DefaultPath = path;
-            Properties.Settings.Default.Save();
+            //Properties.Settings.Default.Save();
         }
 
         // Method to load the default path when the form is initialized.

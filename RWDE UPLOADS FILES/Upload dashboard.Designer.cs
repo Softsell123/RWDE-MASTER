@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class Upload_dashboard
     {

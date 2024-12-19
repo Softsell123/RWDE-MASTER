@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class ContractIDLists
     {
@@ -49,9 +49,9 @@ namespace RWDE_UPLOADS_FILES
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblHeading = new System.Windows.Forms.Label();
             this.lblContract = new System.Windows.Forms.Label();
-            this.rWDEDataSet2 = new RWDE_UPLOADS_FILES.RWDEDataSet2();
+            this.rWDEDataSet2 = new RWDE.RWDEDataSet2();
             this.contractsSetupBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.contractsSetupTableAdapter = new RWDE_UPLOADS_FILES.RWDEDataSet2TableAdapters.ContractsSetupTableAdapter();
+            this.contractsSetupTableAdapter = new RWDE.RWDEDataSet2TableAdapters.ContractsSetupTableAdapter();
             this.pnlGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet2)).BeginInit();

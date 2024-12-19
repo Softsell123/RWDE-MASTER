@@ -1,21 +1,14 @@
-﻿using DocumentFormat.OpenXml.ExtendedProperties;
-using Rwde;
-using RWDE;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Application = System.Windows.Forms.Application;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     public partial class OCHIN_to_RWDE_Conversion : Form
     {
@@ -353,7 +346,7 @@ namespace RWDE_UPLOADS_FILES
         private void AddDateTime(string name, string value, DataGridView dataGridView)//format datetime 
         {
             try { 
-            DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn
+                DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn
             {
                 Name = name,
                 DataPropertyName = name,
@@ -371,19 +364,18 @@ namespace RWDE_UPLOADS_FILES
         private void UpdateBatchStatus(int batchId, int status, DateTime timestamp)//update date information
         {
             try { 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-
-                connection.Open();
-                using (SqlCommand command = new SqlCommand("updatestatus", connection))//UPDATE STATUS
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.Parameters.AddWithValue("@Status", status);
-                    command.Parameters.AddWithValue("@Timestamp", timestamp);
-                    command.Parameters.AddWithValue("@BatchID", batchId);
-                    command.ExecuteNonQuery();
-                    ClearTables(selectedBatchID);//to clear data
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("updatestatus", connection))//UPDATE STATUS
+                    {
+                        command.Parameters.AddWithValue("@Status", status);
+                        command.Parameters.AddWithValue("@Timestamp", timestamp);
+                        command.Parameters.AddWithValue("@BatchID", batchId);
+                        command.ExecuteNonQuery();
+                        ClearTables(selectedBatchID);//to clear data
+                    }
                 }
-            }
             }
             catch (Exception ex)
             {
@@ -691,22 +683,32 @@ namespace RWDE_UPLOADS_FILES
                                 DateTime startTime = DateTime.Now;
                                 txtUploadStarted.Text = startTime.ToString("MM/dd/yyyy HH:mm:ss");
                                 // Update progress textbox with initial progress information
-                                await UpdateProgressAsyncservices(insertedRows, totalRows);
+                                if (totalRows != 0)
+                                {
+                                    await UpdateProgressAsyncservices(insertedRows, totalRows);
+                                }
+                                else
+                                {
+                                    MessageBox.Show(Constants.Nodataexistsforthisbatchid,Constants.ochintorwdeconversion,MessageBoxButtons.OK,MessageBoxIcon.Information);
+                                }
 
-                                // Set up progress bar
-                                progressBarServices.Maximum = totalRows;
+                            // Set up progress bar
+                            progressBarServices.Maximum = totalRows;
 
                                 using (SqlDataReader reader = command.ExecuteReader())
                                 {
-                                    while (insertedRows < totalRows)
+                                    if (totalRows != 0)
                                     {
-                                        // Process each row
-                                        insertedRows++;
+                                        while (insertedRows < totalRows)
+                                        {
+                                            // Process each row
+                                            insertedRows++;
 
-                                        // Update progress bar and text box
-                                        await UpdateProgressAsyncservices(insertedRows, totalRows);
+                                            // Update progress bar and text box
+                                            await UpdateProgressAsyncservices(insertedRows, totalRows);
 
-                                        // You may want to do additional processing here if needed
+                                            // You may want to do additional processing here if needed
+                                        }
                                     }
                                 }
                                 DateTime endTime = DateTime.Now;

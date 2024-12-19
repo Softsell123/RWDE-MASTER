@@ -1,6 +1,4 @@
-﻿using Rwde;
-using RWDE;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -8,7 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     [ComVisible(true)]
     public partial class ViewAllBatchesForm : Form
@@ -463,7 +461,7 @@ namespace RWDE_UPLOADS_FILES
                 MessageBox.Show($"{Constants.ErrorClosingForm}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        // Handle the Filter Datas
+        // Handle the Filter Data
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             try
@@ -501,7 +499,7 @@ namespace RWDE_UPLOADS_FILES
             }
         }
 
-        //clear All Datas 
+        //clear All Data
         private void bnClear_Click(object sender, EventArgs e)
         {
             try
@@ -510,7 +508,7 @@ namespace RWDE_UPLOADS_FILES
                 cbBatchType.Items.Clear();
                 //Handle the Batch type Names
                 getAllBatchTypeNames();
-                //populate the datas into grid
+                //populate the data into grid
                 PopulateDataGridViewLOAD();
                 //Handle the Width For Grid Columns
                 AdjustAllColumnWidths();

@@ -1,34 +1,25 @@
-﻿using Rwde;
-using RWDE;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
-using System.Xml;
-using System.Runtime.Remoting.Messaging;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
-using DocumentFormat.OpenXml.Office.Word;
 using ComboBox = System.Windows.Forms.ComboBox;
 using ScrollBar = System.Windows.Forms.ScrollBar;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     public partial class frmXMLGenerator : Form
     {
         private readonly string connectionString;
         private readonly DBHelper dbHelper;
-        private List<int> removedBatchIDs = new List<int>();
+        //private readonly List<int> removedBatchIDs = new List<int>();
         public string xmlPath;
         public frmXMLGenerator()
         {
@@ -95,7 +86,7 @@ namespace RWDE_UPLOADS_FILES
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -117,11 +108,11 @@ namespace RWDE_UPLOADS_FILES
             try
             {
                 string query = "Generationstarted";
-                if (removedBatchIDs.Any())
-                {
-                    string excludedBatchIDs = string.Join(",", removedBatchIDs);
-                    query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
-                }
+                //if (removedBatchIDs.Any())
+                //{
+                //    string excludedBatchIDs = string.Join(",", removedBatchIDs);
+                //    query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
+                //}
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
@@ -271,11 +262,11 @@ namespace RWDE_UPLOADS_FILES
             try
             {
                 string query = "Generationochin";
-                if (removedBatchIDs.Any())
-                {
-                    string excludedBatchIDs = string.Join(",", removedBatchIDs);
-                    query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
-                }
+                //if (removedBatchIDs.Any())
+                //{
+                //    string excludedBatchIDs = string.Join(",", removedBatchIDs);
+                //    query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
+                //}
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
@@ -1339,11 +1330,11 @@ namespace RWDE_UPLOADS_FILES
             try
             {
                 string query = "Generation";
-                if (removedBatchIDs.Any())
-                {
-                    string excludedBatchIDs = string.Join(",", removedBatchIDs);
-                    query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
-                }
+                //if (removedBatchIDs.Any())
+                //{
+                //    string excludedBatchIDs = string.Join(",", removedBatchIDs);
+                //    query += $" AND [BatchID] NOT IN ({excludedBatchIDs})";
+                //}
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(query, connection);

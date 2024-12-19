@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace RWDE_UPLOADS_FILES {
+namespace RWDE {
     
     
     /// <summary>
@@ -793,7 +793,7 @@ namespace RWDE_UPLOADS_FILES {
         }
     }
 }
-namespace RWDE_UPLOADS_FILES.RWDEDataSet1TableAdapters {
+namespace RWDE.RWDEDataSet1TableAdapters {
     
     
     /// <summary>
@@ -930,7 +930,7 @@ namespace RWDE_UPLOADS_FILES.RWDEDataSet1TableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::RWDE_UPLOADS_FILES.Properties.Settings.Default.RWDEConnectionString;
+            this._connection.ConnectionString = global::RWDE.Properties.Settings.Default.RWDEConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

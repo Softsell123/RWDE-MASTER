@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class ViewAllBatchesForm
     {
@@ -46,8 +44,8 @@ namespace RWDE_UPLOADS_FILES
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.batchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.rWDEDataSet = new RWDE_UPLOADS_FILES.RWDEDataSet();
-            this.batchTableAdapter = new RWDE_UPLOADS_FILES.RWDEDataSetTableAdapters.BatchTableAdapter();
+            this.rWDEDataSet = new RWDE.RWDEDataSet();
+            this.batchTableAdapter = new RWDE.RWDEDataSetTableAdapters.BatchTableAdapter();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pnl = new System.Windows.Forms.Panel();
             this.pnl2 = new System.Windows.Forms.Panel();
@@ -86,7 +84,7 @@ namespace RWDE_UPLOADS_FILES
             this.EndedAt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonDelete = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnClose = new System.Windows.Forms.Button();
-            this.batchTableAdapter1 = new RWDE_UPLOADS_FILES.RWDEDataSet1TableAdapters.BatchTableAdapter();
+            this.batchTableAdapter1 = new RWDE.RWDEDataSet1TableAdapters.BatchTableAdapter();
             ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).BeginInit();
             this.panel1.SuspendLayout();
@@ -615,7 +613,7 @@ namespace RWDE_UPLOADS_FILES
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            
+
         }
 
         #endregion

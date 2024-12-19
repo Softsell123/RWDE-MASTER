@@ -1,21 +1,13 @@
-﻿using Rwde;
-using RWDE;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
-namespace RWDE_UPLOADS_FILES//
+namespace RWDE//
 {
     public partial class frmHccCsv : Form
     {
@@ -422,12 +414,7 @@ namespace RWDE_UPLOADS_FILES//
                         }
                     }
                 }
-                // Loop until a unique batchId is found
-                //while (BatchExists(connection, batchId))
-                //{
-                //    batchId++;
-                //}
-
+               
                 // Insert all client data first
                 foreach (var data in clientData)
                 {
@@ -451,7 +438,10 @@ namespace RWDE_UPLOADS_FILES//
                         //await Task.Delay(500); // Adding delay of 500 milliseconds
                     }
                 }
-
+                if (serviceData.Count == 0&& baseFilename.Contains(Constants.Services))
+                {
+                    MessageBox.Show(Constants.UploadingEmptyFile+baseFilename, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
                 // Insert all service data next
                 foreach (var data in serviceData)
                 {
@@ -477,6 +467,10 @@ namespace RWDE_UPLOADS_FILES//
             }
             catch (Exception ex)
             {
+                if (ex.Message.Contains("another process"))
+                {
+                    MessageBox.Show(Constants.TheFileisbeingUsedinanotherprocessClosethefileandTryagain+baseFilename, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 dbHelper.Log($"Error inserting CSV data from file '{csvFilePath}' into the table: {ex.Message}", Constants.ERROR, baseFilename, Constants.uploadochin);
                 return Tuple.Create(0, false);
             }

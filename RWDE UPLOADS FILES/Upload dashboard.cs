@@ -1,16 +1,11 @@
 ﻿using ClosedXML.Excel;
-using OfficeOpenXml;
-using Rwde;
-using RWDE;
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     public partial class Upload_dashboard : Form
     {
@@ -284,7 +279,7 @@ namespace RWDE_UPLOADS_FILES
         private void btnClr_Click(object sender, EventArgs e)//to clear data in the grid
         {
             try { 
-            // Reset DateTimePickers to one year back from the current date
+                 // Reset DateTimePickers to one year back from the current date
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = "MM-dd-yyyy";
             dtpEndDate.Value = DateTime.Now;
@@ -334,27 +329,27 @@ namespace RWDE_UPLOADS_FILES
                     break;
 
                 case "First Quarter":
-                    SetQuarterDates(1, out startDate, out endDate);//filter quaterly
+                    SetQuarterDates(1, out startDate, out endDate);//filter quarterly
                     break;
 
                 case "Second Quarter":
-                    SetQuarterDates(2, out startDate, out endDate);//filter secomd quaterly
+                    SetQuarterDates(2, out startDate, out endDate);//filter second quarterly
                     break;
 
                 case "Third Quarter":
-                    SetQuarterDates(3, out startDate, out endDate);//filter quaterly
+                    SetQuarterDates(3, out startDate, out endDate);//filter quarterly
                     break;
 
                 case "Fourth Quarter":
-                    SetQuarterDates(4, out startDate, out endDate);//filter quaterly
+                    SetQuarterDates(4, out startDate, out endDate);//filter quarterly
                     break;
 
                 case "Previous Quarter":
-                    SetPreviousQuarterDates(out startDate, out endDate);//filter quaterly
+                    SetPreviousQuarterDates(out startDate, out endDate);//filter quarterly
                     break;
 
                 case "Current Quarter":
-                    SetCurrentQuarterDates(out startDate, out endDate);//filter quaterly
+                    SetCurrentQuarterDates(out startDate, out endDate);//filter quarterly
                     break;
 
                 case "This Year":
@@ -433,7 +428,7 @@ namespace RWDE_UPLOADS_FILES
             }
         }
 
-        private void SetPreviousQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quaterly basis
+        private void SetPreviousQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quarterly basis
         {
             DateTime today = DateTime.Today;
             int currentQuarter = (today.Month - 1) / 3 + 1;
@@ -444,7 +439,7 @@ namespace RWDE_UPLOADS_FILES
             endDate = new DateTime(year, endDate.Month, DateTime.DaysInMonth(year, endDate.Month));
         }
 
-        private void SetCurrentQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quaterly basis
+        private void SetCurrentQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quarterly basis
         {
             {
                 DateTime today = DateTime.Today;

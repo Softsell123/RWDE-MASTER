@@ -1,17 +1,12 @@
 ﻿using ClosedXML.Excel;
-using OfficeOpenXml;
-using Rwde;
-using RWDE;
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     public partial class Error_Log_Report : Form
     {

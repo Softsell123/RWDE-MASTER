@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace RWDE_UPLOADS_FILES {
+namespace RWDE {
     
     
     /// <summary>
@@ -798,7 +798,7 @@ namespace RWDE_UPLOADS_FILES {
         }
     }
 }
-namespace RWDE_UPLOADS_FILES.RWDEDataSet2TableAdapters {
+namespace RWDE.RWDEDataSet2TableAdapters {
     
     
     /// <summary>
@@ -984,7 +984,7 @@ SELECT ContractID, ContractName, StartedDateTime, EndedDateTime, Status, Created
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::RWDE_UPLOADS_FILES.Properties.Settings.Default.RWDEConnectionString1;
+            this._connection.ConnectionString = global::RWDE.Properties.Settings.Default.RWDEConnectionString1;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

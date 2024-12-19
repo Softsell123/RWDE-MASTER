@@ -1,21 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Rwde;
-using RWDE;
-using RWDE_UPLOADS_FILES;
-using System;
-using System.ComponentModel;
-using System.Data.SqlClient;
-using System.Diagnostics.Contracts;
-using System.IO;
-using System.Security.Policy;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Windows.Forms.AxHost;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-
-namespace Rwde
+﻿namespace RWDE
 {
     /// <summary>
     /// Class containing constants used in the application.
@@ -55,7 +38,8 @@ namespace Rwde
         public const string ThefoldercontainsnonXMLfilesorfolderisemptyUploadisallowedonlyforXMLfiles = "The folder contains non-XML files or folder is empty.Upload is allowed only for XML files.";
         public const string Selectafilebeforeuploading = "Select a file before uploading";
         public const string ThefoldercontainsnonCSVfilesUploadisallowedonlyforCSVfiles = "The folder contains non-CSV files or folder is empty to proceed. Upload is allowed only for CSV files";
-
+        public const string UploadingEmptyFile = "Uploading Empty File ";
+        public const string TheFileisbeingUsedinanotherprocessClosethefileandTryagain = "The File is being used in another process.Please Close the file and Try again. ";
 
         public const string AriesClients = "ARIES_Clients";
         public const string EditColumnName = "Edit";
@@ -89,7 +73,7 @@ namespace Rwde
         public const int HCCABORT = 19;
         public const string Abort = "A";
         public const string Clients = "Client_";
-        public const string nobatchid = "No data exists for this Batch ID";
+        public const string Nodataexistsforthisbatchid = "No data exists for this Batch ID";
         public const string batchidnull = "Batch ID Cannot be null";
         public const string XMLUPLOADSTARTED = "XML Upload Started";
         public const string XMLUPLOADCompleted = "XMl Upload Completed";
@@ -375,7 +359,7 @@ namespace Rwde
 
     }
 
-    public static class ServiceCodeSetup
+    public static class ServiceCodeSetupConstants
     {
         public const string AreyousureyouwanttoaddanewService = "Are you sure you want to add a new Service";
     }

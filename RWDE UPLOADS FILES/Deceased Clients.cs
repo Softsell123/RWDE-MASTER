@@ -1,21 +1,11 @@
-﻿using RWDE;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using ClosedXML.Excel;
-using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using DocumentFormat.OpenXml.Bibliography;
-using System.Text.RegularExpressions;
-using Rwde;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     public partial class Deceased_Clients : Form
     {

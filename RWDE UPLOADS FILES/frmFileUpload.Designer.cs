@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace RWDE_UPLOADS_FILES
+namespace RWDE
 {
     partial class btnCT
     {
@@ -587,17 +587,17 @@ namespace RWDE_UPLOADS_FILES
 
         private void textPath_TextChanged(object sender, EventArgs e)
         {
-           
+
         }
 
         private void lblMessage_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         private void txtBatchid_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void label2_Click_2(object sender, EventArgs e)
@@ -612,25 +612,25 @@ namespace RWDE_UPLOADS_FILES
 
         private void txtDesc_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void lblprogress_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         private void panel1_Paint_1(object sender, PaintEventArgs e)
         {
-           
+
         }
 
         private void label2_Click_1(object sender, EventArgs e)
         {
-           
+
         }
 
-       
+
 
 
 
@@ -638,42 +638,42 @@ namespace RWDE_UPLOADS_FILES
 
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
-            
+
         }
 
         private void txtProgressfile_TextChanged(object sender, EventArgs e)
         {
-           
+
         }
 
         private void txtProgressbar_TextChanged(object sender, EventArgs e)
         {
-           
+
         }
 
         private void progressBar_Click(object sender, EventArgs e)
         {
-          
+
         }
 
         private void label1_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         private void frmFileUpload_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void label2_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         private void FormTitle_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
 
 
