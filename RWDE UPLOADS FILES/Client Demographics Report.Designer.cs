@@ -3,7 +3,7 @@ using System;
 
 namespace RWDE
 {
-    partial class Client_Demographics_Report
+    partial class ClientDemographicsReport
     {
         /// <summary>
         /// Required designer variable.
@@ -419,7 +419,7 @@ namespace RWDE
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.pnl);
-            this.Name = "Client_Demographics_Report";
+            this.Name = "ClientDemographicsReport";
             this.Text = "Client_Demographic_Report";
             this.Load += new System.EventHandler(this.Client_Demographics_Report_Load);
             this.pnl.ResumeLayout(false);

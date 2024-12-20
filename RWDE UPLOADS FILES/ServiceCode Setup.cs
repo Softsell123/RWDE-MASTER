@@ -8,16 +8,16 @@ namespace RWDE
 {
     public partial class ServiceCodeSetup : Form
     {
-        private readonly DBHelper dbHelper = new DBHelper();
+        private readonly DBHelper dbHelper;
 
         private DataTable dataTable;
         private readonly string connectionString;
         public ServiceCodeSetup()// Your custom initialization code goes here
         {
            
-            DataGridView dataGridView = new DataGridView();
+            DataGridView gridView = new DataGridView();
          
-            dataGridView.EditMode = DataGridViewEditMode.EditOnEnter;
+            gridView.EditMode = DataGridViewEditMode.EditOnEnter;
             this.ControlBox = false;
             this.DoubleBuffered = true;
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
@@ -26,9 +26,9 @@ namespace RWDE
             dbHelper = new DBHelper();
             connectionString = dbHelper.GetConnectionString();
             InitializeDataGridView();
-            dataGridView.CellEndEdit += dataGridView_CellEndEdit;
-            dataGridView.CellValidating += dataGridView_CellValidating;
-            dataGridView.EditingControlShowing += DataGridView_EditingControlShowingStatus;
+            gridView.CellEndEdit += dataGridView_CellEndEdit;
+            gridView.CellValidating += dataGridView_CellValidating;
+            gridView.EditingControlShowing += DataGridView_EditingControlShowingStatus;
             PopulateGrid();
            // Setup the DataTable and DataGridView when the form loads
             SetupDataGridView();
@@ -165,10 +165,10 @@ namespace RWDE
            private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)//to edit the selected row
         {    
             try{// Reset the row's background color to white when editing is completed
-            if (e.RowIndex >= 0)
-            {
-                dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White; // Set back to default color
-            }
+                if (e.RowIndex >= 0)
+                {
+                    dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White; // Set back to default color
+                }
             }
             catch (Exception ex)
             {
@@ -182,17 +182,17 @@ namespace RWDE
             {
                 dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White; // Set back to default color
             }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+           }
+           catch (Exception ex)
+           {
+               MessageBox.Show(ex.Message);
+           }
         }
         private void InitializeDataGridView()
         {
             try { 
-            // Your DataGridView initialization code
-            dataGridView.AllowUserToAddRows = false; // Prevents user from adding new rows
+                // Your DataGridView initialization code
+                dataGridView.AllowUserToAddRows = false; // Prevents user from adding new rows
             }
             catch (Exception ex)
             {
@@ -400,9 +400,9 @@ namespace RWDE
         private void PopulateContractComboBoxColumn()//to populate data 
         {
             try { 
-            DataTable contracts = dbHelper.GetActiveContracts();//to get contracts list in service code
-            DataGridViewComboBoxColumn comboBoxColumn = (DataGridViewComboBoxColumn)this.dataGridView.Columns["ContractID"];
-            comboBoxColumn.DataSource = contracts;
+                DataTable contracts = dbHelper.GetActiveContracts();//to get contracts list in service code
+                DataGridViewComboBoxColumn comboBoxColumn = (DataGridViewComboBoxColumn)this.dataGridView.Columns["ContractID"];
+                comboBoxColumn.DataSource = contracts;
             }
             catch (Exception ex)
             {

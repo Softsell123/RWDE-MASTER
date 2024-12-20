@@ -6,11 +6,11 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    public partial class frmMain : Form
+    public partial class FrmMain : Form
     {
         private readonly string connectionString;
         private readonly DBHelper dbHelper;
-        public frmMain()//initialize data
+        public FrmMain()//initialize data
         {
             InitializeComponent();
            
@@ -102,7 +102,7 @@ namespace RWDE
             saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                string FileName = saveFileDialog.FileName;
+                string fileName = saveFileDialog.FileName;
             }
         }
         private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)//to close
@@ -111,9 +111,9 @@ namespace RWDE
         }
         private void ToolBarToolStripMenuItem_Click(object sender, EventArgs e)//to open the prescribed form
         {
-            ContractIDLists contractIDLists = new ContractIDLists();
-            contractIDLists.MdiParent = this;
-            contractIDLists.Show();
+            ContractIdLists contractIdLists = new ContractIdLists();
+            contractIdLists.MdiParent = this;
+            contractIdLists.Show();
         }
         private void CascadeToolStripMenuItem_Click(object sender, EventArgs e)//This method is triggered when the user clicks the "Cascade" option from a ToolStripMenuItem.
         {
@@ -148,13 +148,13 @@ namespace RWDE
                 this.ActiveMdiChild.Close();
             }
 
-            frmXMLGenerator frmXMLGenerator = new frmXMLGenerator();
-            frmXMLGenerator.MdiParent = this;
-            frmXMLGenerator.Show();
+            FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml();
+            frmGeneratorXml.MdiParent = this;
+            frmGeneratorXml.Show();
         }
         private void btnOCHINHCCConversion_Click(object sender, EventArgs e)//OCHIN to RWDE insertion
         {
-            OCHIN_to_RWDE_Conversion OCHIN_to_RWDE_Conversion=new OCHIN_to_RWDE_Conversion();
+            OchinToRwdeConversion OCHIN_to_RWDE_Conversion=new OchinToRwdeConversion();
             OCHIN_to_RWDE_Conversion.MdiParent=this;
             OCHIN_to_RWDE_Conversion.Show();
         }
@@ -231,9 +231,9 @@ namespace RWDE
                 }
 
                 // Create an instance of btnCT and show it
-                btnCT btnCT = new btnCT();
-                btnCT.MdiParent = this;
-                btnCT.Show();
+                FrmUploadOchinCsv frmUploadXMLFile = new FrmUploadOchinCsv();
+                frmUploadXMLFile.MdiParent = this;
+                frmUploadXMLFile.Show();
             }
             catch (Exception ex)
             {
@@ -261,9 +261,9 @@ namespace RWDE
                 frmConvertToHCC.Visible = false;
 
                 // Create an instance of frmUploadCsv and show it
-                frmUploadCsv frmUploadCsv = new frmUploadCsv();
-                frmUploadCsv.MdiParent = this;
-                frmUploadCsv.Show();
+                FrmUploadHccCsv FrmUploadHccCsv = new FrmUploadHccCsv();
+                FrmUploadHccCsv.MdiParent = this;
+                FrmUploadHccCsv.Show();
             }
             catch (Exception ex)
             {
@@ -274,10 +274,10 @@ namespace RWDE
         {
             try { 
           
-            OCHIN_to_RWDE_Conversion OCHIN_to_RWDE_Conversion = new OCHIN_to_RWDE_Conversion();
-            // Show the OCHIN to HCC screen (assuming 'ochinToHCCControl' is a user control or panel for the OCHIN to HCC screen)
-            OCHIN_to_RWDE_Conversion.MdiParent = this;
-            OCHIN_to_RWDE_Conversion.Show(); // Make the OCHIN to HCC control visible
+                OchinToRwdeConversion OCHIN_to_RWDE_Conversion = new OchinToRwdeConversion();
+                // Show the OCHIN to HCC screen (assuming 'ochinToHCCControl' is a user control or panel for the OCHIN to HCC screen)
+                OCHIN_to_RWDE_Conversion.MdiParent = this;
+                OCHIN_to_RWDE_Conversion.Show(); // Make the OCHIN to HCC control visible
             }
             catch (Exception ex)
             {
@@ -286,27 +286,27 @@ namespace RWDE
         }
         public void ShowOCHINToHCCScreen()//function to navigate to next page       
             {
-            try { 
-           
-            frmHccCsv frmHccCsv = new frmHccCsv();
-            frmHccCsv.MdiParent = this;
-            frmHccCsv.Show(); // Make the OCHIN to HCC control visible
+            try {
+
+                FrmUploadOchinCsv FrmUploadOchinCsv = new FrmUploadOchinCsv();
+                FrmUploadOchinCsv.MdiParent = this;
+                FrmUploadOchinCsv.Show(); // Make the OCHIN to HCC control visible
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-        }
+            }
         public void ShowOCHINToHCCScreenGENERATE()////function to navigate to next page
-            {
-            try { 
-            // Hide the tool strip menu item or any other controls you want to hide
-            //uploadHCCCSVToolStripMenuItem.Visible = false; // Adjust as necessary
-            frmXMLGenerator frmXMLGenerator = new frmXMLGenerator();
-            // Show the OCHIN to HCC screen (assuming 'ochinToHCCControl' is a user control or panel for the OCHIN to HCC screen)
-            frmXMLGenerator.MdiParent = this;
-            frmXMLGenerator.Show(); // Make the OCHIN to HCC control visible
+        {
+            try {
+                // Hide the tool strip menu item or any other controls you want to hide
+                //uploadHCCCSVToolStripMenuItem.Visible = false; // Adjust as necessary
+                FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml();
+                // Show the OCHIN to HCC screen (assuming 'ochinToHCCControl' is a user control or panel for the OCHIN to HCC screen)
+                frmGeneratorXml.MdiParent = this;
+                frmGeneratorXml.Show(); // Make the OCHIN to HCC control visible
 
                 // Optionally, you might want to hide other controls or panels if necessary
                 // Hide other controls or panels
@@ -318,11 +318,10 @@ namespace RWDE
             }
         }
         public void ShowOCHINToHCCScreenMain()//function to navigate to next page
-            {
-
+        {
             Application.Restart(); // Make the OCHIN to HCC control visible
         }
-       private Image ResizeImage(Image image, int width, int height)
+        private Image ResizeImage(Image image, int width, int height)
         {
 
             Bitmap resizedImage = new Bitmap(width, height);
@@ -332,35 +331,28 @@ namespace RWDE
             }
             return resizedImage;
         }
-   
-         private void uploadCSVToOCHINToolStripMenuItem_Click(object sender, EventArgs e)//csv uploads 
+        private void uploadCSVToOCHINToolStripMenuItem_Click(object sender, EventArgs e)//csv uploads 
         {
             try { 
-            if (panelFrom != null)
-            {
-                panelFrom.Visible = false;
+                if (panelFrom != null)
+                {
+                    panelFrom.Visible = false;
+                }
+                if (pnlForm != null)
+                {
+                    pnlForm.Visible = false;
+                }
 
-
-            }
-            if (pnlForm != null)
-            {
-                pnlForm.Visible = false;
-
-
-            }
-            
-
-            // Create an instance of frmUploadCsv and show it
-            frmUploadCsv frmUploadCsv = new frmUploadCsv();
-            frmUploadCsv.MdiParent = this;
-            frmUploadCsv.Show();
+                // Create an instance of frmUploadCsv and show it
+                FrmUploadHccCsv frmUploadHccCsv = new FrmUploadHccCsv();
+                frmUploadHccCsv.MdiParent = this;
+                frmUploadHccCsv.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void oCHINToHCCConversionToolStripMenuItem_Click(object sender, EventArgs e)//ochin to hcc conversion
         {
             if (this.ActiveMdiChild != null)
@@ -371,55 +363,55 @@ namespace RWDE
             frmConvertToHCC frmConvertToHCC = new frmConvertToHCC();
             frmConvertToHCC.MdiParent = this;
             frmConvertToHCC.Show();
-           // try
-           // { 
-           //     if (panelFrom != null)
-           // {
-           //     panelFrom.Visible = false;
+            // try
+            // { 
+            //     if (panelFrom != null)
+            // {
+            //     panelFrom.Visible = false;
 
 
-           // }
-           // if (pnlForm != null)
-           // {
-           //     pnlForm.Visible = false;
+            // }
+            // if (pnlForm != null)
+            // {
+            //     pnlForm.Visible = false;
 
 
-           // }
+            // }
 
-           // frmConvertToHCC frmConvertToHCC = new frmConvertToHCC();
-           // frmConvertToHCC.MdiParent = this;
+            // frmConvertToHCC frmConvertToHCC = new frmConvertToHCC();
+            // frmConvertToHCC.MdiParent = this;
 
-           // frmConvertToHCC.Show();
+            // frmConvertToHCC.Show();
 
 
-           // // Add the panel from frmConvertToHCC to frmMain if it's not already added
-           // if (panelFrom == null)
-           // {
-           //     panelFrom = frmConvertToHCC.PanelToReplace;
-           //     this.Controls.Add(panelFrom);
-           // }
-           //// Store the current form
-           // currentForm = frmConvertToHCC;
+            // // Add the panel from frmConvertToHCC to frmMain if it's not already added
+            // if (panelFrom == null)
+            // {
+            //     panelFrom = frmConvertToHCC.PanelToReplace;
+            //     this.Controls.Add(panelFrom);
+            // }
+            //// Store the current form
+            // currentForm = frmConvertToHCC;
 
-           // // Fetch data from the Batch table
-           //string query = "SELECT [BatchID], [FileName], [Description], [Path], [UploadStartedAt],[UploadEndedAt],[ConversionStartedAt],[ConversionEndedAt],[GenerationStartedAt]  ,[GenerationEndedAt] , [TotalRows], [SuccessfulRows], [FailedRows], [Status], [Message], [Comments], [CreatedBy], [CreatedOn] FROM [RWDE].[dbo].[Batch]";
+            // // Fetch data from the Batch table
+            //string query = "SELECT [BatchID], [FileName], [Description], [Path], [UploadStartedAt],[UploadEndedAt],[ConversionStartedAt],[ConversionEndedAt],[GenerationStartedAt]  ,[GenerationEndedAt] , [TotalRows], [SuccessfulRows], [FailedRows], [Status], [Message], [Comments], [CreatedBy], [CreatedOn] FROM [RWDE].[dbo].[Batch]";
 
-           // using (SqlConnection connection = new SqlConnection(connectionString))
-           // {
-           //     SqlCommand command = new SqlCommand(query, connection);
-           //     SqlDataAdapter adapter = new SqlDataAdapter(command);
-           //     DataTable dataTable = new DataTable();
+            // using (SqlConnection connection = new SqlConnection(connectionString))
+            // {
+            //     SqlCommand command = new SqlCommand(query, connection);
+            //     SqlDataAdapter adapter = new SqlDataAdapter(command);
+            //     DataTable dataTable = new DataTable();
 
-           //     adapter.Fill(dataTable);
+            //     adapter.Fill(dataTable);
 
-           //     // Bind the DataTable to the DataGridView in frmConvertToHCC
-           //    // frmConvertToHCC.PopulateDataGridView(dataTable);
-           // }
-           // }
-           // catch (Exception ex)
-           // {
-           //     MessageBox.Show(ex.Message);
-           // }
+            //     // Bind the DataTable to the DataGridView in frmConvertToHCC
+            //    // frmConvertToHCC.PopulateDataGridView(dataTable);
+            // }
+            // }
+            // catch (Exception ex)
+            // {
+            //     MessageBox.Show(ex.Message);
+            // }
         }
         private void generateHCCXmlFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -428,9 +420,9 @@ namespace RWDE
                 this.ActiveMdiChild.Close();
             }
 
-            frmXMLGenerator frmXMLGenerator = new frmXMLGenerator();
-            frmXMLGenerator.MdiParent = this;
-            frmXMLGenerator.Show();
+            FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml();
+            frmGeneratorXml.MdiParent = this;
+            frmGeneratorXml.Show();
 
             //try
             //{ // Create an instance of frmUploadCsv and show it
@@ -466,49 +458,48 @@ namespace RWDE
             //    MessageBox.Show(ex.Message);
             //}
         }
-
         private void allBatchesToolStripMenuItem_Click(object sender, EventArgs e)//all batches updates
         {
             try { 
-            ViewAllBatchesForm ViewAllBatchesForm = new ViewAllBatchesForm();
-            ViewAllBatchesForm.MdiParent = this;
-            ViewAllBatchesForm.Show();
+                ViewAllBatchesForm viewAllBatchesForm = new ViewAllBatchesForm();
+                viewAllBatchesForm.MdiParent = this;
+                viewAllBatchesForm.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnochincCsv_Click(object sender, EventArgs e)//ochin csv uploads
+        private void BtnochincCsv_Click(object sender, EventArgs e)//ochin csv uploads
         {
-            try { 
-            frmHccCsv frmHcccsv= new frmHccCsv();
-           frmHcccsv.MdiParent=this;
-            frmHcccsv.Show();
+            try {
+                FrmUploadOchinCsv uploadOchinCsv = new FrmUploadOchinCsv();
+                uploadOchinCsv.MdiParent=this;
+                uploadOchinCsv.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private void uploadHCCCSVToolStripMenuItem_Click(object sender, EventArgs e)//hcc csv uploads
+        private void uploadOchinCSVToolStripMenuItem_Click(object sender, EventArgs e)//hcc csv uploads
         {
             if (this.ActiveMdiChild != null)
             {
                 this.ActiveMdiChild.Close();
             }
 
-            frmHccCsv frmHcccsv = new frmHccCsv();
-            frmHcccsv.MdiParent = this;
-            frmHcccsv.Show();
+            FrmUploadOchinCsv uploadOchinCsv = new FrmUploadOchinCsv();
+            uploadOchinCsv.MdiParent = this;
+            uploadOchinCsv.Show();
         }
         private void xMLFileUploadsToolStripMenuItem_Click(object sender, EventArgs e)//xml file insertion
         {
             try { 
-            btnCT btnCT= new btnCT();
-            btnCT.MdiParent=this;   
-            btnCT.Show();
-        }
+                FrmUploadXmlFile frmUploadXmlFile = new FrmUploadXmlFile();
+                frmUploadXmlFile.MdiParent=this;
+                frmUploadXmlFile.Show();
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -521,7 +512,7 @@ namespace RWDE
                 this.ActiveMdiChild.Close();
             }
 
-            OCHIN_to_RWDE_Conversion OCHIN_to_RWDE_Conversion = new OCHIN_to_RWDE_Conversion();
+            OchinToRwdeConversion OCHIN_to_RWDE_Conversion = new OchinToRwdeConversion();
             OCHIN_to_RWDE_Conversion.MdiParent = this;
             OCHIN_to_RWDE_Conversion.Show();
             //try { 
@@ -582,13 +573,12 @@ namespace RWDE
             //    MessageBox.Show(ex.Message);
             //}
         }
-
         private void serviceReconciliationReportDotNotUseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try { 
-            ServiceReconciliationReport service = new ServiceReconciliationReport();
-            service.MdiParent = this;
-            service.Show();
+                ServiceReconciliationReport service = new ServiceReconciliationReport();
+                service.MdiParent = this;
+                service.Show();
             }
             catch (Exception ex)
             {
@@ -598,9 +588,9 @@ namespace RWDE
         private void contractIDListDotNotUseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try { 
-            ContractIDLists contractIDLists = new ContractIDLists();
-            contractIDLists.MdiParent = this;
-            contractIDLists.Show();
+                ContractIdLists contractIdLists = new ContractIdLists();
+                contractIdLists.MdiParent = this;
+                contractIdLists.Show();
             }
             catch (Exception ex)
             {
@@ -610,22 +600,21 @@ namespace RWDE
         private void serviceIDListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try { 
-            ServiceCodeSetup serviceIDLists = new ServiceCodeSetup();
-            serviceIDLists.MdiParent = this;
-            serviceIDLists.Show();
+                ServiceCodeSetup serviceIdLists = new ServiceCodeSetup();
+                serviceIdLists.MdiParent = this;
+                serviceIdLists.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void serviceReconciliationReportDotNotUseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             try { 
-            ServiceReconciliationReport service = new ServiceReconciliationReport();
-            service.MdiParent = this;
-            service.Show();
+                ServiceReconciliationReport service = new ServiceReconciliationReport();
+                service.MdiParent = this;
+                service.Show();
             }
             catch (Exception ex)
             {
@@ -635,48 +624,45 @@ namespace RWDE
         private void deceasedClientsReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try { 
-            Deceased_Clients clients = new Deceased_Clients();
-            clients.MdiParent = this;
-            clients.Show();
+                DeceasedClients clients = new DeceasedClients();
+                clients.MdiParent = this;
+                clients.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void uploadDashboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try { 
-            Upload_dashboard Upload_dashboard = new Upload_dashboard();
-            Upload_dashboard.MdiParent = this;
-            Upload_dashboard.Show();
+            try {
+                MonthlyReport monthlyReport = new MonthlyReport();
+                monthlyReport.MdiParent = this;
+                monthlyReport.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void hCCRECONToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try { 
-            HCC_Reconciliation HCC_Reconciliation = new HCC_Reconciliation();
-            HCC_Reconciliation.MdiParent = this;
-            HCC_Reconciliation.Show();
+                HccReconciliation hccReconciliation = new HccReconciliation();
+                hccReconciliation.MdiParent = this;
+                hccReconciliation.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void clientDemographicsReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try { 
-            Client_Demographics_Report Client_Demographics_Report = new Client_Demographics_Report();
-            Client_Demographics_Report.MdiParent = this;
-            Client_Demographics_Report.Show();
+                ClientDemographicsReport clientDemographicsReport = new ClientDemographicsReport();
+                clientDemographicsReport.MdiParent = this;
+                clientDemographicsReport.Show();
 
             }
             catch (Exception ex)
@@ -684,13 +670,12 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void errorLogReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try { 
-            Error_Log_Report Error_Log_Report = new Error_Log_Report();
-            Error_Log_Report.MdiParent = this;
-            Error_Log_Report.Show();
+                ErrorLogReport errorLogReport = new ErrorLogReport();
+                errorLogReport.MdiParent = this;
+                errorLogReport.Show();
 
 
             }
@@ -699,54 +684,45 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void toolsMenu_Click(object sender, EventArgs e)
         {
 
         }
-
         private void errorReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.ActiveMdiChild != null)
             {
                 this.ActiveMdiChild.Close();
             }
-
-            LOAD Error_Report =new LOAD();
-            Error_Report.MdiParent = this;
-            Error_Report.Show();
-
+            FrmDownloadHccErrors errorReport =new FrmDownloadHccErrors();
+            errorReport.MdiParent = this;
+            errorReport.Show();
         }
-
         private void reportsToolStripMenuItem_Click(object sender, EventArgs e)
         {
            
         }
-
         private void downloadHCCErrorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.ActiveMdiChild != null)
             {
                 this.ActiveMdiChild.Close();
             }
-
-            LOAD Error_Report = new LOAD();
-            Error_Report.MdiParent = this;
-            Error_Report.Show();
+            FrmDownloadHccErrors errorReport = new FrmDownloadHccErrors();
+            errorReport.MdiParent = this;
+            errorReport.Show();
         }
-
         private void cSVFILESToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CsvFile_Conversion CsvFile_Conversion = new CsvFile_Conversion();
-            CsvFile_Conversion.MdiParent = this;
-            CsvFile_Conversion.Show();
+            CsvFile_Conversion csvFileConversion = new CsvFile_Conversion();
+            csvFileConversion.MdiParent = this;
+            csvFileConversion.Show();
         }
-
         private void manualUploadReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                frmManualUpload frmManualUpload = new frmManualUpload();
+                FrmManualUpload frmManualUpload = new FrmManualUpload();
                 frmManualUpload.MdiParent = this;
                 frmManualUpload.Show();
             }
@@ -754,7 +730,6 @@ namespace RWDE
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
     }
 }

@@ -7,9 +7,9 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    public partial class frmManualUpload : Form
+    public partial class FrmManualUpload : Form
     {
-        public frmManualUpload()//initialize data
+        public FrmManualUpload()//initialize data
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
@@ -49,9 +49,9 @@ namespace RWDE
         private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
             try {
-            // Close the current form (dispose it)
-            this.Close();
-            Application.Restart();
+                // Close the current form (dispose it)
+                this.Close();
+                Application.Restart();
             }
             catch (Exception ex)
             {

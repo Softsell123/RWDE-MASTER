@@ -3,7 +3,7 @@ using System;
 
 namespace RWDE
 {
-    partial class frmManualUpload
+    partial class FrmManualUpload
     {
         /// <summary>
         /// Required designer variable.

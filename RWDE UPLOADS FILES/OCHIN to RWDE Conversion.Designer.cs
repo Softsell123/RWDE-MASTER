@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    partial class OCHIN_to_RWDE_Conversion
+    partial class OchinToRwdeConversion
     {
         /// <summary>
         /// Required designer variable.
@@ -780,7 +780,7 @@ namespace RWDE
             this.ClientSize = new System.Drawing.Size(1924, 1007);
             this.Controls.Add(this.pnlOCHINConversion);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Name = "OCHIN_to_RWDE_Conversion";
+            this.Name = "OchinToRwdeConversion";
             this.Text = "OCHIN_to_RWDE_Conversion";
             this.Load += new System.EventHandler(this.OCHIN_to_RWDE_Conversion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).EndInit();

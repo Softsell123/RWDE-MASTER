@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    public partial class Error_Log_Report : Form
+    public partial class ErrorLogReport : Form
     {
-        public Error_Log_Report()//initialize data
+        public ErrorLogReport()//initialize data
         {
             InitializeComponent();
             this.ControlBox = false;
@@ -86,20 +86,20 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
                        
-            }    
+        }    
         private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
             try { 
-            // Close the current form (dispose it)
-            this.Close();
-            Application.Restart();
+                // Close the current form (dispose it)
+                this.Close();
+                Application.Restart();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-      private void btnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
+        private void btnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
         {
             try {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
@@ -109,63 +109,63 @@ namespace RWDE
                 }
                 DataTable dataTable = new DataTable();
 
-            // Add columns to the DataTable
-            foreach (DataGridViewColumn column in dataGridView.Columns)
-            {
-                dataTable.Columns.Add(column.HeaderText);
-            }
-
-            // Add rows to the DataTable
-            foreach (DataGridViewRow row in dataGridView.Rows)
-            {
-                if (!row.IsNewRow)
+                // Add columns to the DataTable
+                foreach (DataGridViewColumn column in dataGridView.Columns)
                 {
-                    DataRow dataRow = dataTable.NewRow();
-                    foreach (DataGridViewCell cell in row.Cells)
-                    {
-                        dataRow[cell.ColumnIndex] = cell.Value ?? DBNull.Value;
-                    }
-                    dataTable.Rows.Add(dataRow);
+                    dataTable.Columns.Add(column.HeaderText);
                 }
-            }
 
-            // Create a new Excel workbook and worksheet
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.Worksheets.Add("Sheet1");
-
-                // Load the DataTable into the worksheet
-                worksheet.Cell(1, 1).InsertTable(dataTable);
-
-                // Prompt the user to select a folder to save the file
-                using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+                // Add rows to the DataTable
+                foreach (DataGridViewRow row in dataGridView.Rows)
                 {
-                    folderBrowserDialog.Description = Constants.selecrthefoldertosave;
-
-                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    if (!row.IsNewRow)
                     {
-                        // Base file name and directory
-                        string baseFileName = ContractIDList.Error_Log_Report;
-                        string directoryPath = folderBrowserDialog.SelectedPath;
-                        string fileExtension = ".xlsx";
-
-                        // Construct the initial file path
-                        string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
-
-                        // Check if the file already exists, and if so, append a suffix
-                        int fileSuffix = 1;
-                        while (File.Exists(filePath))
+                        DataRow dataRow = dataTable.NewRow();
+                        foreach (DataGridViewCell cell in row.Cells)
                         {
-                            fileSuffix++;
-                            filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
+                            dataRow[cell.ColumnIndex] = cell.Value ?? DBNull.Value;
                         }
-
-                        // Save the workbook to the file path
-                        workbook.SaveAs(filePath);
-                        MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        dataTable.Rows.Add(dataRow);
                     }
                 }
-            }
+
+                // Create a new Excel workbook and worksheet
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("Sheet1");
+
+                    // Load the DataTable into the worksheet
+                    worksheet.Cell(1, 1).InsertTable(dataTable);
+
+                    // Prompt the user to select a folder to save the file
+                    using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+                    {
+                        folderBrowserDialog.Description = Constants.selecrthefoldertosave;
+
+                        if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            // Base file name and directory
+                            string baseFileName = ContractIDList.Error_Log_Report;
+                            string directoryPath = folderBrowserDialog.SelectedPath;
+                            string fileExtension = ".xlsx";
+
+                            // Construct the initial file path
+                            string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
+
+                            // Check if the file already exists, and if so, append a suffix
+                            int fileSuffix = 1;
+                            while (File.Exists(filePath))
+                            {
+                                fileSuffix++;
+                                filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
+                            }
+
+                            // Save the workbook to the file path
+                            workbook.SaveAs(filePath);
+                            MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
 
             }
             catch (Exception ex)
@@ -176,16 +176,16 @@ namespace RWDE
         private void btnClr_Click(object sender, EventArgs e)//to clear data in the grid
         {
             try{// Reset DateTimePickers to one year back from the current date
-            dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.Value = DateTime.Now;
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.Value = DateTime.Now.AddYears(-1);
+                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+                dtpEndDate.Value = DateTime.Now;
+                dtpEndDate.CustomFormat = "MM-dd-yyyy";
 
-            // Clear the DataTable bound to the DataGridView
-            if (dataGridView.DataSource is DataTable dt)
-            {
-                dt.Clear();  // Clears all rows from the DataTable
-            }
+                // Clear the DataTable bound to the DataGridView
+                if (dataGridView.DataSource is DataTable dt)
+                {
+                    dt.Clear();  // Clears all rows from the DataTable
+                }
 
             }
             catch (Exception ex)

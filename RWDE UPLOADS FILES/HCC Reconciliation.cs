@@ -9,14 +9,15 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    public partial class HCC_Reconciliation : Form
+    public partial class HccReconciliation : Form
     {
         private DBHelper DBHelper;
         private DataTable dataTable;
-        private readonly DBHelper dbHelper = new DBHelper();
-        public HCC_Reconciliation()//initialize data
+        private readonly DBHelper dbHelper;
+        public HccReconciliation()//initialize data
         {
             InitializeComponent();
+            dbHelper = new DBHelper();
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = "MM-dd-yyyy";
             dtpEndDate.CustomFormat = "MM-dd-yyyy";
@@ -151,49 +152,49 @@ namespace RWDE
                     }
                 }
                    
-             // Create a new Excel workbook and worksheet
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.Worksheets.Add("Sheet1");
-
-                // Load the DataTable into the worksheet
-                worksheet.Cell(1, 1).InsertTable(dataTable);
-
-                // Prompt the user to select a folder to save the file
-                using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+                // Create a new Excel workbook and worksheet
+                using (var workbook = new XLWorkbook())
                 {
-                    folderBrowserDialog.Description = Constants.selecrthefoldertosave;
+                    var worksheet = workbook.Worksheets.Add("Sheet1");
 
-                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    // Load the DataTable into the worksheet
+                    worksheet.Cell(1, 1).InsertTable(dataTable);
+
+                    // Prompt the user to select a folder to save the file
+                    using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        // Base file name and directory
-                        string baseFileName = Constants.HCC_Reconciliation;
-                        string directoryPath = folderBrowserDialog.SelectedPath;
-                        string fileExtension = ".xlsx";
+                        folderBrowserDialog.Description = Constants.selecrthefoldertosave;
 
-                        // Construct the initial file path
-                        string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
-
-                        // Check if the file already exists, and if so, append a suffix
-                        int fileSuffix = 1;
-                        while (File.Exists(filePath))
+                        if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
-                            fileSuffix++;
-                            filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
-                        }
+                            // Base file name and directory
+                            string baseFileName = Constants.HCC_Reconciliation;
+                            string directoryPath = folderBrowserDialog.SelectedPath;
+                            string fileExtension = ".xlsx";
 
-                        // Save the workbook to the file path
-                        workbook.SaveAs(filePath);
-                        MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}",Constants.HCC_Reconciliation, MessageBoxButtons.OK, MessageBoxIcon.Information);                   
+                            // Construct the initial file path
+                            string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
+
+                            // Check if the file already exists, and if so, append a suffix
+                            int fileSuffix = 1;
+                            while (File.Exists(filePath))
+                            {
+                                fileSuffix++;
+                                filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
+                            }
+
+                            // Save the workbook to the file path
+                            workbook.SaveAs(filePath);
+                            MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}",Constants.HCC_Reconciliation, MessageBoxButtons.OK, MessageBoxIcon.Information);                   
+                        }
+                    }
                 }
+            } catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
-            }
-        } catch (Exception ex)
- {
-     MessageBox.Show(ex.Message);
- }
-}
-      private void btnClose_Click(object sender, EventArgs e)//to close the form
+        }
+        private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
             try
             {
@@ -208,7 +209,7 @@ namespace RWDE
             }
         }
         private void btnReport_Click(object sender, EventArgs e)//to get the filtered data in the grid
-            {
+        {
             try
             {
                 // Ensure the date pickers are properly set
@@ -234,7 +235,7 @@ namespace RWDE
                     filterType = "BatchID";
                     Batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();
                 }
-               else if (dtpDateFilter.SelectedItem != null)
+                else if (dtpDateFilter.SelectedItem != null)
                 {
                     switch (dtpDateFilter.SelectedItem.ToString())
                     {
@@ -304,19 +305,19 @@ namespace RWDE
         {
             try { 
 
-            // Reset DateTimePickers to one year back from the current date
-            dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.Value = DateTime.Now;
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
-            dtpDateFilter.Text = Constants.CreatedDate;
-            txtbatchs.Text = null;
+                // Reset DateTimePickers to one year back from the current date
+                dtpStartDate.Value = DateTime.Now.AddYears(-1);
+                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+                dtpEndDate.Value = DateTime.Now;
+                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpDateFilter.Text = Constants.CreatedDate;
+                txtbatchs.Text = null;
 
-            // Clear the DataTable bound to the DataGridView
-            if (dataGridView.DataSource is DataTable dt)
-            {
-                dt.Clear();  // Clears all rows from the DataTable
-            }
+                // Clear the DataTable bound to the DataGridView
+                if (dataGridView.DataSource is DataTable dt)
+                {
+                    dt.Clear();  // Clears all rows from the DataTable
+                }
 
             }
             catch (Exception ex)

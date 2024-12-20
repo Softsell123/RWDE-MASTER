@@ -7,9 +7,9 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    public partial class Client_Demographics_Report : Form
+    public partial class ClientDemographicsReport : Form
     {
-        public Client_Demographics_Report()//initialize data
+        public ClientDemographicsReport()//initialize data
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
@@ -50,9 +50,9 @@ namespace RWDE
         {
             try { 
 
-            // Close the current form (dispose it)
-            this.Close();
-            Application.Restart();
+                // Close the current form (dispose it)
+                this.Close();
+                Application.Restart();
             }
             catch (Exception ex)
             {
@@ -96,16 +96,16 @@ namespace RWDE
         private void Clear_Click(object sender, EventArgs e)//to clear data in the grid
         {
             try { 
-            dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.Value = DateTime.Now;
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.Value = DateTime.Now.AddYears(-1);
+                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+                dtpEndDate.Value = DateTime.Now;
+                dtpEndDate.CustomFormat = "MM-dd-yyyy";
 
-            // Clear the DataTable bound to the DataGridView
-            if (dataGridView.DataSource is DataTable dt)
-            {
-                dt.Clear();  // Clears all rows from the DataTable
-            }
+                // Clear the DataTable bound to the DataGridView
+                if (dataGridView.DataSource is DataTable dt)
+                {
+                    dt.Clear();  // Clears all rows from the DataTable
+                }
 
             }
             catch (Exception ex)

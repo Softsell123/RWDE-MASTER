@@ -1806,7 +1806,7 @@ namespace RWDE
                   //  LogError($"{ex.Message}", fileName); // Handle the exception within the transaction (e.g., log it)
                     throw;
                 }
-            }
+        }
         
         public int InsertEligibilityDocuments(XmlDocument xmlDoc, int batchId, SqlConnection conn, string xmlFilePath)//insertion of eligibility document from xml file
         {
@@ -1843,10 +1843,10 @@ namespace RWDE
 
                                         // Prepare and execute SQL command to insert into EligibilityDocuments table within the transaction
                                         using (SqlCommand insertCmd = new SqlCommand(
-                                            "INSERT INTO [RWDE].[dbo].[CTClientsEligibilityDoc] " +
-                                            "(DocumentType, DocumentDate, ObtainDate, ExpireDate, Source, Notes, BatchID, AgencyClientID1, AriesID, CreatedBy, CreatedOn, EligibilityDocID) " +
-                                            "VALUES (@DocumentType, @DocumentDate, @ObtainDate, @ExpireDate, @Source, @Notes, @BatchID, @AgencyClientID1, @AriesID, @CreatedBy, @CreatedOn, @EligibilityDocID)",
-                                            conn))
+                                                   "INSERT INTO [RWDE].[dbo].[CTClientsEligibilityDoc] " +
+                                                   "(DocumentType, DocumentDate, ObtainDate, ExpireDate, Source, Notes, BatchID, AgencyClientID1, AriesID, CreatedBy, CreatedOn, EligibilityDocID) " +
+                                                   "VALUES (@DocumentType, @DocumentDate, @ObtainDate, @ExpireDate, @Source, @Notes, @BatchID, @AgencyClientID1, @AriesID, @CreatedBy, @CreatedOn, @EligibilityDocID)",
+                                                   conn))
                                         {
                                             // Set SQL parameters based on the values extracted from the XML document
                                             insertCmd.Parameters.AddWithValue("@DocumentType", string.IsNullOrEmpty(documentType) ? (object)DBNull.Value : documentType);
@@ -2064,7 +2064,7 @@ namespace RWDE
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("INSERT INTO Logger (Type, Module, Stack, Message, FileName, LineNumber, FunctionName, Comments, CreatedBy, CreatedOn) " +
-                                                     "VALUES (@Type, @Module, @Stack, @Message, @FileName, @LineNumber, @FunctionName, @Comments, @CreatedBy, @CreatedOn)", conn);
+                                                    "VALUES (@Type, @Module, @Stack, @Message, @FileName, @LineNumber, @FunctionName, @Comments, @CreatedBy, @CreatedOn)", conn);
                     cmd.Parameters.AddWithValue("@Type", Constants.Error); // Error type
                     cmd.Parameters.AddWithValue("@Module", Constants.Module); // Module name
                     cmd.Parameters.AddWithValue("@Stack", stackTrace);
@@ -2738,9 +2738,9 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         
-    }
-    public void DeleteHCCABORTED(int batchid)
-    {
+        }
+        public void DeleteHCCABORTED(int batchid)
+        {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -2757,7 +2757,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
 
-    }
+        }
 
         public DataTable GetParticularnGenerationDatasHCC(string BatchType, DateTime FromDate, DateTime EndDate)//get generation data according to start and end time
         {
@@ -2926,8 +2926,8 @@ namespace RWDE
 
                                 insertData.Add(new SqlParameter[]
                                 {
-                            new SqlParameter("@Clientid", clientId),
-                            new SqlParameter("@Datetime", date)
+                                    new SqlParameter("@Clientid", clientId),
+                                    new SqlParameter("@Datetime", date)
                                 });
                             }
                         }
@@ -3873,7 +3873,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                         }
                         else if (filterType == "BatchID")
                         {
-                           // cmd.Parameters.AddWithValue("@BatchID", batchid); // Assuming batchID is passed as an integer or similar
+                            // cmd.Parameters.AddWithValue("@BatchID", batchid); // Assuming batchID is passed as an integer or similar
                         }
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);

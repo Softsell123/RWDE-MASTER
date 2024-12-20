@@ -5,9 +5,9 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    public partial class frmConnectionSetup : Form
+    public partial class FrmConnectionSetup : Form
     {
-        public frmConnectionSetup()
+        public FrmConnectionSetup()
         {
             InitializeComponent();
             LoadCurrentDataSource();

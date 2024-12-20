@@ -1,6 +1,6 @@
 ﻿namespace RWDE
 {
-    partial class frmConnectionSetup
+    partial class FrmConnectionSetup
     {
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.TextBox txtDataSource;
