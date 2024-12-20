@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    partial class Error_Log_Report
+    partial class ErrorLogReport
     {
         /// <summary>
         /// Required designer variable.
@@ -335,7 +335,7 @@ namespace RWDE
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.pnl);
-            this.Name = "Error_Log_Report";
+            this.Name = "ErrorLogReport";
             this.Text = "Error_Log_Report";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.pnl.ResumeLayout(false);

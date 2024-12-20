@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    partial class ContractIDLists
+    partial class ContractIdLists
     {
         /// <summary>
         /// Required designer variable.
@@ -257,7 +257,7 @@ namespace RWDE
             this.ControlBox = false;
             this.Controls.Add(this.pnlGrid);
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "ContractIDLists";
+            this.Name = "ContractIdLists";
             this.Text = "Contracts Setup";
             this.TransparencyKey = System.Drawing.Color.White;
             this.Load += new System.EventHandler(this.ContractIDLists_Load);

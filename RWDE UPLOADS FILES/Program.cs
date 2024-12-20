@@ -26,19 +26,19 @@ namespace RWDE
             {
                 // Show Connection Setup Form
 
-                using (var connectionSetupForm = new frmConnectionSetup())
+                using (var connectionSetupForm = new FrmConnectionSetup())
                 {
                     connectionSetupForm.StartPosition = FormStartPosition.CenterScreen;
                     if (connectionSetupForm.ShowDialog() == DialogResult.OK)
                     {
                         // Load Main Form only if connection is successfully set
-                        Application.Run(new frmMain());
+                        Application.Run(new FrmMain());
                     }
                 }
             }
             else
             {
-                Application.Run(new frmMain());
+                Application.Run(new FrmMain());
             }
         }
     }

@@ -257,21 +257,21 @@
     <Compile Include="ContractIDLists.Designer.cs">
       <DependentUpon>ContractIDLists.cs</DependentUpon>
     </Compile>
-    <Compile Include="CsvFile Conversion.cs">
+    <Compile Include="frmConverttoCsv.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CsvFile Conversion.Designer.cs">
-      <DependentUpon>CsvFile Conversion.cs</DependentUpon>
+    <Compile Include="frmConverttoCsv.Designer.cs">
+      <DependentUpon>frmConverttoCsv.cs</DependentUpon>
     </Compile>
     <Compile Include="DataGridViewCalendarColumn.cs" />
     <Compile Include="DataGridViewCalendarDateTimePickerCell.cs" />
     <Compile Include="DataGridViewCalendarTextBoxColumn.cs" />
     <Compile Include="DBHelper.cs" />
-    <Compile Include="Deceased Clients.cs">
+    <Compile Include="Deceased Clients Report.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Deceased Clients.Designer.cs">
-      <DependentUpon>Deceased Clients.cs</DependentUpon>
+    <Compile Include="Deceased Clients Report.Designer.cs">
+      <DependentUpon>Deceased Clients Report.cs</DependentUpon>
     </Compile>
     <Compile Include="Error Log Report.cs">
       <SubType>Form</SubType>
@@ -279,11 +279,11 @@
     <Compile Include="Error Log Report.Designer.cs">
       <DependentUpon>Error Log Report.cs</DependentUpon>
     </Compile>
-    <Compile Include="Error Report.cs">
+    <Compile Include="frmDownloadHccErrors.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Error Report.Designer.cs">
-      <DependentUpon>Error Report.cs</DependentUpon>
+    <Compile Include="frmDownloadHccErrors.Designer.cs">
+      <DependentUpon>frmDownloadHccErrors.cs</DependentUpon>
     </Compile>
     <Compile Include="frmConvertToHCC.cs">
       <SubType>Form</SubType>
@@ -291,17 +291,17 @@
     <Compile Include="frmConvertToHCC.Designer.cs">
       <DependentUpon>frmConvertToHCC.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmFileUpload.cs">
+    <Compile Include="frmUploadXMLFile.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmFileUpload.Designer.cs">
-      <DependentUpon>frmFileUpload.cs</DependentUpon>
+    <Compile Include="frmUploadXMLFile.Designer.cs">
+      <DependentUpon>frmUploadXMLFile.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmHccCsv.cs">
+    <Compile Include="frmUploadOchinCsv.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmHccCsv.Designer.cs">
-      <DependentUpon>frmHccCsv.cs</DependentUpon>
+    <Compile Include="frmUploadOchinCsv.Designer.cs">
+      <DependentUpon>frmUploadOchinCsv.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -309,17 +309,17 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmUploadCsv.cs">
+    <Compile Include="frmUploadHCCCsv.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmUploadCsv.Designer.cs">
-      <DependentUpon>frmUploadCsv.cs</DependentUpon>
+    <Compile Include="frmUploadHCCCsv.Designer.cs">
+      <DependentUpon>frmUploadHCCCsv.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmXmlGenearate.cs">
+    <Compile Include="frmGenearateXml.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmXmlGenearate.Designer.cs">
-      <DependentUpon>frmXmlGenearate.cs</DependentUpon>
+    <Compile Include="frmGenearateXml.Designer.cs">
+      <DependentUpon>frmGenearateXml.cs</DependentUpon>
     </Compile>
     <Compile Include="HCC Reconciliation.cs">
       <SubType>Form</SubType>
@@ -362,11 +362,11 @@
     <Compile Include="ServiceReconciliationReport.Designer.cs">
       <DependentUpon>ServiceReconciliationReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Upload dashboard.cs">
+    <Compile Include="MonthlyReport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Upload dashboard.Designer.cs">
-      <DependentUpon>Upload dashboard.cs</DependentUpon>
+    <Compile Include="MonthlyReport.Designer.cs">
+      <DependentUpon>MonthlyReport.cs</DependentUpon>
     </Compile>
     <Compile Include="ViewAllBatchesForm.cs">
       <SubType>Form</SubType>
@@ -386,36 +386,36 @@
     <EmbeddedResource Include="ContractIDLists.resx">
       <DependentUpon>ContractIDLists.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CsvFile Conversion.resx">
-      <DependentUpon>CsvFile Conversion.cs</DependentUpon>
+    <EmbeddedResource Include="frmConverttoCsv.resx">
+      <DependentUpon>frmConverttoCsv.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Deceased Clients.resx">
-      <DependentUpon>Deceased Clients.cs</DependentUpon>
+    <EmbeddedResource Include="Deceased Clients Report.resx">
+      <DependentUpon>Deceased Clients Report.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Error Log Report.resx">
       <DependentUpon>Error Log Report.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Error Report.resx">
-      <DependentUpon>Error Report.cs</DependentUpon>
+    <EmbeddedResource Include="frmDownloadHccErrors.resx">
+      <DependentUpon>frmDownloadHccErrors.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmConvertToHCC.resx">
       <DependentUpon>frmConvertToHCC.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmFileUpload.resx">
-      <DependentUpon>frmFileUpload.cs</DependentUpon>
+    <EmbeddedResource Include="frmUploadXMLFile.resx">
+      <DependentUpon>frmUploadXMLFile.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmHccCsv.resx">
-      <DependentUpon>frmHccCsv.cs</DependentUpon>
+    <EmbeddedResource Include="frmUploadOchinCsv.resx">
+      <DependentUpon>frmUploadOchinCsv.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmUploadCsv.resx">
-      <DependentUpon>frmUploadCsv.cs</DependentUpon>
+    <EmbeddedResource Include="frmUploadHCCCsv.resx">
+      <DependentUpon>frmUploadHCCCsv.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmXmlGenearate.resx">
-      <DependentUpon>frmXmlGenearate.cs</DependentUpon>
+    <EmbeddedResource Include="frmGenearateXml.resx">
+      <DependentUpon>frmGenearateXml.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="HCC Reconciliation.resx">
@@ -443,8 +443,8 @@
       <DependentUpon>ServiceReconciliationReport.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Upload dashboard.resx">
-      <DependentUpon>Upload dashboard.cs</DependentUpon>
+    <EmbeddedResource Include="MonthlyReport.resx">
+      <DependentUpon>MonthlyReport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ViewAllBatchesForm.resx">
       <DependentUpon>ViewAllBatchesForm.cs</DependentUpon>

@@ -1,6 +1,6 @@
 ﻿namespace RWDE
 {
-    partial class HCC_Reconciliation
+    partial class HccReconciliation
     {
         /// <summary>
         /// Required designer variable.
@@ -411,7 +411,7 @@
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.pnl);
-            this.Name = "HCC_Reconciliation";
+            this.Name = "HccReconciliation";
             this.Text = "HCC_Reconciliation Report";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.pnl.ResumeLayout(false);

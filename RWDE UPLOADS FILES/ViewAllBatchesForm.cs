@@ -12,14 +12,12 @@ namespace RWDE
     public partial class ViewAllBatchesForm : Form
     {
         private readonly DBHelper dbHelper;
-
         public ViewAllBatchesForm()//INITIALIZATION OF FORM
         {
             InitializeComponent();
             dbHelper = new DBHelper();
             try
             {
-
                 this.ControlBox = false;
                 this.WindowState = FormWindowState.Maximized;
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
@@ -29,7 +27,6 @@ namespace RWDE
                 dtpEndDate.Value = DateTime.Now;
                 // Populate the DataGridView with data from the Batch table
                 PopulateDataGridViewLOAD();
-
                 dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;//to adjust the column width
                 dataGridView.CellClick += DataGridView_CellClick;
                 //Handle BatchType Values
@@ -56,7 +53,7 @@ namespace RWDE
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox)
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
