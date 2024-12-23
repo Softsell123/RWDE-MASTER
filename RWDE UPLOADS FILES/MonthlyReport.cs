@@ -9,8 +9,6 @@ namespace RWDE
 {
     public partial class MonthlyReport : Form
     {
-        private readonly string connectionString;
-        private readonly DBHelper dbHelper;
         public MonthlyReport()//initialize data
         {
             InitializeComponent();
@@ -42,7 +40,7 @@ namespace RWDE
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
             // Make sure to instantiate the DBHelper class
-            DBHelper dbHelper = new DBHelper();
+            DbHelper dbHelper = new DbHelper();
             dataGridView.AutoGenerateColumns = true;
 
             // Ensure the date pickers are properly set
@@ -79,7 +77,6 @@ namespace RWDE
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
                 }
-
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
@@ -98,51 +95,6 @@ namespace RWDE
 
             // End date is the last day of the previous week (Sunday)
             endDate = startDate.AddDays(6); // Previous week's Sunday
-        }
-        private void SetDataGridViewFontSize(DataGridView dataGridView, float fontSize)//date filter for weeks
-        {
-            // Set the font size of the DataGridView
-            dataGridView.Font = new Font(dataGridView.Font.FontFamily, fontSize);
-        }        // Usage example
-        public void ConfigureDataGridView()//date filter styles
-        {
-            try
-            {// Assuming you have a DataGridView named dataGridView
-             // Set font size to 16
-                SetDataGridViewFontSize(dataGridView, 16);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        
-        }
-        private void PopulateMonthYearGrid(DateTime startDate, DateTime endDate)//populate data
-        {
-            try {// Create a DataTable to hold the month-year data
-                DataTable monthYearTable = new DataTable();
-                monthYearTable.Columns.Add("Monthyear", typeof(string));
-
-                // Define the date range for months
-                DateTime current = startDate;
-                while (current <= endDate)
-                {
-                    // Format the date as Month-Year
-                    string formattedMonthYear = current.ToString("MMM-yyyy");
-                    monthYearTable.Rows.Add(formattedMonthYear);
-
-                    // Move to the next month
-                    current = current.AddMonths(1);
-                }
-
-                // Bind the DataTable to the DataGridView
-                dataGridView.DataSource = monthYearTable;
-                dataGridView.ForeColor = Color.Black;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
         private void btnDownload_Click(object sender, EventArgs e)//to export report to selected folder
         {
@@ -175,7 +127,6 @@ namespace RWDE
                     }
                 }
 
-
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
@@ -187,12 +138,12 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selecrthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
                             // Base file name and directory
-                            string baseFileName = ContractIDList.Monthly_Reports;
+                            string baseFileName = ContractIdList.MonthlyReports;
                             string directoryPath = folderBrowserDialog.SelectedPath;
                             string fileExtension = ".xlsx";
 
@@ -209,7 +160,7 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.datasuccessfullysaved}: {Path.GetFileName(filePath)}", ContractIDList.Monthly_Reports, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"{Constants.Datasuccessfullysaved}: {Path.GetFileName(filePath)}", ContractIdList.MonthlyReports, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
@@ -232,17 +183,16 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }    
-      private void btnReport_Click(object sender, EventArgs e)//to get filtered data in the grid
+        private void btnReport_Click(object sender, EventArgs e)//to get filtered data in the grid
         {
             try
             {
-                DBHelper dbHelper = new DBHelper();
+                DbHelper dbHelper = new DbHelper();
                 dataGridView.AutoGenerateColumns = true;
                 dataGridView.Columns.Clear();
                 // Ensure the date pickers are properly set
                 DateTime startDate = dtpStartDate.Value;
                 DateTime endDate = dtpEndDate.Value;
-
 
                 try
                 {
@@ -266,8 +216,6 @@ namespace RWDE
                 {
                     // Handle exceptions, such as logging the error
                     MessageBox.Show(ex.Message);
-
-
                 }
             }
             catch (Exception ex)
@@ -290,7 +238,6 @@ namespace RWDE
             {
                 dt.Clear();  // Clears all rows from the DataTable
             }
-
                 // Optionally reset any other controls or fields if necessary
             }
             catch (Exception ex)
@@ -298,7 +245,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }     
-        private void cbDateFilter_SelectedIndexChanged(object sender, EventArgs e)//to filter date accordingly
+        private void cbDateFilter_SelectedIndexChanged(object sender, EventArgs e)//to filter date accordinglyzz
         {
             if (cbDateFilter.SelectedItem == null)
                 return;
@@ -375,7 +322,6 @@ namespace RWDE
         }
         private void SetCurrentWeekDates(out DateTime startDate, out DateTime endDate)//filter data on weekly basis
         {
-
             DateTime today = DateTime.Today;
             int daysToSubtract = (int)today.DayOfWeek;
             startDate = today.AddDays(-daysToSubtract).Date;
@@ -388,14 +334,12 @@ namespace RWDE
             startDate = firstDayOfCurrentMonth.AddMonths(-1);
             endDate = firstDayOfCurrentMonth.AddDays(-1);
         }
-
         private void SetCurrentMonthDates(out DateTime startDate, out DateTime endDate)//filter data on current month 
         {
             DateTime today = DateTime.Today;
             startDate = new DateTime(today.Year, today.Month, 1);
             endDate = startDate.AddMonths(1).AddDays(-1);
         }
-
         private void SetSinceOneMonthAgoDates(out DateTime startDate, out DateTime endDate)//filter data on one month ago
         {
             endDate = DateTime.Today;
@@ -427,7 +371,6 @@ namespace RWDE
                     break;
             }
         }
-
         private void SetPreviousQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quarterly basis
         {
             DateTime today = DateTime.Today;
@@ -438,7 +381,6 @@ namespace RWDE
             startDate = new DateTime(year, startDate.Month, 1);
             endDate = new DateTime(year, endDate.Month, DateTime.DaysInMonth(year, endDate.Month));
         }
-
         private void SetCurrentQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quarterly basis
         {
             {

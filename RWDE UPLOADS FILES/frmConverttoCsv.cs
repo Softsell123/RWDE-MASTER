@@ -7,16 +7,15 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-
-    public partial class CsvFile_Conversion : Form
+    public partial class CsvFileConversion : Form
     {
         private readonly string connectionString;
-        private readonly DBHelper dbHelper;
+        private readonly DbHelper dbHelper;
 
-        public CsvFile_Conversion()//to initialize data
+        public CsvFileConversion()//to initialize data
         {
             InitializeComponent();
-            dbHelper = new DBHelper();
+            dbHelper = new DbHelper();
             connectionString = dbHelper.GetConnectionString();
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
@@ -24,11 +23,11 @@ namespace RWDE
 
             if (File.Exists(Constants.LastFolderPathhcc))
             {
-                string LastFolderPathhcc = File.ReadAllText(Constants.LastFolderPathhcc).Trim();  // Trim to remove any extra spaces or newlines
+                string lastFolderPathhcc = File.ReadAllText(Constants.LastFolderPathhcc).Trim();  // Trim to remove any extra spaces or newlines
                 // Check if the file content is not empty and the directory exists
-                if (!string.IsNullOrEmpty(LastFolderPathhcc) && Directory.Exists(LastFolderPathhcc))
+                if (!string.IsNullOrEmpty(lastFolderPathhcc) && Directory.Exists(lastFolderPathhcc))
                 {
-                    txtPath.Text = LastFolderPathhcc;
+                    txtPath.Text = lastFolderPathhcc;
                 }
                 else
                 {
@@ -48,12 +47,11 @@ namespace RWDE
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                if (control is Button || control is CheckBox || control is DateTimePicker)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
                 }
-
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
@@ -61,11 +59,6 @@ namespace RWDE
                 }
             }
         }
-        private void lblStartDate_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnReport_Click(object sender, EventArgs e)
         {
             string filePath = Path.Combine(txtPath.Text, $"Client_{DateTime.Now.ToString("yyyyMMdd")}.csv"); // Ensure the full file path includes a filename
@@ -82,7 +75,7 @@ namespace RWDE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    int batchid = dbHelper.GetMaxXMLBatchID();
+                    int batchid = dbHelper.GetMaxXmlBatchId();
                     // Call the stored procedure
                     using (SqlCommand cmd = new SqlCommand("ctclientsmapping", conn))
                     {
@@ -111,9 +104,8 @@ namespace RWDE
                                     }
                                     writer.WriteLine(string.Join("|", rowValues));  // Use pipe (|) as the separator
                                 }
-                                GetServicedataCSV(batchid);
+                                GetServicedataCsv(batchid);
                             }
-
                         }
                     }
                     MessageBox.Show("CSV file has been created successfully at " + filePath);//
@@ -128,11 +120,9 @@ namespace RWDE
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
-        public void GetServicedataCSV(int batchid)
+        public void GetServicedataCsv(int batchid)
         {
-            
             string filePath = Path.Combine(txtPath.Text, $"Service_Sample_{DateTime.Now.ToString("yyyyMMdd")}.csv"); // Ensure the full file path includes a filename
-
             try
             {
                 if (!Directory.Exists(txtPath.Text))
@@ -140,16 +130,13 @@ namespace RWDE
                     MessageBox.Show("The selected folder does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
                 // SQL query to execute the stored procedure
                 using (SqlConnection conn = new SqlConnection(connectionString))//
                 {
                     conn.Open();
-
                     // Call the stored procedure
                     using (SqlCommand cmd = new SqlCommand("GetCTServicesForCSV", conn))
                     {
-                      
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@Batchid", batchid);
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -174,12 +161,9 @@ namespace RWDE
                                     writer.WriteLine(string.Join("|", rowValues));  // Use pipe (|) as the separator
                                 }
                             }
-                            
                         }
                     }
-
                     MessageBox.Show("CSV file has been created successfully at " + filePath);
-
                 }
             }
             catch (UnauthorizedAccessException)
@@ -191,11 +175,6 @@ namespace RWDE
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
-        private void GetService(int batchid)
-        {
-            throw new NotImplementedException();
-        }
-
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
@@ -227,6 +206,5 @@ namespace RWDE
                 }
             }
         }
-
     }
 }

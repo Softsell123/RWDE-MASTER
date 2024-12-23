@@ -1,6 +1,6 @@
 ﻿namespace RWDE
 {
-    partial class CsvFile_Conversion
+    partial class CsvFileConversion
     {
         /// <summary>
         /// Required designer variable.
@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CsvFile_Conversion));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CsvFileConversion));
             this.btnReport = new System.Windows.Forms.Button();
             this.lblName = new System.Windows.Forms.Label();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
-            this.lblStartDate = new System.Windows.Forms.Label();
+            this.lblCtCsvFiles = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnReport
@@ -88,18 +88,17 @@
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
-            // lblStartDate
+            // lblCtCsvFiles
             // 
-            this.lblStartDate.AutoSize = true;
-            this.lblStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStartDate.ForeColor = System.Drawing.Color.Black;
-            this.lblStartDate.Location = new System.Drawing.Point(488, 210);
-            this.lblStartDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblStartDate.Name = "lblStartDate";
-            this.lblStartDate.Size = new System.Drawing.Size(161, 35);
-            this.lblStartDate.TabIndex = 11;
-            this.lblStartDate.Text = "CT CSV Files:";
-            this.lblStartDate.Click += new System.EventHandler(this.lblStartDate_Click);
+            this.lblCtCsvFiles.AutoSize = true;
+            this.lblCtCsvFiles.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCtCsvFiles.ForeColor = System.Drawing.Color.Black;
+            this.lblCtCsvFiles.Location = new System.Drawing.Point(488, 210);
+            this.lblCtCsvFiles.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblCtCsvFiles.Name = "lblCtCsvFiles";
+            this.lblCtCsvFiles.Size = new System.Drawing.Size(161, 35);
+            this.lblCtCsvFiles.TabIndex = 11;
+            this.lblCtCsvFiles.Text = "CT CSV Files:";
             // 
             // CsvFile_Conversion
             // 
@@ -107,13 +106,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1438, 620);
-            this.Controls.Add(this.lblStartDate);
+            this.Controls.Add(this.lblCtCsvFiles);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.txtPath);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnReport);
             this.ForeColor = System.Drawing.Color.Black;
-            this.Name = "CsvFile_Conversion";
+            this.Name = "CsvFileConversion";
             this.Text = "CsvFile_Conversion";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -126,6 +125,6 @@
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.Button btnBrowse;
-        private System.Windows.Forms.Label lblStartDate;
+        private System.Windows.Forms.Label lblCtCsvFiles;
     }
 }

@@ -14,8 +14,8 @@ namespace RWDE
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             dtpEndDate.Value = DateTime.Now;
@@ -38,7 +38,6 @@ namespace RWDE
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
                 }
-
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
@@ -63,7 +62,7 @@ namespace RWDE
         {
             try
             {
-                DBHelper dbHelper = new DBHelper();
+                DbHelper dbHelper = new DbHelper();
                 dataGridView.AutoGenerateColumns = true;
                 dataGridView.Columns.Clear();
                 // Ensure the date pickers are properly set
@@ -73,23 +72,18 @@ namespace RWDE
                     MessageBox.Show($"{ Constants.StartdatemustbeearlierthanEnddate}");
 
                 }
-
                 // Call the LoadData method to fetch the data
-
                 dataGridView.ForeColor = Color.Black;
-
 
                 DataTable result = dbHelper.LoadConfigurationfilter(startDate, endDate);//to get data in the grid
 
                 // Now you can use the result, e.g., bind it to a DataGridView or process it
                 dataGridView.DataSource = result;
-                // PopulateMonthYearGrid(startDate, endDate);
             }
             catch (Exception ex)
             {
                 // Handle exceptions, such as logging the error
                 MessageBox.Show(ex.Message);
-
             }
         }
 
@@ -97,16 +91,15 @@ namespace RWDE
         {
             try { 
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
 
                 // Clear the DataTable bound to the DataGridView
                 if (dataGridView.DataSource is DataTable dt)
                 {
                     dt.Clear();  // Clears all rows from the DataTable
                 }
-
             }
             catch (Exception ex)
             {
@@ -119,7 +112,7 @@ namespace RWDE
             {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.Nodataavailabletodownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
                 DataTable dataTable = new DataTable();
@@ -147,7 +140,7 @@ namespace RWDE
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
-                    var worksheet = workbook.Worksheets.Add("Sheet1");
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
 
                     // Load the DataTable into the worksheet
                     worksheet.Cell(1, 1).InsertTable(dataTable);
@@ -155,14 +148,14 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selecrthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
                             // Base file name and directory
-                            string baseFileName = ContractIDList.Client_Demographics_Report;
+                            string baseFileName = ContractIdList.ClientDemographicsReport;
                             string directoryPath = folderBrowserDialog.SelectedPath;
-                            string fileExtension = ".xlsx";
+                            string fileExtension = Constants.XlsxExtention;
 
                             // Construct the initial file path
                             string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
@@ -177,7 +170,7 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}", ContractIDList.Client_Demographics_Report, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", ContractIdList.ClientDemographicsReport, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
@@ -187,7 +180,5 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-       
-
     }
 }

@@ -6,7 +6,6 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-
     static class Program
     {
         /// <summary>
@@ -19,13 +18,11 @@ namespace RWDE
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            
             string currentConnectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(currentConnectionString);
             if (builder.DataSource == "PLACEHOLDER")
             {
                 // Show Connection Setup Form
-
                 using (var connectionSetupForm = new FrmConnectionSetup())
                 {
                     connectionSetupForm.StartPosition = FormStartPosition.CenterScreen;

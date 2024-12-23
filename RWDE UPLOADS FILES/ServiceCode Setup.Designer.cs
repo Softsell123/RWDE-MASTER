@@ -55,7 +55,6 @@ namespace RWDE
             this.UnitofMesurement = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Rate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            //this.button1 = new System.Windows.Forms.Button();
             this.lblTilte.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -98,7 +97,7 @@ namespace RWDE
             this.btnAdd.TabIndex = 14;
             this.btnAdd.Text = "Add New Service";
             this.btnAdd.UseVisualStyleBackColor = false;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click_1);
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnClose
             // 
@@ -111,17 +110,17 @@ namespace RWDE
             this.btnClose.TabIndex = 9;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click_1);
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.Black;
             this.lblTitle.Location = new System.Drawing.Point(865, 68);
             this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(234, 33);
+            this.lblTitle.Size = new System.Drawing.Size(239, 35);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Service Code SetUp";
             this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
@@ -129,7 +128,6 @@ namespace RWDE
             // lblTilte
             // 
             this.lblTilte.BackColor = System.Drawing.Color.White;
-            //this.lblTilte.Controls.Add(this.button1);
             this.lblTilte.Controls.Add(this.dataGridView);
             this.lblTilte.Controls.Add(this.btnSave);
             this.lblTilte.Controls.Add(this.btnClose);
@@ -288,10 +286,6 @@ namespace RWDE
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
             this.Status.Width = 120;
-            // 
-            // button1
-            // 
-
             // 
             // ServiceCodeSetup
             // 

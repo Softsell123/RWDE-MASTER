@@ -30,7 +30,6 @@ namespace RWDE
                 MessageBox.Show("Data Source cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
             if (ValidateDataSource(newDataSource))
             {
                 UpdateConnectionString(newDataSource);
@@ -42,7 +41,6 @@ namespace RWDE
                 MessageBox.Show("Unable to connect to the specified Data Source. Please check and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Application.Exit(); // Exit if no Data Source is set
@@ -58,7 +56,6 @@ namespace RWDE
                 {
                     DataSource = dataSource
                 };
-
                 using (SqlConnection connection = new SqlConnection(builder.ToString()))
                 {
                     connection.Open(); // Test the connection
@@ -80,7 +77,6 @@ namespace RWDE
             {
                 DataSource = newDataSource
             };
-
             connectionStringSettings.ConnectionString = builder.ToString();
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("connectionStrings");

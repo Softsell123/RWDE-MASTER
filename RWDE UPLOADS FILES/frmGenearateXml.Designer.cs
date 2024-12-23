@@ -137,7 +137,6 @@ namespace RWDE
             this.lblXmlHeader.Size = new System.Drawing.Size(280, 35);
             this.lblXmlHeader.TabIndex = 30;
             this.lblXmlHeader.Text = "Generate HCC xml files";
-            this.lblXmlHeader.Click += new System.EventHandler(this.lblXmlHeader_Click);
             // 
             // pnl
             // 
@@ -197,7 +196,6 @@ namespace RWDE
             this.cbBatchType.Name = "cbBatchType";
             this.cbBatchType.Size = new System.Drawing.Size(247, 37);
             this.cbBatchType.TabIndex = 25;
-            this.cbBatchType.SelectedIndexChanged += new System.EventHandler(this.cbBatchType_SelectedIndexChanged);
             // 
             // dtpStartDate
             // 
@@ -300,7 +298,7 @@ namespace RWDE
             this.btnBrowse.Text = "Browse";
             this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnBrowse.UseVisualStyleBackColor = true;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click_1);
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // txtPath
             // 
@@ -336,7 +334,6 @@ namespace RWDE
             this.lblHeading.Size = new System.Drawing.Size(594, 35);
             this.lblHeading.TabIndex = 0;
             this.lblHeading.Text = "Choose a batch from the grid to generate HCC xml\r\n";
-            this.lblHeading.Click += new System.EventHandler(this.label1_Click_1);
             // 
             // dataGridView
             // 
@@ -567,7 +564,6 @@ namespace RWDE
             this.lblUploadStarts.Size = new System.Drawing.Size(271, 35);
             this.lblUploadStarts.TabIndex = 33;
             this.lblUploadStarts.Text = "Generation Started At:";
-            this.lblUploadStarts.Click += new System.EventHandler(this.lblUploadStarts_Click);
             // 
             // lblBatch
             // 
@@ -602,7 +598,6 @@ namespace RWDE
             this.lblClients.TabIndex = 30;
             this.lblClients.Tag = "#Clients";
             this.lblClients.Text = "#Clients:";
-            this.lblClients.Click += new System.EventHandler(this.lblClients_Click);
             // 
             // txtClient
             // 
@@ -624,7 +619,6 @@ namespace RWDE
             this.progressClient.Name = "progressClient";
             this.progressClient.Size = new System.Drawing.Size(240, 39);
             this.progressClient.TabIndex = 7;
-            this.progressClient.Click += new System.EventHandler(this.prgClient_Click);
             // 
             // lblProgress
             // 
@@ -637,7 +631,6 @@ namespace RWDE
             this.lblProgress.Size = new System.Drawing.Size(114, 35);
             this.lblProgress.TabIndex = 6;
             this.lblProgress.Text = "Progress";
-            this.lblProgress.Click += new System.EventHandler(this.label3_Click);
             // 
             // lblServiceLines
             // 
@@ -657,7 +650,6 @@ namespace RWDE
             this.progressServices.Name = "progressServices";
             this.progressServices.Size = new System.Drawing.Size(240, 39);
             this.progressServices.TabIndex = 3;
-            this.progressServices.Click += new System.EventHandler(this.progressBar_Click);
             // 
             // txtProgressBar
             // 
@@ -684,7 +676,7 @@ namespace RWDE
             this.btnClose.TabIndex = 1;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click_1);
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnGeneration
             // 
@@ -730,14 +722,14 @@ namespace RWDE
             // 
             this.batchTableAdapter1.ClearBeforeFill = true;
             // 
-            // frmXMLGenerator
+            // FrmGeneratorXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1924, 1055);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Name = "frmXMLGenerator";
+            this.Name = "FrmGeneratorXml";
             this.Text = "Generate HCC xml files.";
             this.Load += new System.EventHandler(this.frmXMLGenerator_Load);
             this.panel1.ResumeLayout(false);

@@ -49,16 +49,16 @@ namespace RWDE
         /// <summary>
         /// Gets or sets the extended URN of the client.
         /// </summary>
-        public string URNExtended { get; set; }
+        public string UrnExtended { get; set; }
 
         /// <summary>
         /// Gets or sets the Aries ID of the client.
         /// </summary>
-        public string AriesID { get; set; }
+        public string AriesId { get; set; }
 
         /// <summary>
         /// Gets or sets the agency client ID of the client.
         /// </summary>
-        public string AgencyClientID { get; set; }
+        public string AgencyClientId { get; set; }
     }
 }

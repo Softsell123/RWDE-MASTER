@@ -33,12 +33,11 @@ namespace RWDE
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
                 }
-
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
@@ -50,7 +49,7 @@ namespace RWDE
         {
             try
             {
-                DBHelper dbHelper = new DBHelper();
+                DbHelper dbHelper = new DbHelper();
                 dataGridView.AutoGenerateColumns = true;
                 dataGridView.Columns.Clear();
                 // Ensure the date pickers are properly set
@@ -63,11 +62,9 @@ namespace RWDE
                 try
                 {
                     // Call the LoadData method to fetch the data
-
                     dataGridView.ForeColor = Color.Black;
 
-
-                    DataTable result = dbHelper.LoadERRORLOG(startDate, endDate);
+                    DataTable result = dbHelper.LoadErrorlog(startDate, endDate);
 
                     // Now you can use the result, e.g., bind it to a DataGridView or process it
                     dataGridView.DataSource = result;
@@ -77,7 +74,6 @@ namespace RWDE
                 {
                     // Handle exceptions, such as logging the error
                     MessageBox.Show(ex.Message);
-
                 }
             }
             catch (Exception ex)
@@ -85,7 +81,6 @@ namespace RWDE
                 // Handle exceptions
                 MessageBox.Show(ex.Message);
             }
-                       
         }    
         private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
@@ -140,12 +135,12 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selecrthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
                             // Base file name and directory
-                            string baseFileName = ContractIDList.Error_Log_Report;
+                            string baseFileName = ContractIdList.ErrorLogReport;
                             string directoryPath = folderBrowserDialog.SelectedPath;
                             string fileExtension = ".xlsx";
 
@@ -159,14 +154,12 @@ namespace RWDE
                                 fileSuffix++;
                                 filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
                             }
-
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -186,14 +179,11 @@ namespace RWDE
                 {
                     dt.Clear();  // Clears all rows from the DataTable
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
     }
-    
 }

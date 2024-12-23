@@ -48,7 +48,7 @@ namespace RWDE
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblHeading = new System.Windows.Forms.Label();
-            this.lblContract = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.rWDEDataSet2 = new RWDE.RWDEDataSet2();
             this.contractsSetupBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.contractsSetupTableAdapter = new RWDE.RWDEDataSet2TableAdapters.ContractsSetupTableAdapter();
@@ -60,7 +60,7 @@ namespace RWDE
             // 
             // pnlGrid
             // 
-            this.pnlGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.pnlGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlGrid.AutoSize = true;
             this.pnlGrid.BackColor = System.Drawing.Color.White;
@@ -69,7 +69,7 @@ namespace RWDE
             this.pnlGrid.Controls.Add(this.btnClose);
             this.pnlGrid.Controls.Add(this.dataGridView);
             this.pnlGrid.Controls.Add(this.lblHeading);
-            this.pnlGrid.Controls.Add(this.lblContract);
+            this.pnlGrid.Controls.Add(this.lblTitle);
             this.pnlGrid.Location = new System.Drawing.Point(1, 0);
             this.pnlGrid.Margin = new System.Windows.Forms.Padding(4);
             this.pnlGrid.Name = "pnlGrid";
@@ -220,19 +220,19 @@ namespace RWDE
             this.lblHeading.TabIndex = 4;
             this.lblHeading.Text = "All contracts are displayed below.";
             // 
-            // lblContract
+            // lblTitle
             // 
-            this.lblContract.AutoSize = true;
-            this.lblContract.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblContract.ForeColor = System.Drawing.Color.Black;
-            this.lblContract.Location = new System.Drawing.Point(889, 39);
-            this.lblContract.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblContract.Name = "lblContract";
-            this.lblContract.Size = new System.Drawing.Size(199, 35);
-            this.lblContract.TabIndex = 3;
-            this.lblContract.Text = "Contracts Setup";
-            this.lblContract.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.lblContract.Click += new System.EventHandler(this.lblContract_Click);
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.Black;
+            this.lblTitle.Location = new System.Drawing.Point(889, 39);
+            this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(199, 35);
+            this.lblTitle.TabIndex = 3;
+            this.lblTitle.Text = "Contracts Setup";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblTitle.Click += new System.EventHandler(this.lblContract_Click);
             // 
             // rWDEDataSet2
             // 
@@ -248,7 +248,7 @@ namespace RWDE
             // 
             this.contractsSetupTableAdapter.ClearBeforeFill = true;
             // 
-            // ContractIDLists
+            // ContractIdLists
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -283,7 +283,7 @@ namespace RWDE
         #endregion
 
         private System.Windows.Forms.Panel pnlGrid;
-        private System.Windows.Forms.Label lblContract;
+        private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Button btnClose;
         private Button btnSave;
         private Button btnAdd;

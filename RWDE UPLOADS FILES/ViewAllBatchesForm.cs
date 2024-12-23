@@ -11,11 +11,11 @@ namespace RWDE
     [ComVisible(true)]
     public partial class ViewAllBatchesForm : Form
     {
-        private readonly DBHelper dbHelper;
+        private readonly DbHelper dbHelper;
         public ViewAllBatchesForm()//INITIALIZATION OF FORM
         {
             InitializeComponent();
-            dbHelper = new DBHelper();
+            dbHelper = new DbHelper();
             try
             {
                 this.ControlBox = false;
@@ -26,14 +26,14 @@ namespace RWDE
                 // Assuming you have another DateTimePicker for the End Date
                 dtpEndDate.Value = DateTime.Now;
                 // Populate the DataGridView with data from the Batch table
-                PopulateDataGridViewLOAD();
+                PopulateDataGridViewLoad();
                 dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;//to adjust the column width
                 dataGridView.CellClick += DataGridView_CellClick;
                 //Handle BatchType Values
-                getAllBatchTypeNames();
+                GetAllBatchTypeNames();
                 dtpStartDate.Value = DateTime.Today.AddDays(-1);
-                dtpStartDate.CustomFormat = Constants.DateTimeFormat;
-                dtpEndDate.CustomFormat = Constants.DateTimeFormat;
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 RegisterEvents(this);
             }
             catch (Exception ex)
@@ -58,7 +58,6 @@ namespace RWDE
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
                 }
-
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
@@ -79,7 +78,7 @@ namespace RWDE
                 dataGridView.Columns.Clear();
 
                 // Add columns to the DataGridView
-                AddColumn(Constants.BatchID, Constants.BatchIDHeader, dataGridView);
+                AddColumn(Constants.BatchId, Constants.BatchIdHeader, dataGridView);
                 AddColumn(Constants.Description, Constants.DescriptionHeader, dataGridView);
                 AddColumn(Constants.Type, Constants.TypeHeader, dataGridView);
 
@@ -93,7 +92,7 @@ namespace RWDE
 
                 AddColumn(Constants.TotalRows, Constants.TotalRowsHeader, dataGridView);
                 AddColumn(Constants.SuccessfulRows, Constants.SuccessfulRowsHeader, dataGridView);
-                AddColumn(Constants.Statu, Constants.StatusHeader, dataGridView);
+                AddColumn(Constants.Status, Constants.StatusHeader, dataGridView);
 
                 // Add a delete button column to the DataGridView
                 DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn
@@ -117,19 +116,19 @@ namespace RWDE
                 MessageBox.Show($"{Constants.ErrorLoadingData}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void PopulateDataGridViewLOAD()
+        private void PopulateDataGridViewLoad()
         {
             try
             {
                 // Calling Batch table Values
-                DataTable dataTable = dbHelper.GetAllBatchesLOAD();
+                DataTable dataTable = dbHelper.GetAllBatchesLoad();
                 
                 dataGridView.AutoGenerateColumns = false;
                 dataGridView.DataSource = dataTable;
                 dataGridView.Columns.Clear();
 
                 // Add columns to the DataGridView
-                AddColumn(Constants.BatchID, Constants.BatchIDHeader, dataGridView);
+                AddColumn(Constants.BatchId, Constants.BatchIdHeader, dataGridView);
                 AddColumn(Constants.Description, Constants.DescriptionHeader, dataGridView);
                 AddColumn(Constants.Type, Constants.TypeHeader, dataGridView);
 
@@ -143,7 +142,7 @@ namespace RWDE
 
                 AddColumn(Constants.TotalRows, Constants.TotalRowsHeader, dataGridView);
                 AddColumn(Constants.SuccessfulRows, Constants.SuccessfulRowsHeader, dataGridView);
-                AddColumn(Constants.Statu, Constants.StatusHeader, dataGridView);
+                AddColumn(Constants.Status, Constants.StatusHeader, dataGridView);
 
                 // Add a delete button column to the DataGridView
                 DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn
@@ -168,7 +167,7 @@ namespace RWDE
             }
         }
         //Add a Color to the Delete button
-        public void PopulateDataGridViewLOADhcc()
+        public void PopulateDataGridViewLoaDhcc()
         {
             try
             {
@@ -180,7 +179,7 @@ namespace RWDE
                 dataGridView.Columns.Clear();
 
                 // Add columns to the DataGridView
-                AddColumn(Constants.BatchID, Constants.BatchIDHeader, dataGridView);
+                AddColumn(Constants.BatchId, Constants.BatchIdHeader, dataGridView);
                 AddColumn(Constants.Description, Constants.DescriptionHeader, dataGridView);
                 AddColumn(Constants.Type, Constants.TypeHeader, dataGridView);
 
@@ -194,7 +193,7 @@ namespace RWDE
 
                 AddColumn(Constants.TotalRows, Constants.TotalRowsHeader, dataGridView);
                 AddColumn(Constants.SuccessfulRows, Constants.SuccessfulRowsHeader, dataGridView);
-                AddColumn(Constants.Statu, Constants.StatusHeader, dataGridView);
+                AddColumn(Constants.Status, Constants.StatusHeader, dataGridView);
 
                 // Add a delete button column to the DataGridView
                 DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn
@@ -277,8 +276,6 @@ namespace RWDE
             return path;
         }
 
-        // Method to create a rounded rectangle for button styling
-
         //Checking the Rows Values 
         private bool IsRowEmpty(int rowIndex)// //Checking the Rows Values 
         {
@@ -348,7 +345,7 @@ namespace RWDE
         // Adjusts the width of specific columns
         private void AdjustAllColumnWidths()//to give styles for created button
         {
-            AdjustColumnWidth(Constants.BatchID, 120, dataGridView);
+            AdjustColumnWidth(Constants.BatchId, 120, dataGridView);
             AdjustColumnWidth(Constants.Description, 150, dataGridView);
             AdjustColumnWidth(Constants.Type, 160, dataGridView);
             AdjustColumnWidth(Constants.UploadStartedAt, 180, dataGridView);
@@ -359,14 +356,14 @@ namespace RWDE
             AdjustColumnWidth(Constants.GenerationEndedAt, 180, dataGridView);
             AdjustColumnWidth(Constants.TotalRows, 140, dataGridView);
             AdjustColumnWidth(Constants.SuccessfulRows, 185, dataGridView);
-            AdjustColumnWidth(Constants.Statu, 260, dataGridView);
+            AdjustColumnWidth(Constants.Status, 260, dataGridView);
             AdjustColumnWidth(Constants.DeleteColumnName, 120, dataGridView);
         }     
         private void SetDeleteButtonReadOnly() // Sets the Delete button to read-only for rows with null BatchID
         {
             foreach (DataGridViewRow row in dataGridView.Rows)
             {
-                var batchIdCell = row.Cells[Constants.BatchID];
+                var batchIdCell = row.Cells[Constants.BatchId];
                 if (batchIdCell.Value == null || batchIdCell.Value == DBNull.Value)
                 {
                     row.Cells[Constants.DeleteColumnName].Value = null;
@@ -415,22 +412,21 @@ namespace RWDE
                 var cell = dataGridView.Rows[rowIndex].Cells[Constants.DeleteColumnName];
                 if (cell.Value != null && cell.Value.ToString() == Constants.DeleteButtonText)
                 {
-                    string batchID = dataGridView.Rows[rowIndex].Cells[Constants.BatchID].Value?.ToString();
+                    string batchId = dataGridView.Rows[rowIndex].Cells[Constants.BatchId].Value?.ToString();
                     string type = dataGridView.Rows[rowIndex].Cells[Constants.Type].Value?.ToString();
                     string description = dataGridView.Rows[rowIndex].Cells[Constants.Description].Value?.ToString();
-                    DialogResult result = MessageBox.Show($"{Constants.ConfirmationMessage} {batchID}? \n{Constants.Type}  : {type} \n{Constants.Description} : {description}", Constants.ConfirmationTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    DialogResult result = MessageBox.Show($"{Constants.ConfirmationMessage} {batchId}? \n{Constants.Type}  : {type} \n{Constants.Description} : {description}", Constants.ConfirmationTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
-                        if (!string.IsNullOrEmpty(batchID) && !string.IsNullOrEmpty(type))
+                        if (!string.IsNullOrEmpty(batchId) && !string.IsNullOrEmpty(type))
                         {
                             // Calling Delete Function
-                            dbHelper.DeleteBatch(batchID, type);
+                            dbHelper.DeleteBatch(batchId, type);
                             // Refresh the DataGridView after deletion
-                            if (type == Constants.HCCDATA)
+                            if (type == Constants.Hccdata)
                             {
-                                PopulateDataGridViewLOADhcc();
+                                PopulateDataGridViewLoaDhcc();
                                 return;
-
                             }
                             PopulateDataGridView();
                             AdjustAllColumnWidths();
@@ -501,23 +497,20 @@ namespace RWDE
         {
             try
             {
-
                 cbBatchType.Items.Clear();
                 //Handle the Batch type Names
-                getAllBatchTypeNames();
+                GetAllBatchTypeNames();
                 //populate the data into grid
-                PopulateDataGridViewLOAD();
+                PopulateDataGridViewLoad();
                 //Handle the Width For Grid Columns
                 AdjustAllColumnWidths();
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }      
-        private void getAllBatchTypeNames() //Handle the Batch Type Names
+        private void GetAllBatchTypeNames() //Handle the Batch Type Names
         {
             List<string> batchTypes = dbHelper.GetAllBatchTypesview();
             cbBatchType.Items.Clear();  // Clear existing items
@@ -526,6 +519,5 @@ namespace RWDE
                 cbBatchType.Items.Add(batchType);
             }
         }
-
     }  
 }
