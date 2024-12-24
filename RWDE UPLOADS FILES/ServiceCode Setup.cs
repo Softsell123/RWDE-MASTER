@@ -684,17 +684,21 @@ namespace RWDE
                         // Reset the row's background color to the default
                         dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = dataGridView.DefaultCellStyle.BackColor; // Default color
                     }
+                    dataGridView.ReadOnly = false;
                     if (result == DialogResult.Yes)
                     {
                         dataGridView.Rows[e.RowIndex].Cells["Status"].ReadOnly = true;
                         // Make all rows read-only initially
                         foreach (DataGridViewRow row in dataGridView.Rows)
                         {
-                            row.ReadOnly = true;
+                            if (row != dataGridView.Rows[e.RowIndex])
+                            { 
+                                row.ReadOnly = true;
+                            }
                         }
-                        dataGridView.ReadOnly = false;
+                        
                         // Make the specific row editable
-                        dataGridView.Rows[e.RowIndex].ReadOnly = false;
+                       // dataGridView.Rows[e.RowIndex].ReadOnly = false;
                     }
 
                     // Make all cells editable for the selected row except for the "Status" column
@@ -703,10 +707,6 @@ namespace RWDE
                         if (column.Name == "Status")
                         {
                             dataGridView.Rows[e.RowIndex].Cells[column.Index].ReadOnly = true;
-                        }
-                        else
-                        {
-                            dataGridView.Rows[e.RowIndex].Cells[column.Index].ReadOnly = false;
                         }
                     }
 
