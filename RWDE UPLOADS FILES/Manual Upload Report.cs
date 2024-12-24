@@ -62,7 +62,7 @@ namespace RWDE
         {
             try
             {
-                DBHelper dbHelper = new DBHelper();
+                DbHelper dbHelper = new DbHelper();
                 dataGridView.AutoGenerateColumns = true;
                 dataGridView.Columns.Clear();
                 // Ensure the date pickers are properly set
@@ -115,7 +115,7 @@ namespace RWDE
             {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show(ManualUploadConstants.Nodataavailabletodownload, ManualUploadConstants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(ManualUploadConstants.Nodataavailabletodownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
                 DataTable dataTable = new DataTable();
@@ -141,7 +141,7 @@ namespace RWDE
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
-                    var worksheet = workbook.Worksheets.Add(ManualUploadConstants.Sheet1);
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
 
                     // Load the DataTable into the worksheet
                     worksheet.Cell(1, 1).InsertTable(dataTable);
@@ -149,14 +149,14 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selecrthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
                             // Base file name and directory
                             string baseFileName = ManualUploadConstants.ManualUploadClientsReport;
                             string directoryPath = folderBrowserDialog.SelectedPath;
-                            string fileExtension = ManualUploadConstants.xlsx_extention;
+                            string fileExtension =Constants.XlsxExtention;
 
                             // Construct the initial file path
                             string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
@@ -168,10 +168,9 @@ namespace RWDE
                                 fileSuffix++;
                                 filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
                             }
-
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}", ManualUploadConstants.ManualUploadClientsReport, MessageBoxButtons.OK,MessageBoxIcon.Information);
+                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", ManualUploadConstants.ManualUploadClientsReport, MessageBoxButtons.OK,MessageBoxIcon.Information);
                         }
                     }
                 }

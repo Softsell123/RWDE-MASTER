@@ -11,13 +11,11 @@ namespace RWDE
 {
     public partial class HccReconciliation : Form
     {
-        private DBHelper DBHelper;
-        private DataTable dataTable;
-        private readonly DBHelper dbHelper;
+        private readonly DbHelper dbHelper;
         public HccReconciliation()//initialize data
         {
             InitializeComponent();
-            dbHelper = new DBHelper();
+            dbHelper = new DbHelper();
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = "MM-dd-yyyy";
             dtpEndDate.CustomFormat = "MM-dd-yyyy";
@@ -49,75 +47,6 @@ namespace RWDE
                 {
                     RegisterEvents(control);
                 }
-            }
-        }
-        public void PopulateDataGridView()//populate data
-        {
-            try {
-                DataTable dt = new DataTable();
-
-                // Add columns to the DataTable
-                dt.Columns.Add("Month", typeof(string));
-                dt.Columns.Add("TotalServiceEntries", typeof(int));
-                dt.Columns.Add("ServiceEntriesNotMappedToHCC", typeof(int));
-                dt.Columns.Add("ServiceEntriesSuccessfullyExportedToHCC", typeof(int));
-                dt.Columns.Add("ServiceEntriesNotExportedToHCC", typeof(int));
-                dt.Columns.Add("ServiceEntriesForMHServicesOnlyClients", typeof(int));
-                dt.Columns.Add("ServiceEntriesPostTimeboxPeriod", typeof(int));
-                dt.Columns.Add("ServiceEntriesForExpiredMissingHCCConsent", typeof(int));
-                dt.Columns.Add("ServiceEntriesForHCCIDMissing", typeof(int));
-                dt.Columns.Add("ServiceEntriesNotEnrolledInProgram", typeof(int));
-                dt.Columns.Add("ServiceEntriesForPreRegClients", typeof(int));
-                dt.Columns.Add("ServiceEntriesForRWEligibilityExpired", typeof(int));
-                dt.Columns.Add("ServiceEntriesForMissingHCCStaffLogin", typeof(int));
-                dt.Columns.Add("ServiceEntriesWithZeroUnitOfService", typeof(int));
-                dt.Columns.Add("ServiceEntriesForWaiver", typeof(int));
-                dt.Columns.Add("ServiceEntriesFor3DayDelayInHCCUpload", typeof(int));
-                dt.Columns.Add("ServiceEntriesForITDrops", typeof(int));
-                dt.Columns.Add("%Drop", typeof(decimal));  // Percentage fields are often decimal
-
-                // Fetch data from the database
-                DataRow dr = dt.NewRow();
-                dr["Month"] = DateTime.Now.ToString("MMMM");
-
-                dr["TotalServiceEntries"] = dbHelper.GetTotalServiceEntries();
-                dr["ServiceEntriesNotMappedToHCC"] = dbHelper.GetServiceEntriesNotMappedToHCC();
-                dr["ServiceEntriesSuccessfullyExportedToHCC"] = dbHelper.GetServiceEntriesSuccessfullyExportedToHCC();
-                dr["ServiceEntriesNotExportedToHCC"] = dbHelper.GetServiceEntriesNotExportedToHCC();
-                dr["ServiceEntriesForMHServicesOnlyClients"] = dbHelper.GetServiceEntriesForMHServicesOnlyClients();
-                // dr["ServiceEntriesPostTimeboxPeriod"] = dbHelper.GetServiceEntriesPostTimeboxPeriod();
-                //dr["ServiceEntriesForExpiredMissingHCCConsent"] = dbHelper.GetServiceEntriesForExpiredMissingHCCConsent();
-                dr["ServiceEntriesForHCCIDMissing"] = dbHelper.GetServiceEntriesForHCCIDMissing();
-                dr["ServiceEntriesNotEnrolledInProgram"] = dbHelper.GetServiceEntriesNotEnrolledInProgram();
-                //dr["ServiceEntriesForPreRegClients"] = dbHelper.GetServiceEntriesForPreRegClients();
-                dr["ServiceEntriesForRWEligibilityExpired"] = dbHelper.GetServiceEntriesForRWEligibilityExpired();
-                dr["ServiceEntriesForMissingHCCStaffLogin"] = dbHelper.GetServiceEntriesForMissingHCCStaffLogin();
-                // dr["ServiceEntriesWithZeroUnitOfService"] = dbHelper.GetServiceEntriesWithZeroUnitOfService();
-                dr["ServiceEntriesForWaiver"] = dbHelper.GetServiceEntriesForWaiver();
-                //dr["ServiceEntriesFor//3DayDelayInHCCUpload"] = dbHelper.GetServiceEntriesFor3DayDelayInHCCUpload();
-                dr["ServiceEntriesForITDrops"] = dbHelper.GetServiceEntriesForITDrops();
-
-                // Calculate % Drop
-                int expiredMissingHCCConsent = dbHelper.GetServiceEntriesForExpiredMissingHCCConsent();
-                int totalNotMappedToHCC = dbHelper.GetTotalServiceEntries() - dbHelper.GetServiceEntriesNotMappedToHCC();
-                dr["%Drop"] = totalNotMappedToHCC == 0 ? 0 : (decimal)expiredMissingHCCConsent / totalNotMappedToHCC;
-
-                dt.Rows.Add(dr);
-
-                // Clear existing columns and rows
-
-
-                dataGridView.DataSource = dt;
-
-                // Set additional properties like row height, style, etc.
-                this.dataGridView.RowTemplate.Height = 40;
-                this.dataGridView.ForeColor = Color.Black;
-                this.dataGridView.DefaultCellStyle.ForeColor = Color.Black;
-                this.dataGridView.DefaultCellStyle.Font = new Font("Calibre", 14, FontStyle.Regular);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
             }
         }
 
@@ -163,12 +92,12 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selecrthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
                             // Base file name and directory
-                            string baseFileName = Constants.HCC_Reconciliation;
+                            string baseFileName = Constants.HccReconciliation;
                             string directoryPath = folderBrowserDialog.SelectedPath;
                             string fileExtension = ".xlsx";
 
@@ -185,7 +114,7 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}",Constants.HCC_Reconciliation, MessageBoxButtons.OK, MessageBoxIcon.Information);                   
+                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}",Constants.HccReconciliation, MessageBoxButtons.OK, MessageBoxIcon.Information);                   
                         }
                     }
                 }
@@ -224,22 +153,22 @@ namespace RWDE
                 }
 
                 // Create instance of DBHelper
-                DBHelper dbHelper = new DBHelper();
+                DbHelper dbHelper = new DbHelper();
                 dataGridView.ForeColor = Color.Black;
                 string filterType = string.Empty;
-                int[] Batchids = null;
+                int[] batchids = null;
 
 
                 if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))||(!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(","))||(!string.IsNullOrWhiteSpace(txtbatchs.Text)))
                 {
                     filterType = "BatchID";
-                    Batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();
+                    batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();
                 }
                 else if (dtpDateFilter.SelectedItem != null)
                 {
                     switch (dtpDateFilter.SelectedItem.ToString())
                     {
-                        case Constants.servicedate:
+                        case Constants.Servicedate:
                             filterType = "ServiceDate";
                             break;
                         case Constants.CreatedDate:
@@ -261,20 +190,13 @@ namespace RWDE
                     if (filterType == "BatchID")
                     {
                         List<DataTable> allidtables;
-                        allidtables = dbHelper.LoadDatafilterhccreconBatchid(startDate, endDate, Batchids, filterType);
+                        allidtables = dbHelper.LoadDatafilterhccreconBatchid(startDate, endDate, batchids, filterType);
                         result = dbHelper.CombineAllResults(allidtables);
                     }
                     else
                     {
                         result = dbHelper.LoadDatafilterhccrecon(startDate, endDate, filterType);
                     }
-
-                    // Validate results
-                    //if (result == null || result.Rows.Count == 0)
-                    //{
-                    //    MessageBox.Show("No data found for the specified parameters.", "Data Not Found");
-                    //    return;
-                    //}
 
                     // Bind data to the DataGridView
                     dataGridView.AutoGenerateColumns = true;
@@ -304,7 +226,6 @@ namespace RWDE
         private void btnClr_Click(object sender, EventArgs e)//clear the data in the grid
         {
             try { 
-
                 // Reset DateTimePickers to one year back from the current date
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
                 dtpStartDate.CustomFormat = "MM-dd-yyyy";
@@ -318,27 +239,11 @@ namespace RWDE
                 {
                     dt.Clear();  // Clears all rows from the DataTable
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dtpStartDate_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
     }
-    }
+}

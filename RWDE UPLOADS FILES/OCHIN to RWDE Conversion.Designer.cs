@@ -70,8 +70,8 @@ namespace RWDE
             this.lblHcc = new System.Windows.Forms.Label();
             this.lblOchin = new System.Windows.Forms.Label();
             this.lblHeading = new System.Windows.Forms.Label();
-            this.lblOchinHcc = new System.Windows.Forms.Label();
-            this.btnochintorwde = new System.Windows.Forms.Button();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.btnConversion = new System.Windows.Forms.Button();
             this.pnlDATA = new System.Windows.Forms.Panel();
             this.txtTotaltime = new System.Windows.Forms.TextBox();
             this.txtUploadEnded = new System.Windows.Forms.TextBox();
@@ -85,11 +85,11 @@ namespace RWDE
             this.lblServices = new System.Windows.Forms.Label();
             this.progressBarServices = new System.Windows.Forms.ProgressBar();
             this.txtProgressServices = new System.Windows.Forms.TextBox();
-            this.prsHeading = new System.Windows.Forms.Label();
+            this.prgHeading = new System.Windows.Forms.Label();
             this.lblClient = new System.Windows.Forms.Label();
-            this.progressbarHcc = new System.Windows.Forms.ProgressBar();
-            this.txtProgresshcc = new System.Windows.Forms.TextBox();
-            this.btncloseHCC = new System.Windows.Forms.Button();
+            this.progressbarClients = new System.Windows.Forms.ProgressBar();
+            this.txtProgressClients = new System.Windows.Forms.TextBox();
+            this.btnClose = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.pnlOCHINConversion = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).BeginInit();
@@ -307,7 +307,7 @@ namespace RWDE
             this.bnClear.TabIndex = 32;
             this.bnClear.Text = "Clear";
             this.bnClear.UseVisualStyleBackColor = false;
-            this.bnClear.Click += new System.EventHandler(this.bnClear_Click);
+            this.bnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // btnSubmit
             // 
@@ -321,7 +321,7 @@ namespace RWDE
             this.btnSubmit.TabIndex = 1;
             this.btnSubmit.Text = "Filter";
             this.btnSubmit.UseVisualStyleBackColor = false;
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click_1);
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // dtpEndDate
             // 
@@ -489,33 +489,33 @@ namespace RWDE
             this.lblHeading.TabIndex = 4;
             this.lblHeading.Text = "Choose a batch from the grids below to convert from OCHIN and HCC to RWDE.";
             // 
-            // lblOchinHcc
+            // lblTitle
             // 
-            this.lblOchinHcc.AutoSize = true;
-            this.lblOchinHcc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOchinHcc.ForeColor = System.Drawing.Color.Black;
-            this.lblOchinHcc.Location = new System.Drawing.Point(855, 3);
-            this.lblOchinHcc.Name = "lblOchinHcc";
-            this.lblOchinHcc.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblOchinHcc.Size = new System.Drawing.Size(338, 35);
-            this.lblOchinHcc.TabIndex = 35;
-            this.lblOchinHcc.Text = "OCHIN to RWDE Conversion";
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.Black;
+            this.lblTitle.Location = new System.Drawing.Point(855, 3);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.lblTitle.Size = new System.Drawing.Size(338, 35);
+            this.lblTitle.TabIndex = 35;
+            this.lblTitle.Text = "OCHIN to RWDE Conversion";
             // 
-            // btnochintorwde
+            // btnConversion
             // 
-            this.btnochintorwde.AutoSize = true;
-            this.btnochintorwde.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.btnochintorwde.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnochintorwde.ForeColor = System.Drawing.Color.Black;
-            this.btnochintorwde.Location = new System.Drawing.Point(1434, 817);
-            this.btnochintorwde.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnochintorwde.Name = "btnochintorwde";
-            this.btnochintorwde.Size = new System.Drawing.Size(240, 45);
-            this.btnochintorwde.TabIndex = 37;
-            this.btnochintorwde.TabStop = false;
-            this.btnochintorwde.Text = "Start Conversion";
-            this.btnochintorwde.UseVisualStyleBackColor = false;
-            this.btnochintorwde.Click += new System.EventHandler(this.btncthcc_Click_1);
+            this.btnConversion.AutoSize = true;
+            this.btnConversion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.btnConversion.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConversion.ForeColor = System.Drawing.Color.Black;
+            this.btnConversion.Location = new System.Drawing.Point(1434, 817);
+            this.btnConversion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnConversion.Name = "btnConversion";
+            this.btnConversion.Size = new System.Drawing.Size(240, 45);
+            this.btnConversion.TabIndex = 37;
+            this.btnConversion.TabStop = false;
+            this.btnConversion.Text = "Start Conversion";
+            this.btnConversion.UseVisualStyleBackColor = false;
+            this.btnConversion.Click += new System.EventHandler(this.btncthcc_Click);
             // 
             // pnlDATA
             // 
@@ -533,10 +533,10 @@ namespace RWDE
             this.pnlDATA.Controls.Add(this.lblServices);
             this.pnlDATA.Controls.Add(this.progressBarServices);
             this.pnlDATA.Controls.Add(this.txtProgressServices);
-            this.pnlDATA.Controls.Add(this.prsHeading);
+            this.pnlDATA.Controls.Add(this.prgHeading);
             this.pnlDATA.Controls.Add(this.lblClient);
-            this.pnlDATA.Controls.Add(this.progressbarHcc);
-            this.pnlDATA.Controls.Add(this.txtProgresshcc);
+            this.pnlDATA.Controls.Add(this.progressbarClients);
+            this.pnlDATA.Controls.Add(this.txtProgressClients);
             this.pnlDATA.Location = new System.Drawing.Point(134, 576);
             this.pnlDATA.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlDATA.Name = "pnlDATA";
@@ -683,17 +683,17 @@ namespace RWDE
             this.txtProgressServices.TabStop = false;
             this.txtProgressServices.Text = "0%";
             // 
-            // prsHeading
+            // prgHeading
             // 
-            this.prsHeading.AutoSize = true;
-            this.prsHeading.BackColor = System.Drawing.Color.White;
-            this.prsHeading.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.prsHeading.ForeColor = System.Drawing.Color.Black;
-            this.prsHeading.Location = new System.Drawing.Point(3, 0);
-            this.prsHeading.Name = "prsHeading";
-            this.prsHeading.Size = new System.Drawing.Size(114, 35);
-            this.prsHeading.TabIndex = 15;
-            this.prsHeading.Text = "Progress";
+            this.prgHeading.AutoSize = true;
+            this.prgHeading.BackColor = System.Drawing.Color.White;
+            this.prgHeading.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.prgHeading.ForeColor = System.Drawing.Color.Black;
+            this.prgHeading.Location = new System.Drawing.Point(3, 0);
+            this.prgHeading.Name = "prgHeading";
+            this.prgHeading.Size = new System.Drawing.Size(114, 35);
+            this.prgHeading.TabIndex = 15;
+            this.prgHeading.Text = "Progress";
             // 
             // lblClient
             // 
@@ -706,41 +706,41 @@ namespace RWDE
             this.lblClient.TabIndex = 3;
             this.lblClient.Text = "#Client:";
             // 
-            // progressbarHcc
+            // progressbarClients
             // 
-            this.progressbarHcc.Location = new System.Drawing.Point(240, 65);
-            this.progressbarHcc.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.progressbarHcc.Name = "progressbarHcc";
-            this.progressbarHcc.Size = new System.Drawing.Size(240, 39);
-            this.progressbarHcc.TabIndex = 2;
+            this.progressbarClients.Location = new System.Drawing.Point(240, 65);
+            this.progressbarClients.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.progressbarClients.Name = "progressbarClients";
+            this.progressbarClients.Size = new System.Drawing.Size(240, 39);
+            this.progressbarClients.TabIndex = 2;
             // 
-            // txtProgresshcc
+            // txtProgressClients
             // 
-            this.txtProgresshcc.BackColor = System.Drawing.Color.White;
-            this.txtProgresshcc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtProgresshcc.Location = new System.Drawing.Point(500, 63);
-            this.txtProgresshcc.Margin = new System.Windows.Forms.Padding(4);
-            this.txtProgresshcc.Name = "txtProgresshcc";
-            this.txtProgresshcc.ReadOnly = true;
-            this.txtProgresshcc.Size = new System.Drawing.Size(240, 40);
-            this.txtProgresshcc.TabIndex = 14;
-            this.txtProgresshcc.TabStop = false;
-            this.txtProgresshcc.Text = "0%";
+            this.txtProgressClients.BackColor = System.Drawing.Color.White;
+            this.txtProgressClients.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtProgressClients.Location = new System.Drawing.Point(500, 63);
+            this.txtProgressClients.Margin = new System.Windows.Forms.Padding(4);
+            this.txtProgressClients.Name = "txtProgressClients";
+            this.txtProgressClients.ReadOnly = true;
+            this.txtProgressClients.Size = new System.Drawing.Size(240, 40);
+            this.txtProgressClients.TabIndex = 14;
+            this.txtProgressClients.TabStop = false;
+            this.txtProgressClients.Text = "0%";
             // 
-            // btncloseHCC
+            // btnClose
             // 
-            this.btncloseHCC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.btncloseHCC.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btncloseHCC.ForeColor = System.Drawing.Color.Black;
-            this.btncloseHCC.Location = new System.Drawing.Point(1680, 816);
-            this.btncloseHCC.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btncloseHCC.Name = "btncloseHCC";
-            this.btncloseHCC.Size = new System.Drawing.Size(239, 45);
-            this.btncloseHCC.TabIndex = 38;
-            this.btncloseHCC.TabStop = false;
-            this.btncloseHCC.Text = "Close";
-            this.btncloseHCC.UseVisualStyleBackColor = false;
-            this.btncloseHCC.Click += new System.EventHandler(this.btncloseHCC_Click_1);
+            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.btnClose.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.ForeColor = System.Drawing.Color.Black;
+            this.btnClose.Location = new System.Drawing.Point(1680, 816);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(239, 45);
+            this.btnClose.TabIndex = 38;
+            this.btnClose.TabStop = false;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btncloseHCC_Click);
             // 
             // btnNext
             // 
@@ -755,16 +755,16 @@ namespace RWDE
             this.btnNext.TabStop = false;
             this.btnNext.Text = "NEXT";
             this.btnNext.UseVisualStyleBackColor = false;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click_1);
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // pnlOCHINConversion
             // 
             this.pnlOCHINConversion.BackColor = System.Drawing.Color.White;
-            this.pnlOCHINConversion.Controls.Add(this.btnochintorwde);
+            this.pnlOCHINConversion.Controls.Add(this.btnConversion);
             this.pnlOCHINConversion.Controls.Add(this.btnNext);
-            this.pnlOCHINConversion.Controls.Add(this.btncloseHCC);
+            this.pnlOCHINConversion.Controls.Add(this.btnClose);
             this.pnlOCHINConversion.Controls.Add(this.pnlDATA);
-            this.pnlOCHINConversion.Controls.Add(this.lblOchinHcc);
+            this.pnlOCHINConversion.Controls.Add(this.lblTitle);
             this.pnlOCHINConversion.Controls.Add(this.pnl);
             this.pnlOCHINConversion.Location = new System.Drawing.Point(2, 0);
             this.pnlOCHINConversion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -773,7 +773,7 @@ namespace RWDE
             this.pnlOCHINConversion.TabIndex = 6;
             this.pnlOCHINConversion.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
-            // OCHIN_to_RWDE_Conversion
+            // OchinToRwdeConversion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -953,8 +953,8 @@ namespace RWDE
         private Label lblHcc;
         private Label lblOchin;
         private Label lblHeading;
-        private Label lblOchinHcc;
-        private Button btnochintorwde;
+        private Label lblTitle;
+        private Button btnConversion;
         private Panel pnlDATA;
         private TextBox txtTotaltime;
         private TextBox txtUploadEnded;
@@ -968,11 +968,11 @@ namespace RWDE
         private Label lblServices;
         private ProgressBar progressBarServices;
         private TextBox txtProgressServices;
-        private Label prsHeading;
+        private Label prgHeading;
         private Label lblClient;
-        private ProgressBar progressbarHcc;
-        private TextBox txtProgresshcc;
-        private Button btncloseHCC;
+        private ProgressBar progressbarClients;
+        private TextBox txtProgressClients;
+        private Button btnClose;
         private Button btnNext;
         private Panel pnlOCHINConversion;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;

@@ -67,7 +67,7 @@ namespace RWDE
             this.generateHCCXmlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadHCCErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVFILESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.serviceReconciliationReportDotNotUseToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.deceasedClientsReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uploadDashboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -104,7 +104,7 @@ namespace RWDE
             this.editMenu,
             this.viewMenu,
             this.toolsMenu,
-            this.reportsToolStripMenuItem});
+            this.reportsMenu});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
@@ -138,7 +138,7 @@ namespace RWDE
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.ShowNewForm);
             // 
@@ -148,14 +148,14 @@ namespace RWDE
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenFile);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(178, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -163,20 +163,20 @@ namespace RWDE
             this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveToolStripMenuItem.Text = "&Save";
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveAsToolStripMenuItem.Text = "Save &As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(178, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -184,7 +184,7 @@ namespace RWDE
             this.printToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.printToolStripMenuItem.Name = "printToolStripMenuItem";
             this.printToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
@@ -192,24 +192,24 @@ namespace RWDE
             this.printPreviewToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("printPreviewToolStripMenuItem.Image")));
             this.printPreviewToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // printSetupToolStripMenuItem
             // 
             this.printSetupToolStripMenuItem.Name = "printSetupToolStripMenuItem";
-            this.printSetupToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.printSetupToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.printSetupToolStripMenuItem.Text = "Print Setup";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(178, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolsStripMenuItem_Click);
             // 
@@ -347,14 +347,13 @@ namespace RWDE
             this.toolsMenu.Name = "toolsMenu";
             this.toolsMenu.Size = new System.Drawing.Size(147, 24);
             this.toolsMenu.Text = "Data Management";
-            this.toolsMenu.Click += new System.EventHandler(this.toolsMenu_Click);
             // 
             // uploadOCHINCSVToolStripMenuItem
             // 
             this.uploadOCHINCSVToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("uploadOCHINCSVToolStripMenuItem.Image")));
             this.uploadOCHINCSVToolStripMenuItem.Name = "uploadOCHINCSVToolStripMenuItem";
             this.uploadOCHINCSVToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.uploadOCHINCSVToolStripMenuItem.Text = "Upload OCHIN CS";
+            this.uploadOCHINCSVToolStripMenuItem.Text = "Upload OCHIN CSV";
             this.uploadOCHINCSVToolStripMenuItem.Click += new System.EventHandler(this.uploadOchinCSVToolStripMenuItem_Click);
             // 
             // uploadCSVToOCHINToolStripMenuItem
@@ -413,9 +412,9 @@ namespace RWDE
             this.cSVFILESToolStripMenuItem.Text = "CSV FILES";
             this.cSVFILESToolStripMenuItem.Click += new System.EventHandler(this.cSVFILESToolStripMenuItem_Click);
             // 
-            // reportsToolStripMenuItem
+            // reportsMenu
             // 
-            this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reportsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.serviceReconciliationReportDotNotUseToolStripMenuItem1,
             this.deceasedClientsReportToolStripMenuItem,
             this.uploadDashboardToolStripMenuItem,
@@ -423,10 +422,9 @@ namespace RWDE
             this.clientDemographicsReportToolStripMenuItem,
             this.errorLogReportToolStripMenuItem,
             this.manualUploadReportToolStripMenuItem});
-            this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
-            this.reportsToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
-            this.reportsToolStripMenuItem.Text = "Reports";
-            this.reportsToolStripMenuItem.Click += new System.EventHandler(this.reportsToolStripMenuItem_Click);
+            this.reportsMenu.Name = "reportsMenu";
+            this.reportsMenu.Size = new System.Drawing.Size(74, 24);
+            this.reportsMenu.Text = "Reports";
             // 
             // serviceReconciliationReportDotNotUseToolStripMenuItem1
             // 
@@ -603,7 +601,7 @@ namespace RWDE
             this.btnHccCsv.Name = "btnHccCsv";
             this.btnHccCsv.Size = new System.Drawing.Size(29, 24);
             this.btnHccCsv.Text = "Upload XML";
-            this.btnHccCsv.Click += new System.EventHandler(this.btnHccCsv_Click_1);
+            this.btnHccCsv.Click += new System.EventHandler(this.btnHccCsv_Click);
             // 
             // btnOCHINHCCConversion
             // 
@@ -764,7 +762,7 @@ namespace RWDE
         private System.Windows.Forms.ToolStripMenuItem xMLFileUploadsToolStripMenuItem;
         private ToolStripButton btnOCHINHCCConversion;
         private ToolStripMenuItem oCHINToolStripMenuItem;
-        private ToolStripMenuItem reportsToolStripMenuItem;
+        private ToolStripMenuItem reportsMenu;
         private ToolStripMenuItem serviceReconciliationReportDotNotUseToolStripMenuItem1;
         private ToolStripMenuItem deceasedClientsReportToolStripMenuItem;
         private ToolStripMenuItem uploadDashboardToolStripMenuItem;

@@ -53,7 +53,6 @@ namespace RWDE
             this.btnClr = new System.Windows.Forms.Button();
             this.lblHeader = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.rwdeDataSet2 = new RWDE.RWDEDataSet();
             this.SerialNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BatchId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ServiceIDdata = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -73,6 +72,7 @@ namespace RWDE
             this.Lag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Lagstatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesExportFailureReason = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rwdeDataSet2 = new RWDE.RWDEDataSet();
             ((System.ComponentModel.ISupportInitialize)(this.rwdeDataSet1)).BeginInit();
             this.pnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -203,7 +203,6 @@ namespace RWDE
             this.dtpDateFilter.Size = new System.Drawing.Size(247, 41);
             this.dtpDateFilter.TabIndex = 5;
             this.dtpDateFilter.Text = "Created Date";
-            this.dtpDateFilter.SelectedIndexChanged += new System.EventHandler(this.cbDateFilter_SelectedIndexChanged);
             // 
             // btnReport
             // 
@@ -356,11 +355,6 @@ namespace RWDE
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1734, 562);
             this.dataGridView.TabIndex = 1;
-            // 
-            // rwdeDataSet2
-            // 
-            this.rwdeDataSet2.DataSetName = "RWDEDataSet";
-            this.rwdeDataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // SerialNo
             // 
@@ -525,6 +519,11 @@ namespace RWDE
             this.AriesExportFailureReason.Name = "AriesExportFailureReason";
             this.AriesExportFailureReason.ReadOnly = true;
             this.AriesExportFailureReason.Width = 200;
+            // 
+            // rwdeDataSet2
+            // 
+            this.rwdeDataSet2.DataSetName = "RWDEDataSet";
+            this.rwdeDataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // ServiceReconciliationReport
             // 

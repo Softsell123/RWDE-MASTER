@@ -58,7 +58,7 @@ namespace RWDE
             this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
             this.lblEndTo = new System.Windows.Forms.Label();
             this.lblBatchType = new System.Windows.Forms.Label();
-            this.lblHeader = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.BatchID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -122,7 +122,7 @@ namespace RWDE
             // 
             this.pnl.AutoSize = true;
             this.pnl.Controls.Add(this.pnl2);
-            this.pnl.Controls.Add(this.lblHeader);
+            this.pnl.Controls.Add(this.lblTitle);
             this.pnl.Controls.Add(this.dataGridView);
             this.pnl.Controls.Add(this.btnClose);
             this.pnl.Location = new System.Drawing.Point(0, 0);
@@ -269,16 +269,16 @@ namespace RWDE
             this.lblBatchType.TabIndex = 9;
             this.lblBatchType.Text = "Batch Type :";
             // 
-            // lblHeader
+            // lblTitle
             // 
-            this.lblHeader.AutoSize = true;
-            this.lblHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHeader.ForeColor = System.Drawing.Color.Black;
-            this.lblHeader.Location = new System.Drawing.Point(904, 52);
-            this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(207, 35);
-            this.lblHeader.TabIndex = 3;
-            this.lblHeader.Text = "Manage Batches";
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.Black;
+            this.lblTitle.Location = new System.Drawing.Point(904, 52);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(207, 35);
+            this.lblTitle.TabIndex = 3;
+            this.lblTitle.Text = "Manage Batches";
             // 
             // dataGridView
             // 
@@ -648,7 +648,7 @@ namespace RWDE
         private DataGridViewTextBoxColumn commentsDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn createdByDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn createdOnDataGridViewTextBoxColumn;
-        private Label lblHeader;
+        private Label lblTitle;
         private Panel pnl2;
         private Button btnSubmit;
         private DateTimePicker dtpEndDate;

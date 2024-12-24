@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    partial class frmConvertToHCC
+    partial class FrmConvertToHcc
     {
         /// <summary>
         /// Required designer variable.
@@ -37,7 +37,7 @@ namespace RWDE
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlHCCConversion = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.pnl = new System.Windows.Forms.Panel();
             this.txtBatchtype = new System.Windows.Forms.TextBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
@@ -51,12 +51,12 @@ namespace RWDE
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
             this.lblStartFrom = new System.Windows.Forms.Label();
-            this.bnClear = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
             this.btnSubmit = new System.Windows.Forms.Button();
             this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
             this.lblEndTo = new System.Windows.Forms.Label();
             this.lblBatchType = new System.Windows.Forms.Label();
-            this.lblCaption = new System.Windows.Forms.Label();
+            this.lblHeader = new System.Windows.Forms.Label();
             this.pnlProgress = new System.Windows.Forms.Panel();
             this.txtTotaltime = new System.Windows.Forms.TextBox();
             this.txtUploadEnded = new System.Windows.Forms.TextBox();
@@ -70,13 +70,12 @@ namespace RWDE
             this.lblServices = new System.Windows.Forms.Label();
             this.progressBarServices = new System.Windows.Forms.ProgressBar();
             this.txtProgressServices = new System.Windows.Forms.TextBox();
-            this.prsHeading = new System.Windows.Forms.Label();
+            this.lblprgHeader = new System.Windows.Forms.Label();
             this.lblClient = new System.Windows.Forms.Label();
-            this.progressbarHcc = new System.Windows.Forms.ProgressBar();
+            this.progressBarClients = new System.Windows.Forms.ProgressBar();
             this.txtProgresshcc = new System.Windows.Forms.TextBox();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btncloseHCC = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.btncthcc = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
@@ -93,12 +92,11 @@ namespace RWDE
             // pnlHCCConversion
             // 
             this.pnlHCCConversion.BackColor = System.Drawing.Color.White;
-            this.pnlHCCConversion.Controls.Add(this.label1);
+            this.pnlHCCConversion.Controls.Add(this.lblTitle);
             this.pnlHCCConversion.Controls.Add(this.pnl);
             this.pnlHCCConversion.Controls.Add(this.pnlProgress);
             this.pnlHCCConversion.Controls.Add(this.lblStatus);
             this.pnlHCCConversion.Controls.Add(this.btncloseHCC);
-            this.pnlHCCConversion.Controls.Add(this.button4);
             this.pnlHCCConversion.Controls.Add(this.btncthcc);
             this.pnlHCCConversion.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlHCCConversion.ForeColor = System.Drawing.Color.Black;
@@ -109,15 +107,14 @@ namespace RWDE
             this.pnlHCCConversion.TabIndex = 20;
             this.pnlHCCConversion.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlHCCConversion_Paint_1);
             // 
-            // label1
+            // lblTitle
             // 
-            this.label1.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(872, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(345, 34);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "CT to HCC Conversion";
-            this.label1.Click += new System.EventHandler(this.label1_Click_1);
+            this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.Location = new System.Drawing.Point(872, 23);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(276, 34);
+            this.lblTitle.TabIndex = 0;
+            this.lblTitle.Text = "CT to HCC Conversion";
             // 
             // pnl
             // 
@@ -127,12 +124,12 @@ namespace RWDE
             this.pnl.Controls.Add(this.dataGridView);
             this.pnl.Controls.Add(this.dtpStartDate);
             this.pnl.Controls.Add(this.lblStartFrom);
-            this.pnl.Controls.Add(this.bnClear);
+            this.pnl.Controls.Add(this.btnClear);
             this.pnl.Controls.Add(this.btnSubmit);
             this.pnl.Controls.Add(this.dtpEndDate);
             this.pnl.Controls.Add(this.lblEndTo);
             this.pnl.Controls.Add(this.lblBatchType);
-            this.pnl.Controls.Add(this.lblCaption);
+            this.pnl.Controls.Add(this.lblHeader);
             this.pnl.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnl.Location = new System.Drawing.Point(158, 72);
             this.pnl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -295,21 +292,20 @@ namespace RWDE
             this.lblStartFrom.Size = new System.Drawing.Size(152, 35);
             this.lblStartFrom.TabIndex = 23;
             this.lblStartFrom.Text = "From Date :";
-            this.lblStartFrom.Click += new System.EventHandler(this.lblStartFrom_Click);
             // 
-            // bnClear
+            // btnClear
             // 
-            this.bnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.bnClear.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bnClear.ForeColor = System.Drawing.Color.Black;
-            this.bnClear.Location = new System.Drawing.Point(1475, 83);
-            this.bnClear.Margin = new System.Windows.Forms.Padding(4);
-            this.bnClear.Name = "bnClear";
-            this.bnClear.Size = new System.Drawing.Size(227, 46);
-            this.bnClear.TabIndex = 22;
-            this.bnClear.Text = "Clear";
-            this.bnClear.UseVisualStyleBackColor = false;
-            this.bnClear.Click += new System.EventHandler(this.bnClear_Click);
+            this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.btnClear.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClear.ForeColor = System.Drawing.Color.Black;
+            this.btnClear.Location = new System.Drawing.Point(1475, 83);
+            this.btnClear.Margin = new System.Windows.Forms.Padding(4);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(227, 46);
+            this.btnClear.TabIndex = 22;
+            this.btnClear.Text = "Clear";
+            this.btnClear.UseVisualStyleBackColor = false;
+            this.btnClear.Click += new System.EventHandler(this.bnClear_Click);
             // 
             // btnSubmit
             // 
@@ -347,7 +343,6 @@ namespace RWDE
             this.lblEndTo.Size = new System.Drawing.Size(118, 35);
             this.lblEndTo.TabIndex = 19;
             this.lblEndTo.Text = "To Date :";
-            this.lblEndTo.Click += new System.EventHandler(this.lblEndTo_Click);
             // 
             // lblBatchType
             // 
@@ -360,20 +355,18 @@ namespace RWDE
             this.lblBatchType.Size = new System.Drawing.Size(157, 35);
             this.lblBatchType.TabIndex = 18;
             this.lblBatchType.Text = "Batch Type :";
-            this.lblBatchType.Click += new System.EventHandler(this.lblBatchType_Click);
             // 
-            // lblCaption
+            // lblHeader
             // 
-            this.lblCaption.AutoSize = true;
-            this.lblCaption.BackColor = System.Drawing.Color.White;
-            this.lblCaption.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCaption.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.lblCaption.Location = new System.Drawing.Point(15, 12);
-            this.lblCaption.Name = "lblCaption";
-            this.lblCaption.Size = new System.Drawing.Size(754, 35);
-            this.lblCaption.TabIndex = 4;
-            this.lblCaption.Text = "Choose a batch from the grid to convert from CT to HCC format.";
-            this.lblCaption.Click += new System.EventHandler(this.lblCaption_Click);
+            this.lblHeader.AutoSize = true;
+            this.lblHeader.BackColor = System.Drawing.Color.White;
+            this.lblHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblHeader.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lblHeader.Location = new System.Drawing.Point(15, 12);
+            this.lblHeader.Name = "lblHeader";
+            this.lblHeader.Size = new System.Drawing.Size(754, 35);
+            this.lblHeader.TabIndex = 4;
+            this.lblHeader.Text = "Choose a batch from the grid to convert from CT to HCC format.";
             // 
             // pnlProgress
             // 
@@ -390,9 +383,9 @@ namespace RWDE
             this.pnlProgress.Controls.Add(this.lblServices);
             this.pnlProgress.Controls.Add(this.progressBarServices);
             this.pnlProgress.Controls.Add(this.txtProgressServices);
-            this.pnlProgress.Controls.Add(this.prsHeading);
+            this.pnlProgress.Controls.Add(this.lblprgHeader);
             this.pnlProgress.Controls.Add(this.lblClient);
-            this.pnlProgress.Controls.Add(this.progressbarHcc);
+            this.pnlProgress.Controls.Add(this.progressBarClients);
             this.pnlProgress.Controls.Add(this.txtProgresshcc);
             this.pnlProgress.Location = new System.Drawing.Point(158, 545);
             this.pnlProgress.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -412,7 +405,6 @@ namespace RWDE
             this.txtTotaltime.ReadOnly = true;
             this.txtTotaltime.Size = new System.Drawing.Size(348, 40);
             this.txtTotaltime.TabIndex = 36;
-            this.txtTotaltime.TextChanged += new System.EventHandler(this.txtTotaltime_TextChanged);
             // 
             // txtUploadEnded
             // 
@@ -425,7 +417,6 @@ namespace RWDE
             this.txtUploadEnded.ReadOnly = true;
             this.txtUploadEnded.Size = new System.Drawing.Size(348, 43);
             this.txtUploadEnded.TabIndex = 35;
-            this.txtUploadEnded.TextChanged += new System.EventHandler(this.txtUploadEnded_TextChanged);
             // 
             // txtUploadStarted
             // 
@@ -438,7 +429,6 @@ namespace RWDE
             this.txtUploadStarted.ReadOnly = true;
             this.txtUploadStarted.Size = new System.Drawing.Size(348, 43);
             this.txtUploadStarted.TabIndex = 34;
-            this.txtUploadStarted.TextChanged += new System.EventHandler(this.txtUploadStarted_TextChanged);
             // 
             // txtBatchid
             // 
@@ -451,7 +441,6 @@ namespace RWDE
             this.txtBatchid.ReadOnly = true;
             this.txtBatchid.Size = new System.Drawing.Size(348, 43);
             this.txtBatchid.TabIndex = 33;
-            this.txtBatchid.TextChanged += new System.EventHandler(this.txtBatchid_TextChanged);
             // 
             // lblTotaltime
             // 
@@ -463,7 +452,6 @@ namespace RWDE
             this.lblTotaltime.Size = new System.Drawing.Size(212, 35);
             this.lblTotaltime.TabIndex = 32;
             this.lblTotaltime.Text = "Total Time Taken:";
-            this.lblTotaltime.Click += new System.EventHandler(this.lblTotaltime_Click);
             // 
             // lblUploadEnded
             // 
@@ -475,7 +463,6 @@ namespace RWDE
             this.lblUploadEnded.Size = new System.Drawing.Size(261, 35);
             this.lblUploadEnded.TabIndex = 31;
             this.lblUploadEnded.Text = "Conversion Ended At:";
-            this.lblUploadEnded.Click += new System.EventHandler(this.lblUploadEnded_Click);
             // 
             // lblUploadStarts
             // 
@@ -487,7 +474,6 @@ namespace RWDE
             this.lblUploadStarts.Size = new System.Drawing.Size(271, 35);
             this.lblUploadStarts.TabIndex = 30;
             this.lblUploadStarts.Text = "Conversion Started At:";
-            this.lblUploadStarts.Click += new System.EventHandler(this.lblUploadStarts_Click);
             // 
             // lblBatch
             // 
@@ -499,7 +485,6 @@ namespace RWDE
             this.lblBatch.Size = new System.Drawing.Size(117, 35);
             this.lblBatch.TabIndex = 29;
             this.lblBatch.Text = "Batch ID:";
-            this.lblBatch.Click += new System.EventHandler(this.lblBatch_Click);
             // 
             // lblFileInformation
             // 
@@ -511,7 +496,6 @@ namespace RWDE
             this.lblFileInformation.Size = new System.Drawing.Size(290, 35);
             this.lblFileInformation.TabIndex = 28;
             this.lblFileInformation.Text = "Conversion Information";
-            this.lblFileInformation.Click += new System.EventHandler(this.lblFileInformation_Click);
             // 
             // lblServices
             // 
@@ -524,7 +508,6 @@ namespace RWDE
             this.lblServices.Size = new System.Drawing.Size(130, 35);
             this.lblServices.TabIndex = 25;
             this.lblServices.Text = "#Services:";
-            this.lblServices.Click += new System.EventHandler(this.lblServices_Click);
             // 
             // progressBarServices
             // 
@@ -533,7 +516,6 @@ namespace RWDE
             this.progressBarServices.Name = "progressBarServices";
             this.progressBarServices.Size = new System.Drawing.Size(240, 39);
             this.progressBarServices.TabIndex = 24;
-            this.progressBarServices.Click += new System.EventHandler(this.progressBarServices_Click);
             // 
             // txtProgressServices
             // 
@@ -546,20 +528,18 @@ namespace RWDE
             this.txtProgressServices.Size = new System.Drawing.Size(240, 40);
             this.txtProgressServices.TabIndex = 23;
             this.txtProgressServices.Text = "0%";
-            this.txtProgressServices.TextChanged += new System.EventHandler(this.txtProgressServices_TextChanged);
             // 
-            // prsHeading
+            // lblprgHeader
             // 
-            this.prsHeading.AutoSize = true;
-            this.prsHeading.BackColor = System.Drawing.Color.White;
-            this.prsHeading.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.prsHeading.ForeColor = System.Drawing.Color.Black;
-            this.prsHeading.Location = new System.Drawing.Point(3, 0);
-            this.prsHeading.Name = "prsHeading";
-            this.prsHeading.Size = new System.Drawing.Size(114, 35);
-            this.prsHeading.TabIndex = 15;
-            this.prsHeading.Text = "Progress";
-            this.prsHeading.Click += new System.EventHandler(this.prsHeading_Click);
+            this.lblprgHeader.AutoSize = true;
+            this.lblprgHeader.BackColor = System.Drawing.Color.White;
+            this.lblprgHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblprgHeader.ForeColor = System.Drawing.Color.Black;
+            this.lblprgHeader.Location = new System.Drawing.Point(3, 0);
+            this.lblprgHeader.Name = "lblprgHeader";
+            this.lblprgHeader.Size = new System.Drawing.Size(114, 35);
+            this.lblprgHeader.TabIndex = 15;
+            this.lblprgHeader.Text = "Progress";
             // 
             // lblClient
             // 
@@ -571,16 +551,14 @@ namespace RWDE
             this.lblClient.Size = new System.Drawing.Size(102, 35);
             this.lblClient.TabIndex = 3;
             this.lblClient.Text = "#Client:";
-            this.lblClient.Click += new System.EventHandler(this.label4_Click);
             // 
-            // progressbarHcc
+            // progressBarClients
             // 
-            this.progressbarHcc.Location = new System.Drawing.Point(240, 65);
-            this.progressbarHcc.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.progressbarHcc.Name = "progressbarHcc";
-            this.progressbarHcc.Size = new System.Drawing.Size(240, 39);
-            this.progressbarHcc.TabIndex = 2;
-            this.progressbarHcc.Click += new System.EventHandler(this.progressbarHcc_Click_1);
+            this.progressBarClients.Location = new System.Drawing.Point(240, 65);
+            this.progressBarClients.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.progressBarClients.Name = "progressBarClients";
+            this.progressBarClients.Size = new System.Drawing.Size(240, 39);
+            this.progressBarClients.TabIndex = 2;
             // 
             // txtProgresshcc
             // 
@@ -617,19 +595,6 @@ namespace RWDE
             this.btncloseHCC.Text = "Close";
             this.btncloseHCC.UseVisualStyleBackColor = false;
             this.btncloseHCC.Click += new System.EventHandler(this.btncloseHCC_Click);
-            // 
-            // button4
-            // 
-            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(639, 558);
-            this.button4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(0, 0);
-            this.button4.TabIndex = 21;
-            this.button4.Text = "Closed";
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // btncthcc
             // 
@@ -679,7 +644,7 @@ namespace RWDE
             this.ClientSize = new System.Drawing.Size(1924, 1055);
             this.Controls.Add(this.pnlHCCConversion);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Name = "frmConvertToHCC";
+            this.Name = "FrmConvertToHcc";
             this.Text = "CT to HCC Conversion";
             this.Load += new System.EventHandler(this.frmConvertToHCC_Load);
             this.pnlHCCConversion.ResumeLayout(false);
@@ -758,15 +723,14 @@ namespace RWDE
         #endregion
         private System.Windows.Forms.Panel pnlHCCConversion;
         private System.Windows.Forms.Button btncloseHCC;
-        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button btncthcc;
         private System.Windows.Forms.TextBox txtProgresshcc;
-        private System.Windows.Forms.Label lblCaption;
+        private System.Windows.Forms.Label lblHeader;
         private System.Windows.Forms.Label lblClient;
-        private System.Windows.Forms.ProgressBar progressbarHcc;
+        private System.Windows.Forms.ProgressBar progressBarClients;
         private Label lblStatus;
         private Panel pnlProgress;
-        private Label prsHeading;
+        private Label lblprgHeader;
         private ImageList imageList1;
         private ImageList imageList2;
         private ImageList imageList3;
@@ -775,7 +739,7 @@ namespace RWDE
         private Label lblServices;
         private ProgressBar progressBarServices;
         private TextBox txtProgressServices;
-        private Label label1;
+        private Label lblTitle;
         private TextBox txtTotaltime;
         private TextBox txtUploadEnded;
         private TextBox txtUploadStarted;
@@ -787,7 +751,7 @@ namespace RWDE
         private Label lblFileInformation;
         private DateTimePicker dtpStartDate;
         private Label lblStartFrom;
-        private Button bnClear;
+        private Button btnClear;
         private Button btnSubmit;
         private DateTimePicker dtpEndDate;
         private Label lblEndTo;
