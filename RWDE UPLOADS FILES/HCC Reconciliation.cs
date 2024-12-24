@@ -11,11 +11,9 @@ namespace RWDE
 {
     public partial class HccReconciliation : Form
     {
-        private readonly DbHelper dbHelper;
         public HccReconciliation()//initialize data
         {
             InitializeComponent();
-            dbHelper = new DbHelper();
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = "MM-dd-yyyy";
             dtpEndDate.CustomFormat = "MM-dd-yyyy";

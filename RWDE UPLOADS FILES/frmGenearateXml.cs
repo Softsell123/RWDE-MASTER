@@ -19,9 +19,6 @@ namespace RWDE
     {
         private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        public string XmlPath;
-        private Timer timer;
-        private string selectedFolderPath;
         private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;
         public FrmGeneratorXml()
         {
@@ -30,7 +27,6 @@ namespace RWDE
             connectionString = dbHelper.GetConnectionString();
             LoadBatchStatus();
             PopulateDataGridView();
-            XmlPath = txtPath.Text;
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             dataGridView.CellFormatting += dataGridView_CellFormatting;
@@ -1317,7 +1313,7 @@ namespace RWDE
             this.Controls.Add(label);
 
             // Set up timer to close the form after displayDuration milliseconds
-            timer = new Timer();
+            Timer timer = new Timer();
             timer.Interval = displayDuration;
             timer.Tick += (sender, e) => this.Close();
             timer.Start();
@@ -1526,8 +1522,11 @@ namespace RWDE
                             break;
                         } // Abort after updating the first row
 
+                        string selectedFolderPath = txtPath.Text;
+
                         // Update the status of the selected batch to Status "19" (Abort)
                         UpdateBatchStatusabort(batchId, Constants.Xmlabort, selectedFolderPath, filename);
+
                         //Show a message box indicating successful abort
                         MessageBox.Show(Constants.Abortedsuccessfully, Constants.GenerateXml);
                         Application.Restart();

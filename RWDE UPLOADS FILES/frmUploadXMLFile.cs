@@ -16,13 +16,12 @@ namespace RWDE
     {
         private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        private readonly DataGridView dataGridView;
         public string FileName;
         public string Path;
         public int TotalRows;
 
         // Define a class-level variable to store the default path.
-        private string defaultPath = null;
+        private readonly string defaultPath = null;
 
         // Returns the file path of the source file where the method is called, using the CallerFilePath attribute.
         private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;

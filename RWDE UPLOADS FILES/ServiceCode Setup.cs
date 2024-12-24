@@ -10,10 +10,9 @@ namespace RWDE
     {
         private readonly DbHelper dbHelper;
         private DataTable dataTable;
-        private bool alreadyDeletedMessageShown;
+        private bool isHandlingClick = false;
         public ServiceCodeSetup()// Your custom initialization code goes here
         {
-           
             DataGridView gridView = new DataGridView();
             gridView.EditMode = DataGridViewEditMode.EditOnEnter;
             this.ControlBox = false;
@@ -197,14 +196,14 @@ namespace RWDE
                     // Create the ComboBox column
                     DataGridViewComboBoxColumn contractColumn = new DataGridViewComboBoxColumn
                     {
-                        Name = "ContractID",
+                        Name = Constants.ContractId,
                         HeaderText = "Contract",
                         DataPropertyName = "HCC_ContractID", // Ensure this matches your DataTable's column name
                         Width = 130,
                         ValueType = typeof(string),
                         FlatStyle = FlatStyle.Flat,
-                        DisplayMember = "ContractID", // Display member can still be "ContractID" if that's what you want to display
-                        ValueMember = "ContractID"
+                        DisplayMember = Constants.ContractId, // Display member can still be Constants.ContractID if that's what you want to display
+                        ValueMember = Constants.ContractId
                     };
 
                     // Assign DataSource to the ComboBox column
@@ -271,8 +270,8 @@ namespace RWDE
 
                 };
                 // Adding items to the drop-down list
-                statusColumn.Items.Add(ContractIdList.Active);
-                statusColumn.Items.Add(ContractIdList.Inactive);
+                statusColumn.Items.Add(Constants.Active);
+                statusColumn.Items.Add(Constants.Inactive);
                 statusColumn.Items.Add(Constants.Delete);
                 Font smallerFont = new Font(dataGridView.Font.FontFamily, 8); // Adjust the size as needed
 
@@ -322,10 +321,10 @@ namespace RWDE
                         switch (statusValue)
                         {
                             case "29":
-                                row["Status"] = ContractIdList.Active;
+                                row["Status"] = Constants.Active;
                                 break;
                             case "28":
-                                row["Status"] = ContractIdList.Inactive;
+                                row["Status"] = Constants.Inactive;
                                 break;
 
                             default:
@@ -351,7 +350,7 @@ namespace RWDE
         {
             try { 
                 DataTable contracts = dbHelper.GetActiveContracts();//to get contracts list in service code
-                DataGridViewComboBoxColumn comboBoxColumn = (DataGridViewComboBoxColumn)this.dataGridView.Columns["ContractID"];
+                DataGridViewComboBoxColumn comboBoxColumn = (DataGridViewComboBoxColumn)this.dataGridView.Columns[Constants.ContractId];
                 comboBoxColumn.DataSource = contracts;
             }
             catch (Exception ex)
@@ -507,25 +506,25 @@ namespace RWDE
                     string currentStatus = dataGridView.CurrentRow.Cells["Status"].Value.ToString();
 
                     // Populate the ComboBox based on the current status
-                    if (currentStatus == ContractIdList.Active)
+                    if (currentStatus == Constants.Active)
                     {
-                        comboBox.Items.Add(ContractIdList.Inactive);
+                        comboBox.Items.Add(Constants.Inactive);
                         comboBox.Items.Add(Constants.Delete);
                     }
-                    else if (currentStatus == ContractIdList.Inactive)
+                    else if (currentStatus == Constants.Inactive)
                     {
-                        comboBox.Items.Add(ContractIdList.Active);
+                        comboBox.Items.Add(Constants.Active);
                         comboBox.Items.Add(Constants.Delete);
                     }
                     else if (currentStatus == Constants.Delete)
                     {
-                        comboBox.Items.Add(ContractIdList.Active);
-                        comboBox.Items.Add(ContractIdList.Inactive);
+                        comboBox.Items.Add(Constants.Active);
+                        comboBox.Items.Add(Constants.Inactive);
                     }
                     else
                     {
-                        comboBox.Items.Add(ContractIdList.Active);
-                        comboBox.Items.Add(ContractIdList.Inactive);
+                        comboBox.Items.Add(Constants.Active);
+                        comboBox.Items.Add(Constants.Inactive);
                         comboBox.Items.Add(Constants.Delete);
                     }
                 }
@@ -570,7 +569,7 @@ namespace RWDE
                         string statusValue = row.Cells["Status"].Value.ToString();
 
                         // Assuming you have specific conditions for read-only rows based on status
-                        if (statusValue == ContractIdList.Active || statusValue == ContractIdList.Inactive || statusValue == Constants.Delete)
+                        if (statusValue == Constants.Active || statusValue == Constants.Inactive || statusValue == Constants.Delete)
                         {
                             row.ReadOnly = true;
                         }
@@ -719,10 +718,17 @@ namespace RWDE
                 }
             }
         }
-       
-        private void dataGridView_CellClickdelete(object sender, DataGridViewCellEventArgs e)//to delete particular row
+
+        private void dataGridView_CellClickdelete(object sender, DataGridViewCellEventArgs e) //to delete particular row
         {
+            if (isHandlingClick)
+            {
+                isHandlingClick = false;
+                return;
+            } // Exit if already handling
+
             try
+
             { // Ensure the row index is valid and the clicked cell is in the "Delete" column
                 if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns["Delete"].Index)
                 {
@@ -746,16 +752,17 @@ namespace RWDE
                     // Check if the status is 'DELETE' and whether the message has already been shown
                     if (status != null && status.Equals("DELETE", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (!alreadyDeletedMessageShown)
+                        if (!isHandlingClick)
                         {
+                            isHandlingClick = true;// Set the flag to prevent further messages
                             MessageBox.Show($"This {serviceCodeId} has already been deleted.", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Question);
-                            alreadyDeletedMessageShown = true; // Set the flag to prevent further messages
                         }
                         return;  // Exit method here to prevent further actions
                     }
 
                     // Confirm deletion
                     var result = MessageBox.Show($"Do you want to delete Service {serviceCodeId}?", Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    isHandlingClick = true;
                     if (result == DialogResult.Yes)
                     {
                         // Ensure only the current row is editable
@@ -784,7 +791,6 @@ namespace RWDE
                     // Update the status to "DELETE"
                     dataGridView.Rows[rowIndex].Cells["Status"].Value = Constants.Delete;
                     dbHelper.ServiceCodeIdUpdateStatus(serviceCodeId, "30"); // Assume this function updates the status in the database
-                    alreadyDeletedMessageShown = true;
                     MessageBox.Show($"Deleted ContractID: {serviceCodeId} Successfully", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -804,13 +810,18 @@ namespace RWDE
                     int serviceCodeId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells["ServiceCodeID"].Value);
                     string service = dataGridView.Rows[rowIndex].Cells["Service"].Value.ToString();
                     string hccExportToAries = dataGridView.Rows[rowIndex].Cells["HCC_ExportToAries"].Value.ToString();
-                    string hccContractId = dataGridView.Rows[rowIndex].Cells["ContractID"].Value.ToString();
+                    string hccContractId = dataGridView.Rows[rowIndex].Cells[Constants.ContractId].Value.ToString();
                     string hccPrimaryService = dataGridView.Rows[rowIndex].Cells["HCC_PrimaryService"].Value.ToString();
                     string hccSecondaryService = dataGridView.Rows[rowIndex].Cells["HCC_SecondaryService"].Value.ToString();
                     string hccSubservice = dataGridView.Rows[rowIndex].Cells["HCC_Subservice"].Value.ToString();
                     string unitsOfMeasure = dataGridView.Rows[rowIndex].Cells["UnitsOfMeasure"].Value.ToString();
                     decimal unitValue = Convert.ToDecimal(dataGridView.Rows[rowIndex].Cells["UnitValue"].Value);
                     string status = dataGridView.Rows[rowIndex].Cells["Status"].Value.ToString();
+
+                    status = (status == Constants.Active) ? Constants.ActiveContractstatus :
+                        (status == Constants.Inactive) ? Constants.InactiveContractstatus :
+                        (status == Constants.Delete) ? Constants.DeleteContractstatus :
+                        status;
 
                     if (serviceCodeId > 0)
                     {
@@ -925,7 +936,7 @@ namespace RWDE
                 {
                     // Remove existing event handlers to prevent multiple subscriptions
                     comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;//to create dropdown
-                        comboBox.SelectedIndexChanged += ComboBox_SelectedIndexChanged;
+                    comboBox.SelectedIndexChanged += ComboBox_SelectedIndexChanged;
                     comboBox.BackColor = Color.Red;
                 }
             }

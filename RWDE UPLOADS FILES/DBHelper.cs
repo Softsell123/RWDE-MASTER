@@ -1125,7 +1125,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@StatusAsofDate", GetStringValue(data, 3));
                     command.Parameters.AddWithValue("@LastServiceDate", GetStringValue(data, 4));
                     command.Parameters.AddWithValue("@DownloadDate", DateTime.Parse("2024-08-01")); // Assuming 2024-08-01 is the correct date
-                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted); // Assuming 3 is a valid value for Extracted
+                    command.Parameters.AddWithValue("@Extracted", Constants.ExtractedCode); // Assuming 3 is a valid value for Extracted
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Parse("2024-02-06")); // Assuming 2024-02-06 is the correct date
                     command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDate); // Assuming 2 is a valid value for CMSMatch
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Parse("2024-02-05")); // Assuming 2024-02-05 is the correct date
@@ -1171,7 +1171,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ClientStatus", GetStringValue(data, 11));
                     command.Parameters.AddWithValue("@EligibilityDocumentExpireDate", (object)eligibilityDocumentExpireDate ?? DBNull.Value);
                     command.Parameters.AddWithValue("@DownloadDate", DateTime.Now); // Assuming current date/time
-                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted); // Assuming a value for Extracted
+                    command.Parameters.AddWithValue("@Extracted", Constants.ExtractedCode); // Assuming a value for Extracted
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now); // Assuming current date/time
                     command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDate); // Assuming a value for CMSMatch
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now); // Assuming current date/time
@@ -1221,7 +1221,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ClientStatus", GetStringValuedata(data, 11));
                     command.Parameters.AddWithValue("@EligibilityDocumentExpireDate", (object)eligibilityDocumentExpireDate ?? DBNull.Value);
                     command.Parameters.AddWithValue("@DownloadDate", DateTime.Now);
-                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted);
+                    command.Parameters.AddWithValue("@Extracted", Constants.ExtractedCode);
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now);
                     command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDate);
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now);
@@ -1286,9 +1286,9 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ClientURN", GetStringData(data, 1)?.Trim('"'));
                     command.Parameters.AddWithValue("@ServiceNotes", serviceNotes); // Original service notes
                     command.Parameters.AddWithValue("@DownloadDate", DateTime.Now);
-                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted);
+                    command.Parameters.AddWithValue("@Extracted", Constants.ExtractedCode);
                     command.Parameters.AddWithValue("@ExtractionDate", DBNull.Value);
-                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatch);
+                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchCode);
                     command.Parameters.AddWithValue("@CMSMatchDate", DBNull.Value);
                     command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
@@ -1325,9 +1325,9 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ClientURN", GetStringData(data, 1)?.Trim('"'));
                     command.Parameters.AddWithValue("@ServiceNotes", serviceNotes); // Original service notes
                     command.Parameters.AddWithValue("@DownloadDate", DateTime.Now);
-                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted);
+                    command.Parameters.AddWithValue("@Extracted", Constants.ExtractedCode);
                     command.Parameters.AddWithValue("@ExtractionDate", DBNull.Value);
-                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatch);
+                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchCode);
                     command.Parameters.AddWithValue("@CMSMatchDate", DBNull.Value);
                     command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
@@ -1558,9 +1558,9 @@ namespace RWDE
                     command.Parameters.AddWithValue("@FinancialLastSavedDate", GetStringValue(data, 44)?.Trim('"'));
                     command.Parameters.AddWithValue("@FinancialCreateSource", GetStringValue(data, 45)?.Trim('"'));
                     command.Parameters.AddWithValue("@DownloadDate", DateTime.Parse("2/3/4"));
-                    command.Parameters.AddWithValue("@Extracted", Constants.Extracted);
+                    command.Parameters.AddWithValue("@Extracted", Constants.ExtractedCode);
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Parse("2/3/4"));
-                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatch);
+                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchCode);
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Parse("2/3/4"));
                     command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Now); // Or provide the appropriate DateTime value

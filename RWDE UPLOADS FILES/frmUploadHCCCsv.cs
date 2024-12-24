@@ -12,10 +12,7 @@ namespace RWDE
     {
         private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        public string FileName;
-        public int Batchid;
-        bool isUploading;
-        bool batchId = false;
+        
         private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;//to get file path
         public FrmUploadHccCsv()//initializing of data
         {
@@ -113,9 +110,10 @@ namespace RWDE
                 }
                 btnClose.Text = Constants.Abort;
                 btnUpload.Enabled = false;
-                isUploading = true;
+                bool isUploading = true;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
+                    string fileName="";
                     connection.Open();
                     //SqlTransaction transaction = connection.BeginTransaction();
                     try
@@ -149,17 +147,18 @@ namespace RWDE
 
                                 foreach (string csvFilePath in csvFiles)
                                 {
-                                    UpdateFileProgress(currentFileIndex, totalCsvFiles, totalRowsInserted);//to update lines of insertion
+                                    UpdateFileProgress(currentFileIndex, totalCsvFiles,isUploading);//to update lines of insertion
                                     if (!isUploading)
                                         break;
                                     currentFileIndex++;
                                     string[] lines = File.ReadAllLines(csvFilePath);
                                     int totalRowsInCurrentFile = 0; // Initialize within the loop
                                     string baseFilename = Path.GetFileNameWithoutExtension(csvFilePath).Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                                    string fileName = Path.GetFileName(csvFilePath);
+                                    fileName = Path.GetFileName(csvFilePath);
                                     txtFileName.Text = fileName;
-
-                                    Batchid = dbHelper.GetNextBatchId(batchId);//to get next batch id
+                                    bool batchId = false; 
+                                    int Batchid;
+                                    Batchid = dbHelper.GetNextBatchId(false);//to get next batch id
                                     txtBatchid.Text = Batchid.ToString();
                                     string date = startTime.ToString("MM/dd/yyyy");
                                     string time = startTime.ToString("HH:mm:ss");
@@ -169,7 +168,7 @@ namespace RWDE
 
                                     if (isUploading)
                                     {
-                                        var result = InsertCsvDataIntoTable(csvFilePath, Batchid, connection); // Pass connection and transaction objects
+                                        var result = InsertCsvDataIntoTable(csvFilePath, Batchid, connection, isUploading); // Pass connection and transaction objects
                                         totalRowsInserted += result.Item1;
 
                                         // Increment current file index
@@ -188,7 +187,7 @@ namespace RWDE
                                         if (isUploading)
                                         {
                                             dbHelper.InsertBatch(Batchid, fileName, baseFilename, Constants.Hcc, description, DateTime.Now, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
-                                            UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);
+                                            UpdateFileProgress(currentCsvFileIndex, totalCsvFiles,isUploading);
                                         }
                                     }
                                 }
@@ -217,7 +216,7 @@ namespace RWDE
                         var st = new StackTrace(ex, true);
                         var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                         int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
-                        dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(btnUpload_Click), FileName, lineNumber);
+                        dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(btnUpload_Click), fileName, lineNumber);
                         MessageBox.Show(string.Format(Constants.ErrorMessage, ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -227,7 +226,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public Tuple<int, bool> InsertCsvDataIntoTable(string csvFilePath, int batchid, SqlConnection connection)//Insertion of CSV DATA into tables
+        public Tuple<int, bool> InsertCsvDataIntoTable(string csvFilePath, int batchid, SqlConnection connection,Boolean isUploading)//Insertion of CSV DATA into tables
         {
             int rowsInserted = 0;
             int totalRows = 0;
@@ -324,8 +323,9 @@ namespace RWDE
             {
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertCsvDataIntoTable), FileName, lineNumber);
+                //int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertCsvDataIntoTable), filename, lineNumber);
                 return Tuple.Create(0, false);
             }
         }
@@ -349,7 +349,7 @@ namespace RWDE
             }
         }
 
-        private void UpdateFileProgress(int currentFileIndex, int totalFiles, int totalRowsInserted)//progress of total files insertion 
+        private void UpdateFileProgress(int currentFileIndex, int totalFiles,Boolean isUploading)//progress of total files insertion 
         {
             try
             {

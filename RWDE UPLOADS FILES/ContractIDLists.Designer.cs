@@ -188,7 +188,7 @@ namespace RWDE
             this.ContractName.FillWeight = 100.1664F;
             this.ContractName.HeaderText = "Contract Names";
             this.ContractName.MinimumWidth = 6;
-            this.ContractName.Name = "ContractName";
+            this.ContractName.Name = Constants.ContractName;
             this.ContractName.ReadOnly = true;
             this.ContractName.Width = 301;
             // 

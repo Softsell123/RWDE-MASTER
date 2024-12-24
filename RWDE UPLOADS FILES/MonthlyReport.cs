@@ -14,7 +14,7 @@ namespace RWDE
             InitializeComponent();
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
-            cbDateFilter.Items.AddRange(new string[]
+            cbDateFilter.Items.AddRange(new object[]
                {
         "Previous Week", // Add "Previous Week" item
         "Current Week",
@@ -35,18 +35,12 @@ namespace RWDE
             // Attach SelectedIndexChanged event handler
             cbDateFilter.SelectedIndexChanged += cbDateFilter_SelectedIndexChanged;//filter data accordingly
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
             // Make sure to instantiate the DBHelper class
-            DbHelper dbHelper = new DbHelper();
             dataGridView.AutoGenerateColumns = true;
-
-            // Ensure the date pickers are properly set
-            DateTime startDate = dtpStartDate.Value;
-            DateTime endDate = dtpEndDate.Value;
-
             try
             {
 
@@ -72,7 +66,7 @@ namespace RWDE
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -102,7 +96,7 @@ namespace RWDE
             {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.Nodataavailabletodownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
                 DataTable dataTable = new DataTable();
@@ -160,7 +154,7 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.Datasuccessfullysaved}: {Path.GetFileName(filePath)}", ContractIdList.MonthlyReports, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($@"{Constants.Datasuccessfullysaved}: {Path.GetFileName(filePath)}", ContractIdList.MonthlyReports, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
@@ -229,9 +223,9 @@ namespace RWDE
             try { 
                  // Reset DateTimePickers to one year back from the current date
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 cbDateFilter.Text = "";
             // Clear the DataTable bound to the DataGridView
             if (dataGridView.DataSource is DataTable dt)
@@ -245,7 +239,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }     
-        private void cbDateFilter_SelectedIndexChanged(object sender, EventArgs e)//to filter date accordinglyzz
+        private void cbDateFilter_SelectedIndexChanged(object sender, EventArgs e)//to filter date accordingly
         {
             if (cbDateFilter.SelectedItem == null)
                 return;

@@ -14,8 +14,6 @@ namespace RWDE
     {
         private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        private List<int> removedBatchIDs = new List<int>();
-        private int selectedBatchId = 0;
         public Panel PanelToReplace
         {
             get
@@ -602,19 +600,6 @@ namespace RWDE
                     dataGridView.Columns["Status"].DataPropertyName = "Status";
                     // Bind the DataTable to the DataGridView
                     dataGridView.DataSource = dataTable;
-
-                    // Now, remove the rows corresponding to removed batch IDs from the DataGridView
-                    foreach (int batchId in removedBatchIDs)
-                    {
-                        DataGridViewRow row = dataGridView.Rows
-                            .Cast<DataGridViewRow>()
-                            .Where(r => r.Cells["BatchID"].Value != null && (int)r.Cells["BatchID"].Value == batchId)
-                            .FirstOrDefault();
-                        if (row != null)
-                        {
-                            dataGridView.Rows.Remove(row);
-                        }
-                    }
                 }
             }
             catch (Exception ex)
@@ -656,19 +641,6 @@ namespace RWDE
                     dataGridViewHCC.Columns["Status"].DataPropertyName = "Status";
                     // Bind the DataTable to the DataGridView
                     dataGridViewHCC.DataSource = dataTable;
-
-                    // Now, remove the rows corresponding to removed batch IDs from the DataGridView
-                    foreach (int batchId in removedBatchIDs)
-                    {
-                        DataGridViewRow row = dataGridViewHCC.Rows
-                            .Cast<DataGridViewRow>()
-                            .Where(r => r.Cells["BatchID"].Value != null && (int)r.Cells["BatchID"].Value == batchId)
-                            .FirstOrDefault();
-                        if (row != null)
-                        {
-                            dataGridViewHCC.Rows.Remove(row);
-                        }
-                    }
                 }
             }
             catch (Exception ex)
@@ -840,23 +812,6 @@ namespace RWDE
             return totalRows;
         }
         
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)//to select particular batch
-        {
-            try
-            {
-                // Check if the click is on a valid row
-                if (e.RowIndex >= 0)
-                {
-                    // Get the BatchID of the selected row
-                    selectedBatchId = Convert.ToInt32(dataGridView.Rows[e.RowIndex].Cells["BatchID"].Value);
-                    Console.WriteLine("Selected BatchID: " + selectedBatchId); // Check the selected BatchID value
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
         private void btncloseHCC_Click(object sender, EventArgs e)//Closing form
         {
             int batchId = dbHelper.GetNextBatchId();

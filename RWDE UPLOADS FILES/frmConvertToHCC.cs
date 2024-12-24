@@ -16,9 +16,6 @@ namespace RWDE
     {
         private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        private readonly List<int> removedBatchIDs = new List<int>();
-        private readonly int selectedBatchId = 0;
-
         public Panel PanelToReplace
         {
             get
@@ -26,7 +23,6 @@ namespace RWDE
                 return pnlHCCConversion;
             }
         }
-        
         public FrmConvertToHcc()
         {
             InitializeComponent();
@@ -179,7 +175,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@Timestamp", timestamp);
                     command.Parameters.AddWithValue("@BatchID", batchId);
                     command.ExecuteNonQuery();
-                    ClearTables(selectedBatchId);
+                    ClearTables(batchId);
                 }
             }
         }
@@ -484,18 +480,6 @@ namespace RWDE
                     // Bind the DataTable to the DataGridView
                     dataGridView.DataSource = dataTable;
 
-                    // Now, remove the rows corresponding to removed batch IDs from the DataGridView
-                    foreach (int batchId in removedBatchIDs)
-                    {
-                        DataGridViewRow row = dataGridView.Rows
-                            .Cast<DataGridViewRow>()
-                            .Where(r => r.Cells["BatchID"].Value != null && (int)r.Cells["BatchID"].Value == batchId)
-                            .FirstOrDefault();
-                        if (row != null)
-                        {
-                            dataGridView.Rows.Remove(row);
-                        }
-                    }
                 }
             }
             catch (Exception ex)

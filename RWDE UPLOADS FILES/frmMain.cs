@@ -10,7 +10,6 @@ namespace RWDE
     {
         private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        private Form currentForm; // Declare the current form variable at class level
         private Panel panelFrom;
         private Panel pnlForm;
         public FrmMain()//initialize data
@@ -152,10 +151,6 @@ namespace RWDE
                     panelFrom = frmConvertToHcc.PanelToReplace;
                     this.Controls.Add(panelFrom);
                 }
-
-                // Store the current form
-                currentForm = frmConvertToHcc;
-
                 // Fetch data from the Batch table
                 string query = "SELECT [BatchID], [FileName], [Description], [Path], [StartedAt], [EndedAt], [TotalRows], [SuccessfulRows], [FailedRows], [Status], [Message], [Comments], [CreatedBy], [CreatedOn] FROM [RWDE].[dbo].[Batch]";
 

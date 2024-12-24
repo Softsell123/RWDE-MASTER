@@ -1,4 +1,5 @@
-﻿using System.Security.Policy;
+﻿using System.Diagnostics.Contracts;
+using System.Security.Policy;
 
 namespace RWDE
 {
@@ -46,7 +47,7 @@ namespace RWDE
         public const string TheFileisbeingUsedinanotherprocessClosethefileandTryagain = "The File is being used in another process.Please Close the file and Try again. ";
 
         public const string AriesClients = "ARIES_Clients";
-        public const string EditColumnName = "Edit";
+        public const string Edit = "Edit";
         public const string StartdatemustbeearlierthanEnddate = "Start date must be earlier than End date";
         public const string AriesConsent = "ARIES_Consent";
         public const string AriesDeceased = "ARIES_Decased";
@@ -92,8 +93,8 @@ namespace RWDE
         public const string ServiceCttohcc = "Services CT TO HCC";
         public const string HccClients = "HCCClients";
         public const string Clientsandservicescttohcc = "CT TO HCC";
-        public const int Extracted = 3;
-        public const int CmsMatch = 2;
+        public const int ExtractedCode = 3;
+        public const int CmsMatchCode = 2;
         public const int CmsMatchDate = 7;
         public const string FolderSelectMessage = "Select folder containing CSV files";
         public const string NoFolderSelectedMessage = "Please select a folder containing CSV files.";
@@ -127,7 +128,7 @@ namespace RWDE
         public const string ConverttoHcCformatcompletedsuccessfully = "Convert to HCC format completed successfully";
         public const string StartTime = "Start Time";
         public const string TotalTimeTaken = "Total time taken";
-        public const string Endedat = "Ended At";
+        public const string EndedAt = "Ended At";
         public const string TotalRowsInserted = "Total Rows Inserted";
         public const string ServiceCodeSetup = "Service Code_Setup";
     public const string Xmlselect = "Please select a batch to generate XML.";
@@ -251,13 +252,48 @@ namespace RWDE
         //ContractIdList
         //
         public const string ContractName = "ContractName";
-        public const string ContractID = "ContractID";
+        public const string Name = "Name";
+        public const string ContractId = "ContractID";
+        public const string Active = "ACTIVE";
+        public const string Inactive = "INACTIVE";
+        public const string ActiveContractstatus = "29";
+        public const string InactiveContractstatus = "28";
+        public const string DeleteContractstatus = "30";
+        public const string ContractIDs = "Contract ID";
+        public const string AreYouSureDeleteContract = "Are you sure you want to delete contract '{0}'?";
+        public const string AreYouSureMakeActive = "Do you want to make the contract '{0}' active?";
+        public const string AreYouSureMakeInactive = "Do you want to make the contract '{0}' inactive?";
+        //
+        //DeceasedClientReport
+        //
+        public const string HccId = "HCCID";
+        public const string HccIdsp = "HCC ID";
+        public const string ClientName = "ClientName";
+        public const string ClientNamesp = "Client Name";
+        public const string DateOfDeath = "DateOfDeath";
+        public const string DateOfDeathsp = "Date Of Death";
+        public const string LastServiceDate = "LastServiceDate";
+        public const string LastServiceDatesp = "Last Service Date";
+        public const string DownloadDate = "DownloadDate";
+        public const string DownloadDatesp = "Download Date";
+        public const string Extracted = "Extracted";
+        public const string Extractedsp = "Extracted Y/N";
+        public const string ExtractionDate = "ExtractionDate";
+        public const string ExtractionDatesp = "Extraction Date";
+        public const string CmsMatch = "CMSMatch";
+        public const string CmsMatchsp = "CMS Match";
+
+
 
 
         //
-        //Time
+        //DateTime
         //
+        public const string StartedDateTime = "StartedDateTime";
+        public const string EndedDateTime = "EndedDateTime";
+        public const string StartedOn = "Started On";
         public const string MMddyyyyHHmmss = "MM-dd-yyyy HH:mm:ss";
+        public const string DdMMyyyyHHmmss= "dd-MM-yyyy HH:mm:ss";
         //
         //MessageBox
         //
@@ -265,16 +301,15 @@ namespace RWDE
         public const string Norowselectedtosave = "No row selected to save.";
         public const string SaveError = "Save Error";
         public const string DeletedContractId = "Deleted ContractID";
+        public const string ContractIdisrequired="Contract ID is required.";
+        public const string ContractsSetupError = "Contracts Setup - Error";
+
         public const string Successfully = "Successfully";
+        public const string Confirmation = "Confirmation";
+        public const string Information = "Information";
         public const string Delete = "DELETE";
         public const string This = "This ";
         public const string Hasalreadybeendeleted = " has already been deleted.";
-
-        
-
-
-
-
     }
 
 
@@ -288,21 +323,18 @@ namespace RWDE
 
 
 
-        public const string StartedDateTime = "StartedDateTime";
+        
         public const string ErrorLogReport = "Error_Log_Report";
         public const string Success = "Success";
         public const string MonthlyReports = "Monthly_Reports";
         public const string ClientDemographicsReport = "Client_Demographics_Report";
 
-        public const string EndedDateTime = "Ended DateTime";
+        
         public const string DoyouwanttodeletecontractContractName = "‘Do you want to delete contract ‘Contract Name’?";
-        public const string ActiveContractstatus = "29";
-        public const string InactiveContractstatus = "28";
-        public const string DeleteContractstatus = "30";
-        public const string Active = "ACTIVE";
-        public const string Inactive = "INACTIVE";
+       
+        
         public const string ConfirmDelete = "ConfirmDelete";
-        public const string Information = "Information";
+        
         public const string AreyousureyouwanttoEditthisrow = "Are you sure you want to Edit this row?";
         public const string Insert = "Insert";
         public const string Areyousureyouwanttodeletecontract = "Do you want to delete contract";
@@ -319,20 +351,18 @@ namespace RWDE
 
 
         //Header Text
-        public const string ContractIDs = "Contract ID";
+       
         public const string ContractNames = "Contract Name";
 
         public const string ConfirmMakeActive = "Confirm Activation";
         public const string ConfirmMakeInactive = "Confirm Deactivation";
-        public const string AreYouSureDeleteContract = "Are you sure you want to delete contract '{0}'?";
-        public const string AreYouSureMakeActive = "Do you want to make the contract '{0}' active?";
-        public const string AreYouSureMakeInactive = "Do you want to make the contract '{0}' inactive?";
+        
+       
+       
 
         public const string DeleteColumnName = "DeleteColumn";
         public const string MakeActiveColumnName = "MakeActiveColumn";
         public const string MakeInactiveColumnName = "MakeInactiveColumn";
-      
-
     }
 
     public static class XmlConstants

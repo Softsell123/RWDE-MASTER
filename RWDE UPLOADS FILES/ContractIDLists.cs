@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-// ReSharper disable All
 
 namespace RWDE
 {
     public partial class ContractIdLists : Form
     {
         private readonly DbHelper dbHelper;
-        private DataTable dataTable;
         private readonly string connectionString;//CONNECTION STRING
         public ContractIdLists()//Initialize the form or object
         {
@@ -121,20 +118,20 @@ namespace RWDE
             public DataGridViewCalendarEditingControl()
             {
                 this.Format = DateTimePickerFormat.Custom;
-                this.CustomFormat = "dd-MM-yyyy HH:mm:ss"; // Custom format with seconds
+                this.CustomFormat = Constants.DdMMyyyyHHmmss; // Custom format with seconds
             }
 
             public object EditingControlFormattedValue
             {
                 get
                 {
-                    return this.Value.ToString("dd-MM-yyyy HH:mm:ss");
+                    return this.Value.ToString(Constants.DdMMyyyyHHmmss);
                 }
                 set
                 {
-                    if (value is string)
+                    if (value is string s)
                     {
-                        this.Value = DateTime.Parse((string)value);
+                        this.Value = DateTime.Parse(s);
                     }
                 }
             }
@@ -226,7 +223,10 @@ namespace RWDE
                 }
                 else
                 {
-                    ctl.Value = (DateTime)this.Value;
+                    if (ctl != null)
+                    {
+                        ctl.Value = (DateTime)this.Value;
+                    }
                 }
             }
             public override Type EditType
@@ -246,7 +246,7 @@ namespace RWDE
             try
             {
                 this.dataGridView.AutoGenerateColumns = false;
-                dataTable = dbHelper.GetAllContractLists();//to get the contractid which are stored in db table
+                DataTable dataTable = dbHelper.GetAllContractLists();//to get the contractid which are stored in db table
 
                 if (dataTable != null)
                 {
@@ -255,50 +255,48 @@ namespace RWDE
 
                 this.dataGridView.Columns.Clear();
 
-                this.dataGridView.Columns.Add("ContractID", "Contract ID");
-                this.dataGridView.Columns["ContractID"].DataPropertyName = "ContractID";
-                this.dataGridView.Columns["ContractID"].Width = 220;
+                this.dataGridView.Columns.Add(Constants.ContractId, Constants.ContractIDs);
+                this.dataGridView.Columns[Constants.ContractId].DataPropertyName = Constants.ContractId;
+                this.dataGridView.Columns[Constants.ContractId].Width = 220;
                 this.dataGridView.RowTemplate.Height = 40;
-                this.dataGridView.Columns.Add("ContractName", "Name");
-                this.dataGridView.Columns["ContractName"].DataPropertyName = "ContractName";
-                this.dataGridView.Columns["ContractName"].Width = 220;
+                this.dataGridView.Columns.Add(Constants.ContractName, Constants.Name);
+                this.dataGridView.Columns[Constants.ContractName].DataPropertyName = Constants.ContractName;
+                this.dataGridView.Columns[Constants.ContractName].Width = 220;
 
                 // Add the StartedDateTime column with a custom format that includes seconds
                 DataGridViewCalendarColumn startedDateTimeColumn = new DataGridViewCalendarColumn
                 {
-                    Name = "StartedDateTime",
-                    HeaderText = "Started On",
-                    DataPropertyName = "StartedDateTime",
+                    Name = Constants.StartedDateTime,
+                    HeaderText = Constants.StartedOn,
+                    DataPropertyName = Constants.StartedDateTime,
                     Width = 220,
-                    DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MM-yyyy HH:mm:ss" }
+                    DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.DdMMyyyyHHmmss }
                     // Custom format with seconds
-
                 };
-
                 this.dataGridView.Columns.Add(startedDateTimeColumn);
 
                 DataGridViewCalendarColumn endedDateTimeColumn = new DataGridViewCalendarColumn
                 {
-                    Name = "EndedDateTime",
-                    HeaderText = "Ended At",
-                    DataPropertyName = "EndedDateTime",
+                    Name =Constants.EndedDateTime,
+                    HeaderText = Constants.EndedAt,
+                    DataPropertyName = Constants.EndedDateTime,
                     Width = 220,
-                    DefaultCellStyle = new DataGridViewCellStyle { Format = "dd-MM-yyyy HH:mm:ss" }
+                    DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.DdMMyyyyHHmmss }
                 };
 
                 this.dataGridView.Columns.Add(endedDateTimeColumn);
-
+                
                 DataGridViewComboBoxColumn statusColumn = new DataGridViewComboBoxColumn
                 {
-                    Name = "Status",
-                    HeaderText = "Status",
-                    DataPropertyName = "Status", // Assuming you have a "Status" column in your DataTable
+                    Name = Constants.Status,
+                    HeaderText = Constants.Status,
+                    DataPropertyName = Constants.Status, // Assuming you have a Constants.Status column in your DataTable
                     Width = 130
                 };
 
                 // Adding items to the drop-down list
-                statusColumn.Items.Add(ContractIdList.Active);
-                statusColumn.Items.Add(ContractIdList.Inactive);
+                statusColumn.Items.Add(Constants.Active);
+                statusColumn.Items.Add(Constants.Inactive);
                 statusColumn.Items.Add(Constants.Delete);
 
                 this.dataGridView.Columns.Add(statusColumn);
@@ -307,8 +305,8 @@ namespace RWDE
                 // Adding the edit button column
                 DataGridViewButtonColumn editButtonColumn = new DataGridViewButtonColumn
                 {
-                    Name = Constants.EditColumnName,
-                    Text = Constants.EditColumnName,
+                    Name = Constants.Edit,
+                    Text = Constants.Edit,
                     Width = 130,
                     UseColumnTextForButtonValue = true
                 };
@@ -318,26 +316,25 @@ namespace RWDE
                 {
                     foreach (DataRow row in dataTable.Rows)
                     {
-                        string statusValue = row["Status"].ToString();
+                        string statusValue = row[Constants.Status].ToString();
 
                         switch (statusValue)
                         {
-                            case "29":
-                                row["Status"] = ContractIdList.Active;
+                            case Constants.ActiveContractstatus:
+                                row[Constants.Status] = Constants.Active;
                                 break;
-                            case "28":
-                                row["Status"] = ContractIdList.Inactive;
+                            case Constants.InactiveContractstatus:
+                                row[Constants.Status] = Constants.Inactive;
                                 break;
-
                             default:
-                                row["Status"] = Constants.Delete;
+                                row[Constants.Status] = Constants.Delete;
                                 break;
                         }
                     }
 
                     // Set the DataTable as the DataSource of the DataGridView
                     this.dataGridView.DataSource = dataTable;
-                    dataGridView.Columns["Status"].ReadOnly = true;
+                    dataGridView.Columns[Constants.Status].ReadOnly = true;
                 }
 
                 DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn
@@ -359,41 +356,41 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorLoadingData}{ex.Message}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorLoadingData}{ex.Message}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             try { 
-                if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns["Status"].Index && e.Control is System.Windows.Forms.ComboBox)
+                if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox)
                 {
                     if (e.Control is ComboBox comboBox)
                     {
                         comboBox.Items.Clear();
 
                         // Get the current row's status value
-                        string currentStatus = dataGridView.CurrentRow.Cells["Status"].Value.ToString();
+                        string currentStatus = dataGridView.CurrentRow.Cells[Constants.Status].Value.ToString();
 
                         // Populate the ComboBox based on the current status
-                        if (currentStatus == ContractIdList.Active)
+                        if (currentStatus == Constants.Active)
                         {
-                            comboBox.Items.Add(ContractIdList.Inactive);
+                            comboBox.Items.Add(Constants.Inactive);
                             comboBox.Items.Add(Constants.Delete);
                         }
-                        else if (currentStatus == ContractIdList.Inactive)
+                        else if (currentStatus == Constants.Inactive)
                         {
-                            comboBox.Items.Add(ContractIdList.Active);
+                            comboBox.Items.Add(Constants.Active);
                             comboBox.Items.Add(Constants.Delete);
                         }
                         else if (currentStatus == Constants.Delete)
                         {
-                            comboBox.Items.Add(ContractIdList.Active);
-                            comboBox.Items.Add(ContractIdList.Inactive);
+                            comboBox.Items.Add(Constants.Active);
+                            comboBox.Items.Add(Constants.Inactive);
                         }
                         else
                         {
-                            comboBox.Items.Add(ContractIdList.Active);
-                            comboBox.Items.Add(ContractIdList.Inactive);
+                            comboBox.Items.Add(Constants.Active);
+                            comboBox.Items.Add(Constants.Inactive);
                             comboBox.Items.Add(Constants.Delete);
                         }
                     }
@@ -409,15 +406,16 @@ namespace RWDE
             try { 
                  // Allow editing for the entire DataGridView initially
             dataGridView.ReadOnly = false;
-            dataGridView.Columns["Status"].ReadOnly = false;
+            dataGridView.Columns[Constants.Status].ReadOnly = false;
 
             // Display confirmation message
-            var result = MessageBox.Show($"{Constants.Areyousureyouwanttoaddanewcontract}", Constants.ContractsSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show($@"{Constants.Areyousureyouwanttoaddanewcontract}", Constants.ContractsSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                // Create a new row in the DataTable
-                DataRow newRow = dataTable.NewRow();
+                 DataTable dataTable= (DataTable)dataGridView.DataSource;
+                    // Create a new row in the DataTable
+                    DataRow newRow = dataTable.NewRow();
 
                 // Insert the new row at index 1 in the DataTable
                 dataTable.Rows.InsertAt(newRow, 0);
@@ -439,12 +437,12 @@ namespace RWDE
             // Iterate through each row in the DataGridView to set read-only based on status
             foreach (DataGridViewRow row in dataGridView.Rows)
             {
-                if (row.Cells["Status"].Value != null)
+                if (row.Cells[Constants.Status].Value != null)
                 {
-                    string statusValue = row.Cells["Status"].Value.ToString();
+                    string statusValue = row.Cells[Constants.Status].Value.ToString();
 
                     // Assuming you have specific conditions for read-only rows based on status
-                    if (statusValue == ContractIdList.Active || statusValue == ContractIdList.Inactive || statusValue == Constants.Delete)
+                    if (statusValue == Constants.Active || statusValue == Constants.Inactive || statusValue == Constants.Delete)
                     {
                         row.ReadOnly = true;
                     }
@@ -459,7 +457,7 @@ namespace RWDE
         private void DataGridView_EditingControlShowingStatus(object sender, DataGridViewEditingControlShowingEventArgs e)//to update status
         {
             try { 
-                 if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns["Status"].Index && e.Control is System.Windows.Forms.ComboBox comboBox)
+                 if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox comboBox)
                  {
                   // Remove existing event handlers to prevent multiple subscriptions
                  comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;
@@ -474,34 +472,35 @@ namespace RWDE
         private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)//to update status
         {
             try { 
-                if (sender is System.Windows.Forms.ComboBox comboBox)
+                if (sender is ComboBox comboBox)
                 {
 
                  string selectedStatus = comboBox.SelectedItem.ToString();
                 DataGridViewRow currentRow = dataGridView.CurrentRow;
-                if (currentRow == null || currentRow.Cells["ContractName"].Value == null) return;
-                string contractid = currentRow.Cells["ContractID"].Value?.ToString();
+                if (currentRow == null || currentRow.Cells[Constants.ContractName].Value == null) return;
+                string contractid = currentRow.Cells[Constants.ContractId].Value?.ToString();
 
-                string contractName = currentRow.Cells["ContractName"].Value.ToString();
-                string currentStatus = currentRow.Cells["Status"].Value?.ToString();
+                string contractName = currentRow.Cells[Constants.ContractName].Value.ToString();
+                string currentStatus = currentRow.Cells[Constants.Status].Value?.ToString();
 
                 if (currentStatus != selectedStatus)
                 { 
                     if (contractid == "")
                     {
-                        MessageBox.Show("Contract ID is required.", "Contracts Setup - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(Constants.ContractIdisrequired, Constants.ContractsSetupError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
-                    string message = selectedStatus == ContractIdList.Active
-                    ? string.Format($"Do you want to make the contract {contractName} active?")
-                    : string.Format($"Do you want to make the contract {contractName} inactive?");
 
-                    var result = MessageBox.Show(message, selectedStatus == ContractIdList.Active ? ContractIdList.ConfirmMakeActive : ContractIdList.ConfirmMakeInactive, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    string message = selectedStatus == Constants.Active
+                        ? string.Format(Constants.AreYouSureMakeActive, contractName)
+                        : string.Format(Constants.AreYouSureMakeInactive, contractName);
+
+                        var result = MessageBox.Show(message, selectedStatus == Constants.Active ? ContractIdList.ConfirmMakeActive : ContractIdList.ConfirmMakeInactive, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
                         // Update the status cell value
-                        currentRow.Cells["Status"].Value = selectedStatus;
+                        currentRow.Cells[Constants.Status].Value = selectedStatus;
                     }
                     else
                     {
@@ -509,9 +508,9 @@ namespace RWDE
                         comboBox.SelectedItem = currentStatus;
                     }
 
-                    if (selectedStatus == ContractIdList.Active || selectedStatus == ContractIdList.Inactive || selectedStatus == Constants.Delete)
+                    if (selectedStatus == Constants.Active || selectedStatus == Constants.Inactive || selectedStatus == Constants.Delete)
                     {
-                        dataGridView.CurrentRow.Cells["Status"].ReadOnly = false;
+                        dataGridView.CurrentRow.Cells[Constants.Status].ReadOnly = false;
                     }
                 }
                 }
@@ -525,7 +524,7 @@ namespace RWDE
         private void DataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)//to update startdate time
         {
             try { 
-               if (dataGridView.CurrentCell != null && dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns["StartedDateTime"].Index)
+               if (dataGridView.CurrentCell != null && dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.StartedDateTime].Index)
                {
                    if (e.Control is DataGridViewCalendarEditingControl startedDateTimePicker)
                    {
@@ -552,10 +551,10 @@ namespace RWDE
                     DataGridViewRow currentRow = dataGridView.CurrentRow;
                     if (currentRow != null)
                     {
-                        currentRow.Cells["StartedDateTime"].Value = startedDateTime;
-                        currentRow.Cells["EndedDateTime"].Value = endedDateTime;
+                        currentRow.Cells[Constants.StartedDateTime].Value = startedDateTime;
+                        currentRow.Cells[Constants.EndedDateTime].Value = endedDateTime;
                     }
-                };
+                }
             }
             catch (Exception ex)
             {
@@ -572,7 +571,7 @@ namespace RWDE
                     e.SuppressKeyPress = true;
 
                     // Show confirmation dialog
-                    var result = MessageBox.Show($"{Constants.AreyousureyouwanttodeleteSelectedrow}", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var result = MessageBox.Show($@"{Constants.AreyousureyouwanttodeleteSelectedrow}", Constants.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (result == DialogResult.Yes)
                     {
@@ -582,7 +581,7 @@ namespace RWDE
                     else
                     {
                         // Optionally, show a message to the user
-                        MessageBox.Show($"{Constants.Deletioncancelled}", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($@"{Constants.Deletioncancelled}", Constants.Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
@@ -621,17 +620,17 @@ namespace RWDE
                     return;
                 }
 
-                if (dataGridView.CurrentRow != null && !dataGridView.CurrentCell.OwningColumn.Name.Equals(Constants.EditColumnName))
+                if (dataGridView.CurrentRow != null && !dataGridView.CurrentCell.OwningColumn.Name.Equals(Constants.Edit))
                 {
                     if (dataGridView.SelectedRows.Count > 1)
                     {
-                        MessageBox.Show($"{Constants.Selectonlyonerowatatime}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($@"{Constants.Selectonlyonerowatatime}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     int rowIndex = dataGridView.CurrentRow.Index;
                     DataRow row = ((DataRowView)dataGridView.CurrentRow.DataBoundItem).Row;
 
-                    string currentContractId = row[Constants.ContractID].ToString();
+                    string currentContractId = row[Constants.ContractId].ToString();
 
                     // Check for duplicate Contract ID in other rows
                     bool isDuplicate = false;
@@ -640,8 +639,8 @@ namespace RWDE
                         if (i != rowIndex) // Skip the current row
                         {
                             var otherRow = dataGridView.Rows[i];
-                            if (otherRow.Cells[Constants.ContractID].Value != null &&
-                                otherRow.Cells[Constants.ContractID].Value.ToString() == currentContractId)
+                            if (otherRow.Cells[Constants.ContractId].Value != null &&
+                                otherRow.Cells[Constants.ContractId].Value.ToString() == currentContractId)
                             {
                                 isDuplicate = true;
                                 break;
@@ -651,7 +650,7 @@ namespace RWDE
 
                     if (isDuplicate)
                     {
-                        MessageBox.Show($"{Constants.ContractIDalreadyexists}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($@"{Constants.ContractIDalreadyexists}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return; // Exit the method if a duplicate is found
                     }
 
@@ -677,58 +676,54 @@ namespace RWDE
         private void SaveContract(DataRow row)//insert and update into table 
         {
             try { 
-                if (dataGridView.ReadOnly == true)
+                if (dataGridView.ReadOnly)
                 {
-                    MessageBox.Show($"{ContractId}{Constants.Alreadysaved}");
+                    MessageBox.Show($@"{ContractId}{Constants.Alreadysaved}");
                 }
 
                 var statusString = row[Constants.Status].ToString();
 
-                if (statusString == ContractIdList.Active)
+                if (statusString == Constants.Active)
                 {
-                    statusString = ContractIdList.ActiveContractstatus;
+                    statusString = Constants.ActiveContractstatus;
                 }
-                else if (statusString == ContractIdList.Inactive)
+                else if (statusString == Constants.Inactive)
                 {
-                    statusString = ContractIdList.InactiveContractstatus;
+                    statusString = Constants.InactiveContractstatus;
                 }
                 else if (statusString == Constants.Delete)
                 {
-                    statusString = ContractIdList.DeleteContractstatus;
+                    statusString = Constants.DeleteContractstatus;
                 }
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string currentContractId = row[Constants.ContractID].ToString();
+                    string currentContractId = row[Constants.ContractId].ToString();
                     string contractName = row[Constants.ContractName].ToString();
-                    string startedDateTimeStr = row[ContractIdList.StartedDateTime].ToString();
+                    string startedDateTimeStr = row[Constants.StartedDateTime].ToString();
 
                     // Validate Contract ID and Contract Name
                     if (string.IsNullOrWhiteSpace(currentContractId))
                     {
-                        MessageBox.Show($"{Constants.PleaseaddContractIDbeforesaving}.", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($@"{Constants.PleaseaddContractIDbeforesaving}.", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     if (string.IsNullOrWhiteSpace(contractName))
                     {
-                        MessageBox.Show($"{Constants.PleasefillinContractNamebeforesaving}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($@"{Constants.PleasefillinContractNamebeforesaving}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
                     // Validate and parse StartedDateTime
                     if (string.IsNullOrWhiteSpace(startedDateTimeStr) || !DateTime.TryParse(startedDateTimeStr, out DateTime startedDateTime))
                     {
-                        MessageBox.Show($"{Constants.PleaseenteravalidStartedDateTimeandEndedDateTime}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($@"{Constants.PleaseenteravalidStartedDateTimeandEndedDateTime}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
                     // Calc
                     // Calculate EndedDateTime
                     DateTime endedDateTime = startedDateTime.AddYears(1).AddDays(-1).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
-
-                    // Format the dates as "MM-dd-yyyy HH:mm:ss"
-                    string formattedStartedDateTime = startedDateTime.ToString(Constants.MMddyyyyHHmmss);
-                    string formattedEndedDateTime = endedDateTime.ToString(Constants.MMddyyyyHHmmss);
 
                     // Execute the stored procedure
                     string operation = dbHelper.InsertOrUpdateContract(
@@ -745,7 +740,7 @@ namespace RWDE
                     // Display appropriate message
                     if (operation == ContractIdList.Update)
                     {
-                        MessageBox.Show($"{ContractIdList.Contractupdatedsuccessfully}. {Constants.ContractID}: {currentContractId}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($@"{ContractIdList.Contractupdatedsuccessfully}. {Constants.ContractId}: {currentContractId}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else if (operation == ContractIdList.Insert)
                     {
@@ -766,12 +761,12 @@ namespace RWDE
                     DataGridViewRow row = dataGridView.Rows[e.RowIndex];
 
                     // Get the Contract ID column index
-                    int contractIdColumnIndex = dataGridView.Columns[Constants.ContractID].Index;
+                    int contractIdColumnIndex = dataGridView.Columns[Constants.ContractId].Index;
 
                     // Check if the Contract ID cell is empty or null
                     if (row.Cells[contractIdColumnIndex].Value == null || string.IsNullOrWhiteSpace(row.Cells[contractIdColumnIndex].Value.ToString()))
                     {
-                        MessageBox.Show($"{Constants.ContractIDhastobepresentbeforedeleting}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($@"{Constants.ContractIDhastobepresentbeforedeleting}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         // Cancel the edit
                         dataGridView.CancelEdit();
                         return;
@@ -783,13 +778,13 @@ namespace RWDE
                     // Check if the Status cell is set to 'deleted'
                     if (row.Cells[statusColumnIndex].Value != null && row.Cells[statusColumnIndex].Value.ToString().Equals(Constants.Delete, StringComparison.OrdinalIgnoreCase))
                     {
-                        MessageBox.Show($"{Constants.This} {contractName} {Constants.Hasalreadybeendeleted}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Question);
+                        MessageBox.Show($@"{Constants.This} {contractName} {Constants.Hasalreadybeendeleted}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Question);
                         // Status is already 'deleted', proceed with deletion without confirmation
                         return;
                     }
 
                     // Confirm deletion
-                    var result = MessageBox.Show($"{ContractIdList.Areyousureyouwanttodeletecontract} {contractName}?", Constants.ContractsSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var result = MessageBox.Show($@"{ContractIdList.Areyousureyouwanttodeletecontract} {contractName}?", Constants.ContractsSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
                         // Set the DataGridView to read-only except the row to be deleted
@@ -815,12 +810,12 @@ namespace RWDE
         {
             try { 
                 // Check if the clicked cell is in a valid row and is the "Edit" column
-                if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.EditColumnName].Index)
+                if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index)
                 {
                     if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
                     {
                         // Get the Contract ID column index
-                        int contractIdColumnIndex = dataGridView.Columns[Constants.ContractID].Index;
+                        int contractIdColumnIndex = dataGridView.Columns[Constants.ContractId].Index;
 
                         // Check if the current cell being edited is not in the Contract ID column
                         if (e.ColumnIndex != contractIdColumnIndex)
@@ -830,7 +825,7 @@ namespace RWDE
                             // Check if the Contract ID cell is empty or null
                             if (row.Cells[contractIdColumnIndex].Value == null || string.IsNullOrWhiteSpace(row.Cells[contractIdColumnIndex].Value.ToString()))
                             {
-                                MessageBox.Show($"{Constants.ContractIDhastobepresentbeforeediting}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show($@"{Constants.ContractIDhastobepresentbeforeediting}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                                 // Cancel the edit
                                 dataGridView.CancelEdit();
@@ -842,10 +837,10 @@ namespace RWDE
                     }
 
                     // Get the ContractID from the current row
-                    string contractId = dataGridView.Rows[e.RowIndex].Cells["ContractID"].Value.ToString();
+                    string contractId = dataGridView.Rows[e.RowIndex].Cells[Constants.ContractId].Value.ToString();
 
                     // Prompt user for confirmation before editing, showing the ContractID
-                    var result = MessageBox.Show($"{Constants.AreyousureyouwanttoeditContractId}: {contractId}?", Constants.ContractsSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var result = MessageBox.Show($@"{Constants.AreyousureyouwanttoeditContractId}: {contractId}?", Constants.ContractsSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.No)
                     {
                         // Reset the row's background color to the default
@@ -853,7 +848,7 @@ namespace RWDE
                     }
                     if (result == DialogResult.Yes)
                     {
-                        dataGridView.Rows[e.RowIndex].Cells["Status"].ReadOnly = true;
+                        dataGridView.Rows[e.RowIndex].Cells[Constants.Status].ReadOnly = true;
                         // Make all rows read-only initially
                         foreach (DataGridViewRow row in dataGridView.Rows)
                         {
@@ -863,10 +858,10 @@ namespace RWDE
                         // Make the specific row editable
                         dataGridView.Rows[e.RowIndex].ReadOnly = false;
 
-                        // Make all cells editable for the selected row except for the "Status" column
+                        // Make all cells editable for the selected row except for the Constants.Status column
                         foreach (DataGridViewColumn column in dataGridView.Columns)
                         {
-                            if (column.Name == "Status")
+                            if (column.Name == Constants.Status)
                             {
                                 dataGridView.Rows[e.RowIndex].Cells[column.Index].ReadOnly = true;
                             }
@@ -921,13 +916,13 @@ namespace RWDE
         {
             try
             {
-                var cell = dataGridView.Rows[rowIndex].Cells[Constants.EditColumnName];
-                if (cell.Value != null && cell.Value.ToString() == Constants.EditColumnName)
+                var cell = dataGridView.Rows[rowIndex].Cells[Constants.Edit];
+                if (cell.Value != null && cell.Value.ToString() == Constants.Edit)
                 {
-                    int contractId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[Constants.ContractID].Value);
+                    int contractId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[Constants.ContractId].Value);
                     string contractName = dataGridView.Rows[rowIndex].Cells[Constants.ContractName].Value.ToString();
-                    object startedDateTime = dataGridView.Rows[rowIndex].Cells[ContractIdList.StartedDateTime].Value;
-                    object endedDateTime = dataGridView.Rows[rowIndex].Cells[ContractIdList.EndedDateTime].Value;
+                    object startedDateTime = dataGridView.Rows[rowIndex].Cells[Constants.StartedDateTime].Value;
+                    object endedDateTime = dataGridView.Rows[rowIndex].Cells[Constants.EndedDateTime].Value;
                     string status = dataGridView.Rows[rowIndex].Cells[Constants.Status].Value.ToString();
 
                     if (contractId > 0)
@@ -987,7 +982,6 @@ namespace RWDE
                             TextRenderer.DrawText(e.Graphics, buttonText, dataGridView.Font, buttonRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
                         }
                     }
-
                     e.Handled = true;
                 }
             }
@@ -999,12 +993,12 @@ namespace RWDE
         private void dataGridView_CelleditPainting(object sender, DataGridViewCellPaintingEventArgs e)//to dynamially display edit button in grid
         {
             try { 
-                if (e.ColumnIndex == dataGridView.Columns[Constants.EditColumnName].Index && e.RowIndex >= 0)
+                if (e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index && e.RowIndex >= 0)
                 {
                     e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
 
                     var buttonRectangle = new Rectangle(e.CellBounds.X + 2, e.CellBounds.Y + 2, e.CellBounds.Width - 4, e.CellBounds.Height - 4);
-                    var buttonText = Constants.EditColumnName;
+                    var buttonText = Constants.Edit;
                     Color buttonColor = Color.FromArgb(128, 128, 255);
                     bool isEmptyRow = IsRowEmpty(e.RowIndex);
 
@@ -1066,17 +1060,17 @@ namespace RWDE
                 var cell = dataGridView.Rows[rowIndex].Cells[Constants.DeleteColumnName];
                 if (cell.Value != null && cell.Value.ToString() == Constants.DeleteButtonText)
                 {
-                    int contractId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[Constants.ContractID].Value);
+                    int contractId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[Constants.ContractId].Value);
 
                     if (contractId > 0)
                     {
                         // Update the status to "DELETE"
                         dataGridView.Rows[rowIndex].Cells[Constants.Status].Value = Constants.Delete;
-                        dbHelper.ContractIdUpdateStatus(contractId, ContractIdList.DeleteContractstatus); // Assume this function updates the status in the database
+                        dbHelper.ContractIdUpdateStatus(contractId, Constants.DeleteContractstatus); // Assume this function updates the status in the database
 
                         // Refresh the DataGridView to reflect the status change
                         // PopulateDataGridView();
-                        MessageBox.Show($"{Constants.DeletedContractId}{contractId} {Constants.Successfully}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($@"{Constants.DeletedContractId}{contractId} {Constants.Successfully}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
@@ -1104,14 +1098,14 @@ namespace RWDE
         {
            try{
 
-            if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.EditColumnName].Index)
+            if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index)
             {
                 // Set all rows to read-only
                 foreach (DataGridViewRow row in dataGridView.Rows)
                 {
                     row.ReadOnly = true;
                 }
-                // Make all cells in the specific row editable, except for the "Status" column
+                // Make all cells in the specific row editable, except for the Constants.Status column
                 foreach (DataGridViewCell cell in dataGridView.Rows[e.RowIndex].Cells)
                 {
                     if (cell.OwningColumn.Name !=Constants.Status)

@@ -232,7 +232,7 @@ namespace RWDE
             this.ContractName.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
             this.ContractName.HeaderText = "Contract Name";
             this.ContractName.MinimumWidth = 6;
-            this.ContractName.Name = "ContractName";
+            this.ContractName.Name = Constants.ContractName;
             this.ContractName.ReadOnly = true;
             this.ContractName.Width = 180;
             // 

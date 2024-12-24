@@ -12,14 +12,13 @@ namespace RWDE
     public partial class FrmDownloadHccErrors : Form
     {
         private readonly string connectionString;
-        private readonly DbHelper dbHelper;
 
         public FrmDownloadHccErrors()
         {
             InitializeComponent();
             this.BackColor = Color.White;
             this.WindowState = FormWindowState.Maximized;
-            dbHelper = new DbHelper();
+            DbHelper dbHelper = new DbHelper();
             connectionString = dbHelper.GetConnectionString();
             InitializeDataGridView();
             RegisterEvents(this);

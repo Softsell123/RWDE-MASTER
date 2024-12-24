@@ -9,19 +9,18 @@ namespace RWDE
 {
     public partial class DeceasedClients : Form
     {
-        private readonly string connectionString;
         private readonly DbHelper dbHelper;
 
         public DeceasedClients() //initialize data
         {
             dbHelper = new DbHelper(); // Initialize the dbHelper object
-            connectionString = dbHelper.GetConnectionString(); // Now this will work because dbHelper is initialized
+            // Now this will work because dbHelper is initialized
             InitializeComponent();
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
             RegisterEvents(this);
@@ -65,30 +64,30 @@ namespace RWDE
                 this.dataGridView.Columns.Clear();
 
                 // Add columns to the DataGridView
-                this.dataGridView.Columns.Add("HCCID", "HCC ID");
-                this.dataGridView.Columns.Add("ClientName", "Client Name");
-                this.dataGridView.Columns.Add("Status", "Status");
-                this.dataGridView.Columns.Add("DateOfDeath", "Date of Death");
-                this.dataGridView.Columns.Add("LastServiceDate", "Last Service Date");
-                this.dataGridView.Columns.Add("DownloadDate", "Download Date");
-                this.dataGridView.Columns.Add("Extracted", "Extracted Y/N");
-                this.dataGridView.Columns.Add("ExtractionDate", "Extraction Date");
-                this.dataGridView.Columns.Add("CMSMatch", "CMS Match");
+                this.dataGridView.Columns.Add(Constants.HccId, Constants.HccIdsp);
+                this.dataGridView.Columns.Add(Constants.ClientName, Constants.ClientNamesp);
+                this.dataGridView.Columns.Add(Constants.Status, Constants.Status);
+                this.dataGridView.Columns.Add(Constants.DateOfDeath, Constants.DateOfDeathsp);
+                this.dataGridView.Columns.Add(Constants.LastServiceDate, Constants.LastServiceDatesp);
+                this.dataGridView.Columns.Add(Constants.DownloadDate, Constants.DownloadDatesp);
+                this.dataGridView.Columns.Add(Constants.Extracted, Constants.Extractedsp);
+                this.dataGridView.Columns.Add(Constants.ExtractionDate, Constants.ExtractionDatesp);
+                this.dataGridView.Columns.Add(Constants.CmsMatch, Constants.CmsMatchsp);
                 this.dataGridView.Columns.Add("CMSMatchDate", "CMS Match Date");
                 this.dataGridView.Columns.Add("Service Count After Death", "Service Count After Death");
 
                 this.dataGridView.Columns.Add("CreatedOn", "Created On");
 
                 // Set column widths (adjust as needed)
-                this.dataGridView.Columns["HCCID"].Width = 100;
-                this.dataGridView.Columns["ClientName"].Width = 200;
-                this.dataGridView.Columns["Status"].Width = 120;
-                this.dataGridView.Columns["DateOfDeath"].Width = 120;
-                this.dataGridView.Columns["LastServiceDate"].Width = 120;
-                this.dataGridView.Columns["DownloadDate"].Width = 120;
-                this.dataGridView.Columns["Extracted"].Width = 100;
-                this.dataGridView.Columns["ExtractionDate"].Width = 120;
-                this.dataGridView.Columns["CMSMatch"].Width = 100;
+                this.dataGridView.Columns[Constants.HccId].Width = 100;
+                this.dataGridView.Columns[Constants.ClientName].Width = 200;
+                this.dataGridView.Columns[Constants.Status].Width = 120;
+                this.dataGridView.Columns[Constants.DateOfDeath].Width = 120;
+                this.dataGridView.Columns[Constants.LastServiceDate].Width = 120;
+                this.dataGridView.Columns[Constants.DownloadDate].Width = 120;
+                this.dataGridView.Columns[Constants.Extracted].Width = 100;
+                this.dataGridView.Columns[Constants.ExtractionDate].Width = 120;
+                this.dataGridView.Columns[Constants.CmsMatch].Width = 100;
                 this.dataGridView.Columns["CMSMatchDate"].Width = 120;
                 this.dataGridView.Columns["Service Count After Death"].Width = 120;
 
@@ -116,9 +115,9 @@ namespace RWDE
                 foreach (DataRow row in dataTable.Rows)
                 {
                     this.dataGridView.Rows.Add(
-                        row["HCC ID"],
-                        row["Client Name"],
-                        row["Status"],
+                        row[Constants.HccIdsp],
+                        row[Constants.ClientNamesp],
+                        row[Constants.Status],
                         row["Date of Death"],
                         row["Last Service Date"],
                         row["Download Date"],
