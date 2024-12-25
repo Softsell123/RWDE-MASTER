@@ -16,7 +16,7 @@ namespace RWDE
         // Load the current Data Source into the textbox
         private void LoadCurrentDataSource()
         {
-            string currentConnectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+            string currentConnectionString = ConfigurationManager.ConnectionStrings[Constants.MyConnection].ConnectionString;
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(currentConnectionString);
             txtDataSource.Text = builder.DataSource; // Load current Data Source
         }
@@ -27,18 +27,18 @@ namespace RWDE
 
             if (string.IsNullOrEmpty(newDataSource))
             {
-                MessageBox.Show("Data Source cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Constants.DataSourcecannotbeempty, Constants.ValidationError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (ValidateDataSource(newDataSource))
             {
                 UpdateConnectionString(newDataSource);
-                MessageBox.Show("Data Source updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Constants.DataSourceupdatedsuccessfully, Constants.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
             }
             else
             {
-                MessageBox.Show("Unable to connect to the specified Data Source. Please check and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Constants.UnabletoconnectPleasecheckandtryagain ,Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void btnCancel_Click(object sender, EventArgs e)
@@ -51,7 +51,7 @@ namespace RWDE
         {
             try
             {
-                string currentConnectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+                string currentConnectionString = ConfigurationManager.ConnectionStrings[Constants.MyConnection].ConnectionString;
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(currentConnectionString)
                 {
                     DataSource = dataSource
@@ -72,14 +72,14 @@ namespace RWDE
         private void UpdateConnectionString(string newDataSource)
         {
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            var connectionStringSettings = config.ConnectionStrings.ConnectionStrings["MyConnection"];
+            var connectionStringSettings = config.ConnectionStrings.ConnectionStrings[Constants.MyConnection];
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionStringSettings.ConnectionString)
             {
                 DataSource = newDataSource
             };
             connectionStringSettings.ConnectionString = builder.ToString();
             config.Save(ConfigurationSaveMode.Modified);
-            ConfigurationManager.RefreshSection("connectionStrings");
+            ConfigurationManager.RefreshSection(Constants.ConnectionStrings);
         }
     }
 }

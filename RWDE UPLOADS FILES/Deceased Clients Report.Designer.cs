@@ -97,7 +97,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 8;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -181,7 +181,7 @@ namespace RWDE
             // AriesId
             // 
             this.AriesId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.AriesId.HeaderText = "Status";
+            this.AriesId.HeaderText = Constants.Status;
             this.AriesId.MinimumWidth = 6;
             this.AriesId.Name = "AriesId";
             this.AriesId.ReadOnly = true;

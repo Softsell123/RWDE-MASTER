@@ -47,7 +47,7 @@ namespace RWDE
 
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@BatchID", batchId);
+                        cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
 
                         await conn.OpenAsync();
 
@@ -57,8 +57,8 @@ namespace RWDE
                             {
                                 return new BatchDetails
                                 {
-                                    ConversionStartedAt = reader["ConversionStartedAt"] as DateTime?,
-                                    ConversionEndedAt = reader["ConversionEndedAt"] as DateTime?
+                                    ConversionStartedAt = reader[Constants.ConversionStartedAt] as DateTime?,
+                                    ConversionEndedAt = reader[Constants.ConversionEndedAt] as DateTime?
                                 };
                             }
                         }
@@ -85,7 +85,7 @@ namespace RWDE
 
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@BatchID", batchId);
+                        cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
 
                         await conn.OpenAsync();
 
@@ -95,8 +95,8 @@ namespace RWDE
                             {
                                 return new BatchDetails
                                 {
-                                    ConversionStartedAt = reader["ConversionStartedAt"] as DateTime?,
-                                    ConversionEndedAt = reader["ConversionEndedAt"] as DateTime?
+                                    ConversionStartedAt = reader[Constants.ConversionStartedAt] as DateTime?,
+                                    ConversionEndedAt = reader[Constants.ConversionEndedAt] as DateTime?
                                 };
                             }
                         }
@@ -123,7 +123,7 @@ namespace RWDE
 
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@BatchID", batchId);
+                        cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
 
                         await conn.OpenAsync();
 
@@ -133,8 +133,8 @@ namespace RWDE
                             {
                                 return new BatchDetailsgeneration
                                 {
-                                    GenerationStartedAt = reader["GenerationStartedAt"] as DateTime?,
-                                    GenerationEndedAt = reader["GenerationEndedAt"] as DateTime?
+                                    GenerationStartedAt = reader[Constants.GenerationStartedAt] as DateTime?,
+                                    GenerationEndedAt = reader[Constants.GenerationEndedAt] as DateTime?
                                 };
                             }
                         }
@@ -160,7 +160,7 @@ namespace RWDE
 
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@BatchID", batchId);
+                        cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
 
                         await conn.OpenAsync(); //CONNECTION STRING
 
@@ -170,8 +170,8 @@ namespace RWDE
                             {
                                 return new BatchDetailsgeneration
                                 {
-                                    GenerationStartedAt = reader["GenerationStartedAt"] as DateTime?,
-                                    GenerationEndedAt = reader["GenerationEndedAt"] as DateTime? //
+                                    GenerationStartedAt = reader[Constants.GenerationStartedAt] as DateTime?,
+                                    GenerationEndedAt = reader[Constants.GenerationEndedAt] as DateTime? //
                                 };
                             }
                         }
@@ -211,7 +211,7 @@ namespace RWDE
                             SqlCommand cmd = new SqlCommand("sp_service_reconbatchid", con);
 
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@BatchID", onebatch);
+                            cmd.Parameters.AddWithValue(Constants.AtBatchid, onebatch);
                             con.Open();
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
@@ -251,11 +251,11 @@ namespace RWDE
                     }
                     if (dy.Rows.Count == 0)
                     {
-                        dy.Columns.Add("BatchID", typeof(int));
+                        dy.Columns.Add(Constants.BatchId, typeof(int));
                         dy.Columns.Add("ServiceDate", typeof(DateTime));
                         dy.Columns.Add("CreatedDate", typeof(DateTime));
                         dy.Columns.Add("ErrorDetails", typeof(string));
-                        dy.Columns.Add("Status", typeof(string));
+                        dy.Columns.Add(Constants.Status, typeof(string));
                         MessageBox.Show(Constants.Nodataexistsforthisbatchid, "Service Reconciliation Report");
                     }
                     return dy; // Return the populated DataTable
@@ -363,21 +363,21 @@ namespace RWDE
 
                     string datePart = startedAt.ToString("dd-MM-yyyy");
                     string timePart = startedAt.ToString("HH:mm:ss");
-                    command.Parameters.AddWithValue("@BatchID", batchId);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     command.Parameters.AddWithValue("@FileName", fileName);
                     command.Parameters.AddWithValue("@Description", $"OCHIN TO RWDE On {datePart} at {timePart}");
                     command.Parameters.AddWithValue("@Path", path);
                     command.Parameters.AddWithValue("@Type", type);
                     command.Parameters.AddWithValue("@UploadStartedAt", startedAt);
                     command.Parameters.AddWithValue("@UploadEndedAt", DateTime.Now);
-                    command.Parameters.AddWithValue("@ConversionStartedAt", DBNull.Value);
-                    command.Parameters.AddWithValue("@ConversionEndedAt", DBNull.Value);
-                    command.Parameters.AddWithValue("@GenerationStartedAt", DBNull.Value);
-                    command.Parameters.AddWithValue("@GenerationEndedAt", DBNull.Value); // Assuming EndedAt is set to current time
+                    command.Parameters.AddWithValue(Constants.AtConversionStartedAt, DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtConversionEndedAt, DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtGenerationStartedAt, DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtGenerationEndedAt, DBNull.Value); // Assuming EndedAt is set to current time
                     command.Parameters.AddWithValue("@TotalRows", totalRowsInCurrentFile);
                     command.Parameters.AddWithValue("@SuccessfulRows", successfulRows);
                     command.Parameters.AddWithValue("@FailedRows", totalRowsInCurrentFile - successfulRows); // Calculate failed rows
-                    command.Parameters.AddWithValue("@Status", status);
+                    command.Parameters.AddWithValue(Constants.AtStatus, status);
                     command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                     command.Parameters.AddWithValue("@Comments", string.Empty); // Provide default value for Comments
@@ -400,7 +400,7 @@ namespace RWDE
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with appropriate conversion and null handling
-                    cmd.Parameters.AddWithValue("@BatchID", batchId);
+                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     cmd.Parameters.AddWithValue("@Clnt_id", int.Parse(data[0]));
                     cmd.Parameters.AddWithValue("@Service_date", DateTime.Parse(data[1]));
                     cmd.Parameters.AddWithValue("@Contract_id", int.Parse(data[2]));
@@ -444,7 +444,7 @@ namespace RWDE
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with appropriate conversion and null handling
-                    cmd.Parameters.AddWithValue("@BatchID", batchId-1);
+                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId-1);
                     cmd.Parameters.AddWithValue("@Clnt_id", int.Parse(data[0]));
                     cmd.Parameters.AddWithValue("@Service_date", DateTime.Parse(data[1]));
                     cmd.Parameters.AddWithValue("@Contract_id", int.Parse(data[2]));
@@ -486,7 +486,7 @@ namespace RWDE
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with appropriate conversion and null handling
-                    command.Parameters.AddWithValue("@BatchID", batchid);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                     command.Parameters.AddWithValue("@clnt_id", ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@first_nm", data[1] ?? (object)DBNull.Value);
@@ -608,7 +608,7 @@ namespace RWDE
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with appropriate conversion and null handling
-                    command.Parameters.AddWithValue("@BatchID", batchid);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                     command.Parameters.AddWithValue("@clnt_id", ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@first_nm", data[1] ?? (object)DBNull.Value);
@@ -844,7 +844,7 @@ namespace RWDE
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with appropriate conversion and null handling
-                    command.Parameters.AddWithValue("@BatchID", batchid);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                     command.Parameters.AddWithValue("@clnt_id", ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@first_nm", data[1] ?? (object)DBNull.Value);
@@ -1001,7 +1001,7 @@ namespace RWDE
                 command.CommandType = CommandType.StoredProcedure;
 
                 // Add parameters to the stored procedure
-                command.Parameters.AddWithValue("@BatchID", batchid);
+                command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                 command.Parameters.AddWithValue("@ClientID", GetStringData(data, 9)?.Trim('"'));
                 command.Parameters.AddWithValue("@ClientFirstName", data[0]?.Trim()); // Trim leading and trailing whitespaces
                 command.Parameters.AddWithValue("@ClientLastName", data[1]?.Trim()); // Trim leading and trailing whitespaces
@@ -1061,7 +1061,7 @@ namespace RWDE
                 command.CommandType = CommandType.StoredProcedure;
 
                 // Add parameters to the stored procedure
-                command.Parameters.AddWithValue("@BatchID", batchid);
+                command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                 command.Parameters.AddWithValue("@ClientID", GetStringData(data, 9)?.Trim('"'));
                 command.Parameters.AddWithValue("@ClientFirstName", data[0]?.Trim()); // Trim leading and trailing whitespaces
                 command.Parameters.AddWithValue("@ClientLastName", data[1]?.Trim()); // Trim leading and trailing whitespaces
@@ -1119,7 +1119,7 @@ namespace RWDE
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@ClientID", GetStringValue(data, 0));
-                    command.Parameters.AddWithValue("@BatchID", batchid);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@ClientLastFirstName", GetStringValue(data, 1));
                     command.Parameters.AddWithValue("@ClientStatus", GetStringValue(data, 2));
                     command.Parameters.AddWithValue("@StatusAsofDate", GetStringValue(data, 3));
@@ -1127,7 +1127,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@DownloadDate", DateTime.Parse("2024-08-01")); // Assuming 2024-08-01 is the correct date
                     command.Parameters.AddWithValue("@Extracted", Constants.ExtractedCode); // Assuming 3 is a valid value for Extracted
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Parse("2024-02-06")); // Assuming 2024-02-06 is the correct date
-                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDate); // Assuming 2 is a valid value for CMSMatch
+                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDateCode); // Assuming 2 is a valid value for CMSMatch
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Parse("2024-02-05")); // Assuming 2024-02-05 is the correct date
                     command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming "Admin" is the correct creator
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Parse("2024-09-03")); // Assuming 2024-09-03 is the correct date
@@ -1157,7 +1157,7 @@ namespace RWDE
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.AddWithValue("@BatchID", batchid);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@ClientID", GetStringValue(data, 0)?.Trim('"'));
                     command.Parameters.AddWithValue("@AgencyClientID", GetStringValue(data, 1));
                     command.Parameters.AddWithValue("@ClientLastFirstName", clientLastFirstName);
@@ -1173,7 +1173,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@DownloadDate", DateTime.Now); // Assuming current date/time
                     command.Parameters.AddWithValue("@Extracted", Constants.ExtractedCode); // Assuming a value for Extracted
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now); // Assuming current date/time
-                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDate); // Assuming a value for CMSMatch
+                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDateCode); // Assuming a value for CMSMatch
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now); // Assuming current date/time
                     command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a value for CreatedBy
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Now); // Assuming current date/time
@@ -1207,7 +1207,7 @@ namespace RWDE
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.AddWithValue("@BatchID", batchid);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@ClientID", GetStringValuedata(data, 0));
                     command.Parameters.AddWithValue("@AgencyClientID1", GetStringValuedata(data, 1));
                     command.Parameters.AddWithValue("@ClientLastFirstName", clientLastFirstName);
@@ -1223,7 +1223,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@DownloadDate", DateTime.Now);
                     command.Parameters.AddWithValue("@Extracted", Constants.ExtractedCode);
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now);
-                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDate);
+                    command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDateCode);
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now);
                     command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
                     command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
@@ -1281,7 +1281,7 @@ namespace RWDE
 
                     // Add parameters to the stored procedure
                     command.Parameters.AddWithValue("@ServiceID", serviceId);
-                    command.Parameters.AddWithValue("@BatchID", batchid);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@ClientID", GetStringData(data, 0)?.Trim('"')); // Treat ClientID as string
                     command.Parameters.AddWithValue("@ClientURN", GetStringData(data, 1)?.Trim('"'));
                     command.Parameters.AddWithValue("@ServiceNotes", serviceNotes); // Original service notes
@@ -1320,7 +1320,7 @@ namespace RWDE
 
                     // Add parameters to the stored procedure
                     command.Parameters.AddWithValue("@ServiceID", serviceId);
-                    command.Parameters.AddWithValue("@BatchID", batchid);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@ClientID", GetStringData(data, 0)?.Trim('"')); // Treat ClientID as string
                     command.Parameters.AddWithValue("@ClientURN", GetStringData(data, 1)?.Trim('"'));
                     command.Parameters.AddWithValue("@ServiceNotes", serviceNotes); // Original service notes
@@ -1453,10 +1453,10 @@ namespace RWDE
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         // Set the parameters
-                        command.Parameters.AddWithValue("@BatchID", batchId);
-                        command.Parameters.AddWithValue("@ConversionStartedAt", startTime);
-                        command.Parameters.AddWithValue("@ConversionEndedAt", endTime);
-                        command.Parameters.AddWithValue("@AllTotalRows", allTotalRows - 1);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
+                        command.Parameters.AddWithValue(Constants.AtConversionStartedAt, startTime);
+                        command.Parameters.AddWithValue(Constants.AtConversionEndedAt, endTime);
+                        command.Parameters.AddWithValue(Constants.AtAllTotalRows, allTotalRows - 1);
 
                         // Execute the SQL update command
                         command.ExecuteNonQuery();
@@ -1485,10 +1485,10 @@ namespace RWDE
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         // Set the parameters
-                        command.Parameters.AddWithValue("@BatchID", batchId);
-                        command.Parameters.AddWithValue("@ConversionStartedAt", startTime);
-                        command.Parameters.AddWithValue("@ConversionEndedAt", endTime);
-                        command.Parameters.AddWithValue("@AllTotalRows", allTotalRows - 1);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
+                        command.Parameters.AddWithValue(Constants.AtConversionStartedAt, startTime);
+                        command.Parameters.AddWithValue(Constants.AtConversionEndedAt, endTime);
+                        command.Parameters.AddWithValue(Constants.AtAllTotalRows, allTotalRows - 1);
 
                         // Execute the SQL update command
                         command.ExecuteNonQuery();
@@ -1510,7 +1510,7 @@ namespace RWDE
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with proper null or empty value checks
-                    command.Parameters.AddWithValue("@BatchID", batchid);
+                    command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@ClientID", GetStringValue(data, 0)?.Trim('"'));
                     AddDecimalParameter(command, "@FinancialTotalIncomeMonthly", GetStringValue(data, 1));
                     AddDecimalParameter(command, "@FinancialTotalIncomeAnnual", GetStringValue(data, 2));
@@ -1697,7 +1697,7 @@ namespace RWDE
                     xmlDataParam.Value = new SqlXml(new XmlTextReader(new StringReader(xmlDoc.OuterXml)));
                     cmd.Parameters.Add(xmlDataParam);
 
-                    cmd.Parameters.AddWithValue("@BatchID", batchId);
+                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
 
                     // Execute the command to insert clients
                     cmd.ExecuteNonQuery();
@@ -1763,7 +1763,7 @@ namespace RWDE
                                             insertCmd.Parameters.AddWithValue("@ExpireDate", expireDate ?? (object)DBNull.Value);
                                             insertCmd.Parameters.AddWithValue("@Source", string.IsNullOrEmpty(source) ? (object)DBNull.Value : source);
                                             insertCmd.Parameters.AddWithValue("@Notes", string.IsNullOrEmpty(notes) ? (object)DBNull.Value : notes);
-                                            insertCmd.Parameters.AddWithValue("@BatchID", batchId);
+                                            insertCmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                                             insertCmd.Parameters.AddWithValue("@AgencyClientID1", agencyClientId);
                                             insertCmd.Parameters.AddWithValue("@AriesID", ariesId);
                                             insertCmd.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a constant value for CreatedBy
@@ -1856,7 +1856,7 @@ namespace RWDE
                         insertCmd.Parameters.AddWithValue("@MeasurementUnit", GetAttributeValue(serviceNode, "measurementUnit"));
                         insertCmd.Parameters.AddWithValue("@TotalCost", GetDecimalValue(serviceNode, "totalCost"));
                         insertCmd.Parameters.AddWithValue("@Notes", GetAttributeValue(serviceNode, "notes"));
-                        insertCmd.Parameters.AddWithValue("@BatchID", batchId);
+                        insertCmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         insertCmd.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a constant value for CreatedBy
                         insertCmd.Parameters.AddWithValue("@ActualMinutesSpent", GetAttributeValueOrDefault<object>(serviceNode, "actualTimeSpentMinutes", DBNull.Value));
                         insertCmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
@@ -2039,7 +2039,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand("DeleteochinBatchDatas", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchID", batchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         connection.Open();
                         command.ExecuteNonQuery();
                     }
@@ -2063,7 +2063,7 @@ namespace RWDE
                     {
                         connection.Open();
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchID", batchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         command.ExecuteNonQuery();
                         connection.Close();
                     }
@@ -2500,7 +2500,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand(Constants.ServiceXmlGenerationQuery, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@batchId", batchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -2537,7 +2537,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand(Constants.ServiceXmlGenerationQuery, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchId", batchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         command.CommandTimeout = 120; // Extend timeout
                         connection.Open();
 
@@ -2610,7 +2610,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand(Constants.ServicegeneratorError, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchId", batchId);//
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);//
                         command.CommandTimeout = 120;
                         connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -2771,7 +2771,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand("clientgeneratorXMLDEMO", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@batchId", batchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -2828,8 +2828,8 @@ namespace RWDE
                     using (SqlCommand com = new SqlCommand(storedProcedureName, sql))
                     {
                         com.CommandType = CommandType.StoredProcedure;
-                        com.Parameters.AddWithValue("@BatchId", batchid);
-                        com.Parameters.AddWithValue("@ClientId", clientid);
+                        com.Parameters.AddWithValue(Constants.AtBatchid, batchid);
+                        com.Parameters.AddWithValue(Constants.AtClientId, clientid);
                         sql.Open();
                         using (SqlDataReader reader = com.ExecuteReader())
                         {
@@ -2907,7 +2907,7 @@ namespace RWDE
                         command.Parameters.AddWithValue("@ContractName", contractName);
                         command.Parameters.AddWithValue("@StartedDateTime", startedDateTime);
                         command.Parameters.AddWithValue("@EndedDateTime", endedDateTime);
-                        command.Parameters.AddWithValue("@Status", statusValue);
+                        command.Parameters.AddWithValue(Constants.AtStatus, statusValue);
                         command.Parameters.AddWithValue("@CreatedBy", createdBy);
                         command.Parameters.AddWithValue("@CreatedOn", createdOn);
 
@@ -2949,7 +2949,7 @@ namespace RWDE
 
                         // Add parameters to the SqlCommand
                         command.Parameters.AddWithValue("@ContractID", contractId);
-                        command.Parameters.AddWithValue("@Status", status);
+                        command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Open the database connection
                         connection.Open();
@@ -2980,7 +2980,7 @@ namespace RWDE
                         command.Parameters.AddWithValue("@ContractName", contractName);
                         command.Parameters.AddWithValue("@StartedDateTime", startedDateTime);
                         command.Parameters.AddWithValue("@EndedDateTime", endedDateTime);
-                        command.Parameters.AddWithValue("@Status", status);
+                        command.Parameters.AddWithValue(Constants.AtStatus, status);
                         command.Parameters.AddWithValue("@CreatedBy", "sakku");
                         command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
 
@@ -3011,7 +3011,7 @@ namespace RWDE
 
                         // Add parameters to the SqlCommand
                         command.Parameters.AddWithValue("@ServiceCodeID", serviceCodeId);
-                        command.Parameters.AddWithValue("@Status", status);
+                        command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Open the database connection
                         connection.Open();
@@ -3047,7 +3047,7 @@ namespace RWDE
                         command.Parameters.AddWithValue("@HCC_Subservice", hccSubservice);
                         command.Parameters.AddWithValue("@UnitsOfMeasure", unitsOfMeasure);
                         command.Parameters.AddWithValue("@UnitValue", unitValue);
-                        command.Parameters.AddWithValue("@Status", status);
+                        command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Add output parameter
                         SqlParameter outputParameter = new SqlParameter
@@ -3100,7 +3100,7 @@ namespace RWDE
                         command.Parameters.AddWithValue("@HCC_Subservice", hccSubservice);
                         command.Parameters.AddWithValue("@UnitsOfMeasure", unitsOfMeasure);
                         command.Parameters.AddWithValue("@UnitValue", unitValue);
-                        command.Parameters.AddWithValue("@Status", status);
+                        command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Add output parameter
                         SqlParameter outputParameter = new SqlParameter
@@ -3124,7 +3124,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log or handle the error as needed
-                MessageBox.Show($"An error occurred: {ex.Message}");
+                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
                 return null; // or return an appropriate error value
             }
         }
@@ -3156,7 +3156,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log or handle the error as needed
-                MessageBox.Show($"An error occurred: {ex.Message}");
+                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
             }
 
             // Return the populated DataTable
@@ -3417,7 +3417,7 @@ namespace RWDE
                             cmd.Parameters.AddWithValue("@StartDate", startDate);
                             cmd.Parameters.AddWithValue("@EndDate", endDate);
                         }
-                        else if (filterType == "BatchID")
+                        else if (filterType == Constants.BatchId)
                         {
                           
                         }
@@ -3447,7 +3447,7 @@ namespace RWDE
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@StartDate", startDate);
                         cmd.Parameters.AddWithValue("@EndDate", endDate);
-                        cmd.Parameters.AddWithValue("@BatchID", onebatch);
+                        cmd.Parameters.AddWithValue(Constants.AtBatchid, onebatch);
                         cmd.Parameters.AddWithValue("@Type", filterType);
 
                         conn.Open();
@@ -3518,7 +3518,7 @@ namespace RWDE
                         // Add start and end date parameters directly as DateTime
                         cmd.Parameters.AddWithValue("@StartDate", startDate);
                         cmd.Parameters.AddWithValue("@EndDate", endDate);
-                        cmd.Parameters.AddWithValue("@BatchID", 0);
+                        cmd.Parameters.AddWithValue(Constants.AtBatchid, 0);
                         cmd.Parameters.AddWithValue("@Type", filterType);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);

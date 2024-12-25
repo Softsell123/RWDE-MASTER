@@ -61,13 +61,13 @@ namespace RWDE
         }
         private void btnReport_Click(object sender, EventArgs e)
         {
-            string filePath = Path.Combine(txtPath.Text, $"Client_{DateTime.Now.ToString("yyyyMMdd")}.csv"); // Ensure the full file path includes a filename
+            string filePath = Path.Combine(txtPath.Text, $"{Constants.Clients}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
 
             try
             {
                 if (!Directory.Exists(txtPath.Text))
                 {
-                    MessageBox.Show("The selected folder does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.Theselectedfolderdoesnotexist, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -77,11 +77,11 @@ namespace RWDE
                     conn.Open();
                     int batchid = dbHelper.GetMaxXmlBatchId();
                     // Call the stored procedure
-                    using (SqlCommand cmd = new SqlCommand("ctclientsmapping", conn))
+                    using (SqlCommand cmd = new SqlCommand(Constants.Ctclientsmapping, conn))
                     {
 
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Batchid", batchid);
+                        cmd.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             // Create a StreamWriter to write to the CSV file
@@ -108,26 +108,26 @@ namespace RWDE
                             }
                         }
                     }
-                    MessageBox.Show("CSV file has been created successfully at " + filePath);//
+                    MessageBox.Show(Constants.CsVfilehasbeencreatedsuccessfullyat + filePath);//
                 }
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("Access to the path is denied. Please choose a different folder or run the application as an administrator.", "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Constants.Accessdeniedtothefolder, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show(Constants.Errorsp + ex.Message);
             }
         }
         public void GetServicedataCsv(int batchid)
         {
-            string filePath = Path.Combine(txtPath.Text, $"Service_Sample_{DateTime.Now.ToString("yyyyMMdd")}.csv"); // Ensure the full file path includes a filename
+            string filePath = Path.Combine(txtPath.Text, $"{Constants.ServiceSample}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
             try
             {
                 if (!Directory.Exists(txtPath.Text))
                 {
-                    MessageBox.Show("The selected folder does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.Theselectedfolderdoesnotexist, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 // SQL query to execute the stored procedure
@@ -135,10 +135,10 @@ namespace RWDE
                 {
                     conn.Open();
                     // Call the stored procedure
-                    using (SqlCommand cmd = new SqlCommand("GetCTServicesForCSV", conn))
+                    using (SqlCommand cmd = new SqlCommand(Constants.GetCtServicesForCsv, conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Batchid", batchid);
+                        cmd.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             // Create a StreamWriter to write to the CSV file
@@ -163,23 +163,23 @@ namespace RWDE
                             }
                         }
                     }
-                    MessageBox.Show("CSV file has been created successfully at " + filePath);
+                    MessageBox.Show(Constants.CsVfilehasbeencreatedsuccessfullyat + filePath);
                 }
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("Access to the path is denied. Please choose a different folder or run the application as an administrator.", "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Constants.Accessdeniedtothefolder, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show(Constants.Errorsp + ex.Message);
             }
         }
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
             {
-                folderDialog.Description = "Select a folder to save the file";
+                folderDialog.Description = Constants.Selectafoldertosavethefile;
                 folderDialog.ShowNewFolderButton = true;
 
                 if (folderDialog.ShowDialog() == DialogResult.OK)
@@ -191,15 +191,15 @@ namespace RWDE
                         txtPath.Text = selectedPath;
 
                         // Test writing permission by creating a temporary file
-                        string testFilePath = Path.Combine(selectedPath, "testfile.txt");
-                        File.WriteAllText(testFilePath, "Testing permissions.");
+                        string testFilePath = Path.Combine(selectedPath, Constants.Testfiletxt);
+                        File.WriteAllText(testFilePath, Constants.Testingpermissions);
                         File.Delete(testFilePath); // Clean up after test
 
-                        MessageBox.Show("Selected folder: " + selectedPath);
+                        MessageBox.Show(Constants.Selectedfolder + selectedPath);
                     }
                     catch (UnauthorizedAccessException ex)
                     {
-                        MessageBox.Show("Access to the selected folder is denied. Please choose a different folder.", "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(Constants.Accessdeniedtothefolder, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     // Save the folder path (you only need to save it once)
                     File.WriteAllText(Constants.LastFolderPathhcc, selectedPath);

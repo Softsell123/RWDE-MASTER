@@ -391,7 +391,7 @@ namespace RWDE
             this.txtProgressLines.Size = new System.Drawing.Size(240, 40);
             this.txtProgressLines.TabIndex = 1;
             this.txtProgressLines.TabStop = false;
-            this.txtProgressLines.Text = "0%";
+            this.txtProgressLines.Text = Constants.ZeroPercent;
             this.txtProgressLines.TextChanged += new System.EventHandler(this.txtProgressbar_TextChanged);
             // 
             // lblfiles
@@ -587,7 +587,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(240, 45);
             this.btnClose.TabIndex = 1;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 

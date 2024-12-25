@@ -92,7 +92,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 13;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 

@@ -40,7 +40,7 @@ namespace RWDE
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker ||
+                if (control is Button || control is CheckBox || control is DateTimePicker ||
                     control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
@@ -73,10 +73,10 @@ namespace RWDE
                 this.dataGridView.Columns.Add(Constants.Extracted, Constants.Extractedsp);
                 this.dataGridView.Columns.Add(Constants.ExtractionDate, Constants.ExtractionDatesp);
                 this.dataGridView.Columns.Add(Constants.CmsMatch, Constants.CmsMatchsp);
-                this.dataGridView.Columns.Add("CMSMatchDate", "CMS Match Date");
-                this.dataGridView.Columns.Add("Service Count After Death", "Service Count After Death");
+                this.dataGridView.Columns.Add(Constants.CmsMatchDate, Constants.CmsMatchDatesp);
+                this.dataGridView.Columns.Add(Constants.ServiceCountAfterDeath, Constants.ServiceCountAfterDeath);
 
-                this.dataGridView.Columns.Add("CreatedOn", "Created On");
+                this.dataGridView.Columns.Add(Constants.CreatedOn, Constants.CreatedOnsp);
 
                 // Set column widths (adjust as needed)
                 this.dataGridView.Columns[Constants.HccId].Width = 100;
@@ -88,10 +88,9 @@ namespace RWDE
                 this.dataGridView.Columns[Constants.Extracted].Width = 100;
                 this.dataGridView.Columns[Constants.ExtractionDate].Width = 120;
                 this.dataGridView.Columns[Constants.CmsMatch].Width = 100;
-                this.dataGridView.Columns["CMSMatchDate"].Width = 120;
-                this.dataGridView.Columns["Service Count After Death"].Width = 120;
-
-                this.dataGridView.Columns["CreatedOn"].Width = 120;
+                this.dataGridView.Columns[Constants.CmsMatchDate].Width = 120;
+                this.dataGridView.Columns[Constants.ServiceCountAfterDeath].Width = 120;
+                this.dataGridView.Columns[Constants.CreatedOn].Width = 120;
 
                 // Set row height
                 this.dataGridView.RowTemplate.Height = 40;
@@ -100,7 +99,7 @@ namespace RWDE
                 this.dataGridView.ForeColor = Color.Black;
                 this.dataGridView.DefaultCellStyle.ForeColor = Color.Black; // Text color
                 this.dataGridView.DefaultCellStyle.Font =
-                    new Font("Calibre", 14, FontStyle.Regular); // Font size 14 and regular
+                    new Font(Constants.FntfmlyCalibre, 14, FontStyle.Regular); // Font size 14 and regular
 
                 // Set header style
                 foreach (DataGridViewColumn column in this.dataGridView.Columns)
@@ -118,15 +117,15 @@ namespace RWDE
                         row[Constants.HccIdsp],
                         row[Constants.ClientNamesp],
                         row[Constants.Status],
-                        row["Date of Death"],
-                        row["Last Service Date"],
-                        row["Download Date"],
-                        row["Extracted Y/N"],
-                        row["Extraction Date"],
-                        row["CMS Match"],
-                        row["CMS Match Date"],
-                        row["Service Count After Death"],
-                        row["Created On"]
+                        row[Constants.DateOfDeathsp],
+                        row[Constants.LastServiceDatesp],
+                        row[Constants.DownloadDatesp],
+                        row[Constants.Extractedsp],
+                        row[Constants.ExtractionDatesp],
+                        row[Constants.CmsMatchsp],
+                        row[Constants.CmsMatchDatesp],
+                        row[Constants.ServiceCountAfterDeath],
+                        row[Constants.CreatedOnsp]
                     );
                 }
             }
@@ -156,8 +155,9 @@ namespace RWDE
             {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", "Warning", MessageBoxButtons.OK,
+                    MessageBox.Show(Constants.Nodataavailabletodownload, Constants.Warning, MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
+                    
                     return; // Exit the method if there is no data
                 }
 
@@ -187,7 +187,7 @@ namespace RWDE
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
-                    var worksheet = workbook.Worksheets.Add("Sheet1");
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
 
                     // Load the DataTable into the worksheet
                     worksheet.Cell(1, 1).InsertTable(dataTable);
@@ -202,7 +202,7 @@ namespace RWDE
                             // Base file name and directory
                             string baseFileName = Constants.DeceasedClients;
                             string directoryPath = folderBrowserDialog.SelectedPath;
-                            string fileExtension = ".xlsx";
+                            string fileExtension = Constants.XlsxExtention;
 
                             // Construct the initial file path
                             string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
@@ -217,8 +217,7 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.Datasuccessfullysaved}{Path.GetFileName(filePath)}", "Success",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"{Constants.Datasuccessfullysaved}{Path.GetFileName(filePath)}", Constants.Success,MessageBoxButtons.OK, MessageBoxIcon.Information); 
                         }
                     }
                 }
@@ -239,7 +238,7 @@ namespace RWDE
                 if (startDate > endDate)
                 {
                     // Show an error message if the start date is later than the end date
-                    MessageBox.Show(Constants.StartdatemustbeearlierthanEnddate, "Deceased Clients",
+                    MessageBox.Show(Constants.StartdatemustbeearlierthanEnddate, Constants.DeceasedClientsp,
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return; // Exit the method to prevent further processing
                 }
@@ -261,8 +260,8 @@ namespace RWDE
             try
             {
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
                 // Clear only the rows in the DataGridView
                 dataGridView.Rows.Clear();

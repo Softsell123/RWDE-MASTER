@@ -199,7 +199,7 @@ namespace RWDE
             this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridViewTextBoxColumn1.HeaderText = "Batch ID";
+            this.dataGridViewTextBoxColumn1.HeaderText = Constants.BatchIdHeader;
             this.dataGridViewTextBoxColumn1.MaxInputLength = 8;
             this.dataGridViewTextBoxColumn1.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
@@ -209,7 +209,7 @@ namespace RWDE
             // dataGridViewTextBoxColumn2
             // 
             this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridViewTextBoxColumn2.HeaderText = "Batch Type";
+            this.dataGridViewTextBoxColumn2.HeaderText = Constants.BatchTypeHeader;
             this.dataGridViewTextBoxColumn2.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
@@ -218,7 +218,7 @@ namespace RWDE
             // dataGridViewTextBoxColumn3
             // 
             this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridViewTextBoxColumn3.HeaderText = "Description";
+            this.dataGridViewTextBoxColumn3.HeaderText = Constants.Description;
             this.dataGridViewTextBoxColumn3.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.ReadOnly = true;
@@ -245,7 +245,7 @@ namespace RWDE
             // dataGridViewTextBoxColumn6
             // 
             this.dataGridViewTextBoxColumn6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridViewTextBoxColumn6.HeaderText = "Status";
+            this.dataGridViewTextBoxColumn6.HeaderText = Constants.Status;
             this.dataGridViewTextBoxColumn6.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
             this.dataGridViewTextBoxColumn6.ReadOnly = true;
@@ -254,7 +254,7 @@ namespace RWDE
             // dataGridViewTextBoxColumn7
             // 
             this.dataGridViewTextBoxColumn7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridViewTextBoxColumn7.DataPropertyName = "Batch ID";
+            this.dataGridViewTextBoxColumn7.DataPropertyName = Constants.BatchIdHeader;
             this.dataGridViewTextBoxColumn7.HeaderText = "Select";
             this.dataGridViewTextBoxColumn7.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
@@ -264,7 +264,7 @@ namespace RWDE
             // dataGridViewTextBoxColumn8
             // 
             this.dataGridViewTextBoxColumn8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridViewTextBoxColumn8.HeaderText = "Conversion Started At";
+            this.dataGridViewTextBoxColumn8.HeaderText = Constants.ConversionStartedAtHeader;
             this.dataGridViewTextBoxColumn8.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
             this.dataGridViewTextBoxColumn8.ReadOnly = true;
@@ -527,7 +527,7 @@ namespace RWDE
             this.txtProgressServices.ReadOnly = true;
             this.txtProgressServices.Size = new System.Drawing.Size(240, 40);
             this.txtProgressServices.TabIndex = 23;
-            this.txtProgressServices.Text = "0%";
+            this.txtProgressServices.Text = Constants.ZeroPercent;
             // 
             // lblprgHeader
             // 
@@ -570,7 +570,7 @@ namespace RWDE
             this.txtProgresshcc.ReadOnly = true;
             this.txtProgresshcc.Size = new System.Drawing.Size(240, 40);
             this.txtProgresshcc.TabIndex = 14;
-            this.txtProgresshcc.Text = "0%";
+            this.txtProgresshcc.Text = Constants.ZeroPercent;
             this.txtProgresshcc.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // lblStatus
@@ -592,7 +592,7 @@ namespace RWDE
             this.btncloseHCC.Name = "btncloseHCC";
             this.btncloseHCC.Size = new System.Drawing.Size(239, 43);
             this.btncloseHCC.TabIndex = 22;
-            this.btncloseHCC.Text = "Close";
+            this.btncloseHCC.Text = Constants.Close;
             this.btncloseHCC.UseVisualStyleBackColor = false;
             this.btncloseHCC.Click += new System.EventHandler(this.btncloseHCC_Click);
             // 

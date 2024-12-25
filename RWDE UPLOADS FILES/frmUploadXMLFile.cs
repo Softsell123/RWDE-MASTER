@@ -46,7 +46,7 @@ namespace RWDE
                 string date = currenttime.ToString("MM/dd/yyyy");
                 string time = currenttime.ToString("HH:mm:ss");
                 txtDesc.Text = $"ClientTrack Upload on {date} at {time}";
-                txtProgressLines.Text = "0%";
+                txtProgressLines.Text = Constants.ZeroPercent;
                 txtProgressfile.Text = "0/0 (0%)";
                 string pathFile = "LastFolderPath.txt";
                 RegisterEvents(this);
@@ -73,7 +73,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -154,7 +154,7 @@ namespace RWDE
             var values = chkPHI.Checked ? true : false;
             if (string.IsNullOrEmpty(folderPath))
             {
-                MessageBox.Show("Please select a folder to upload XML files.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please select a folder to upload XML files.", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnUploadXML.Enabled = true;
                 return;
             }
@@ -162,7 +162,7 @@ namespace RWDE
             {
                 if (string.IsNullOrEmpty(txtBatchid.Text) && string.IsNullOrEmpty(txtUploadStarted.Text))
                 {
-                    btnClose.Text = "Abort";
+                    btnClose.Text = Constants.Abort;
                     string[] xmlFiles = Directory.GetFiles(folderPath, "*.xml");
                     int totalXmlFiles = xmlFiles.Length;
                     int processedXmlFiles = 0;
@@ -188,7 +188,7 @@ namespace RWDE
                         string date = startTime.ToString("MM/dd/yyyy");
                         string time = startTime.ToString("HH:mm:ss");
                         txtDesc.Text = $"ClientTrack Upload on {date} At {time}";
-                        string formattime = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+                        string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                         txtUploadStarted.Text = formattime;
 
                         using (SqlConnection conn = new SqlConnection(connectionString))
@@ -209,7 +209,7 @@ namespace RWDE
                         DateTime endTime = DateTime.Now;
                         TimeSpan totalTime = endTime - startTime;
                         double totalSeconds = totalTime.TotalSeconds;
-                        string eTime = endTime.ToString("MM/dd/yyyy HH:mm:ss");
+                        string eTime = endTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                         txtUploadEnded.Text = eTime;
                         txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
                         btnClose.Text = Constants.Close;
@@ -225,9 +225,9 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnUploadXML.Enabled = true;
-                btnClose.Text = "Close";
+                btnClose.Text = Constants.Close;
             }
         }
 
@@ -273,7 +273,7 @@ namespace RWDE
         {
             progressBarLines.Minimum = 0;
             progressBarLines.Maximum = totalCount;
-            txtProgressLines.Text = "0%";
+            txtProgressLines.Text = Constants.ZeroPercent;
             progressBarLines.Value = 0; // Immediate feedback
             int currentCount = 0;
             int updateInterval = Math.Max(1, totalCount / 100); // Update every 1% or more frequently
@@ -372,7 +372,7 @@ namespace RWDE
                 int batchId = Convert.ToInt32(txtBatchid.Text);
                 if (btnClose.Text == Constants.Abort)
                 {
-                    DialogResult result = MessageBox.Show("Are you sure you want to abort?","XML File Upload", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort,"XML File Upload", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     // Check if the user clicked "Yes"
                     UpdateBatch(batchId, FileName, Path);
@@ -412,7 +412,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand("abortdelete", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchId", batchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
 
                         command.ExecuteNonQuery();
                     }

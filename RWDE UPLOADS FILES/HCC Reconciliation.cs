@@ -15,8 +15,8 @@ namespace RWDE
         {
             InitializeComponent();
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
@@ -54,7 +54,7 @@ namespace RWDE
             try {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("No data available to download.", Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
                 DataTable dataTable = new DataTable();
@@ -82,7 +82,7 @@ namespace RWDE
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
-                    var worksheet = workbook.Worksheets.Add("Sheet1");
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
 
                     // Load the DataTable into the worksheet
                     worksheet.Cell(1, 1).InsertTable(dataTable);
@@ -97,7 +97,7 @@ namespace RWDE
                             // Base file name and directory
                             string baseFileName = Constants.HccReconciliation;
                             string directoryPath = folderBrowserDialog.SelectedPath;
-                            string fileExtension = ".xlsx";
+                            string fileExtension = Constants.XlsxExtention;
 
                             // Construct the initial file path
                             string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
@@ -159,7 +159,7 @@ namespace RWDE
 
                 if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))||(!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(","))||(!string.IsNullOrWhiteSpace(txtbatchs.Text)))
                 {
-                    filterType = "BatchID";
+                    filterType = Constants.BatchId;
                     batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();
                 }
                 else if (dtpDateFilter.SelectedItem != null)
@@ -185,7 +185,7 @@ namespace RWDE
                 DataTable result = null;
                 try
                 {
-                    if (filterType == "BatchID")
+                    if (filterType == Constants.BatchId)
                     {
                         List<DataTable> allidtables;
                         allidtables = dbHelper.LoadDatafilterhccreconBatchid(startDate, endDate, batchids, filterType);
@@ -203,9 +203,9 @@ namespace RWDE
                 catch (Exception ex)
                 {
                     // Handle exceptions related to DateTimePicker values or other issues
-                    MessageBox.Show($"An error occurred: {ex.Message}");
+                    MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
                 }
-                if(filterType == "BatchID")
+                if(filterType == Constants.BatchId)
                 {
                     return;
                 }
@@ -218,7 +218,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exceptions related to DateTimePicker values or other issues
-                MessageBox.Show($"An error occurred: {ex.Message}");
+                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
             }
         }
         private void btnClr_Click(object sender, EventArgs e)//clear the data in the grid
@@ -226,9 +226,9 @@ namespace RWDE
             try { 
                 // Reset DateTimePickers to one year back from the current date
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpDateFilter.Text = Constants.CreatedDate;
                 txtbatchs.Text = null;
 

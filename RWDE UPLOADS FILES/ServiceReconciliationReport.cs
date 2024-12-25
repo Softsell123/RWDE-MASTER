@@ -22,9 +22,9 @@ namespace RWDE
             DataTable hccServices = dbHelper.GetHccServices();//to load data of services
             DataTable hccClients = dbHelper.GetHccClients();// Similarly get and populate hccClients
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             this.ControlBox = false;
             this.DoubleBuffered = true;
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
@@ -62,12 +62,12 @@ namespace RWDE
             dataGridView.DataSource = null;
             dataGridView.Columns.Clear();
             dataGridView.Columns.Add("Sl No", "Sl No");
-            dataGridView.Columns.Add("BatchID", "Batch ID");
+            dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
             dataGridView.Columns.Add("Staff", "Staff");
             dataGridView.Columns.Add("HCCID", "HCC ID");
             dataGridView.Columns.Add("HCCConsentExpiryDate", "HCC Consent Expiry Date");
             dataGridView.Columns.Add("RWEligibilityExpiryDate", "RW Eligibility Expiry Date");
-            dataGridView.Columns.Add("Service", "Service");
+            dataGridView.Columns.Add(Constants.Service, Constants.Service);
             dataGridView.Columns.Add("ServiceCodeID", "Service Code ID");
             dataGridView.Columns.Add("HCCContractID", "HCC Contract ID");
             dataGridView.Columns.Add("UnitsOfServices", "Units of Services");
@@ -105,7 +105,7 @@ namespace RWDE
                 string filterType = string.Empty;
                 if (!string.IsNullOrWhiteSpace(txtBatchID.Text) && int.TryParse(txtBatchID.Text, out int batchid) || (!string.IsNullOrWhiteSpace(txtBatchID.Text) && txtBatchID.Text.Contains(",")) || (!string.IsNullOrWhiteSpace(txtBatchID.Text)))
                 {
-                    filterType = "BatchID";
+                    filterType = Constants.BatchId;
                 }
                 else if (dtpDateFilter.SelectedItem != null)
                 {
@@ -132,7 +132,7 @@ namespace RWDE
                 // Fetch data based on selected filter type
                 DataTable result = null;
                 int[] batchids = null;
-                if (filterType == "BatchID")
+                if (filterType == Constants.BatchId)
                 {
                     // Get and validate batch IDs
                     string batchIdText = txtBatchID.Text;
@@ -179,7 +179,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 DisplayHeadersOnly();
-                MessageBox.Show($"An error occurred: {ex.Message}");
+                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
             }
         }
         private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -205,7 +205,7 @@ namespace RWDE
                 // Check if there are any rows in the DataGridView
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("No data available to download.", Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
 
@@ -234,7 +234,7 @@ namespace RWDE
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
-                    var worksheet = workbook.Worksheets.Add("Sheet1");
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
 
                     // Load the DataTable into the worksheet
                     worksheet.Cell(1, 1).InsertTable(dataTable);
@@ -249,7 +249,7 @@ namespace RWDE
                             // Base file name and directory
                             string baseFileName = Constants.ServiceReconciliationReport;
                             string directoryPath = folderBrowserDialog.SelectedPath;
-                            string fileExtension = ".xlsx";
+                            string fileExtension = Constants.XlsxExtention;
 
                             // Construct the initial file path
                             string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
@@ -264,14 +264,14 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", Constants.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void btnClose_Click(object sender, EventArgs e)//to close the form
@@ -293,9 +293,9 @@ namespace RWDE
             {
                 // Reset DateTimePickers to one year back from the current date
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpDateFilter.Text = Constants.CreatedDate;
                 txtBatchID.Text = null;
                 dtpDateFilter.Text = null;

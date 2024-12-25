@@ -440,20 +440,20 @@ namespace RWDE {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
-                this.columnBatchID = base.Columns["BatchID"];
-                this.columnDescription = base.Columns["Description"];
+                this.columnBatchID = base.Columns[Constants.BatchId];
+                this.columnDescription = base.Columns[Constants.Description];
                 this.columnStartedAt = base.Columns["StartedAt"];
                 this.columnEndedAt = base.Columns["EndedAt"];
                 this.columnTotalRows = base.Columns["TotalRows"];
-                this.columnStatus = base.Columns["Status"];
+                this.columnStatus = base.Columns[Constants.Status];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             private void InitClass() {
-                this.columnBatchID = new global::System.Data.DataColumn("BatchID", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columnBatchID = new global::System.Data.DataColumn(Constants.BatchId, typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnBatchID);
-                this.columnDescription = new global::System.Data.DataColumn("Description", typeof(string), null, global::System.Data.MappingType.Element);
+                this.columnDescription = new global::System.Data.DataColumn(Constants.Description, typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDescription);
                 this.columnStartedAt = new global::System.Data.DataColumn("StartedAt", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStartedAt);
@@ -461,7 +461,7 @@ namespace RWDE {
                 base.Columns.Add(this.columnEndedAt);
                 this.columnTotalRows = new global::System.Data.DataColumn("TotalRows", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTotalRows);
-                this.columnStatus = new global::System.Data.DataColumn("Status", typeof(string), null, global::System.Data.MappingType.Element);
+                this.columnStatus = new global::System.Data.DataColumn(Constants.Status, typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStatus);
                 this.columnBatchID.AllowDBNull = false;
                 this.columnDescription.MaxLength = 2147483647;
@@ -917,12 +917,12 @@ namespace RWDE.RWDEDataSet1TableAdapters {
             global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
             tableMapping.SourceTable = "Table";
             tableMapping.DataSetTable = "Batch";
-            tableMapping.ColumnMappings.Add("BatchID", "BatchID");
-            tableMapping.ColumnMappings.Add("Description", "Description");
+            tableMapping.ColumnMappings.Add(Constants.BatchId, Constants.BatchId);
+            tableMapping.ColumnMappings.Add(Constants.Description, Constants.Description);
             tableMapping.ColumnMappings.Add("StartedAt", "StartedAt");
             tableMapping.ColumnMappings.Add("EndedAt", "EndedAt");
             tableMapping.ColumnMappings.Add("TotalRows", "TotalRows");
-            tableMapping.ColumnMappings.Add("Status", "Status");
+            tableMapping.ColumnMappings.Add(Constants.Status, Constants.Status);
             this._adapter.TableMappings.Add(tableMapping);
         }
         

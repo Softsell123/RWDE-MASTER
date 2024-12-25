@@ -16,8 +16,9 @@ namespace RWDE
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            ;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
             RegisterEvents(this);
         }
@@ -99,8 +100,9 @@ namespace RWDE
             try {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.Nodataavailabletodownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
+                    
                 }
                 DataTable dataTable = new DataTable();
 
@@ -127,7 +129,7 @@ namespace RWDE
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
-                    var worksheet = workbook.Worksheets.Add("Sheet1");
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
 
                     // Load the DataTable into the worksheet
                     worksheet.Cell(1, 1).InsertTable(dataTable);
@@ -142,7 +144,7 @@ namespace RWDE
                             // Base file name and directory
                             string baseFileName = ContractIdList.ErrorLogReport;
                             string directoryPath = folderBrowserDialog.SelectedPath;
-                            string fileExtension = ".xlsx";
+                            string fileExtension = Constants.XlsxExtention;
 
                             // Construct the initial file path
                             string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
@@ -156,7 +158,7 @@ namespace RWDE
                             }
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", Constants.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
@@ -170,15 +172,15 @@ namespace RWDE
         {
             try{// Reset DateTimePickers to one year back from the current date
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
 
                 // Clear the DataTable bound to the DataGridView
                 if (dataGridView.DataSource is DataTable dt)
                 {
                     dt.Clear();  // Clears all rows from the DataTable
-                }
+                }   
             }
             catch (Exception ex)
             {

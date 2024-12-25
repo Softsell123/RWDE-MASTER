@@ -171,9 +171,9 @@ namespace RWDE
                 this.dataGridView.Columns["ServiceCodeID"].DataPropertyName = "ServiceCodeID";
                 this.dataGridView.Columns["ServiceCodeID"].Width = 220;
 
-                this.dataGridView.Columns.Add("Service", "Service");
-                this.dataGridView.Columns["Service"].DataPropertyName = "Service";
-                this.dataGridView.Columns["Service"].Width = 220;
+                this.dataGridView.Columns.Add(Constants.Service, Constants.Service);
+                this.dataGridView.Columns[Constants.Service].DataPropertyName = Constants.Service;
+                this.dataGridView.Columns[Constants.Service].Width = 220;
                 DataGridViewComboBoxColumn maptohcc = new DataGridViewComboBoxColumn
                 {
                     Name = "HCC_ExportToAries",
@@ -263,9 +263,9 @@ namespace RWDE
 
                 DataGridViewComboBoxColumn statusColumn = new DataGridViewComboBoxColumn
                 {
-                    Name = "Status",
-                    HeaderText = "Status",
-                    DataPropertyName = "Status", // Assuming you have a "Status" column in your DataTable
+                    Name = Constants.Status,
+                    HeaderText = Constants.Status,
+                    DataPropertyName = Constants.Status, // Assuming you have a Constants.Status column in your DataTable
                     Width = 130
 
                 };
@@ -284,8 +284,8 @@ namespace RWDE
                 dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;//to edit particular row
                 DataGridViewButtonColumn editButtonColumn = new DataGridViewButtonColumn
                 {
-                    Name = Constants.EditColumnName,
-                    Text = Constants.EditColumnName,
+                    Name = Constants.Edit,
+                    Text = Constants.Edit,
                     Width = 130,
                     UseColumnTextForButtonValue = true
                 };
@@ -310,31 +310,31 @@ namespace RWDE
                 dataGridView.CellClick += dataGridView_CellClickdelete;//to apply styles to delete button
                 //dataGridView.ClearSelection();
 
-                dataGridView.Columns["Status"].ReadOnly = true;
+                dataGridView.Columns[Constants.Status].ReadOnly = true;
 
                 if (dataTable != null)
                 {
                     foreach (DataRow row in dataTable.Rows)
                     {
-                        string statusValue = row["Status"].ToString();
+                        string statusValue = row[Constants.Status].ToString();
 
                         switch (statusValue)
                         {
                             case "29":
-                                row["Status"] = Constants.Active;
+                                row[Constants.Status] = Constants.Active;
                                 break;
                             case "28":
-                                row["Status"] = Constants.Inactive;
+                                row[Constants.Status] = Constants.Inactive;
                                 break;
 
                             default:
-                                row["Status"] = Constants.Delete;
+                                row[Constants.Status] = Constants.Delete;
                                 break;
                         }
                     }
                     // Set the DataTable as the DataSource of the DataGridView
                     this.dataGridView.DataSource = dataTable;
-                    dataGridView.Columns["Status"].ReadOnly = true;
+                    dataGridView.Columns[Constants.Status].ReadOnly = true;
                 }
             }
             catch (Exception ex)
@@ -405,12 +405,12 @@ namespace RWDE
         {
             try
             {
-                if (e.ColumnIndex == dataGridView.Columns[Constants.EditColumnName].Index && e.RowIndex >= 0)
+                if (e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index && e.RowIndex >= 0)
                 {
                     e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
 
                     var buttonRectangle = new Rectangle(e.CellBounds.X + 2, e.CellBounds.Y + 2, e.CellBounds.Width - 4, e.CellBounds.Height - 4);
-                    var buttonText = Constants.EditColumnName;
+                    var buttonText = Constants.Edit;
                     Color buttonColor = Color.FromArgb(128, 128, 255);
                     bool isEmptyRow = IsRowEmpty(e.RowIndex);
 
@@ -493,7 +493,7 @@ namespace RWDE
         }
         private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)//to display the drop down
         {
-            if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns["Status"].Index && e.Control is System.Windows.Forms.ComboBox)
+            if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is System.Windows.Forms.ComboBox)
             {
 
                 System.Windows.Forms.ComboBox comboBox = e.Control as System.Windows.Forms.ComboBox;
@@ -503,7 +503,7 @@ namespace RWDE
                     comboBox.Items.Clear();
 
                     // Get the current row's status value
-                    string currentStatus = dataGridView.CurrentRow.Cells["Status"].Value.ToString();
+                    string currentStatus = dataGridView.CurrentRow.Cells[Constants.Status].Value.ToString();
 
                     // Populate the ComboBox based on the current status
                     if (currentStatus == Constants.Active)
@@ -536,7 +536,7 @@ namespace RWDE
             {
                 // Allow editing for the entire DataGridView initially
                 dataGridView.ReadOnly = false;
-                dataGridView.Columns["Status"].ReadOnly = false;
+                dataGridView.Columns[Constants.Status].ReadOnly = false;
 
                 // Display confirmation message
                 var result = MessageBox.Show($"{Constants.AreyousureyouwanttoaddanewService}", Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -564,9 +564,9 @@ namespace RWDE
                 // Iterate through each row in the DataGridView to set read-only based on status
                 foreach (DataGridViewRow row in dataGridView.Rows)
                 {
-                    if (row.Cells["Status"].Value != null)
+                    if (row.Cells[Constants.Status].Value != null)
                     {
-                        string statusValue = row.Cells["Status"].Value.ToString();
+                        string statusValue = row.Cells[Constants.Status].Value.ToString();
 
                         // Assuming you have specific conditions for read-only rows based on status
                         if (statusValue == Constants.Active || statusValue == Constants.Inactive || statusValue == Constants.Delete)
@@ -592,7 +592,7 @@ namespace RWDE
                     return;
                 }
 
-                if (dataGridView.CurrentRow != null && !dataGridView.CurrentCell.OwningColumn.Name.Equals(Constants.EditColumnName))
+                if (dataGridView.CurrentRow != null && !dataGridView.CurrentCell.OwningColumn.Name.Equals(Constants.Edit))
                 {
                     if (dataGridView.SelectedRows.Count > 1)
                     {
@@ -647,9 +647,9 @@ namespace RWDE
         }
         private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)// Event handler for when a cell is clicked, specifically to handle edit button
         {
-            if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.EditColumnName].Index)
+            if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index)
             {
-                dataGridView.Rows[e.RowIndex].Cells["Status"].ReadOnly = true;
+                dataGridView.Rows[e.RowIndex].Cells[Constants.Status].ReadOnly = true;
 
                 if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
                 {
@@ -686,7 +686,7 @@ namespace RWDE
                     dataGridView.ReadOnly = false;
                     if (result == DialogResult.Yes)
                     {
-                        dataGridView.Rows[e.RowIndex].Cells["Status"].ReadOnly = true;
+                        dataGridView.Rows[e.RowIndex].Cells[Constants.Status].ReadOnly = true;
                         // Make all rows read-only initially
                         foreach (DataGridViewRow row in dataGridView.Rows)
                         {
@@ -700,10 +700,10 @@ namespace RWDE
                        // dataGridView.Rows[e.RowIndex].ReadOnly = false;
                     }
 
-                    // Make all cells editable for the selected row except for the "Status" column
+                    // Make all cells editable for the selected row except for the Constants.Status column
                     foreach (DataGridViewColumn column in dataGridView.Columns)
                     {
-                        if (column.Name == "Status")
+                        if (column.Name == Constants.Status)
                         {
                             dataGridView.Rows[e.RowIndex].Cells[column.Index].ReadOnly = true;
                         }
@@ -736,7 +736,7 @@ namespace RWDE
 
                     // Get the Contract ID and Status column indices
                     int contractIdColumnIndex = dataGridView.Columns["ServiceCodeID"].Index;
-                    int statusColumnIndex = dataGridView.Columns["Status"].Index;
+                    int statusColumnIndex = dataGridView.Columns[Constants.Status].Index;
 
                     // Retrieve values
                     string serviceCodeId = currentRow.Cells[contractIdColumnIndex].Value?.ToString();
@@ -789,7 +789,7 @@ namespace RWDE
                 if (serviceCodeId > 0)
                 {
                     // Update the status to "DELETE"
-                    dataGridView.Rows[rowIndex].Cells["Status"].Value = Constants.Delete;
+                    dataGridView.Rows[rowIndex].Cells[Constants.Status].Value = Constants.Delete;
                     dbHelper.ServiceCodeIdUpdateStatus(serviceCodeId, "30"); // Assume this function updates the status in the database
                     MessageBox.Show($"Deleted ContractID: {serviceCodeId} Successfully", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
@@ -802,13 +802,13 @@ namespace RWDE
         }
         private void HandleEditServiceCode(int rowIndex)//updating data
         {
-            var cell = dataGridView.Rows[rowIndex].Cells[Constants.EditColumnName];
-            if (cell.Value != null && cell.Value.ToString() == Constants.EditColumnName)
+            var cell = dataGridView.Rows[rowIndex].Cells[Constants.Edit];
+            if (cell.Value != null && cell.Value.ToString() == Constants.Edit)  
             {
                 try
                 {
                     int serviceCodeId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells["ServiceCodeID"].Value);
-                    string service = dataGridView.Rows[rowIndex].Cells["Service"].Value.ToString();
+                    string service = dataGridView.Rows[rowIndex].Cells[Constants.Service].Value.ToString();
                     string hccExportToAries = dataGridView.Rows[rowIndex].Cells["HCC_ExportToAries"].Value.ToString();
                     string hccContractId = dataGridView.Rows[rowIndex].Cells[Constants.ContractId].Value.ToString();
                     string hccPrimaryService = dataGridView.Rows[rowIndex].Cells["HCC_PrimaryService"].Value.ToString();
@@ -816,7 +816,7 @@ namespace RWDE
                     string hccSubservice = dataGridView.Rows[rowIndex].Cells["HCC_Subservice"].Value.ToString();
                     string unitsOfMeasure = dataGridView.Rows[rowIndex].Cells["UnitsOfMeasure"].Value.ToString();
                     decimal unitValue = Convert.ToDecimal(dataGridView.Rows[rowIndex].Cells["UnitValue"].Value);
-                    string status = dataGridView.Rows[rowIndex].Cells["Status"].Value.ToString();
+                    string status = dataGridView.Rows[rowIndex].Cells[Constants.Status].Value.ToString();
 
                     status = (status == Constants.Active) ? Constants.ActiveContractstatus :
                         (status == Constants.Inactive) ? Constants.InactiveContractstatus :
@@ -840,7 +840,7 @@ namespace RWDE
         {
             try
             {
-                var statusString = row["Status"].ToString();
+                var statusString = row[Constants.Status].ToString();
 
                 // Ensure the status is set correctly based on your conditions
                 if (statusString == "ACTIVE")
@@ -897,7 +897,7 @@ namespace RWDE
                 // Execute the stored procedure to insert or update row into table
                 string operation = dbHelper.InsertOrUpdateServiceCode(
                     serviceCodeId,
-                    row["Service"].ToString(),
+                    row[Constants.Service].ToString(),
                     row["HCC_ExportToAries"].ToString(),
                     hccContractId,
                     row["HCC_PrimaryService"].ToString(),
@@ -932,7 +932,7 @@ namespace RWDE
         {
             try
             {
-                if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns["Status"].Index && e.Control is System.Windows.Forms.ComboBox comboBox)
+                if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is System.Windows.Forms.ComboBox comboBox)
                 {
                     // Remove existing event handlers to prevent multiple subscriptions
                     comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;//to create dropdown
@@ -955,7 +955,7 @@ namespace RWDE
 
                 string selectedStatus = comboBox.SelectedItem.ToString();
                 string serviceCodeId = currentRow.Cells["ServiceCodeID"].Value.ToString();
-                string currentStatus = currentRow.Cells["Status"].Value?.ToString();
+                string currentStatus = currentRow.Cells[Constants.Status].Value?.ToString();
 
                 if (currentStatus != selectedStatus)
                 {
@@ -967,7 +967,7 @@ namespace RWDE
                     if (result == DialogResult.Yes)
                     {
                         // Update the status cell value
-                        currentRow.Cells["Status"].Value = selectedStatus;
+                        currentRow.Cells[Constants.Status].Value = selectedStatus;
                     }
                     else
                     {

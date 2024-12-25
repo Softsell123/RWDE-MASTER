@@ -610,7 +610,7 @@ namespace RWDE
             this.txtClient.Size = new System.Drawing.Size(240, 40);
             this.txtClient.TabIndex = 8;
             this.txtClient.TabStop = false;
-            this.txtClient.Text = "0%";
+            this.txtClient.Text = Constants.ZeroPercent;
             // 
             // progressClient
             // 
@@ -662,7 +662,7 @@ namespace RWDE
             this.txtProgressBar.Size = new System.Drawing.Size(240, 40);
             this.txtProgressBar.TabIndex = 5;
             this.txtProgressBar.TabStop = false;
-            this.txtProgressBar.Text = "0%";
+            this.txtProgressBar.Text = Constants.ZeroPercent;
             // 
             // btnClose
             // 

@@ -108,7 +108,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(200, 50);
             this.btnClose.TabIndex = 9;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -281,9 +281,9 @@ namespace RWDE
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
             this.Status.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Status.HeaderText = "Status";
+            this.Status.HeaderText = Constants.Status;
             this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
+            this.Status.Name = Constants.Status;
             this.Status.ReadOnly = true;
             this.Status.Width = 120;
             // 

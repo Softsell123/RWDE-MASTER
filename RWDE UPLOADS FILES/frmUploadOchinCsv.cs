@@ -249,7 +249,7 @@ namespace RWDE//
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(string.Format(Constants.ErrorMessage, ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     ResetUi();
                 }
             }

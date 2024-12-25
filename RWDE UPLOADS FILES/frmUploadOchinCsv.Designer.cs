@@ -472,7 +472,7 @@ namespace RWDE
             this.txtProgressLines.Size = new System.Drawing.Size(240, 40);
             this.txtProgressLines.TabIndex = 0;
             this.txtProgressLines.TabStop = false;
-            this.txtProgressLines.Text = "0%";
+            this.txtProgressLines.Text = Constants.ZeroPercent;
             this.txtProgressLines.TextChanged += new System.EventHandler(this.txtProgressbar_TextChanged);
             // 
             // lblfiles

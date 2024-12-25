@@ -82,7 +82,7 @@ namespace RWDE
             try {
                 if (string.IsNullOrEmpty(txtpath.Text))
                 {
-                    MessageBox.Show("The folder path cannot be empty. Please select a valid folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("The folder path cannot be empty. Please select a valid folder.", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -163,7 +163,7 @@ namespace RWDE
                                     string date = startTime.ToString("MM/dd/yyyy");
                                     string time = startTime.ToString("HH:mm:ss");
                                     txtDesc.Text = $"HCC CSV Upload on {date} at {time}";
-                                    string formattime = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+                                    string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                                     txtUploadStarted.Text = formattime;
 
                                     if (isUploading)
@@ -193,7 +193,7 @@ namespace RWDE
                                 }
                                 DateTime endTime = DateTime.Now;
                                 TimeSpan totalTime = endTime - startTime;
-                                string eTime = endTime.ToString("MM/dd/yyyy HH:mm:ss");
+                                string eTime = endTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                                 double totalSeconds = totalTime.TotalSeconds;
                                 txtUploadEnded.Text = eTime;
                                 txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
@@ -208,7 +208,7 @@ namespace RWDE
                         }
                         else
                         {
-                            MessageBox.Show(Constants.NoFolderSelectedMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(Constants.NoFolderSelectedMessage, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     catch (Exception ex)
@@ -217,7 +217,7 @@ namespace RWDE
                         var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                         int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
                         dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(btnUpload_Click), fileName, lineNumber);
-                        MessageBox.Show(string.Format(Constants.ErrorMessage, ex.Message), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -375,7 +375,7 @@ namespace RWDE
             {
                 try
                 {
-                    if (btnClose.Text == "Close")
+                    if (btnClose.Text == Constants.Close)
                     {
                         this.Close();
                         Application.Restart();

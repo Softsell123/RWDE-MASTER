@@ -115,7 +115,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(200, 51);
             this.btnClose.TabIndex = 6;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -202,7 +202,7 @@ namespace RWDE
             // 
             // Column3
             // 
-            this.Column3.HeaderText = "Status";
+            this.Column3.HeaderText = Constants.Status;
             this.Column3.MinimumWidth = 6;
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;

@@ -21,8 +21,8 @@ namespace RWDE
                 this.ControlBox = false;
                 this.WindowState = FormWindowState.Maximized;
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 // Assuming you have another DateTimePicker for the End Date
                 dtpEndDate.Value = DateTime.Now;
                 // Populate the DataGridView with data from the Batch table
@@ -80,7 +80,7 @@ namespace RWDE
                 // Add columns to the DataGridView
                 AddColumn(Constants.BatchId, Constants.BatchIdHeader, dataGridView);
                 AddColumn(Constants.Description, Constants.DescriptionHeader, dataGridView);
-                AddColumn(Constants.Type, Constants.TypeHeader, dataGridView);
+                AddColumn(Constants.Type, Constants.BatchTypeHeader, dataGridView);
 
                 // Format time columns to include seconds
                 AddTimeColumn(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridView);
@@ -130,7 +130,7 @@ namespace RWDE
                 // Add columns to the DataGridView
                 AddColumn(Constants.BatchId, Constants.BatchIdHeader, dataGridView);
                 AddColumn(Constants.Description, Constants.DescriptionHeader, dataGridView);
-                AddColumn(Constants.Type, Constants.TypeHeader, dataGridView);
+                AddColumn(Constants.Type, Constants.BatchTypeHeader, dataGridView);
 
                 // Format time columns to include seconds
                 AddTimeColumn(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridView);
@@ -181,7 +181,7 @@ namespace RWDE
                 // Add columns to the DataGridView
                 AddColumn(Constants.BatchId, Constants.BatchIdHeader, dataGridView);
                 AddColumn(Constants.Description, Constants.DescriptionHeader, dataGridView);
-                AddColumn(Constants.Type, Constants.TypeHeader, dataGridView);
+                AddColumn(Constants.Type, Constants.BatchTypeHeader, dataGridView);
 
                 // Format time columns to include seconds
                 AddTimeColumn(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridView);
@@ -318,7 +318,7 @@ namespace RWDE
                     Name = name,
                     DataPropertyName = name,
                     HeaderText = headerText,
-                    DefaultCellStyle = new DataGridViewCellStyle { Format = "MM-dd-yyyy HH:mm:ss" }
+                    DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.MMddyyyyHHmmss }
                 };
                 dataGridView.Columns.Add(column);
             }
@@ -488,7 +488,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log the exception or display an error message
-                MessageBox.Show($"An error occurred: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

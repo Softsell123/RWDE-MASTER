@@ -351,19 +351,19 @@ namespace RWDE
             // 
             // BatchID
             // 
-            this.BatchID.DataPropertyName = "BatchID";
-            this.BatchID.HeaderText = "BatchID";
+            this.BatchID.DataPropertyName = Constants.BatchId;
+            this.BatchID.HeaderText = Constants.BatchId;
             this.BatchID.MinimumWidth = 6;
-            this.BatchID.Name = "BatchID";
+            this.BatchID.Name = Constants.BatchId;
             this.BatchID.ReadOnly = true;
             this.BatchID.Width = 119;
             // 
             // Description
             // 
-            this.Description.DataPropertyName = "Description";
-            this.Description.HeaderText = "Description";
+            this.Description.DataPropertyName = Constants.Description;
+            this.Description.HeaderText = Constants.Description;
             this.Description.MinimumWidth = 6;
-            this.Description.Name = "Description";
+            this.Description.Name = Constants.Description;
             this.Description.ReadOnly = true;
             this.Description.Width = 157;
             // 
@@ -387,17 +387,17 @@ namespace RWDE
             // 
             // Status
             // 
-            this.Status.DataPropertyName = "Status";
-            this.Status.HeaderText = "Status";
+            this.Status.DataPropertyName = Constants.Status;
+            this.Status.HeaderText = Constants.Status;
             this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
+            this.Status.Name = Constants.Status;
             this.Status.ReadOnly = true;
             this.Status.Width = 104;
             // 
             // batchIDDataGridViewTextBoxColumn
             // 
-            this.batchIDDataGridViewTextBoxColumn.DataPropertyName = "BatchID";
-            this.batchIDDataGridViewTextBoxColumn.HeaderText = "BatchID";
+            this.batchIDDataGridViewTextBoxColumn.DataPropertyName = Constants.BatchId;
+            this.batchIDDataGridViewTextBoxColumn.HeaderText = Constants.BatchId;
             this.batchIDDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.batchIDDataGridViewTextBoxColumn.Name = "batchIDDataGridViewTextBoxColumn";
             this.batchIDDataGridViewTextBoxColumn.ReadOnly = true;
@@ -405,8 +405,8 @@ namespace RWDE
             // 
             // fileNameDataGridViewTextBoxColumn
             // 
-            this.fileNameDataGridViewTextBoxColumn.DataPropertyName = "FileName";
-            this.fileNameDataGridViewTextBoxColumn.HeaderText = "FileName";
+            this.fileNameDataGridViewTextBoxColumn.DataPropertyName = Constants.FileName;
+            this.fileNameDataGridViewTextBoxColumn.HeaderText = Constants.FileName;
             this.fileNameDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.fileNameDataGridViewTextBoxColumn.Name = "fileNameDataGridViewTextBoxColumn";
             this.fileNameDataGridViewTextBoxColumn.ReadOnly = true;
@@ -414,8 +414,8 @@ namespace RWDE
             // 
             // descriptionDataGridViewTextBoxColumn
             // 
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
+            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = Constants.Description;
+            this.descriptionDataGridViewTextBoxColumn.HeaderText = Constants.Description;
             this.descriptionDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
             this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
@@ -477,8 +477,8 @@ namespace RWDE
             // 
             // statusDataGridViewTextBoxColumn
             // 
-            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
-            this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
+            this.statusDataGridViewTextBoxColumn.DataPropertyName = Constants.Status;
+            this.statusDataGridViewTextBoxColumn.HeaderText = Constants.Status;
             this.statusDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
             this.statusDataGridViewTextBoxColumn.ReadOnly = true;
@@ -522,7 +522,7 @@ namespace RWDE
             // 
             // Batchtype
             // 
-            this.Batchtype.HeaderText = "Batch Type";
+            this.Batchtype.HeaderText = Constants.BatchTypeHeader;
             this.Batchtype.MinimumWidth = 6;
             this.Batchtype.Name = "Batchtype";
             this.Batchtype.ReadOnly = true;
@@ -530,7 +530,7 @@ namespace RWDE
             // 
             // StartedAt
             // 
-            this.StartedAt.DataPropertyName = "UploadStartedAt";
+            this.StartedAt.DataPropertyName = Constants.UploadStartedAt;
             this.StartedAt.HeaderText = "Upload StartedAt";
             this.StartedAt.MinimumWidth = 6;
             this.StartedAt.Name = "StartedAt";
@@ -539,7 +539,7 @@ namespace RWDE
             // 
             // EndedAt
             // 
-            this.EndedAt.DataPropertyName = "UploadEndedAt";
+            this.EndedAt.DataPropertyName = Constants.UploadEndedAt;
             this.EndedAt.HeaderText = "Upload EndedAt";
             this.EndedAt.MinimumWidth = 6;
             this.EndedAt.Name = "EndedAt";
@@ -565,7 +565,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(240, 48);
             this.btnClose.TabIndex = 2;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 

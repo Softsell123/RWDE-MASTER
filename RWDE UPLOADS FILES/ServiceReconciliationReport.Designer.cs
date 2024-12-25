@@ -95,7 +95,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 2;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -268,7 +268,7 @@ namespace RWDE
             this.lblBatch.Name = "lblBatch";
             this.lblBatch.Size = new System.Drawing.Size(107, 35);
             this.lblBatch.TabIndex = 8;
-            this.lblBatch.Text = "BatchID";
+            this.lblBatch.Text = Constants.BatchId;
             // 
             // btnClr
             // 
@@ -368,7 +368,7 @@ namespace RWDE
             // BatchId
             // 
             this.BatchId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.BatchId.HeaderText = "BatchID";
+            this.BatchId.HeaderText = Constants.BatchId;
             this.BatchId.MinimumWidth = 6;
             this.BatchId.Name = "BatchId";
             this.BatchId.ReadOnly = true;
@@ -402,9 +402,9 @@ namespace RWDE
             // 
             // Status
             // 
-            this.Status.HeaderText = "Status";
+            this.Status.HeaderText = Constants.Status;
             this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
+            this.Status.Name = Constants.Status;
             this.Status.ReadOnly = true;
             // 
             // AriesConsentExprireDate

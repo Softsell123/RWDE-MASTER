@@ -14,8 +14,8 @@ namespace RWDE
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddMonths(-1);
-            dtpStartDate.CustomFormat = ManualUploadConstants.DateCustomFormat;
-            dtpEndDate.CustomFormat = ManualUploadConstants.DateCustomFormat;
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             dtpEndDate.Value = DateTime.Now;
@@ -78,7 +78,7 @@ namespace RWDE
                 // Now you can use the result, e.g., bind it to a DataGridView or process it
                 if (result.Rows.Count == 0)
                 {
-                    MessageBox.Show(ManualUploadConstants.NoManualUploadsbetweenselecteddates, ManualUploadConstants.Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(ManualUploadConstants.NoManualUploadsbetweenselecteddates, Constants.Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 dataGridView.DataSource = result;
@@ -94,9 +94,9 @@ namespace RWDE
             try 
             { 
                 dtpStartDate.Value = DateTime.Now.AddMonths(-1);
-                dtpStartDate.CustomFormat = ManualUploadConstants.DateCustomFormat;
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
-                dtpEndDate.CustomFormat = ManualUploadConstants.DateCustomFormat;
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
 
                 // Clear the DataTable bound to the DataGridView
                 if (dataGridView.DataSource is DataTable dt)
@@ -115,7 +115,7 @@ namespace RWDE
             {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show(ManualUploadConstants.Nodataavailabletodownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.Nodataavailabletodownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
                 DataTable dataTable = new DataTable();

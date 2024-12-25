@@ -97,7 +97,7 @@
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 8;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -395,7 +395,7 @@
             this.lblBatch.Name = "lblBatch";
             this.lblBatch.Size = new System.Drawing.Size(107, 35);
             this.lblBatch.TabIndex = 10;
-            this.lblBatch.Text = "BatchID";
+            this.lblBatch.Text = Constants.BatchId;
             // 
             // HccReconciliation
             // 

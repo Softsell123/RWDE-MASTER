@@ -130,17 +130,17 @@
             // Status
             // 
             this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Status.DataPropertyName = "BatchID";
+            this.Status.DataPropertyName = Constants.BatchId;
             this.Status.HeaderText = "HCC Tables";
             this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
+            this.Status.Name = Constants.Status;
             this.Status.ReadOnly = true;
             this.Status.Width = 350;
             // 
             // Message
             // 
             this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Message.DataPropertyName = "BatchID";
+            this.Message.DataPropertyName = Constants.BatchId;
             this.Message.HeaderText = "Error Message";
             this.Message.MinimumWidth = 6;
             this.Message.Name = "Message";
@@ -150,9 +150,9 @@
             // Sourceid
             // 
             this.Sourceid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Sourceid.HeaderText = "SourceId";
+            this.Sourceid.HeaderText = Constants.SourceId;
             this.Sourceid.MinimumWidth = 6;
-            this.Sourceid.Name = "Sourceid";
+            this.Sourceid.Name = Constants.SourceId;
             this.Sourceid.ReadOnly = true;
             this.Sourceid.Width = 350;
             // 
@@ -161,7 +161,7 @@
             this.SourceFileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.SourceFileName.HeaderText = "Source File Name";
             this.SourceFileName.MinimumWidth = 6;
-            this.SourceFileName.Name = "SourceFileName";
+            this.SourceFileName.Name = Constants.SourceFileName;
             this.SourceFileName.ReadOnly = true;
             this.SourceFileName.Width = 350;
             // 
@@ -270,7 +270,7 @@
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(265, 35);
             this.lblTitle.TabIndex = 12;
-            this.lblTitle.Text = "Download HCC Errors";
+            this.lblTitle.Text = Constants.DownloadHccErrors;
             // 
             // btnClose
             // 
@@ -283,7 +283,7 @@
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 13;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -318,7 +318,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FrmDownloadHccErrors";
-            this.Text = "Download HCC Errors";
+            this.Text = Constants.DownloadHccErrors;
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

@@ -94,7 +94,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 18;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -150,7 +150,7 @@ namespace RWDE
             // 
             // Column5
             // 
-            this.Column5.HeaderText = "Type";
+            this.Column5.HeaderText = Constants.Type;
             this.Column5.MinimumWidth = 6;
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
@@ -160,7 +160,7 @@ namespace RWDE
             // 
             this.FileName.HeaderText = "Module";
             this.FileName.MinimumWidth = 6;
-            this.FileName.Name = "FileName";
+            this.FileName.Name = Constants.FileName;
             this.FileName.ReadOnly = true;
             this.FileName.Width = 134;
             // 
@@ -174,7 +174,7 @@ namespace RWDE
             // 
             // CreatedOn
             // 
-            this.CreatedOn.HeaderText = "File Name";
+            this.CreatedOn.HeaderText = Constants.FileNamesp;
             this.CreatedOn.MinimumWidth = 6;
             this.CreatedOn.Name = "CreatedOn";
             this.CreatedOn.ReadOnly = true;
@@ -182,7 +182,7 @@ namespace RWDE
             // 
             // ErrorLine
             // 
-            this.ErrorLine.HeaderText = "Error";
+            this.ErrorLine.HeaderText = Constants.ErrorTitle;
             this.ErrorLine.MinimumWidth = 6;
             this.ErrorLine.Name = "ErrorLine";
             this.ErrorLine.ReadOnly = true;

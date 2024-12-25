@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace RWDE
@@ -35,7 +34,7 @@ namespace RWDE
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -57,8 +56,8 @@ namespace RWDE
             {
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
-                    openFileDialog.Filter = "Excel Files|*.xlsx";
-                    openFileDialog.Title = "Select an Excel File";
+                    openFileDialog.Filter = Constants.ExcelFilesXlsx;
+                    openFileDialog.Title = Constants.SelectAnExcelFile;
 
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
@@ -76,16 +75,16 @@ namespace RWDE
         private bool IsAllowedFileType(string filePath)
         {
             string extension = Path.GetExtension(filePath).ToLowerInvariant();
-            return extension == ".xlsx";
+            return extension == Constants.XlsxExtention;
         }
         private void ProcessExcelData(string SourceFileName)
         {
             DataTable excelData = ReadExcelFile(SourceFileName);
-
+            
             // Ensure the required columns exist
-            if (!excelData.Columns.Contains("HccTable") || !excelData.Columns.Contains("ErrorMessage"))
+            if (!excelData.Columns.Contains(Constants.HccTable) || !excelData.Columns.Contains(Constants.ErrorMessage))
             {
-                MessageBox.Show("The required columns 'HCCTABLE' or 'ErrorMessage' are missing in the Excel sheet.", "Download HCC Errors");
+                MessageBox.Show(Constants.TheRequiredColumnsAreMissing,Constants.DownloadHccErrors);
                 return;
             }
 
@@ -99,44 +98,44 @@ namespace RWDE
                     {
                         foreach (DataRow row in excelData.Rows)
                         {
-                            string sourceFileName = row["SourceFileName"].ToString();
-                            string hccTable = row["HccTable"].ToString();
-                            string errorMessage = row["ErrorMessage"].ToString();
-                            string clientId = row["SourceId"].ToString();
+                            string sourceFileName = row[Constants.SourceFileName].ToString();
+                            string hccTable = row[Constants.HccTable].ToString();
+                            string errorMessage = row[Constants.ErrorMessage].ToString();
+                            string clientId = row[Constants.SourceId].ToString();
                             
                             // Replace values in HccTable based on specific cases
                             switch (hccTable)
                             {
-                                case "T_CLNT_DEMO":
-                                case "T_CLNT_ETHN_DTL":
-                                    hccTable = "HCCCLIENTS";
+                                case Constants.T_CLNT_DEMO:
+                                case Constants.T_CLNT_ETHN_DTL:
+                                    hccTable = Constants.HCCCLIENTS;
                                     break;
-                                case "T_CLNT_HIV_INFO":
-                                    hccTable = "HCCClientMedCD4";
+                                case Constants.T_CLNT_HIV_INFO:
+                                    hccTable = Constants.HCCClientMedCD4;
                                     break;
-                                case "T_CLNT_HIV_TEST":
-                                    hccTable = "HCCClientHIVTest";
+                                case Constants.T_CLNT_HIV_TEST:
+                                    hccTable = Constants.HCCClientHIVTest;
                                     break;
-                                case "T_CLNT_LVNG_STTN":
-                                    hccTable = "HCCLvngSttn";
+                                case Constants.T_CLNT_LVNG_STTN:
+                                    hccTable =Constants.HCCLvngSttn;
                                     break;
-                                case "T_CLNT_RACE_DTL":
-                                    hccTable = "HCCClientRace";
+                                case Constants.T_CLNT_RACE_DTL:
+                                    hccTable = Constants.HCCClientRace;
                                     break;
-                                case "T_CLNT_SITE":
-                                    hccTable = "HCCClientAddr";
+                                case Constants.T_CLNT_SITE:
+                                    hccTable = Constants.HCCClientAddr;
                                     break;
-                                case "T_CLNT_HSNG_ASSTNC":
-                                    hccTable = "HCCLvngSttn";
+                                case Constants.T_CLNT_HSNG_ASSTNC:
+                                    hccTable = Constants.HCCLvngSttn;
                                     break;
-                                case "T_CLNT_HSHLD_INCOME":
-                                    hccTable = "HCCClients";
+                                case Constants.T_CLNT_HSHLD_INCOME:
+                                    hccTable = Constants.HccClients;
                                     break;
 
                                 default:
-                                    if (hccTable.Contains("T_SITE"))
+                                    if (hccTable.Contains(Constants.T_SITE))
                                     {
-                                        hccTable = "HCCServices";
+                                        hccTable = Constants.HccServices;
                                     }
                                     else
                                     {
@@ -150,12 +149,12 @@ namespace RWDE
                             AddRowToGrid(errorMessage, hccTable, clientId, sourceFileName);
                         }
                         transaction.Commit();
-                        MessageBox.Show("Data processed and inserted into the database successfully.", "Download HCC Errors");
+                        MessageBox.Show(Constants.Dataprocessedandinsertedintothedatabasesuccessfully, Constants.DownloadHccErrors);
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        MessageBox.Show("Error inserting data into the database: " + ex.Message, "Download HCC Errors");
+                        MessageBox.Show(Constants.Errorinsertingdataintothedatabase + ex.Message, Constants.DownloadHccErrors);
                     }
                 }
             }
@@ -166,10 +165,10 @@ namespace RWDE
             if (dataGridView.Columns.Count == 0)
             {
                 // Create columns if they don't exist
-                dataGridView.Columns.Add("HccTable", "HCC Table");
-                dataGridView.Columns.Add("ErrorMessage", "Error Message");
-                dataGridView.Columns.Add("SourceId", "Client ID");
-                dataGridView.Columns.Add("SourceFileName", "SourceFileName");
+                dataGridView.Columns.Add(Constants.HccTable, Constants.HccTableSp);
+                dataGridView.Columns.Add(Constants.ErrorMessage, Constants.ErrorMessageSp);
+                dataGridView.Columns.Add(Constants.SourceId, Constants.ClientIdSp);
+                dataGridView.Columns.Add(Constants.SourceFileName, Constants.SourceFileName);
             }
             // Add a new row to the DataGridView
             dataGridView.Rows.Add(hccTable, errorMessage, clientId, sourceFileName);
@@ -178,29 +177,29 @@ namespace RWDE
         {
             try
             {
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO HCC_ErrorLog (HccTable, ErrorMessage, SourceId, SourceFileName) VALUES (@HccTable, @ErrorMessage, @ClientId, @SourceFileName)", conn, transaction))
+                using (SqlCommand cmd = new SqlCommand(Constants.InsertIntoDatabaseQuery, conn, transaction))
                 {
-                    cmd.Parameters.AddWithValue("@HccTable", hccTable);
-                    cmd.Parameters.AddWithValue("@ErrorMessage", errorMessage);
+                    cmd.Parameters.AddWithValue(Constants.AtHccTable, hccTable);
+                    cmd.Parameters.AddWithValue(Constants.AtErrorMessage, errorMessage);
 
                     // Check if clientId starts with "246_" and remove it if it does
-                    string modifiedClientId = clientId.StartsWith("246_") ? clientId.Substring(4) : clientId;
+                    string modifiedClientId = clientId.StartsWith(Constants.AgencyCode) ? clientId.Substring(4) : clientId;
 
-                    cmd.Parameters.AddWithValue("@ClientId", modifiedClientId);
-                    cmd.Parameters.AddWithValue("@SourceFileName", sourceFileName);
+                    cmd.Parameters.AddWithValue(Constants.AtClientId, modifiedClientId);
+                    cmd.Parameters.AddWithValue(Constants.AtSourceFileName, sourceFileName);
                     cmd.ExecuteNonQuery();
                 }
             }
             catch (SqlException ex)
             {
                 // Handle SQL exceptions
-                Console.WriteLine($"SQL Error: {ex.Message}");
+                Console.WriteLine($@"{Constants.SqlError}{ex.Message}");
                 transaction.Rollback(); // Rollback transaction if needed
             }
             catch (Exception ex)
             {
                 // Handle any other exceptions
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($@"{Constants.Errorsp}{ex.Message}");
                 transaction.Rollback(); // Rollback transaction if needed
             }
         }
@@ -241,7 +240,7 @@ namespace RWDE
         {
             if (txtPath.Text == "")
             {
-                MessageBox.Show(Constants.Nodatatoinsertintotable, "Download HCC Errors");
+                MessageBox.Show(Constants.Nodatatoinsertintotable, Constants.DownloadHccErrors);
                 return;
             }
             string selectedFilePath = txtPath.Text;
@@ -256,12 +255,12 @@ namespace RWDE
         {
             if (txtFileName.Text == "")
             {
-                MessageBox.Show(Constants.Theservicefilenamecannotbenull, "Download HCC Errors");
+                MessageBox.Show(Constants.Theservicefilenamecannotbenull, Constants.DownloadHccErrors);
                 return;
             }
-            if (!txtFileName.Text.ToUpper().Contains("SERVICE") && !txtFileName.Text.ToUpper().Contains("CLIENT"))
+            if (!txtFileName.Text.ToUpper().Contains(Constants.UpperService) && !txtFileName.Text.ToUpper().Contains(Constants.UpperClient))
             {
-                MessageBox.Show(Constants.Nodataavailableforthissourcefilename, "Download HCC Errors");
+                MessageBox.Show(Constants.Nodataavailableforthissourcefilename, Constants.DownloadHccErrors);
                 return;
             }
             dataGridView.AutoGenerateColumns = false;
@@ -272,10 +271,10 @@ namespace RWDE
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand("FILTERSOURCEFILENAME", conn))
+                    using (SqlCommand command = new SqlCommand(Constants.Filtersourcefilename, conn))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@SourceFileName", sourceFileName);
+                        command.Parameters.AddWithValue(Constants.AtSourceFileName, sourceFileName);
                         using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                         {
                             try
@@ -291,7 +290,7 @@ namespace RWDE
                             catch (Exception ex)
                             {
                                 // Handle exceptions (e.g., logging)
-                                Console.WriteLine("Error: " + ex.Message);
+                                Console.WriteLine(Constants.Errorsp + ex.Message);
                             }
                             command.ExecuteNonQuery();
                             // Execute the SQL command to insert client data

@@ -124,7 +124,7 @@ namespace RWDE
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
-                    var worksheet = workbook.Worksheets.Add("Sheet1");
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
 
                     // Load the DataTable into the worksheet
                     worksheet.Cell(1, 1).InsertTable(dataTable);
@@ -139,7 +139,7 @@ namespace RWDE
                             // Base file name and directory
                             string baseFileName = ContractIdList.MonthlyReports;
                             string directoryPath = folderBrowserDialog.SelectedPath;
-                            string fileExtension = ".xlsx";
+                            string fileExtension = Constants.XlsxExtention;
 
                             // Construct the initial file path
                             string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);

@@ -40,8 +40,8 @@ namespace RWDE
             dataGridViewHCC.CellFormatting += dataGridView_CellFormatting;
             dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
             RegisterEvents(this);
@@ -78,7 +78,7 @@ namespace RWDE
                 }
             }
         }
-        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)// Formats the cell value for the "Status" column based on the corresponding value in the database.
+        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)// Formats the cell value for the Constants.Status column based on the corresponding value in the database.
         {
             try
             {
@@ -93,7 +93,7 @@ namespace RWDE
                             using (SqlCommand com = new SqlCommand(valueSelectQuery, sql))
                             {
                                 com.CommandType = CommandType.StoredProcedure;
-                                com.Parameters.AddWithValue("@ListsID", statusValue);
+                                com.Parameters.AddWithValue(Constants.AtListsId, statusValue);
                                 sql.Open();
                                 var result = com.ExecuteScalar();
                                 sql.Close();
@@ -116,88 +116,88 @@ namespace RWDE
         private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)// Sets the width of specific columns in the DataGridView after data binding is complete.
         {
             try
-            {            // Check if the "BatchID" column exists before setting its width
-                if (dataGridView.Columns.Contains("BatchID"))
+            {            // Check if the Constants.BatchId column exists before setting its width
+                if (dataGridView.Columns.Contains(Constants.BatchId))
                 {
-                    dataGridView.Columns["BatchID"].Width = 205;
+                    dataGridView.Columns[Constants.BatchId].Width = 205;
                     // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("Type"))
+                if (dataGridView.Columns.Contains(Constants.Type))
                 {
-                    dataGridView.Columns["Type"].Width = 160; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.Type].Width = 160; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("FileName"))
+                if (dataGridView.Columns.Contains(Constants.FileName))
                 {
-                    dataGridView.Columns["FileName"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.FileName].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("Description"))
+                if (dataGridView.Columns.Contains(Constants.Description))
                 {
-                    dataGridView.Columns["Description"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.Description].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("UploadStartedAt"))
+                if (dataGridView.Columns.Contains(Constants.UploadStartedAt))
                 {
-                    dataGridView.Columns["UploadStartedAt"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.UploadStartedAt].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("UploadEndedAt"))
+                if (dataGridView.Columns.Contains(Constants.UploadEndedAt))
                 {
-                    dataGridView.Columns["UploadEndedAt"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.UploadEndedAt].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("ConversionStartedAt"))
+                if (dataGridView.Columns.Contains(Constants.ConversionStartedAt))
                 {
-                    dataGridView.Columns["ConversionStartedAt"].Width = 250; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.ConversionStartedAt].Width = 250; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("ConversionEndedAt"))
+                if (dataGridView.Columns.Contains(Constants.ConversionEndedAt))
                 {
-                    dataGridView.Columns["ConversionEndedAt"].Width = 250; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.ConversionEndedAt].Width = 250; // Set the width to 200 pixels
                 }
 
-                if (dataGridView.Columns.Contains("Status"))
+                if (dataGridView.Columns.Contains(Constants.Status))
                 {
-                    dataGridView.Columns["Status"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.Status].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("BatchID"))
+                if (dataGridViewHCC.Columns.Contains(Constants.BatchId))
                 {
-                    dataGridViewHCC.Columns["BatchID"].Width = 205;
+                    dataGridViewHCC.Columns[Constants.BatchId].Width = 205;
                     // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("Type"))
+                if (dataGridViewHCC.Columns.Contains(Constants.Type))
                 {
-                    dataGridViewHCC.Columns["Type"].Width = 160; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.Type].Width = 160; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("FileName"))
+                if (dataGridViewHCC.Columns.Contains(Constants.FileName))
                 {
-                    dataGridViewHCC.Columns["FileName"].Width = 205; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.FileName].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("Description"))
+                if (dataGridViewHCC.Columns.Contains(Constants.Description))
                 {
-                    dataGridViewHCC.Columns["Description"].Width = 205; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.Description].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("UploadStartedAt"))
+                if (dataGridViewHCC.Columns.Contains(Constants.UploadStartedAt))
                 {
-                    dataGridViewHCC.Columns["UploadStartedAt"].Width = 205; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.UploadStartedAt].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("UploadEndedAt"))
+                if (dataGridViewHCC.Columns.Contains(Constants.UploadEndedAt))
                 {
-                    dataGridViewHCC.Columns["UploadEndedAt"].Width = 205; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.UploadEndedAt].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("ConversionStartedAt"))
+                if (dataGridViewHCC.Columns.Contains(Constants.ConversionStartedAt))
                 {
-                    dataGridViewHCC.Columns["ConversionStartedAt"].Width = 250; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.ConversionStartedAt].Width = 250; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("ConversionEndedAt"))
+                if (dataGridViewHCC.Columns.Contains(Constants.ConversionEndedAt))
                 {
-                    dataGridViewHCC.Columns["ConversionEndedAt"].Width = 250; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.ConversionEndedAt].Width = 250; // Set the width to 200 pixels
                 }
 
-                if (dataGridViewHCC.Columns.Contains("Status"))
+                if (dataGridViewHCC.Columns.Contains(Constants.Status))
                 {
-                    dataGridViewHCC.Columns["Status"].Width = 205; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.Status].Width = 205; // Set the width to 200 pixels
                 }
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine(Constants.Errorsp + ex.Message);
             }
         }
         private void AddDateTime(string name, string value, DataGridView dataGridView)//format datetime 
@@ -208,7 +208,7 @@ namespace RWDE
                 Name = name,
                 DataPropertyName = name,
                 HeaderText = value,
-                DefaultCellStyle = new DataGridViewCellStyle { Format = "MM-dd-yyyy HH:mm:ss" }
+                DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.MMddyyyyHHmmss }
             };
             dataGridView.Columns.Add(column);
             }
@@ -233,20 +233,20 @@ namespace RWDE
                         return; // Exit the method early
                     }
                     int selectedRowIndex = dataGridView.SelectedRows[0].Index;
-                if (dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value == null ||!int.TryParse(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString(), out int batchId) || batchId == 0)
+                if (dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value == null ||!int.TryParse(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString(), out int batchId) || batchId == 0)
                 {
-                    MessageBox.Show(Constants.Pleaseselectavalidrowtoproceed, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.Pleaseselectavalidrowtoproceed, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
-                    string fileName = dataGridView.Rows[selectedRowIndex].Cells["fileName"].Value.ToString();
+                int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
+                    string fileName = dataGridView.Rows[selectedRowIndex].Cells[Constants.SmallFileName].Value.ToString();
 
-                    if (fileName.Contains("Client"))
+                    if (fileName.Contains(Constants.Client))
                     {
                         _ = GetclientssAsync(selectedBatchId);//to get client data mapping
                     }
 
-                    if (fileName.Contains("Service"))
+                    if (fileName.Contains(Constants.Service))
                     {
                         _ = GetservicesAsync(selectedBatchId);//to get service data mapping
                     }
@@ -270,8 +270,8 @@ namespace RWDE
             if (batchDetails.ConversionStartedAt != null && batchDetails.ConversionEndedAt != null)
             {
                 MessageBox.Show(Constants.Conversionhasalreadybeencompletedforthisbatch,Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtProgressClients.Text = "0%";
-                txtProgressServices.Text = "0%";
+                txtProgressClients.Text = Constants.ZeroPercent;
+                txtProgressServices.Text = Constants.ZeroPercent;
                 txtBatchid.Text = null;
                 txtUploadStarted.Text = null;
                 txtUploadEnded.Text = null;
@@ -311,7 +311,7 @@ namespace RWDE
 
                     using (SqlCommand command = new SqlCommand("SELECT ConversionStartedAt, ConversionEndedAt FROM Batch WHERE BatchID = @BatchID", connection))
                     {
-                        command.Parameters.AddWithValue("@BatchID", selectedBatchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -328,7 +328,7 @@ namespace RWDE
                 {
                     DialogResult result = MessageBox.Show($"Batch ID {selectedBatchId} has already completed the conversion.", "OCHIN To HCC Conversion", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnConversion.Enabled = true;
-                    //btncloseHCC.Text = "Close";
+                    //btncloseHCC.Text = Constants.Close;
                     return;
                 }
                 UpdateGridStatus(selectedBatchId, Constants.Hccstartcon);//update the Status label in Status Column
@@ -337,11 +337,11 @@ namespace RWDE
                 dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrack, baseFilename, Constants.Uploadct);
 
                 DateTime startTime = DateTime.Now;
-                dataGridView.Rows[selectedRowIndex].Cells["Status"].Value = 17;
-                dataGridView.Rows[selectedRowIndex].Cells["ConversionStartedAt"].Value = startTime;
+                dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = 17;
+                dataGridView.Rows[selectedRowIndex].Cells[Constants.ConversionStartedAt].Value = startTime;
               
                 txtBatchid.Text = selectedBatchId.ToString();
-                txtUploadStarted.Text = startTime.ToString("MM/dd/yyyy HH:mm:ss");// Record the start time
+                txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);// Record the start time
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -352,7 +352,7 @@ namespace RWDE
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Pass the selected BatchID to the stored procedure
-                        command.Parameters.AddWithValue("@BatchID", selectedBatchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
 
                         // Get the total number of rows to be inserted
                         int totalRows = GetTotalRowsForBatch(selectedBatchId);
@@ -383,7 +383,7 @@ namespace RWDE
                         }
                         DateTime endedTime = DateTime.Now;
                         TimeSpan totalTime = endedTime - startTime;
-                        string eTime = endedTime.ToString("MM/dd/yyyy HH:mm:ss");
+                        string eTime = endedTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                         double totalSeconds = totalTime.TotalSeconds;
                         txtUploadEnded.Text = eTime;
                         txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
@@ -404,7 +404,7 @@ namespace RWDE
 
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine(Constants.Errorsp + ex.Message);
 
             }
         }
@@ -440,7 +440,7 @@ namespace RWDE
         }
         private async Task GetservicesAsync(int selectedBatchId)//Mapping from CTServices to HCCServices
         {
-            //btncloseHCC.Text = "Abort";
+            //btncloseHCC.Text = Constants.Abort;
             try
             {
                 //progressbarHcc.Visible = false;
@@ -458,8 +458,8 @@ namespace RWDE
                     if (batchDetails.ConversionStartedAt!= null && batchDetails.ConversionEndedAt != null)
                     {
                        MessageBox.Show(Constants.Conversionhasalreadybeencompletedforthisbatch,Constants.Ochintorwdeconversion,MessageBoxButtons.OK,MessageBoxIcon.Information);
-                        txtProgressClients.Text = "0%";
-                        txtProgressServices.Text = "0%";
+                        txtProgressClients.Text = Constants.ZeroPercent;
+                        txtProgressServices.Text = Constants.ZeroPercent;
                         txtBatchid.Text = null;
                         txtUploadStarted.Text = null;
                         txtUploadEnded.Text = null;
@@ -472,12 +472,12 @@ namespace RWDE
                     txtUploadEnded.Text = null;
                     txtTotaltime.Text = null;
                     btnConversion.Enabled = false;
-                    txtUploadStarted.Text = starttime.ToString("MM/dd/yyyy HH:mm:ss");
+                    txtUploadStarted.Text = starttime.ToString(Constants.MMddyyyyHHmmssbkslash);
                     // Check if a batch has been selected
                     if (selectedBatchId >= 0)
                     {
                         int selectedRowIndex = dataGridView.SelectedRows[0].Index;
-                        selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
+                        selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
                         //int AllTotalRows = GetTotalForBatch(selectedBatchID);
                         using (SqlConnection connection = new SqlConnection(connectionString))
                         {
@@ -488,7 +488,7 @@ namespace RWDE
                                 command.CommandType = CommandType.StoredProcedure;
 
                                 // Pass the selected BatchID to the stored procedure
-                                command.Parameters.AddWithValue("@BatchID", selectedBatchId);
+                                command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
 
                                 // Get the total number of rows to be inserted
                                 int totalRows = GetTotalRowsForBatchservices(selectedBatchId);//to get total rows
@@ -500,7 +500,7 @@ namespace RWDE
                                 dbHelper.Log($"Convert to HCC  for batch ID Started.", Constants.Hcc, baseFilename, Constants.Uploadhcc);
 
                                 DateTime startTime = DateTime.Now;
-                                txtUploadStarted.Text = startTime.ToString("MM/dd/yyyy HH:mm:ss");
+                                txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                                 // Update progress textbox with initial progress information
                                 if (totalRows != 0)
                                 {
@@ -540,11 +540,11 @@ namespace RWDE
                                 RemoveSelectedRow(selectedBatchId, "");
                                 // int batchId = dbHelper.GetNextBatchID();//Getting next batchid from Batch table
                                 dbHelper.UpdateBatchServices(selectedBatchId, startTime, endTime, totalRows);
-                                dataGridView.Rows[selectedRowIndex].Cells["Status"].Value = 18;
-                                dataGridView.Rows[selectedRowIndex].Cells["ConversionEndedAt"].Value = endTime;
+                                dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = 18;
+                                dataGridView.Rows[selectedRowIndex].Cells[Constants.ConversionEndedAt].Value = endTime;
                                 DateTime endedTime = DateTime.Now;
                                 TimeSpan totalTime = endTime - startTime; // Calculate total time taken
-                                string eTime = endedTime.ToString("MM/dd/yyyy HH:mm:ss");
+                                string eTime = endedTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                                 double totalSeconds = totalTime.TotalSeconds;
                                 txtUploadEnded.Text = eTime;
                                 txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
@@ -563,7 +563,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine(Constants.Errorsp + ex.Message);
             }
         }
         private void PopulateDataGridView()//load data in the grid
@@ -584,20 +584,20 @@ namespace RWDE
                     dataGridView.Columns.Clear(); // Clear existing columns
 
                     // Define DataGridView columns and map them to DataTable columns
-                    dataGridView.Columns.Add("BatchID", "Batch ID");
-                    dataGridView.Columns["BatchID"].DataPropertyName = "BatchID";
-                    dataGridView.Columns.Add("Type", "Batch Type");
-                    dataGridView.Columns["Type"].DataPropertyName = "Type";
-                    dataGridView.Columns.Add("Description", "Description");
-                    dataGridView.Columns["Description"].DataPropertyName = "Description";
-                    dataGridView.Columns.Add("FileName", "File Name");
-                    dataGridView.Columns["FileName"].DataPropertyName = "FileName";
-                    AddDateTime("UploadStartedAt", "Upload Started At", dataGridView);
-                    AddDateTime("UploadEndedAt", "Upload Ended At", dataGridView);
-                    AddDateTime("ConversionStartedAt", "Conversion Started At", dataGridView);
-                    AddDateTime("ConversionEndedAt", "Conversion Ended At", dataGridView);
-                    dataGridView.Columns.Add("Status", "Status");
-                    dataGridView.Columns["Status"].DataPropertyName = "Status";
+                    dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
+                    dataGridView.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
+                    dataGridView.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
+                    dataGridView.Columns[Constants.Type].DataPropertyName = Constants.Type;
+                    dataGridView.Columns.Add(Constants.Description, Constants.Description);
+                    dataGridView.Columns[Constants.Description].DataPropertyName = Constants.Description;
+                    dataGridView.Columns.Add(Constants.FileName, Constants.FileNamesp);
+                    dataGridView.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
+                    AddDateTime(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridView);
+                    AddDateTime(Constants.UploadEndedAt, Constants.UploadEndedAtHeader, dataGridView);
+                    AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridView);
+                    AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridView);
+                    dataGridView.Columns.Add(Constants.Status, Constants.Status);
+                    dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
                     // Bind the DataTable to the DataGridView
                     dataGridView.DataSource = dataTable;
                 }
@@ -625,20 +625,20 @@ namespace RWDE
                     dataGridViewHCC.Columns.Clear(); // Clear existing columns
 
                     // Define DataGridView columns and map them to DataTable columns
-                    dataGridViewHCC.Columns.Add("BatchID", "Batch ID");
-                    dataGridViewHCC.Columns["BatchID"].DataPropertyName = "BatchID";
-                    dataGridViewHCC.Columns.Add("Type", "Batch Type");
-                    dataGridViewHCC.Columns["Type"].DataPropertyName = "Type";
-                    dataGridViewHCC.Columns.Add("Description", "Description");
-                    dataGridViewHCC.Columns["Description"].DataPropertyName = "Description";
-                    dataGridViewHCC.Columns.Add("FileName", "File Name");
-                    dataGridViewHCC.Columns["FileName"].DataPropertyName = "FileName";
-                    AddDateTime("UploadStartedAt", "Upload Started At", dataGridViewHCC);
-                    AddDateTime("UploadEndedAt", "Upload Ended At", dataGridViewHCC);
-                    AddDateTime("ConversionStartedAt", "Conversion Started At", dataGridViewHCC);
-                    AddDateTime("ConversionEndedAt", "Conversion Ended At", dataGridViewHCC);
-                    dataGridViewHCC.Columns.Add("Status", "Status");
-                    dataGridViewHCC.Columns["Status"].DataPropertyName = "Status";
+                    dataGridViewHCC.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
+                    dataGridViewHCC.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
+                    dataGridViewHCC.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
+                    dataGridViewHCC.Columns[Constants.Type].DataPropertyName = Constants.Type;
+                    dataGridViewHCC.Columns.Add(Constants.Description, Constants.Description);
+                    dataGridViewHCC.Columns[Constants.Description].DataPropertyName = Constants.Description;
+                    dataGridViewHCC.Columns.Add(Constants.FileName, Constants.FileNamesp);
+                    dataGridViewHCC.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
+                    AddDateTime(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridViewHCC);
+                    AddDateTime(Constants.UploadEndedAt, Constants.UploadEndedAtHeader, dataGridViewHCC);
+                    AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridViewHCC);
+                    AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridViewHCC);
+                    dataGridViewHCC.Columns.Add(Constants.Status, Constants.Status);
+                    dataGridViewHCC.Columns[Constants.Status].DataPropertyName = Constants.Status;
                     // Bind the DataTable to the DataGridView
                     dataGridViewHCC.DataSource = dataTable;
                 }
@@ -684,7 +684,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand("countcmsservices", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchID", batchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         totalRows = (int)command.ExecuteScalar();
                     }
                 }
@@ -703,7 +703,7 @@ namespace RWDE
                 // Find and remove the row corresponding to the selected batch ID in the DataGridView
                 foreach (DataGridViewRow row in dataGridView.Rows)
                 {
-                    if (row.Cells["BatchID"].Value != null && Convert.ToInt32(row.Cells["BatchID"].Value) == batchId)
+                    if (row.Cells[Constants.BatchId].Value != null && Convert.ToInt32(row.Cells[Constants.BatchId].Value) == batchId)
                     {
                         dataGridView.Rows.Remove(row);
                         btnClose.Text = status;
@@ -715,7 +715,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine(Constants.Errorsp + ex.Message);
             }
         }
         private void AddRemovedBatchIdToDatabase(int batchId)// // Method to add a removed batch ID to the database table
@@ -726,7 +726,7 @@ namespace RWDE
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("INSERT INTO RemovedBatchIDs (BatchID) VALUES (@BatchID)", conn);
-                    cmd.Parameters.AddWithValue("@BatchID", batchId);
+                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -745,7 +745,7 @@ namespace RWDE
                 {
                     using (SqlCommand com = new SqlCommand(valueSelectQuery, sql))
                     {
-                        com.Parameters.AddWithValue("@ListsID", status);
+                        com.Parameters.AddWithValue(Constants.AtListsId, status);
 
                         sql.Open();
 
@@ -785,7 +785,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine(Constants.Errorsp + ex.Message);
             }
         }
         private int GetTotalRowsForBatch(int batchId)//getting total rows from particular tables
@@ -800,7 +800,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand("COUNTCMSCLIENTS", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchID", batchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         totalRows = (int)command.ExecuteScalar();
                     }
                 }
@@ -817,7 +817,7 @@ namespace RWDE
             int batchId = dbHelper.GetNextBatchId();
             try
             {
-                if (btnClose.Text == "Abort")
+                if (btnClose.Text == Constants.Abort)
                 {
                     DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort,Constants.Ochin, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     // Check if the user clicked "Yes"
@@ -826,7 +826,7 @@ namespace RWDE
                     MessageBox.Show(Constants.Abortedsuccessfully);
                     foreach (DataGridViewRow row in dataGridView.Rows)
                     {
-                        row.Cells["Status"].Value = Constants.Hccabort;
+                        row.Cells[Constants.Status].Value = Constants.Hccabort;
                         break;
                     }
                     // Update the status of the selected batch to Status "19" (Abort)
@@ -856,8 +856,8 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         // Add parameters to the command
-                        command.Parameters.AddWithValue("@Status", status);
-                        command.Parameters.AddWithValue("@BatchID", selectedBatchId);
+                        command.Parameters.AddWithValue(Constants.AtStatus, status);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
 
                         // Execute the update query
                         int rowsAffected = command.ExecuteNonQuery();
@@ -880,7 +880,7 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand("abortconversiondelete", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchId", batchId);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         command.ExecuteNonQuery();
                     }
                 }
@@ -898,9 +898,9 @@ namespace RWDE
             txtTotaltime.Clear();
             txtUploadStarted.Clear();
             txtUploadEnded.Clear();
-            txtProgressClients.Text = "0%";
+            txtProgressClients.Text = Constants.ZeroPercent;
             progressbarClients.Value = 0;
-            txtProgressServices.Text = "0%";
+            txtProgressServices.Text = Constants.ZeroPercent;
             progressBarServices.Value = 0;
         }    
         private void btnSubmit_Click(object sender, EventArgs e)//to insert data
@@ -938,7 +938,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log the exception or display an error message
-                MessageBox.Show($"An error occurred: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void btnClear_Click(object sender, EventArgs e)//to clear existing data
@@ -962,13 +962,13 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void dtpStartDate_ValueChanged_1(object sender, EventArgs e)//to format dateY
         {
             try { 
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpStartDate.Format = DateTimePickerFormat.Custom;
             }
             catch (Exception ex)
@@ -980,7 +980,7 @@ namespace RWDE
         private void dtpEndDate_ValueChanged_1(object sender, EventArgs e)//to format date
         {
             try { 
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Format = DateTimePickerFormat.Custom;
             }
             catch (Exception ex)
