@@ -68,13 +68,13 @@ namespace RWDE
             dataGridView.Columns.Add("HCCConsentExpiryDate", "HCC Consent Expiry Date");
             dataGridView.Columns.Add("RWEligibilityExpiryDate", "RW Eligibility Expiry Date");
             dataGridView.Columns.Add(Constants.Service, Constants.Service);
-            dataGridView.Columns.Add("ServiceCodeID", "Service Code ID");
+            dataGridView.Columns.Add(Constants.ServiceCodeId, "Service Code ID");
             dataGridView.Columns.Add("HCCContractID", "HCC Contract ID");
             dataGridView.Columns.Add("UnitsOfServices", "Units of Services");
             dataGridView.Columns.Add("ActualMinutesSpent", "Actual Minutes Spent");
             dataGridView.Columns.Add("ServiceID", "Service ID");
             dataGridView.Columns.Add("ServiceExportedToHCC", "Service Exported to HCC");
-            dataGridView.Columns.Add("ServiceDate", "Service Date");
+            dataGridView.Columns.Add(Constants.ServiceDate, "Service Date");
             dataGridView.Columns.Add("EntryDate", "Entry Date");
             dataGridView.Columns.Add("Lag", "Lag");
             dataGridView.Columns.Add("Lag Status", "Lag Status");
@@ -112,19 +112,19 @@ namespace RWDE
                     switch (dtpDateFilter.SelectedItem.ToString())
                     {
                         case Constants.Servicedate:
-                            filterType = "ServiceDate";
+                            filterType = Constants.ServiceDate;
                             break;
                         case Constants.CreatedDate:
-                            filterType = "CreatedDate";
+                            filterType = Constants.CreatedDate;
                             break;
                         default:
-                            MessageBox.Show("Please select a valid filter type from the dropdown.", "Filter Selection Required");
+                            MessageBox.Show("Please select a valid filter type from the dropdown.", Constants.FilterSelectionRequired);
                             return;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a valid Batch ID or select a filter type.", "Input Error");
+                    MessageBox.Show("Please enter a valid Batch ID or select a filter type.", Constants.InputError);
                     DisplayHeadersOnly();
                     return;
                 }
@@ -205,7 +205,7 @@ namespace RWDE
                 // Check if there are any rows in the DataGridView
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.NoDataAvailableToDownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
 

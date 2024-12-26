@@ -85,7 +85,7 @@ namespace RWDE
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            openFileDialog.Filter = Constants.AllExtention;
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = openFileDialog.FileName;
@@ -95,7 +95,7 @@ namespace RWDE
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            saveFileDialog.Filter = Constants.AllExtention;
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = saveFileDialog.FileName;
@@ -152,7 +152,7 @@ namespace RWDE
                     this.Controls.Add(panelFrom);
                 }
                 // Fetch data from the Batch table
-                string query = "SELECT [BatchID], [FileName], [Description], [Path], [StartedAt], [EndedAt], [TotalRows], [SuccessfulRows], [FailedRows], [Status], [Message], [Comments], [CreatedBy], [CreatedOn] FROM [RWDE].[dbo].[Batch]";
+                string query = Constants.BatchTableQuery;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -161,9 +161,7 @@ namespace RWDE
                     DataTable dataTable = new DataTable();
 
                     adapter.Fill(dataTable);
-
                     // Bind the DataTable to the DataGridView in frmConvertToHCC
-                    //frmConvertToHCC.PopulateDataGridView(dataTable);//The code fetches the grid and values from the frmConvertToHCC class
                 }
             }
             catch (Exception ex)
@@ -188,9 +186,9 @@ namespace RWDE
                 }
 
                 // Create an instance of btnCT and show it
-                FrmUploadOchinCsv frmUploadXMLFile = new FrmUploadOchinCsv();
-                frmUploadXMLFile.MdiParent = this;
-                frmUploadXMLFile.Show();
+                FrmUploadOchinCsv frmUploadXmlFile = new FrmUploadOchinCsv();
+                frmUploadXmlFile.MdiParent = this;
+                frmUploadXmlFile.Show();
             }
             catch (Exception ex)
             {
@@ -341,7 +339,6 @@ namespace RWDE
             {
                 this.ActiveMdiChild.Close();
             }
-
             FrmUploadOchinCsv uploadOchinCsv = new FrmUploadOchinCsv();
             uploadOchinCsv.MdiParent = this;
             uploadOchinCsv.Show();

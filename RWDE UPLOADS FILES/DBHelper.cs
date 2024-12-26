@@ -249,13 +249,8 @@ namespace RWDE
                     {
                         MessageBox.Show(ex.Message);
                     }
-                    if (dy.Rows.Count == 0)
+                    if (dy.Rows.Count == 0 && batchids.Length!=1 && batchids.Length== noDataIds.Count)
                     {
-                        dy.Columns.Add(Constants.BatchId, typeof(int));
-                        dy.Columns.Add("ServiceDate", typeof(DateTime));
-                        dy.Columns.Add("CreatedDate", typeof(DateTime));
-                        dy.Columns.Add("ErrorDetails", typeof(string));
-                        dy.Columns.Add(Constants.Status, typeof(string));
                         MessageBox.Show(Constants.Nodataexistsforthisbatchid, "Service Reconciliation Report");
                     }
                     return dy; // Return the populated DataTable
@@ -362,7 +357,7 @@ namespace RWDE
                     command.CommandType = CommandType.StoredProcedure;
 
                     string datePart = startedAt.ToString("dd-MM-yyyy");
-                    string timePart = startedAt.ToString("HH:mm:ss");
+                    string timePart = startedAt.ToString(Constants.HHmmss);
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     command.Parameters.AddWithValue("@FileName", fileName);
                     command.Parameters.AddWithValue("@Description", $"OCHIN TO RWDE On {datePart} at {timePart}");
@@ -1465,7 +1460,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error updating batch: {ex.Message}");
+                Console.WriteLine($"{Constants.Errorupdatingbatch}{ex.Message}");
                 // Log or handle the exception appropriately
             }
         }
@@ -1497,7 +1492,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error updating batch: {ex.Message}");
+                Console.WriteLine($"{Constants.Errorupdatingbatch}{ex.Message}");
                 // Log or handle the exception appropriately
             }
         }
@@ -3383,7 +3378,7 @@ namespace RWDE
                     }
 
                     // Select query based on filter type
-                    if (filterType == "ServiceDate")
+                    if (filterType == Constants.ServiceDate)
                     {
                         query = @"SELECT*
     FROM vwService_Reconciliationdatefilter
@@ -3392,7 +3387,7 @@ namespace RWDE
     OR ServiceDate = @EndDate";
 
                     }
-                    else if (filterType == "CreatedDate")
+                    else if (filterType == Constants.CreatedDate)
                     {
                         query = @"
                     SELECT * 
@@ -3412,7 +3407,7 @@ namespace RWDE
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         // Add parameters based on the filter type
-                        if (filterType == "ServiceDate" || filterType == "CreatedDate")
+                        if (filterType == Constants.ServiceDate || filterType == Constants.CreatedDate)
                         {
                             cmd.Parameters.AddWithValue("@StartDate", startDate);
                             cmd.Parameters.AddWithValue("@EndDate", endDate);
@@ -4131,7 +4126,7 @@ namespace RWDE
                 fileName = "Client_" + fileName;
             }
 
-            return fileName + ".xml";
+            return fileName + Constants.XmlExtention;
         }
     }
 }

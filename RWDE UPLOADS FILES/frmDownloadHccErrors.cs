@@ -106,7 +106,7 @@ namespace RWDE
                             // Replace values in HccTable based on specific cases
                             switch (hccTable)
                             {
-                                case Constants.T_CLNT_DEMO:
+                                case  Constants. T_CLNT_DEMO:
                                 case Constants.T_CLNT_ETHN_DTL:
                                     hccTable = Constants.HCCCLIENTS;
                                     break;

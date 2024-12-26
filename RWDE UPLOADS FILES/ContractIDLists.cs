@@ -738,7 +738,7 @@ namespace RWDE
                     dataGridView.ReadOnly = true;
 
                     // Display appropriate message
-                    if (operation == ContractIdList.Update)
+                    if (operation == Constants.Update)
                     {
                         MessageBox.Show($@"{ContractIdList.Contractupdatedsuccessfully}. {Constants.ContractId}: {currentContractId}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -1064,7 +1064,7 @@ namespace RWDE
 
                     if (contractId > 0)
                     {
-                        // Update the status to "DELETE"
+                        // Update the status to Constants.Delete
                         dataGridView.Rows[rowIndex].Cells[Constants.Status].Value = Constants.Delete;
                         dbHelper.ContractIdUpdateStatus(contractId, Constants.DeleteContractstatus); // Assume this function updates the status in the database
 

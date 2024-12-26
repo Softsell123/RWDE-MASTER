@@ -1,7 +1,12 @@
 ﻿
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using RWDE.Properties;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Policy;
+using System.Windows.Forms;
 using static Spire.Pdf.General.Render.Decode.Jpeg2000.j2k.codestream.HeaderInfo;
 
 namespace RWDE
@@ -83,7 +88,7 @@ namespace RWDE
         public const int Hccabort = 19;
         public const string AbortCode = "A";
 
-        public const string Nodataexistsforthisbatchid = "No data exists for this Batch ID";
+        public const string Nodataexistsforthisbatchid = "No data exists for this Batch ID(s)";
         public const string Batchidnull = "Batch ID Cannot be null";
         public const string Xmluploadstarted = "XML Upload Started";
         public const string XmluploadCompleted = "XMl Upload Completed";
@@ -112,7 +117,6 @@ namespace RWDE
                                                     "Time taken: {0} seconds\n" +
                                                     "Total rows inserted: {1}";
         public const string Errorupdatingbatchstatus = "Error updating batch status:";
-        public const string Abortedsuccessfully = "Aborted Successfully";
         public const string PleaseselectonlyonebatchId = "Please select only one batch Id";
         public const string PleaseselectabatchtogenerateXml = "Please select a batch to generate XML";
         public const string Pleaseselectthefolder = "Please select the folder";
@@ -125,6 +129,11 @@ namespace RWDE
         public const string Sheet1 = "Sheet1";
         public const string XlsxExtention = ".xlsx";
         public const string CsvExtention = ".csv";
+        public const string AllCsvExtention = "*.csv";
+        public const string XmlExtention = ".xml";
+        public const string AllXmlExtention = "*.xml";
+        public const string AllExtention = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+
 
 
 
@@ -143,7 +152,7 @@ namespace RWDE
         public const string ServiceReconciliationReport = "Service_Reconciliation Report";
         public const string DeceasedClients = "Deceased_Clients";
         public const string Nodatafoundbetweenselecteddates = "No data found between selected dates";
-        public const string Nodataavailabletodownload = "No data available to download.";
+        public const string NoDataAvailableToDownload = "No data available to download.";
 
 
 
@@ -222,7 +231,7 @@ namespace RWDE
         public const string TotalRowsHeader = "Total Rows";
         public const string SuccessfulRowsHeader = "Successful Rows";
         public const string StatusHeader = Constants.Status;
-        public const string CreatedDate = "Created Date";
+        public const string CreatedDatesp = "Created Date";
         
 
         public const string EmptyvalueMessage = "Enter The Correct Details";
@@ -316,9 +325,11 @@ namespace RWDE
         public const string DdMMyyyyHHmmss= "dd-MM-yyyy HH:mm:ss";
         public const string YyyyMMdd = "yyyyMMdd";
         public const string DdMMyyyy = "ddMMyyyy";
+        public const string MMddyyyybkslash = "MM/dd/yyyy";
+        public const string HHmmss = "HH:mm:ss";
 
         public const string MMddyyyyHHmmssbkslash = "MM/dd/yyyy HH:mm:ss";
-        public const string Seconds = " Seconds";
+        public const string Seconds = "Seconds";
 
 
         //
@@ -328,13 +339,22 @@ namespace RWDE
         public const string Norowselectedtosave = "No row selected to save.";
         public const string SaveError = "Save Error";
         public const string Errorsp = "Error: ";
+        public const string InputError = "Input Error";
 
+
+        public const string FilterSelectionRequired = "Filter Selection Required";
         public const string PermissionError = "Permission Error";
         public const string AbortConfirmation = "Abort Confirmation";
-        public const string DeletedContractId = "Deleted ContractID";
+        public const string DeletedContractId = "Deleted ContractID:";
         public const string ContractIdisrequired="Contract ID is required.";
         public const string ContractsSetupError = "Contracts Setup - Error";
-        
+        public const string InvalidFileType = "Invalid File Type";
+        public const string BatchIdExists = "Batch ID Exists";
+        public const string ServiceCodeSetupError = "ServiceCode Setup-Error";
+
+
+
+
         public const string DataSourcecannotbeempty = "Data Source cannot be empty.";
         public const string ValidationError = "Validation Error";
         public const string UnabletoconnectPleasecheckandtryagain = "Unable to connect to the specified Data Source. Please check and try again.";
@@ -346,8 +366,13 @@ namespace RWDE
         public const string ConverttoHcCforbatchIdStarted = "Convert to HCC  for batch ID Started.";
         public const string ConverttoHcCformatcompletedsuccessfully = "Convert to HCC format completed successfully.";
         public const string MappingcompletedsuccessfullyforBatchId = "Mapping completed successfully for BatchID: ";
-        public const string Pleaseselectabatchbeforestartingtheconversion = "Please select a batch before starting the conversion.";
         public const string TheRequiredColumnsAreMissing = "The required columns 'HCCTABLE' or 'ErrorMessage' are missing in the Excel sheet.";
+
+        public const string PleaseSelectAValidFilterTypeFromTheDropdown = "Please select a valid filter type from the dropdown.";
+        public const string PleaseEnterAValidBatchIdOrSelectAFilterType = "Please enter a valid Batch ID or select a filter type.";
+        public const string PleaseSelectABatchBeforeStartingTheConversion = "Please select a batch before starting the conversion";
+
+
 
 
         public const string Dataprocessedandinsertedintothedatabasesuccessfully = "Data processed and inserted into the database successfully.";
@@ -355,11 +380,18 @@ namespace RWDE
         public const string Errorinsertingdataintothedatabase = "Error inserting data into the database: ";
         public const string ErroraddingremovedbatchIDtodatabase = "Error adding removed batch ID to database: ";
         public const string Errorupdatingbatch = "Error updating batch: ";
+        public const string ErrorUpdatingFileProgress= "Error updating file progress: ";
         public const string AnErrorOccurred = "An error occurred: ";
         public const string SqlError  = "SQL Error: ";
         public const string ErrorGettingTotalRows = "Error getting total rows: ";
         public const string ErrorUpdatingGridStatus = "Error updating grid status: ";
         public const string ErrorClearingtables = "Error clearing tables: ";
+        public const string ErrorDeletingXmlFiles = "Error deleting XML files: ";
+        public const string BatchIdAlreadyExists = "Batch ID {existingBatchId} already exist";
+        public const string BatchIdAlreadyExistsCloseAndReopen= "Batch ID {existingBatchId} already exists. Close and reopen to upload new files.";
+        public const string ErrorAddingRemovedBatchIdToDatabase= "Error adding removed batch ID to database:";
+        public const string DoYouWantToDeleteServiceCodeId = "Do you want to delete Service {0}?";
+
 
         public const string CsVfilehasbeencreatedsuccessfullyat  = "CSV file has been created successfully at ";
         public const string Accessdeniedtothefolder = "Access to the path is denied. Please choose a different folder or run the application as an administrator.";
@@ -371,8 +403,24 @@ namespace RWDE
         public const string Success = "Success";
         public const string Delete = "DELETE";
         public const string This = "This ";
+        public const string AbortedSuccessfully = "Aborted Successfully";
         public const string OchinToHccConversion = "OCHIN To HCC Conversion";
+        public const string UploadHccCsv = "UPLOAD HCC CSV";
+        public const string UploadOchinCsv = "UPLOAD OCHIN CSV";
+        public const string XmlFileUpload = "XML File Upload";
+
+
         public const string Areyousureyouwanttoabort = "Are you sure you want to abort?";
+        public const string TheFolderPathCannotBeEmpty = "The folder path cannot be empty. Please select a valid folder.";
+        public const string SelectAFolderBeforeUploading = "Select a folder before uploading.";
+        public const string PleaseSelectAFolderToUploadXmlFiles = "Please select a folder to upload XML files.";
+
+        public const string TheFileIsAlreadyUploaded = "This File is already uploaded.Click On Browse to Choose another file to upload.";
+
+        public const string TheSelectedFolderIsEmpty = "The selected folder is empty. Please select a folder containing .csv files.";
+        public const string TheFolderContainsNonXmlFiles= "The folder contains non-XML files or folder is empty. Upload is allowed only for XML files.";
+
+
 
 
 
@@ -403,6 +451,25 @@ namespace RWDE
         public const string CountXml = "countxml";
         public const string CountXmlServices = "countxmlservices";
         public const string CountXmlRows = "countxmlrows";
+        public const string AbortDelete = "abortdelete";
+        public const string ListConversion = "listconversion";
+        public const string MapCmsClients = "MapCMSClients";
+        public const string MapCmsServicesToHccServices = "MapCMSServicesToHCCServices";
+        public const string ConversionOchin = "Conversionochin";
+        public const string ConversionHcc = "ConversionHCC";
+        public const string CountCmsServices = "countcmsservices";
+        public const string UpdateGrid = "updategrid";
+        public const string CountCmsClients = "COUNTCMSCLIENTS";
+        public const string UpdateBatch = "Updatebatch";
+        public const string AbortConversionDelete = "abortconversiondelete";
+
+
+
+
+
+
+
+
 
 
 
@@ -425,9 +492,10 @@ namespace RWDE
         public const string UpdateStatusColumnQuery = "UPDATE [RWDE].[dbo].[Batch] SET[GenerationEndedAt] = @GenerationEndedAt, [Status] = '21' WHERE[BatchID] = @BatchID AND[FileName] LIKE '%Client%'";
 
         public const string GetGenerationTime = "SELECT GenerationStartedAt, GenerationEndedAt FROM Batch WHERE BatchID = @BatchID";
-        
-        
-        
+        public const string BatchTableQuery = "SELECT [BatchID], [FileName], [Description], [Path], [StartedAt], [EndedAt], [TotalRows], [SuccessfulRows], [FailedRows], [Status], [Message], [Comments], [CreatedBy], [CreatedOn] FROM [RWDE].[dbo].[Batch]";
+        public const string AddRemoveBatchIdQuery = "INSERT INTO RemovedBatchIDs(BatchID) VALUES(@BatchID)";
+
+
         //
         //SPparametersConstants
         //
@@ -506,8 +574,89 @@ namespace RWDE
         public const string ServiceXmlHeader = "ServiceDetails_0246_0422_";
         public const string ClientXmlHeader = "ClientDetails_0246_0689_";
         public const string XmlFooter = "_143100.xml";
-
         public const string Generation = "Generation";
+
+
+        //
+        //frmUploadHCCCsv
+        //
+        public const string HccCsvUploadonAt = "HCC CSV Upload on {date} at {time}";
+        public const string UploadForBaseFileNameHasStarted = "Upload for {baseFilename} has started";
+        public const string UploadForBaseFileNameHasCompleted = "Upload for {baseFilename} has completed";
+
+
+        //
+        //frmUploadOchinCsv
+        //
+        public const string OchinCsvUploadonAt = "OCHIN CSV Upload on {date} at {time}";
+        public const string AnotherProcess = "another proces";
+        public const string ErrorInsertingCsvDataFromFileIntoTheTable = "Error inserting CSV data from file '{csvFilePath}' into the table: {ex.Message}";
+
+
+
+
+        //
+        //frmUploadXMLFile
+        //
+        public const string ClientTrackUploadOnAt= "ClientTrack Upload on {date} at {time}";
+        
+        public const string LastFolderPathTxt = "LastFolderPath.txt";
+        public const string Batch = "Batch";
+        public const string BkslhClient = "//Client";
+        public const string BkslhEligibilityDocument = "//EligibilityDocument";
+        public const string BkslhServiceLineItem = "//ServiceLineItem";
+
+
+        //
+        //frmUploadXMLFile
+        //
+        public const string ServiceDate = "ServiceDate";
+        public const string CreatedDate = "CreatedDate";
+
+
+
+
+        //
+        //MonthlyReport
+        //
+        public const string PreviousWeek = "Previous Week";
+        public const string CurrentWeek = "Current Week";
+        public const string PreviousMonth = "Previous Month";
+        public const string CurrentMonth = "Current Month";
+        public const string SinceOneMonthAgo = "Since One Month Ago";
+        public const string FirstQuarter = "First Quarter";
+        public const string SecondQuarter = "Second Quarter";
+        public const string ThirdQuarter = "Third Quarter";
+        public const string FourthQuarter = "Fourth Quarter";
+        public const string PreviousQuarter = "Previous Quarter";
+        public const string CurrentQuarter = "Current Quarter";
+        public const string ThisYear = "This Year";
+        public const string LastYear = "Last Year";
+        public const string SinceThisDateLastYear = "Since This Date Last Year";
+
+
+
+
+        //
+        //ServiceCodeSetup
+        //
+        public const string ServiceCodeId = "ServiceCodeID";
+        public const string HccExportToAries = "HCC_ExportToAries";
+        public const string MapToHcc = "Map to HCC";
+        public const string HccContractId= "HCC_ContractID";
+        public const string Contract = "Contract";
+        public const string PrimaryService = "Primary Service";
+        public const string HccPrimaryService = "HCC_PrimaryService";
+        public const string SecondaryService = "Secondary Services";
+        public const string HccSecondaryService = "HCC_SecondaryService";
+        public const string SubService = "Sub Service";
+        public const string HccSubService = "HCC_Subservice";
+        public const string UnitsOfMeasuresp = "Units Of Measure";
+        public const string UnitsOfMeasure = "UnitsOfMeasure";
+        public const string Unit = "Unit";
+        public const string UnitValue = "UnitValue";
+        public const string Update = "Update";
+        public const string Insert = "Insert";
 
 
 
@@ -538,6 +687,10 @@ namespace RWDE
         //Status
         //
         public const string ZeroPercent = "0%";
+        public const string ProgressUpdate = "ProgressUpdate";
+        public const string InitialProgress = "0/0 (0%)";
+
+
     }
 
 
@@ -564,10 +717,8 @@ namespace RWDE
         public const string ConfirmDelete = "ConfirmDelete";
         
         public const string AreyousureyouwanttoEditthisrow = "Are you sure you want to Edit this row?";
-        public const string Insert = "Insert";
         public const string Areyousureyouwanttodeletecontract = "Do you want to delete contract";
 
-        public const string Update = "Update";
         public const string ConfirmEdit = "ConfirmEdit";
         public const string ContractIDortypeisinvalid = "ContractID or type is invalid.";
 
@@ -603,13 +754,13 @@ namespace RWDE
         // TagNumber 
         public const string TagNumberFive = "5";
         public const string TagNumberTen = "10";
-        public const string TagNumberThirty = "30";
+        public const string TagNumberThirty = Constants.DeleteContractstatus;
 
         // Example error message
         public const string ErrorMessage = "Your constant error message here.";
 
         // Example constant values
-        public const string ContractServicesTagNumber = "30";
+        public const string ContractServicesTagNumber = Constants.DeleteContractstatus;
         public const string ContractServicesTitleIdentifier = "TITLE";
         public const string ContractServicestitleIdentifier = "title";
         public const string TagNumber = "TagNumber";

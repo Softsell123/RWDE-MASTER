@@ -200,7 +200,7 @@ namespace RWDE
             // 
             this.ServiceCodeID.HeaderText = "ServiceCode ID";
             this.ServiceCodeID.MinimumWidth = 6;
-            this.ServiceCodeID.Name = "ServiceCodeID";
+            this.ServiceCodeID.Name = Constants.ServiceCodeId;
             this.ServiceCodeID.ReadOnly = true;
             this.ServiceCodeID.Width = 150;
             // 
@@ -246,7 +246,7 @@ namespace RWDE
             // 
             // SecondaryServices
             // 
-            this.SecondaryServices.HeaderText = "Secondary Services";
+            this.SecondaryServices.HeaderText = Constants.SecondaryService;
             this.SecondaryServices.MinimumWidth = 6;
             this.SecondaryServices.Name = "SecondaryServices";
             this.SecondaryServices.ReadOnly = true;

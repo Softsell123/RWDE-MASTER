@@ -34,7 +34,7 @@ namespace RWDE
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -54,7 +54,7 @@ namespace RWDE
             try {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.NoDataAvailableToDownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
                 DataTable dataTable = new DataTable();
@@ -112,7 +112,7 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}",Constants.HccReconciliation, MessageBoxButtons.OK, MessageBoxIcon.Information);                   
+                            MessageBox.Show($@"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}",Constants.HccReconciliation, MessageBoxButtons.OK, MessageBoxIcon.Information);                   
                         }
                     }
                 }
@@ -167,19 +167,19 @@ namespace RWDE
                     switch (dtpDateFilter.SelectedItem.ToString())
                     {
                         case Constants.Servicedate:
-                            filterType = "ServiceDate";
+                            filterType = Constants.ServiceDate;
                             break;
                         case Constants.CreatedDate:
-                            filterType = "CreatedDate";
+                            filterType = Constants.CreatedDate;
                             break;
                         default:
-                            MessageBox.Show("Please select a valid filter type from the dropdown.", "Filter Selection Required");
+                            MessageBox.Show(Constants.PleaseSelectAValidFilterTypeFromTheDropdown, Constants.FilterSelectionRequired);
                             return;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a valid Batch ID or select a filter type.", "Input Error");
+                    MessageBox.Show(Constants.PleaseEnterAValidBatchIdOrSelectAFilterType, Constants.InputError);
                     return;
                 }
                 DataTable result = null;
@@ -203,7 +203,7 @@ namespace RWDE
                 catch (Exception ex)
                 {
                     // Handle exceptions related to DateTimePicker values or other issues
-                    MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
+                    MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
                 }
                 if(filterType == Constants.BatchId)
                 {
@@ -218,7 +218,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exceptions related to DateTimePicker values or other issues
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
             }
         }
         private void btnClr_Click(object sender, EventArgs e)//clear the data in the grid

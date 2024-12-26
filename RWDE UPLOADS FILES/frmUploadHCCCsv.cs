@@ -22,9 +22,9 @@ namespace RWDE
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
             DateTime currenttime = DateTime.Now;
-            string date = currenttime.ToString("MM/dd/yyyy");
-            string time = currenttime.ToString("HH:mm:ss");
-            txtDesc.Text = $"HCC CSV Upload on {date} at {time}";
+            string date = currenttime.ToString(Constants.MMddyyyybkslash);
+            string time = currenttime.ToString(Constants.HHmmss);
+            txtDesc.Text = $@"{Constants.HccCsvUploadonAt.Replace("{date}", date).Replace("{time}", time)}";
             string pathFile = Constants.LastFolderPathOchin;
             RegisterEvents(this);
             // Check if the file exists
@@ -82,7 +82,7 @@ namespace RWDE
             try {
                 if (string.IsNullOrEmpty(txtpath.Text))
                 {
-                    MessageBox.Show("The folder path cannot be empty. Please select a valid folder.", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.TheFolderPathCannotBeEmpty, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -101,7 +101,7 @@ namespace RWDE
                     return; // Exit the method if the path is empty
                 }
                 string[] files = Directory.GetFiles(txtpath.Text);
-                bool allFilesAreCsv = files.All(file => Path.GetExtension(file).Equals(".csv", StringComparison.OrdinalIgnoreCase));
+                bool allFilesAreCsv = files.All(file => Path.GetExtension(file).Equals(Constants.CsvExtention, StringComparison.OrdinalIgnoreCase));
 
                 if (!allFilesAreCsv)
                 {
@@ -127,7 +127,7 @@ namespace RWDE
                             // Check if the batch ID already exists and matches the previous batch ID
                             if (!string.IsNullOrEmpty(existingBatchId))
                             {
-                                MessageBox.Show($"Batch ID {existingBatchId} already exists", Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show($@"{Constants.BatchIdAlreadyExists.Replace("{existingBatchId}", existingBatchId)}", Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 btnUpload.Enabled = false;
                                 btnClose.Text = Constants.Close;
                                 btnBrowse.Enabled = false;
@@ -136,7 +136,7 @@ namespace RWDE
                             if (string.IsNullOrEmpty(txtBatchid.Text) && string.IsNullOrEmpty(txtUploadStarted.Text))
                             {
                                 btnUpload.Enabled = false;
-                                string[] csvFiles = Directory.GetFiles(folderPath, "*.csv");
+                                string[] csvFiles = Directory.GetFiles(folderPath, Constants.AllCsvExtention);
                                 int totalCsvFiles = csvFiles.Length;
                                 int currentCsvFileIndex = 0;
                                 int totalRowsInserted = 0;
@@ -160,9 +160,9 @@ namespace RWDE
                                     int Batchid;
                                     Batchid = dbHelper.GetNextBatchId(false);//to get next batch id
                                     txtBatchid.Text = Batchid.ToString();
-                                    string date = startTime.ToString("MM/dd/yyyy");
-                                    string time = startTime.ToString("HH:mm:ss");
-                                    txtDesc.Text = $"HCC CSV Upload on {date} at {time}";
+                                    string date = startTime.ToString(Constants.MMddyyyybkslash);
+                                    string time = startTime.ToString(Constants.HHmmss);
+                                    txtDesc.Text = $@"{Constants.HccCsvUploadonAt.Replace("{date}", date).Replace("{time}", time)}";
                                     string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                                     txtUploadStarted.Text = formattime;
 
@@ -196,7 +196,7 @@ namespace RWDE
                                 string eTime = endTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                                 double totalSeconds = totalTime.TotalSeconds;
                                 txtUploadEnded.Text = eTime;
-                                txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
+                                txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
                                 btnClose.Text = Constants.Close;
                                 btnUpload.Enabled = true;
                             }
@@ -236,7 +236,7 @@ namespace RWDE
             string baseFilename = filenameParts[0];
             try
             {
-                dbHelper.Log($"Upload for {baseFilename} has started", Constants.Hcc, baseFilename+".csv", Constants.Uploadhcc);
+                dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.Hcc, baseFilename+Constants.CsvExtention, Constants.Uploadhcc);
 
                 // No need to open the connection here as it's already open
 
@@ -315,7 +315,7 @@ namespace RWDE
                 // No need to close the connection here as it will be handled externally
                 if (isUploading)
                 {
-                    dbHelper.Log($"Upload for {baseFilename} has completed", Constants.OchinCode, baseFilename+".csv", Constants.Uploadhcc);
+                    dbHelper.Log($"{Constants.UploadForBaseFileNameHasCompleted.Replace("{baseFilename}", baseFilename)}", Constants.OchinCode, baseFilename+Constants.CsvExtention, Constants.Uploadhcc);
                 }
                 return Tuple.Create(rowsInserted, true);
             }
@@ -338,7 +338,7 @@ namespace RWDE
                     currentRowIndex++;
                     double percentage = ((double)currentRowIndex / totalRowsInCurrentFile) * 100;
                     int progress = (int)Math.Round(percentage); // Round the percentage to the nearest integer
-                    txtProgressLines.Text = $"{currentRowIndex}/{totalRowsInCurrentFile} ({progress}%)";
+                    txtProgressLines.Text = $@"{currentRowIndex}/{totalRowsInCurrentFile} ({progress}%)";
                     progressBarLines.Value = progress;
                     Application.DoEvents();
                 }
@@ -358,7 +358,7 @@ namespace RWDE
 
                 int progressPercentage = (int)((double)currentFileIndex / totalFiles * 100);
                 // Update the progress text with current file progress
-                txtProgressfile.Text = $"{currentFileIndex}/{totalFiles} ({progressPercentage}%)";
+                txtProgressfile.Text = $@"{currentFileIndex}/{totalFiles} ({progressPercentage}%)";
 
                 // Refresh the UI
                 Application.DoEvents();
@@ -383,7 +383,7 @@ namespace RWDE
                     }
                     if (btnClose.Text == Constants.Abort)
                     {
-                        DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, "UPLOAD HCC CSV", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, Constants.UploadHccCsv, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (result == DialogResult.Yes)
                         {
                             int batchId = Convert.ToInt32(txtBatchid.Text);
@@ -391,7 +391,7 @@ namespace RWDE
                             string fileName = txtFileName.Text;
 
                             // Show confirmation message
-                            MessageBox.Show(Constants.Abortedsuccessfully, "UPLOAD HCC CSV");
+                            MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadHccCsv);
                             String path = txtpath.Text;
                             UpdateBatch(batchId, fileName,path);
                             this.Close();
@@ -419,7 +419,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{Constants.ErrorLoadingData} {ex.Message}");
+                Console.WriteLine($@"{Constants.ErrorLoadingData} {ex.Message}");
                 // Log or handle the exception appropriately
             }
         }
@@ -438,7 +438,7 @@ namespace RWDE
                         string[] files = Directory.GetFiles(selectedFolderPath);
 
                         // Check if all files have the .xml extension
-                        bool allFilesAreXml = files.All(file => Path.GetExtension(file).Equals(".csv", StringComparison.OrdinalIgnoreCase));
+                        bool allFilesAreXml = files.All(file => Path.GetExtension(file).Equals(Constants.CsvExtention, StringComparison.OrdinalIgnoreCase));
 
                         if (!allFilesAreXml)
                         {

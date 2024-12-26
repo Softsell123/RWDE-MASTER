@@ -436,9 +436,9 @@ namespace RWDE
             // 
             // ServiceCodeID
             // 
-            this.ServiceCodeID.HeaderText = "ServiceCodeID";
+            this.ServiceCodeID.HeaderText = Constants.ServiceCodeId;
             this.ServiceCodeID.MinimumWidth = 6;
-            this.ServiceCodeID.Name = "ServiceCodeID";
+            this.ServiceCodeID.Name = Constants.ServiceCodeId;
             this.ServiceCodeID.ReadOnly = true;
             this.ServiceCodeID.Width = 180;
             // 

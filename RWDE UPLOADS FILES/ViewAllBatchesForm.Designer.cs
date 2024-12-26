@@ -548,7 +548,7 @@ namespace RWDE
             // 
             // buttonDelete
             // 
-            this.buttonDelete.HeaderText = "Delete";
+            this.buttonDelete.HeaderText = Constants.DeleteColumnName;
             this.buttonDelete.MinimumWidth = 6;
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.ReadOnly = true;

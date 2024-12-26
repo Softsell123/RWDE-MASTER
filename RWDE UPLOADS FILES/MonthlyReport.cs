@@ -14,22 +14,23 @@ namespace RWDE
             InitializeComponent();
             this.ControlBox = false;
             this.WindowState = FormWindowState.Maximized;
+            
             cbDateFilter.Items.AddRange(new object[]
                {
-        "Previous Week", // Add "Previous Week" item
-        "Current Week",
-        "Previous Month",
-        "Current Month",
-        "Since One Month Ago",
-        "First Quarter",
-        "Second Quarter",
-        "Third Quarter",
-        "Fourth Quarter",
-        "Previous Quarter",
-        "Current Quarter",
-        "This Year",
-        "Last Year",
-        "Since This Date Last Year"
+                   Constants.PreviousWeek, // Add "Previous Week" item
+                   Constants.CurrentWeek,
+                   Constants.PreviousMonth,
+                   Constants.CurrentMonth,
+                   Constants.SinceOneMonthAgo,
+                   Constants.FirstQuarter,
+                   Constants.SecondQuarter,
+                   Constants.ThirdQuarter,
+                   Constants.FourthQuarter,
+                   Constants.PreviousQuarter,
+                   Constants.CurrentQuarter,
+                   Constants.ThisYear,
+                   Constants.LastYear,
+                   Constants.SinceThisDateLastYear
               });
 
             // Attach SelectedIndexChanged event handler
@@ -96,7 +97,7 @@ namespace RWDE
             {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show(Constants.Nodataavailabletodownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.NoDataAvailableToDownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
                 DataTable dataTable = new DataTable();
@@ -249,59 +250,59 @@ namespace RWDE
 
             switch (selectedFilter)
             {
-                case "Previous Week":
+                case Constants.PreviousWeek:
                     SetPreviousWeekDates(out startDate, out endDate);//filter weekly
                     break;
 
-                case "Current Week":
+                case Constants.CurrentWeek:
                     SetCurrentWeekDates(out startDate, out endDate);//filter weekly
                     break;
 
-                case "Previous Month":
+                case Constants.PreviousMonth:
                     SetPreviousMonthDates(out startDate, out endDate);//filter weekly
                     break;
 
-                case "Current Month":
+                case Constants.CurrentMonth:
                     SetCurrentMonthDates(out startDate, out endDate);//filter weekly
                     break;
 
-                case "Since One Month Ago":
+                case Constants.SinceOneMonthAgo:
                     SetSinceOneMonthAgoDates(out startDate, out endDate);//filter monthly
                     break;
 
-                case "First Quarter":
+                case Constants.FirstQuarter:
                     SetQuarterDates(1, out startDate, out endDate);//filter quarterly
                     break;
 
-                case "Second Quarter":
+                case Constants.SecondQuarter:
                     SetQuarterDates(2, out startDate, out endDate);//filter second quarterly
                     break;
 
-                case "Third Quarter":
+                case Constants.ThirdQuarter:
                     SetQuarterDates(3, out startDate, out endDate);//filter quarterly
                     break;
 
-                case "Fourth Quarter":
+                case Constants.FourthQuarter:
                     SetQuarterDates(4, out startDate, out endDate);//filter quarterly
                     break;
 
-                case "Previous Quarter":
+                case Constants.PreviousQuarter:
                     SetPreviousQuarterDates(out startDate, out endDate);//filter quarterly
                     break;
 
-                case "Current Quarter":
+                case Constants.CurrentQuarter:
                     SetCurrentQuarterDates(out startDate, out endDate);//filter quarterly
                     break;
 
-                case "This Year":
+                case Constants.ThisYear:
                     SetThisYearDates(out startDate, out endDate);//filter yearly
                     break;
 
-                case "Last Year":
+                case Constants.LastYear:
                     SetLastYearDates(out startDate, out endDate);//filter yearly
                     break;
 
-                case "Since This Date Last Year":
+                case Constants.SinceThisDateLastYear:
                     SetSinceThisDateLastYear(out startDate, out endDate);//filter yearly
                     break;
 

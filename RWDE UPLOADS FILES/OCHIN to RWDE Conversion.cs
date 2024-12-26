@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Application = System.Windows.Forms.Application;
+// ReSharper disable PossibleNullReferenceException
 
 namespace RWDE
 {
@@ -87,7 +88,7 @@ namespace RWDE
                     string statusValue = e.Value?.ToString();
                     if (!string.IsNullOrEmpty(statusValue))
                     {
-                        string valueSelectQuery = "listconversion";
+                        string valueSelectQuery = Constants.ListConversion;
                         using (SqlConnection sql = new SqlConnection(connectionString))
                         {
                             using (SqlCommand com = new SqlCommand(valueSelectQuery, sql))
@@ -289,7 +290,7 @@ namespace RWDE
                 // Check if no batch is selected
                 if (selectedRowCount == 0)
                 {
-                    MessageBox.Show(Constants.Pleaseselectabatchbeforestartingtheconversion, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.PleaseSelectABatchBeforeStartingTheConversion, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     btnClose.Text = Constants.Close;
                     btnConversion.Enabled = true;
                     return; // Exit the method early
@@ -309,7 +310,7 @@ namespace RWDE
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand("SELECT ConversionStartedAt, ConversionEndedAt FROM Batch WHERE BatchID = @BatchID", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.GetConversionTimeQuery, connection))
                     {
                         command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
 
@@ -326,7 +327,7 @@ namespace RWDE
                 }
                 if (conversionStartedAt != null && conversionEndedAt != null)
                 {
-                    DialogResult result = MessageBox.Show($"Batch ID {selectedBatchId} has already completed the conversion.", "OCHIN To HCC Conversion", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DialogResult result = MessageBox.Show($@"{Constants.BatchIdHeader} {selectedBatchId} {Constants.Hasalreadycompletedtheconversion}", Constants.OchinToHccConversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnConversion.Enabled = true;
                     //btncloseHCC.Text = Constants.Close;
                     return;
@@ -347,7 +348,7 @@ namespace RWDE
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand("MapCMSClients", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.MapCmsClients, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
@@ -386,7 +387,7 @@ namespace RWDE
                         string eTime = endedTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                         double totalSeconds = totalTime.TotalSeconds;
                         txtUploadEnded.Text = eTime;
-                        txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
+                        txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
                         
                         UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update Status label in Status Column 
                         dataGridView.Refresh();
@@ -427,8 +428,8 @@ namespace RWDE
             label.Size = new Size(this.ClientSize.Width - 10, this.ClientSize.Height - 10); // Adjust size for padding
             label.Location = new Point(5, 5); // Adjust location for padding
             label.TextAlign = ContentAlignment.MiddleCenter;
-            label.Font = new Font("Arial", 12, FontStyle.Regular); // Set font and size
-
+            label.Font = new Font(Constants.FntfmlyArial, 12, FontStyle.Regular); // Set font and size
+            
             // Add label to form
             this.Controls.Add(label);
 
@@ -483,7 +484,7 @@ namespace RWDE
                         {
                             connection.Open();
 
-                            using (SqlCommand command = new SqlCommand("MapCMSServicesToHCCServices", connection))
+                            using (SqlCommand command = new SqlCommand(Constants.MapCmsServicesToHccServices, connection))
                             {
                                 command.CommandType = CommandType.StoredProcedure;
 
@@ -497,7 +498,7 @@ namespace RWDE
                                 int insertedRows = 0;
 
                                 string baseFilename = Constants.CtServices;
-                                dbHelper.Log($"Convert to HCC  for batch ID Started.", Constants.Hcc, baseFilename, Constants.Uploadhcc);
+                                dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.Hcc, baseFilename, Constants.Uploadhcc);
 
                                 DateTime startTime = DateTime.Now;
                                 txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
@@ -533,10 +534,10 @@ namespace RWDE
                                 DateTime endTime = DateTime.Now;
                                 UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update the Status label in batch table
 
-                                dbHelper.Log($"Convert to HCC format completed successfully.", Constants.ClientTrack, baseFilename, Constants.Uploadct);
+                                dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrack, baseFilename, Constants.Uploadct);
                                 //Record the end time
                                 
-                                Console.WriteLine("Mapping completed successfully for BatchID: " + selectedBatchId);
+                                Console.WriteLine(Constants.MappingcompletedsuccessfullyforBatchId + selectedBatchId);
                                 RemoveSelectedRow(selectedBatchId, "");
                                 // int batchId = dbHelper.GetNextBatchID();//Getting next batchid from Batch table
                                 dbHelper.UpdateBatchServices(selectedBatchId, startTime, endTime, totalRows);
@@ -547,7 +548,7 @@ namespace RWDE
                                 string eTime = endedTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                                 double totalSeconds = totalTime.TotalSeconds;
                                 txtUploadEnded.Text = eTime;
-                                txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
+                                txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
                                 btnClose.Text = Constants.Close;
                                 PopulateDataGridView();
                                 dataGridView.Refresh();
@@ -556,9 +557,8 @@ namespace RWDE
                         }
                     }
                     else
-
                     {
-                        Console.WriteLine(Constants.Pleaseselectabatchbeforestartingtheconversion);
+                        Console.WriteLine(Constants.PleaseSelectABatchBeforeStartingTheConversion);
                     }
             }
             catch (Exception ex)
@@ -572,7 +572,7 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand("Conversionochin", connection);
+                    SqlCommand command = new SqlCommand(Constants.ConversionOchin, connection);
                     command.CommandType = CommandType.StoredProcedure;
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     DataTable dataTable = new DataTable();
@@ -613,7 +613,7 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand("ConversionHCC", connection);
+                    SqlCommand command = new SqlCommand(Constants.ConversionHcc, connection);
                     command.CommandType = CommandType.StoredProcedure;
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     DataTable dataTable = new DataTable();
@@ -681,7 +681,7 @@ namespace RWDE
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand("countcmsservices", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.CountCmsServices, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
@@ -725,21 +725,21 @@ namespace RWDE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO RemovedBatchIDs (BatchID) VALUES (@BatchID)", conn);
+                    SqlCommand cmd = new SqlCommand(Constants.AddRemoveBatchIdQuery, conn);
                     cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error adding removed batch ID to database: {ex.Message}");
+                Console.WriteLine($@"{Constants.ErrorAddingRemovedBatchIdToDatabase} {ex.Message}");
             }
         }     
         private void UpdateGridStatus(int batchId, int status)// Updates the status label on the form based on a given status code retrieved from the database.
         {
             try
             {
-                string valueSelectQuery = "updategrid";
+                string valueSelectQuery = Constants.UpdateGrid;
 
                 using (SqlConnection sql = new SqlConnection(connectionString))
                 {
@@ -761,7 +761,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log or handle the exception appropriately
-                Console.WriteLine($"Error updating grid status: {ex.Message}");
+                Console.WriteLine($@"{Constants.ErrorUpdatingGridStatus}{ex.Message}");
             }
         }
         private async Task UpdateProgressAsync(int insertedRows, int totalRows)//progress of rows
@@ -797,7 +797,7 @@ namespace RWDE
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand("COUNTCMSCLIENTS", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.CountCmsClients, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
@@ -823,7 +823,7 @@ namespace RWDE
                     // Check if the user clicked "Yes"
 
                     // Show a message box indicating successful abort
-                    MessageBox.Show(Constants.Abortedsuccessfully);
+                    MessageBox.Show(Constants.AbortedSuccessfully);
                     foreach (DataGridViewRow row in dataGridView.Rows)
                     {
                         row.Cells[Constants.Status].Value = Constants.Hccabort;
@@ -851,7 +851,7 @@ namespace RWDE
                     connection.Open();
                     ClearTables(selectedBatchId);//to clear the data in table
                     // Construct the SQL UPDATE statement
-                    string query = "Updatebatch";
+                    string query = Constants.UpdateBatch;
                     // Create and execute the SqlCommand
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -877,7 +877,7 @@ namespace RWDE
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("abortconversiondelete", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.AbortConversionDelete, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
@@ -938,7 +938,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log the exception or display an error message
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void btnClear_Click(object sender, EventArgs e)//to clear existing data

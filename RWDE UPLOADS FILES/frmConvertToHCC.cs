@@ -193,7 +193,7 @@ namespace RWDE
                 // Check if no batch is selected
                 if (selectedRowCount == 0)
                 {
-                    MessageBox.Show(Constants.Pleaseselectabatchbeforestartingtheconversion, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.PleaseSelectABatchBeforeStartingTheConversion, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     btncloseHCC.Text = Constants.Close;
                     btncthcc.Enabled = true;
                     return; // Exit the method early
@@ -409,7 +409,7 @@ namespace RWDE
                 }
                 else
                 {
-                    Console.WriteLine(Constants.Pleaseselectabatchbeforestartingtheconversion);
+                    Console.WriteLine(Constants.PleaseSelectABatchBeforeStartingTheConversion);
                 }
             }
             catch (Exception ex)
@@ -686,7 +686,7 @@ namespace RWDE
                     // Check if the user clicked "Yes"
 
                     // Show a message box indicating successful abort
-                    MessageBox.Show(Constants.Abortedsuccessfully);
+                    MessageBox.Show(Constants.AbortedSuccessfully);
                     foreach (DataGridViewRow row in dataGridView.Rows)
                     {
                         row.Cells[Constants.Status].Value = Constants.Hccabort;

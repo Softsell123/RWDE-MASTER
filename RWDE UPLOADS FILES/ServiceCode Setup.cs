@@ -3,6 +3,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+// ReSharper disable PossibleNullReferenceException
 
 namespace RWDE
 {
@@ -59,7 +60,7 @@ namespace RWDE
         {
             if (e.KeyCode == Keys.Delete)
             {
-                // Suppress the default delete action when the "Delete" key is pressed
+                // Suppress the default delete action when the Constants.DeleteColumnName key is pressed
                 e.Handled = true; // Mark the event as handled
                 e.SuppressKeyPress = true; // Prevent the key press from being processed further               
             }
@@ -76,7 +77,7 @@ namespace RWDE
                     e.SuppressKeyPress = true;
 
                     // Show confirmation dialog
-                    var result = MessageBox.Show($"{Constants.AreyousureyouwanttodeleteSelectedrow}", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var result = MessageBox.Show(Constants.AreyousureyouwanttodeleteSelectedrow, Constants.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (result == DialogResult.Yes)
                     {
@@ -86,7 +87,7 @@ namespace RWDE
                     else
                     {
                         // Optionally, show a message to the user
-                        MessageBox.Show($"{Constants.Deletioncancelled}", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(Constants.Deletioncancelled, Constants.Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
@@ -167,18 +168,18 @@ namespace RWDE
 
                 this.dataGridView.Columns.Clear();
 
-                this.dataGridView.Columns.Add("ServiceCodeID", "ServiceCodeID");
-                this.dataGridView.Columns["ServiceCodeID"].DataPropertyName = "ServiceCodeID";
-                this.dataGridView.Columns["ServiceCodeID"].Width = 220;
+                this.dataGridView.Columns.Add(Constants.ServiceCodeId, Constants.ServiceCodeId);
+                this.dataGridView.Columns[Constants.ServiceCodeId].DataPropertyName = Constants.ServiceCodeId;
+                this.dataGridView.Columns[Constants.ServiceCodeId].Width = 220;
 
                 this.dataGridView.Columns.Add(Constants.Service, Constants.Service);
                 this.dataGridView.Columns[Constants.Service].DataPropertyName = Constants.Service;
                 this.dataGridView.Columns[Constants.Service].Width = 220;
                 DataGridViewComboBoxColumn maptohcc = new DataGridViewComboBoxColumn
                 {
-                    Name = "HCC_ExportToAries",
-                    HeaderText = "Map to HCC",
-                    DataPropertyName = "HCC_ExportToAries", // Ensure this matches your DataTable column
+                    Name = Constants.HccExportToAries,
+                    HeaderText = Constants.MapToHcc,
+                    DataPropertyName = Constants.HccExportToAries, // Ensure this matches your DataTable column
                     Width = 130,
                     ValueType = typeof(string), // Ensure ValueType is set correctly
                     FlatStyle = FlatStyle.Flat
@@ -197,8 +198,8 @@ namespace RWDE
                     DataGridViewComboBoxColumn contractColumn = new DataGridViewComboBoxColumn
                     {
                         Name = Constants.ContractId,
-                        HeaderText = "Contract",
-                        DataPropertyName = "HCC_ContractID", // Ensure this matches your DataTable's column name
+                        HeaderText = Constants.Contract,
+                        DataPropertyName = Constants.HccContractId, // Ensure this matches your DataTable's column name
                         Width = 130,
                         ValueType = typeof(string),
                         FlatStyle = FlatStyle.Flat,
@@ -220,15 +221,14 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error: {ex.Message}");
+                    MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message));
                 }
-
                 foreach (DataGridViewRow row in dataGridView.Rows)
                 {
-                    if (row.Cells["HCC_ExportToAries"].Value == null ||
-                        !maptohcc.Items.Contains(row.Cells["HCC_ExportToAries"].Value))
+                    if (row.Cells[Constants.HccExportToAries].Value == null ||
+                        !maptohcc.Items.Contains(row.Cells[Constants.HccExportToAries].Value))
                     {
-                        row.Cells["HCC_ExportToAries"].Value = "";
+                        row.Cells[Constants.HccExportToAries].Value = "";
                     }
                 }
                 this.Load += new EventHandler(Form1_Load);//to load form
@@ -243,21 +243,21 @@ namespace RWDE
                     e.ThrowException = false; // Prevent the exception from being thrown
                 }
                 this.dataGridView.RowTemplate.Height = 40;
-                this.dataGridView.Columns.Add("HCC_PrimaryService", "Primary Services");
-                this.dataGridView.Columns["HCC_PrimaryService"].DataPropertyName = "HCC_PrimaryService";
-                this.dataGridView.Columns["HCC_PrimaryService"].Width = 220;
-                this.dataGridView.Columns.Add("HCC_SecondaryService", "Secondary Services");
-                this.dataGridView.Columns["HCC_SecondaryService"].DataPropertyName = "HCC_SecondaryService";
-                this.dataGridView.Columns["HCC_SecondaryService"].Width = 220;
-                this.dataGridView.Columns.Add("HCC_Subservice", "Sub Service");
-                this.dataGridView.Columns["HCC_Subservice"].DataPropertyName = "HCC_Subservice";
-                this.dataGridView.Columns["HCC_Subservice"].Width = 220;
-                this.dataGridView.Columns.Add("UnitsOfMeasure", "Units Of Measure");
-                this.dataGridView.Columns["UnitsOfMeasure"].DataPropertyName = "UnitsOfMeasure";
-                this.dataGridView.Columns["UnitsOfMeasure"].Width = 220;
-                this.dataGridView.Columns.Add("UnitValue", "Unit");
-                this.dataGridView.Columns["UnitValue"].DataPropertyName = "UnitValue";
-                this.dataGridView.Columns["UnitValue"].Width = 220;
+                this.dataGridView.Columns.Add(Constants.HccPrimaryService, Constants.PrimaryService);
+                this.dataGridView.Columns[Constants.HccPrimaryService].DataPropertyName = Constants.HccPrimaryService;
+                this.dataGridView.Columns[Constants.HccPrimaryService].Width = 220;
+                this.dataGridView.Columns.Add(Constants.HccSecondaryService, Constants.SecondaryService);
+                this.dataGridView.Columns[Constants.HccSecondaryService].DataPropertyName = Constants.HccSecondaryService;
+                this.dataGridView.Columns[Constants.HccSecondaryService].Width = 220;
+                this.dataGridView.Columns.Add(Constants.HccSubService, Constants.SubService);
+                this.dataGridView.Columns[Constants.HccSubService].DataPropertyName = Constants.HccSubService;
+                this.dataGridView.Columns[Constants.HccSubService].Width = 220;
+                this.dataGridView.Columns.Add(Constants.UnitsOfMeasure, Constants.UnitsOfMeasuresp);
+                this.dataGridView.Columns[Constants.UnitsOfMeasure].DataPropertyName = Constants.UnitsOfMeasure;
+                this.dataGridView.Columns[Constants.UnitsOfMeasure].Width = 220;
+                this.dataGridView.Columns.Add(Constants.UnitValue, Constants.Unit);
+                this.dataGridView.Columns[Constants.UnitValue].DataPropertyName = Constants.UnitValue;
+                this.dataGridView.Columns[Constants.UnitValue].Width = 220;
                 //calling Service Lsit function
                 DataTable result = this.dbHelper.GetAllServiceLists();
 
@@ -320,10 +320,10 @@ namespace RWDE
 
                         switch (statusValue)
                         {
-                            case "29":
+                            case Constants.ActiveContractstatus:
                                 row[Constants.Status] = Constants.Active;
                                 break;
-                            case "28":
+                            case Constants.InactiveContractstatus:
                                 row[Constants.Status] = Constants.Inactive;
                                 break;
 
@@ -493,10 +493,10 @@ namespace RWDE
         }
         private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)//to display the drop down
         {
-            if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is System.Windows.Forms.ComboBox)
+            if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox)
             {
 
-                System.Windows.Forms.ComboBox comboBox = e.Control as System.Windows.Forms.ComboBox;
+                ComboBox comboBox = e.Control as ComboBox;
 
                 if (comboBox != null)
                 {
@@ -539,7 +539,7 @@ namespace RWDE
                 dataGridView.Columns[Constants.Status].ReadOnly = false;
 
                 // Display confirmation message
-                var result = MessageBox.Show($"{Constants.AreyousureyouwanttoaddanewService}", Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBox.Show(Constants.AreyousureyouwanttoaddanewService, Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
@@ -588,7 +588,7 @@ namespace RWDE
                 if (dataGridView.SelectedRows.Count == 0)
                 {
                     // No row selected
-                    MessageBox.Show(Constants.Norowselectedtosave, "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.Norowselectedtosave, Constants.SaveError, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -596,13 +596,13 @@ namespace RWDE
                 {
                     if (dataGridView.SelectedRows.Count > 1)
                     {
-                        MessageBox.Show($"{Constants.Selectonlyonerowatatime}", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(Constants.Selectonlyonerowatatime, Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     int rowIndex = dataGridView.CurrentRow.Index;
                     DataRow row = ((DataRowView)dataGridView.CurrentRow.DataBoundItem).Row;
 
-                    string currentContractId = row["ServiceCodeID"].ToString();
+                    string currentContractId = row[Constants.ServiceCodeId].ToString();
 
                     // Check for duplicate Contract ID in other rows
                     bool isDuplicate = false;
@@ -611,8 +611,8 @@ namespace RWDE
                         if (i != rowIndex) // Skip the current row
                         {
                             var otherRow = dataGridView.Rows[i];
-                            if (otherRow.Cells["ServiceCodeID"].Value != null &&
-                                otherRow.Cells["ServiceCodeID"].Value.ToString() == currentContractId)
+                            if (otherRow.Cells[Constants.ServiceCodeId].Value != null &&
+                                otherRow.Cells[Constants.ServiceCodeId].Value.ToString() == currentContractId)
                             {
                                 isDuplicate = true;
                                 break;
@@ -622,7 +622,7 @@ namespace RWDE
 
                     if (isDuplicate)
                     {
-                        MessageBox.Show($"{Constants.ServiceCodeIdiDalreadyexists}", "ServiceCode Setup-Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(Constants.ServiceCodeIdiDalreadyexists, Constants.ServiceCodeSetupError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return; // Exit the method if a duplicate is found
                     }
 
@@ -654,7 +654,7 @@ namespace RWDE
                 if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
                 {
                     // Get the Contract ID column index
-                    int contractIdColumnIndex = dataGridView.Columns["ServiceCodeID"].Index;
+                    int contractIdColumnIndex = dataGridView.Columns[Constants.ServiceCodeId].Index;
 
                     // Check if the current cell being edited is not in the Contract ID column
                     if (e.ColumnIndex != contractIdColumnIndex)
@@ -664,16 +664,16 @@ namespace RWDE
                         // Check if the Contract ID cell is empty or null
                         if (row.Cells[contractIdColumnIndex].Value == null || string.IsNullOrWhiteSpace(row.Cells[contractIdColumnIndex].Value.ToString()))
                         {
-                            MessageBox.Show($"{Constants.ServiceCodeIDhastobepresentbeforeediting}", "ServiceCode Setup-Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(Constants.ServiceCodeIDhastobepresentbeforeediting, Constants.ServiceCodeSetupError, MessageBoxButtons.OK, MessageBoxIcon.Information);
                             return;
                         }
                         row.DefaultCellStyle.BackColor = Color.FromArgb(200, 230, 255);
                     }
 
                     // Get the ContractID from the current row
-                    string serviceCodeId = dataGridView.Rows[e.RowIndex].Cells["ServiceCodeID"].Value.ToString();
+                    string serviceCodeId = dataGridView.Rows[e.RowIndex].Cells[Constants.ServiceCodeId].Value.ToString();
 
-                    var result = MessageBox.Show($"{Constants.AreyousureyouwanttoeditServiceCodeId} {serviceCodeId} ", Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    var result = MessageBox.Show($@"{Constants.AreyousureyouwanttoeditServiceCodeId} {serviceCodeId}", Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     // alreadyDeletedMessageShown = true; // Set the flag to true after showing the message
 
                     // Prompt user for confirmation before editing, showing the ContractID
@@ -729,13 +729,13 @@ namespace RWDE
 
             try
 
-            { // Ensure the row index is valid and the clicked cell is in the "Delete" column
-                if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns["Delete"].Index)
+            { // Ensure the row index is valid and the clicked cell is in the Constants.DeleteColumnName column
+                if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.DeleteColumnName].Index)
                 {
                     DataGridViewRow currentRow = dataGridView.Rows[e.RowIndex];
 
                     // Get the Contract ID and Status column indices
-                    int contractIdColumnIndex = dataGridView.Columns["ServiceCodeID"].Index;
+                    int contractIdColumnIndex = dataGridView.Columns[Constants.ServiceCodeId].Index;
                     int statusColumnIndex = dataGridView.Columns[Constants.Status].Index;
 
                     // Retrieve values
@@ -745,23 +745,23 @@ namespace RWDE
                     // Check if the Contract ID cell is empty or null
                     if (string.IsNullOrWhiteSpace(serviceCodeId))
                     {
-                        MessageBox.Show($"{Constants.ServiceIDhastobepresentbeforedeleting}", "ServiceCode Setup - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(Constants.ServiceIDhastobepresentbeforedeleting, Constants.ServiceCodeSetupError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
                     // Check if the status is 'DELETE' and whether the message has already been shown
-                    if (status != null && status.Equals("DELETE", StringComparison.OrdinalIgnoreCase))
+                    if (status != null && status.Equals(Constants.Delete, StringComparison.OrdinalIgnoreCase))
                     {
                         if (!isHandlingClick)
                         {
                             isHandlingClick = true;// Set the flag to prevent further messages
-                            MessageBox.Show($"This {serviceCodeId} has already been deleted.", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Question);
+                            MessageBox.Show($@"{Constants.This} {serviceCodeId} {Constants.Hasalreadybeendeleted}", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Question);
                         }
                         return;  // Exit method here to prevent further actions
                     }
 
                     // Confirm deletion
-                    var result = MessageBox.Show($"Do you want to delete Service {serviceCodeId}?", Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var result = MessageBox.Show(string.Format(Constants.DoYouWantToDeleteServiceCodeId, serviceCodeId), Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     isHandlingClick = true;
                     if (result == DialogResult.Yes)
                     {
@@ -784,19 +784,19 @@ namespace RWDE
             var cell = dataGridView.Rows[rowIndex].Cells[Constants.DeleteColumnName];
             if (cell.Value != null && cell.Value.ToString() == Constants.DeleteButtonText)
             {
-                int serviceCodeId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells["ServiceCodeID"].Value);
+                int serviceCodeId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[Constants.ServiceCodeId].Value);
 
                 if (serviceCodeId > 0)
                 {
-                    // Update the status to "DELETE"
+                    // Update the status to Constants.Delete
                     dataGridView.Rows[rowIndex].Cells[Constants.Status].Value = Constants.Delete;
-                    dbHelper.ServiceCodeIdUpdateStatus(serviceCodeId, "30"); // Assume this function updates the status in the database
-                    MessageBox.Show($"Deleted ContractID: {serviceCodeId} Successfully", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    dbHelper.ServiceCodeIdUpdateStatus(serviceCodeId, Constants.DeleteContractstatus); // Assume this function updates the status in the database
+                    MessageBox.Show($@"{Constants.DeletedContractId} {serviceCodeId} {Constants.Successfully}", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
                 else
                 {
-                    MessageBox.Show(ContractIdList.ContractIDortypeisinvalid, "ServiceCode Setup-Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ContractIdList.ContractIDortypeisinvalid, Constants.ServiceCodeSetupError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -807,15 +807,15 @@ namespace RWDE
             {
                 try
                 {
-                    int serviceCodeId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells["ServiceCodeID"].Value);
+                    int serviceCodeId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[Constants.ServiceCodeId].Value);
                     string service = dataGridView.Rows[rowIndex].Cells[Constants.Service].Value.ToString();
-                    string hccExportToAries = dataGridView.Rows[rowIndex].Cells["HCC_ExportToAries"].Value.ToString();
+                    string hccExportToAries = dataGridView.Rows[rowIndex].Cells[Constants.HccExportToAries].Value.ToString();
                     string hccContractId = dataGridView.Rows[rowIndex].Cells[Constants.ContractId].Value.ToString();
-                    string hccPrimaryService = dataGridView.Rows[rowIndex].Cells["HCC_PrimaryService"].Value.ToString();
-                    string hccSecondaryService = dataGridView.Rows[rowIndex].Cells["HCC_SecondaryService"].Value.ToString();
-                    string hccSubservice = dataGridView.Rows[rowIndex].Cells["HCC_Subservice"].Value.ToString();
-                    string unitsOfMeasure = dataGridView.Rows[rowIndex].Cells["UnitsOfMeasure"].Value.ToString();
-                    decimal unitValue = Convert.ToDecimal(dataGridView.Rows[rowIndex].Cells["UnitValue"].Value);
+                    string hccPrimaryService = dataGridView.Rows[rowIndex].Cells[Constants.HccPrimaryService].Value.ToString();
+                    string hccSecondaryService = dataGridView.Rows[rowIndex].Cells[Constants.HccSecondaryService].Value.ToString();
+                    string hccSubservice = dataGridView.Rows[rowIndex].Cells[Constants.HccSubService].Value.ToString();
+                    string unitsOfMeasure = dataGridView.Rows[rowIndex].Cells[Constants.UnitsOfMeasure].Value.ToString();
+                    decimal unitValue = Convert.ToDecimal(dataGridView.Rows[rowIndex].Cells[Constants.UnitValue].Value);
                     string status = dataGridView.Rows[rowIndex].Cells[Constants.Status].Value.ToString();
 
                     status = (status == Constants.Active) ? Constants.ActiveContractstatus :
@@ -843,17 +843,17 @@ namespace RWDE
                 var statusString = row[Constants.Status].ToString();
 
                 // Ensure the status is set correctly based on your conditions
-                if (statusString == "ACTIVE")
+                if (statusString == Constants.Active)
                 {
-                    statusString = "29";
+                    statusString = Constants.ActiveContractstatus;
                 }
-                else if (statusString == "INACTIVE")
+                else if (statusString == Constants.Inactive)
                 {
-                    statusString = "28";
+                    statusString = Constants.InactiveContractstatus;
                 }
-                else if (statusString == "DELETE")
+                else if (statusString == Constants.Delete)
                 {
-                    statusString = "30";
+                    statusString = Constants.DeleteContractstatus;
                 }
 
                 int serviceCodeId;
@@ -861,34 +861,34 @@ namespace RWDE
                 decimal unitValue;
 
                 // Check for empty or null HCC_ContractID before parsing
-                if (string.IsNullOrEmpty(row["HCC_ContractID"].ToString()))
+                if (string.IsNullOrEmpty(row[Constants.HccContractId].ToString()))
                 {
                     MessageBox.Show(Constants.HccContractIDcannotbeempty,Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                if (!int.TryParse(row["ServiceCodeID"].ToString(), out serviceCodeId))
+                if (!int.TryParse(row[Constants.ServiceCodeId].ToString(), out serviceCodeId))
                 {
                     MessageBox.Show(Constants.InvalidServiceCodeId, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (string.IsNullOrEmpty(row["UnitValue"].ToString()))
+                if (string.IsNullOrEmpty(row[Constants.UnitValue].ToString()))
                 {
                     unitValue = 0; // or any default value you want to use
                 }
-                if (!int.TryParse(row["HCC_ContractID"].ToString(), out hccContractId))
+                if (!int.TryParse(row[Constants.HccContractId].ToString(), out hccContractId))
                 {
                     MessageBox.Show(Constants.InvalidHccContractId,Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // Check if UnitValue is null or empty and set a default value if necessary
-                if (string.IsNullOrEmpty(row["UnitValue"].ToString()))
+                if (string.IsNullOrEmpty(row[Constants.UnitValue].ToString()))
                 {
                     unitValue = 0; // or any default value you want to use
                 }
 
-                else if (!decimal.TryParse(row["UnitValue"].ToString(), out unitValue))
+                else if (!decimal.TryParse(row[Constants.UnitValue].ToString(), out unitValue))
                 {
                     MessageBox.Show(Constants.InvalidUnitValue, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -898,25 +898,25 @@ namespace RWDE
                 string operation = dbHelper.InsertOrUpdateServiceCode(
                     serviceCodeId,
                     row[Constants.Service].ToString(),
-                    row["HCC_ExportToAries"].ToString(),
+                    row[Constants.HccExportToAries].ToString(),
                     hccContractId,
-                    row["HCC_PrimaryService"].ToString(),
-                    row["HCC_SecondaryService"].ToString(),
-                    row["HCC_Subservice"].ToString(),
-                    row["UnitsOfMeasure"].ToString(),
+                    row[Constants.HccPrimaryService].ToString(),
+                    row[Constants.HccSecondaryService].ToString(),
+                    row[Constants.HccSubService].ToString(),
+                    row[Constants.UnitsOfMeasure].ToString(),
                     unitValue,
                     statusString
                 );
                 dataGridView.ReadOnly = true;
 
                 // Display appropriate message
-                if (operation == "Update")
+                if (operation == Constants.Update)
                 {
-                    MessageBox.Show($"{Constants.Servicecodeupdatedsuccessfully}", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Constants.Servicecodeupdatedsuccessfully, Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                else if (operation == "Insert")
+                else if (operation == Constants.Insert)
                 {
-                    MessageBox.Show($"{Constants.Servicecodeinsertedsuccessfully}",Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Constants.Servicecodeinsertedsuccessfully,Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -950,11 +950,11 @@ namespace RWDE
             if (sender is ComboBox comboBox)
             {
                 DataGridViewRow currentRow = dataGridView.CurrentRow;
-                if (currentRow == null || currentRow.Cells["ServiceCodeID"].Value == null)
+                if (currentRow == null || currentRow.Cells[Constants.ServiceCodeId].Value == null)
                     return;
 
                 string selectedStatus = comboBox.SelectedItem.ToString();
-                string serviceCodeId = currentRow.Cells["ServiceCodeID"].Value.ToString();
+                string serviceCodeId = currentRow.Cells[Constants.ServiceCodeId].Value.ToString();
                 string currentStatus = currentRow.Cells[Constants.Status].Value?.ToString();
 
                 if (currentStatus != selectedStatus)

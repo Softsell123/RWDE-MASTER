@@ -43,12 +43,12 @@ namespace RWDE
                 this.ControlBox = false;
                 this.WindowState = FormWindowState.Maximized;
                 DateTime currenttime = DateTime.Now;
-                string date = currenttime.ToString("MM/dd/yyyy");
-                string time = currenttime.ToString("HH:mm:ss");
-                txtDesc.Text = $"ClientTrack Upload on {date} at {time}";
+                string date = currenttime.ToString(Constants.MMddyyyybkslash);
+                string time = currenttime.ToString(Constants.HHmmss);
+                txtDesc.Text = $@"{Constants.ClientTrackUploadOnAt.Replace("{date}", date).Replace("{time}", time)}";
                 txtProgressLines.Text = Constants.ZeroPercent;
-                txtProgressfile.Text = "0/0 (0%)";
-                string pathFile = "LastFolderPath.txt";
+                txtProgressfile.Text = Constants.InitialProgress;
+                string pathFile = Constants.LastFolderPathTxt;
                 RegisterEvents(this);
 
                 // Check if the file exists
@@ -73,7 +73,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -120,7 +120,7 @@ namespace RWDE
             }
             string[] files = Directory.GetFiles(txtPath.Text);
 
-            bool allFilesAreXml = files.All(file => System.IO.Path.GetExtension(file).Equals(".xml", StringComparison.OrdinalIgnoreCase));
+            bool allFilesAreXml = files.All(file => System.IO.Path.GetExtension(file).Equals(Constants.XmlExtention, StringComparison.OrdinalIgnoreCase));
 
             if (files == null || files.Length == 0)
             {
@@ -144,7 +144,7 @@ namespace RWDE
      
             if (string.IsNullOrWhiteSpace(txtPath.Text))
             {
-                MessageBox.Show("Select a file before uploading.");
+                MessageBox.Show(Constants.SelectAFolderBeforeUploading);
                 return; // Exit the method if the path is empty
             }
 
@@ -154,7 +154,7 @@ namespace RWDE
             var values = chkPHI.Checked ? true : false;
             if (string.IsNullOrEmpty(folderPath))
             {
-                MessageBox.Show("Please select a folder to upload XML files.", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Constants.PleaseSelectAFolderToUploadXmlFiles, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnUploadXML.Enabled = true;
                 return;
             }
@@ -163,7 +163,7 @@ namespace RWDE
                 if (string.IsNullOrEmpty(txtBatchid.Text) && string.IsNullOrEmpty(txtUploadStarted.Text))
                 {
                     btnClose.Text = Constants.Abort;
-                    string[] xmlFiles = Directory.GetFiles(folderPath, "*.xml");
+                    string[] xmlFiles = Directory.GetFiles(folderPath, Constants.AllXmlExtention);
                     int totalXmlFiles = xmlFiles.Length;
                     int processedXmlFiles = 0;
                     DateTime startTime = DateTime.Now;
@@ -185,9 +185,9 @@ namespace RWDE
                         FileName = System.IO.Path.GetFileName(xmlFilePath);
                         txtFileName.Text = FileName;
                         txtBatchid.Text = batchId.ToString();
-                        string date = startTime.ToString("MM/dd/yyyy");
-                        string time = startTime.ToString("HH:mm:ss");
-                        txtDesc.Text = $"ClientTrack Upload on {date} At {time}";
+                        string date = startTime.ToString(Constants.MMddyyyybkslash);
+                        string time = startTime.ToString(Constants.HHmmss);
+                        txtDesc.Text = Constants.ClientTrackUploadOnAt.Replace("{date}", date).Replace("{time}", time);
                         string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                         txtUploadStarted.Text = formattime;
 
@@ -200,7 +200,7 @@ namespace RWDE
                             await InsertXmlDataIntoTable(xmlDoc, batchId, xmlFilePath, TotalRows, conn, values);
 
                             int successfulRows = TotalRows;
-                            string description = $"Batch {batchId} - {FileName}";
+                            string description = $"{Constants.Batch} {batchId} - {FileName}";
                             dbHelper.InsertBatch(batchId, FileName, xmlFilePath, Constants.ClientTrack, description, uploadStartedAt, TotalRows, successfulRows, Constants.StatusCode);
 
                             processedXmlFiles++;
@@ -211,7 +211,7 @@ namespace RWDE
                         double totalSeconds = totalTime.TotalSeconds;
                         string eTime = endTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                         txtUploadEnded.Text = eTime;
-                        txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
+                        txtTotaltime.Text = $"{totalSeconds:F2} {Constants.Seconds}";
                         btnClose.Text = Constants.Close;
                     }
                     btnUploadXML.Enabled = true;
@@ -219,7 +219,7 @@ namespace RWDE
                 }
                 else
                 {
-                    MessageBox.Show($"This {FileName} File is already uploaded.click On Browse to Choose another file to upload.", "XML File Upload", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"{Constants.TheFileIsAlreadyUploaded}", Constants.XmlFileUpload, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     btnUploadXML.Enabled = true;
                 }
             }
@@ -233,9 +233,9 @@ namespace RWDE
 
         private async Task<int> GetTotalRowsInXml(XmlDocument xmlDoc)// This method asynchronously returns the total number of rows in the given XmlDocument.
         {
-            int totalClients = CountNodes(xmlDoc, "//Client");
-            int totalEligibilityDocs = CountNodes(xmlDoc, "//EligibilityDocument");
-            int totalServiceLineItems = CountNodes(xmlDoc, "//ServiceLineItem");
+            int totalClients = CountNodes(xmlDoc, Constants.BkslhClient);
+            int totalEligibilityDocs = CountNodes(xmlDoc, Constants.BkslhEligibilityDocument);
+            int totalServiceLineItems = CountNodes(xmlDoc, Constants.BkslhServiceLineItem);
 
             return totalClients + totalEligibilityDocs + totalServiceLineItems;
         }
@@ -245,7 +245,7 @@ namespace RWDE
             string baseFilename = System.IO.Path.GetFileNameWithoutExtension(xmlFilePath);
             try
             {
-                dbHelper.Log($"Upload for {baseFilename} has started", Constants.ClientTrack, baseFilename, Constants.Uploadct);// Log the start of the upload process for the given base filename
+                dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrack, baseFilename, Constants.Uploadct);// Log the start of the upload process for the given base filename
 
                 int insertedClients = dbHelper.InsertClients(xmlDoc, batchId, conn, FileName, value);
                 totalInsertedRows += insertedClients;
@@ -256,8 +256,8 @@ namespace RWDE
                 int insertedServiceLineItems = dbHelper.InsertServiceLineItems(xmlDoc, batchId, conn, FileName);
                 totalInsertedRows += insertedServiceLineItems;
 
-                await UpdateProgressBar(totalRows);/// Update the progress bar to reflect the total number of rows being processed.
-                dbHelper.Log($"Upload for {baseFilename} has completed Successfully", Constants.ClientTrack, baseFilename, Constants.Uploadct);// Log the end of the upload process for the given base filename
+                await UpdateProgressBar(totalRows);// Update the progress bar to reflect the total number of rows being processed.
+                dbHelper.Log($"{Constants.UploadForBaseFileNameHasCompleted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrack, baseFilename, Constants.Uploadct);// Log the end of the upload process for the given base filename
             }
             catch (Exception ex)
             {
@@ -302,14 +302,14 @@ namespace RWDE
                 {
                     int fileProgressPercentage = (int)((double)currentFileIndex / totalFiles * 100);
                     progressBarfile.Value = currentFileIndex;
-                    txtProgressfile.Text = $"{currentFileIndex}/{totalFiles} ({fileProgressPercentage}%)";
+                    txtProgressfile.Text = $@"{currentFileIndex}/{totalFiles} ({fileProgressPercentage}%)";
                 });
             }
             else
             {
                 int fileProgressPercentage = (int)((double)currentFileIndex / totalFiles * 100);
                 progressBarfile.Value = currentFileIndex;
-                txtProgressfile.Text = $"{currentFileIndex}/{totalFiles} ({fileProgressPercentage}%)";
+                txtProgressfile.Text = $@"{currentFileIndex}/{totalFiles} ({fileProgressPercentage}%)";
             }
         }
         private int CountNodes(XmlDocument xmlDoc, string xpath)// This method counts the number of nodes in the XmlDocument that match the specified XPath expression.
@@ -333,15 +333,15 @@ namespace RWDE
                             string[] files = Directory.GetFiles(selectedFolderPath);
 
                             // Check if all files have the .xml extension
-                            bool allFilesAreXml = files.All(file => System.IO.Path.GetExtension(file).Equals(".xml", StringComparison.OrdinalIgnoreCase));
+                            bool allFilesAreXml = files.All(file => System.IO.Path.GetExtension(file).Equals(Constants.XmlExtention, StringComparison.OrdinalIgnoreCase));
 
                             if (!allFilesAreXml)
                             {
-                                MessageBox.Show("The folder contains non-XML files or folder is empty. Upload is allowed only for XML files.", "Invalid File Type", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(Constants.TheFolderContainsNonXmlFiles, Constants.InvalidFileType, MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return;
                             }
                             // Save the path to the file
-                            File.WriteAllText("LastFolderPath.txt", selectedFolderPath);
+                            File.WriteAllText(Constants.LastFolderPathTxt, selectedFolderPath);
                         }
                     }
             }
@@ -372,11 +372,11 @@ namespace RWDE
                 int batchId = Convert.ToInt32(txtBatchid.Text);
                 if (btnClose.Text == Constants.Abort)
                 {
-                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort,"XML File Upload", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort,Constants.XmlFileUpload, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     // Check if the user clicked "Yes"
                     UpdateBatch(batchId, FileName, Path);
-                    DialogResult result2 = MessageBox.Show("Aborted Successfully","XML File Upload");
+                    DialogResult result2 = MessageBox.Show(Constants.AbortedSuccessfully,Constants.XmlFileUpload);
                 }
                 this.WindowState = FormWindowState.Maximized;
                 Application.Restart();
@@ -399,7 +399,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error updating batch: {ex.Message}");
+                Console.WriteLine($@"{Constants.Errorupdatingbatch}{ex.Message}");
             }
         }
         private void ClearTables(int batchId)// This method clears or resets tables associated with the specified batch ID.
@@ -409,7 +409,7 @@ namespace RWDE
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("abortdelete", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.AbortDelete, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
@@ -420,7 +420,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error clearing tables: {ex.Message}");
+                Console.WriteLine($@"{Constants.ErrorClearingtables}{ex.Message}");
                 throw; // Re-throw if you want to handle it in the calling method
             }
         }

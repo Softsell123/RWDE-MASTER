@@ -1487,7 +1487,7 @@ namespace RWDE
                         UpdateBatchStatusabort(batchId, Constants.Xmlabort, selectedFolderPath, filename);
 
                         //Show a message box indicating successful abort
-                        MessageBox.Show(Constants.Abortedsuccessfully, Constants.GenerateXml);
+                        MessageBox.Show(Constants.AbortedSuccessfully, Constants.GenerateXml);
                         Application.Restart();
                     }
                     if (result == DialogResult.No)
@@ -1545,14 +1545,15 @@ namespace RWDE
                 // Log or handle the exception appropriately
             }
         }
-        private void DeleteXmlFiles(string directoryPath)//Deleting the xml after abort
+
+        private void DeleteXmlFiles(string directoryPath) //Deleting the xml after abort
         {
             try
             {
                 if (Directory.Exists(directoryPath))
                 {
                     // Get all XML files in the directory
-                    string[] xmlFiles = Directory.GetFiles(directoryPath, "*.xml");
+                    string[] xmlFiles = Directory.GetFiles(directoryPath, Constants.AllXmlExtention);
 
                     // Delete each XML file
                     foreach (string file in xmlFiles)
@@ -1563,25 +1564,12 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting XML files: {ex.Message}");
+                Console.WriteLine($@"{Constants.ErrorDeletingXmlFiles} {ex.Message}");
                 // Log or handle the exception appropriately
                 throw; // Re-throw if you want to handle it in the calling method
             }
         }
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)//to select particular row
-        {
-            try { 
-                if (e.RowIndex >= 0)
-                {
-                    int  selectedBatchId = Convert.ToInt32(dataGridView.Rows[e.RowIndex].Cells[Constants.BatchId].Value);
-                    Console.WriteLine("Selected BatchID: " + selectedBatchId);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
+
         private void btnBrowse_Click(object sender, EventArgs e)//selecting path to save xml file
         {
             try
@@ -1597,7 +1585,7 @@ namespace RWDE
                         string[] files = Directory.GetFiles(selectedFolderPath);
 
                         // Check if all files have the .xml extension
-                        bool allFilesAreXml = files.All(file => Path.GetExtension(file).Equals(".xml", StringComparison.OrdinalIgnoreCase));
+                        bool allFilesAreXml = files.All(file => Path.GetExtension(file).Equals(Constants.XmlExtention, StringComparison.OrdinalIgnoreCase));
 
                         // Save the path to the file
                         File.WriteAllText(Constants.LastFolderPathxml, selectedFolderPath);
@@ -1642,7 +1630,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log the exception or display an error message
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void bnClear_Click(object sender, EventArgs e)//Handle to clear the filter datas
@@ -1705,7 +1693,6 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
         }
 

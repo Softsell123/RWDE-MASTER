@@ -379,7 +379,6 @@ namespace RWDE
             this.dataGridView.Size = new System.Drawing.Size(1715, 251);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.TabStop = false;
-            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             this.dataGridView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView_Scroll);
             // 
             // descriptionDataGridViewTextBoxColumn
@@ -610,7 +609,7 @@ namespace RWDE
             this.txtClient.Size = new System.Drawing.Size(240, 40);
             this.txtClient.TabIndex = 8;
             this.txtClient.TabStop = false;
-            this.txtClient.Text = Constants.ZeroPercent;
+            this.txtClient.Text = "0%";
             // 
             // progressClient
             // 
@@ -662,7 +661,7 @@ namespace RWDE
             this.txtProgressBar.Size = new System.Drawing.Size(240, 40);
             this.txtProgressBar.TabIndex = 5;
             this.txtProgressBar.TabStop = false;
-            this.txtProgressBar.Text = Constants.ZeroPercent;
+            this.txtProgressBar.Text = "0%";
             // 
             // btnClose
             // 
@@ -674,7 +673,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(240, 43);
             this.btnClose.TabIndex = 1;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
