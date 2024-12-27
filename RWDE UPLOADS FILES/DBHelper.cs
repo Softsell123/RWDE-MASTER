@@ -19,14 +19,16 @@ namespace RWDE
         private readonly string connectionString; // Stores the connection string for the database
         private string error;
         private bool batchIdIncremented; // Stores any error messages encountered during database operations
+/*
         private bool batchIdIncre;
+*/
         private bool errorLogged;
 
         // Constructor to initialize the DBHelper class with a connection string
         public DbHelper()
         {
             // Define the connection string within the DBHelper class
-            connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+            connectionString = ConfigurationManager.ConnectionStrings[Constants.MyConnection].ConnectionString;
         }
 
         public string GetConnectionString() //get connection string
@@ -36,14 +38,13 @@ namespace RWDE
 
         // Method to check if a message is already logged
 
-        public async Task<BatchDetails>
-            GetBatchDetailsFromSpAsync(int batchId) //to check whether the conversion completed or not
+        public async Task<BatchDetails> GetBatchDetailsFromSpAsync(int batchId) //to check whether the conversion completed or not
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("Conversioncompletion", conn))
+                    using (SqlCommand cmd = new SqlCommand(Constants.ConversionCompletion, conn))
 
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -81,7 +82,7 @@ namespace RWDE
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("ClientCONVERSIONCOMPLETION", conn))
+                    using (SqlCommand cmd = new SqlCommand(Constants.ClientConversionCompletion, conn))
 
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -119,7 +120,7 @@ namespace RWDE
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("ClientgenerationCOMPLETION", conn))
+                    using (SqlCommand cmd = new SqlCommand(Constants.ClientGenerationCompletion, conn))
 
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -156,7 +157,7 @@ namespace RWDE
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("ServicegenerationCOMPLETION", conn))
+                    using (SqlCommand cmd = new SqlCommand(Constants.ServiceGenerationCompletion, conn))
 
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -197,7 +198,7 @@ namespace RWDE
                 {
                     conn.Open();
                     // Call the stored procedure to update HCCServices
-                    using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
+                    using (SqlCommand updateCmd = new SqlCommand(Constants.UpdateHcServicesWithErrors, conn))
                     {
                         updateCmd.CommandType = CommandType.StoredProcedure;
                         updateCmd.ExecuteNonQuery();
@@ -208,7 +209,7 @@ namespace RWDE
                     {
                         using (SqlConnection con = new SqlConnection(connectionString))
                         {
-                            SqlCommand cmd = new SqlCommand("sp_service_reconbatchid", con);
+                            SqlCommand cmd = new SqlCommand(Constants.SpServiceReconBatchId, con);
 
                             cmd.CommandType = CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue(Constants.AtBatchid, onebatch);
@@ -251,14 +252,14 @@ namespace RWDE
                     }
                     if (dy.Rows.Count == 0 && batchids.Length!=1 && batchids.Length== noDataIds.Count)
                     {
-                        MessageBox.Show(Constants.Nodataexistsforthisbatchid, "Service Reconciliation Report");
+                        MessageBox.Show(Constants.Nodataexistsforthisbatchid, Constants.ServiceReconciliationReport);
                     }
                     return dy; // Return the populated DataTable
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while loading data.", ex);
+                throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
             }
         }
 
@@ -283,7 +284,7 @@ namespace RWDE
                 {
                     connection.Open();
 
-                    SqlCommand command = new SqlCommand("SELECT ISNULL(MAX(BatchID), 0) FROM Batch", connection);
+                    SqlCommand command = new SqlCommand(Constants.GetNextBatchIdQuery, connection);
 
                     // Get the last batch ID from the database
                     object result = command.ExecuteScalar();
@@ -329,7 +330,7 @@ namespace RWDE
                 {
                     connection.Open();
 
-                    SqlCommand command = new SqlCommand("SELECT ISNULL(MAX(BatchID), 0) FROM CTClients", connection);
+                    SqlCommand command = new SqlCommand(Constants.GetMaxXmlBatchIdQuery, connection);
 
                     // Get the last batch ID from the database
                     object result = command.ExecuteScalar();
@@ -353,36 +354,36 @@ namespace RWDE
                     connection.Open();
 
                     // Proceed with inserting the new batch record
-                    SqlCommand command = new SqlCommand("insertbatchtable", connection);
+                    SqlCommand command = new SqlCommand(Constants.InsertBatchTable, connection);
                     command.CommandType = CommandType.StoredProcedure;
 
-                    string datePart = startedAt.ToString("dd-MM-yyyy");
-                    string timePart = startedAt.ToString(Constants.HHmmss);
+                    string date = startedAt.ToString(Constants.DdMMyyyyHyphen);
+                    string time = startedAt.ToString(Constants.HHmmss);
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                    command.Parameters.AddWithValue("@FileName", fileName);
-                    command.Parameters.AddWithValue("@Description", $"OCHIN TO RWDE On {datePart} at {timePart}");
-                    command.Parameters.AddWithValue("@Path", path);
-                    command.Parameters.AddWithValue("@Type", type);
-                    command.Parameters.AddWithValue("@UploadStartedAt", startedAt);
-                    command.Parameters.AddWithValue("@UploadEndedAt", DateTime.Now);
+                    command.Parameters.AddWithValue(Constants.AtFilename, fileName);
+                    command.Parameters.AddWithValue(Constants.AtDescription, string.Format(Constants.OchinToRwdeOnAt, date, time));
+                    command.Parameters.AddWithValue(Constants.AtPath, path);
+                    command.Parameters.AddWithValue(Constants.AtType, type);
+                    command.Parameters.AddWithValue(Constants.AtUploadStartedAt, startedAt);
+                    command.Parameters.AddWithValue(Constants.AtUploadEndedAt, DateTime.Now);
                     command.Parameters.AddWithValue(Constants.AtConversionStartedAt, DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtConversionEndedAt, DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtGenerationStartedAt, DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtGenerationEndedAt, DBNull.Value); // Assuming EndedAt is set to current time
-                    command.Parameters.AddWithValue("@TotalRows", totalRowsInCurrentFile);
-                    command.Parameters.AddWithValue("@SuccessfulRows", successfulRows);
-                    command.Parameters.AddWithValue("@FailedRows", totalRowsInCurrentFile - successfulRows); // Calculate failed rows
+                    command.Parameters.AddWithValue(Constants.AtTotalRows, totalRowsInCurrentFile);
+                    command.Parameters.AddWithValue(Constants.AtSuccessfulRows, successfulRows);
+                    command.Parameters.AddWithValue(Constants.AtFailedRows, totalRowsInCurrentFile - successfulRows); // Calculate failed rows
                     command.Parameters.AddWithValue(Constants.AtStatus, status);
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                    command.Parameters.AddWithValue("@Comments", string.Empty); // Provide default value for Comments
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
+                    command.Parameters.AddWithValue(Constants.AtComments, string.Empty); // Provide default value for Comments
 
                     command.ExecuteNonQuery(); // Execute the SQL insert command
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error inserting batch: {ex.Message}");
+                Console.WriteLine(string.Format(Constants.ErrorInsertingBatch, ex.Message));
                 // Log or handle the exception appropriately
             }
         }
@@ -390,39 +391,39 @@ namespace RWDE
         {
             try
             {
-                using (SqlCommand cmd = new SqlCommand("InsertClientServices", connection))
+                using (SqlCommand cmd = new SqlCommand(Constants.InsertClientServices, connection))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with appropriate conversion and null handling
                     cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                    cmd.Parameters.AddWithValue("@Clnt_id", int.Parse(data[0]));
-                    cmd.Parameters.AddWithValue("@Service_date", DateTime.Parse(data[1]));
-                    cmd.Parameters.AddWithValue("@Contract_id", int.Parse(data[2]));
-                    cmd.Parameters.AddWithValue("@Staff_id",data[3]);
-                    cmd.Parameters.AddWithValue("@Prim_serv_desc", data[4]);
-                    cmd.Parameters.AddWithValue("@Quantity_served", decimal.Parse(data[6]));
-                    cmd.Parameters.AddWithValue("@Unit_cd", data[5]);
-                    cmd.Parameters.AddWithValue("@Actual_minutes_spent", int.Parse(data[7]));
-                    cmd.Parameters.AddWithValue("@ServiceID", int.Parse(data[8]));
+                    cmd.Parameters.AddWithValue(Constants.AtClntId, int.Parse(data[0]));
+                    cmd.Parameters.AddWithValue(Constants.AtServiceDate, DateTime.Parse(data[1]));
+                    cmd.Parameters.AddWithValue(Constants.AtContractId, int.Parse(data[2]));
+                    cmd.Parameters.AddWithValue(Constants.AtStaffId,data[3]);
+                    cmd.Parameters.AddWithValue(Constants.AtPrimServDesc, data[4]);
+                    cmd.Parameters.AddWithValue(Constants.AtQuantityServed, decimal.Parse(data[6]));
+                    cmd.Parameters.AddWithValue(Constants.AtUnitCd, data[5]);
+                    cmd.Parameters.AddWithValue(Constants.AtActualMinutesSpent, int.Parse(data[7]));
+                    cmd.Parameters.AddWithValue(Constants.AtServiceId, int.Parse(data[8]));
                     // Construct AdditionalServiceInformation with the new format
-                    string additionalServiceInformation = $"Id={data[8]};";
-                    cmd.Parameters.AddWithValue("@AdditionalServiceInformation", additionalServiceInformation);
+                    string additionalServiceInformation = $"{Constants.AtIdEqualTto}{data[8]};";
+                    cmd.Parameters.AddWithValue(Constants.AtAdditionalServiceInformation, additionalServiceInformation);
 
-                    cmd.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
-                    cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
+                    cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
                     if (connection.State != System.Data.ConnectionState.Open)
                     {
                         connection.Open();
                     }
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine("Data inserted successfully.");
+                    Console.WriteLine(Constants.DataInsertedSuccessfully);
                 }
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"SQL Error: {sqlEx.Message}");
+                Console.WriteLine($@"{Constants.SqlError}{sqlEx.Message}");
             }
             catch (Exception ex)
             {
@@ -440,151 +441,151 @@ namespace RWDE
 
                     // Add parameters with appropriate conversion and null handling
                     cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId-1);
-                    cmd.Parameters.AddWithValue("@Clnt_id", int.Parse(data[0]));
-                    cmd.Parameters.AddWithValue("@Service_date", DateTime.Parse(data[1]));
-                    cmd.Parameters.AddWithValue("@Contract_id", int.Parse(data[2]));
-                    cmd.Parameters.AddWithValue("@Staff_id", int.Parse(data[3]));
-                    cmd.Parameters.AddWithValue("@Prim_serv_desc", data[4]);
-                    cmd.Parameters.AddWithValue("@Quantity_served", decimal.Parse(data[5]));
-                    cmd.Parameters.AddWithValue("@Unit_cd", data[6]);
-                    cmd.Parameters.AddWithValue("@Actual_minutes_spent", int.Parse(data[7]));
-                    cmd.Parameters.AddWithValue("@ServiceID", int.Parse(data[8]));
+                    cmd.Parameters.AddWithValue(Constants.AtClntId, int.Parse(data[0]));
+                    cmd.Parameters.AddWithValue(Constants.AtServiceDate, DateTime.Parse(data[1]));
+                    cmd.Parameters.AddWithValue(Constants.AtContractId, int.Parse(data[2]));
+                    cmd.Parameters.AddWithValue(Constants.AtStaffId, int.Parse(data[3]));
+                    cmd.Parameters.AddWithValue(Constants.AtPrimServDesc, data[4]);
+                    cmd.Parameters.AddWithValue(Constants.AtQuantityServed, decimal.Parse(data[5]));
+                    cmd.Parameters.AddWithValue(Constants.AtUnitCd, data[6]);
+                    cmd.Parameters.AddWithValue(Constants.AtActualMinutesSpent, int.Parse(data[7]));
+                    cmd.Parameters.AddWithValue(Constants.AtServiceId, int.Parse(data[8]));
                     // Construct AdditionalServiceInformation with the new format
-                    string additionalServiceInformation = $"Id={data[8]};";
-                    cmd.Parameters.AddWithValue("@AdditionalServiceInformation", additionalServiceInformation);
+                    string additionalServiceInformation = $"{Constants.AtIdEqualTto}{data[8]};";
+                    cmd.Parameters.AddWithValue(Constants.AtAdditionalServiceInformation, additionalServiceInformation);
 
-                    cmd.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
-                    cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
+                    cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
                     if (connection.State != System.Data.ConnectionState.Open)
                     {
                         connection.Open();
                     }
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine("Data inserted successfully.");
+                    Console.WriteLine(Constants.DataInsertedSuccessfully);
                 }
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($"SQL Error: {sqlEx.Message}");
+                Console.WriteLine($@"{Constants.SqlError}{sqlEx.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine(string.Format(Constants.ErrorMessagedynamic, ex.Message));
             }
         }
         public void InsertClientInformation(SqlConnection connection, string[] data, int batchid)//cms client insertion
         {
             try
             {
-                using (SqlCommand command = new SqlCommand("InsertClientInfotest", connection))
+                using (SqlCommand command = new SqlCommand(Constants.InsertClientInfoTest, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with appropriate conversion and null handling
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                    command.Parameters.AddWithValue("@clnt_id", ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@first_nm", data[1] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@last_nm", data[2] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mi", data[3] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@chsn_nm", data[4] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@dob", ConvertToDateTimeOrNull(data[5]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@is_decd", ConvertToIntOrNull(data[6]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@dt_of_death", ConvertToDateTimeOrNull(data[7]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@place_of_death", data[8] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@SSN", data[9] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@homeless_flg", ConvertToIntOrNull(data[10]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@gndr_cd", data[11] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sex_cd", data[12] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@lang_pref_cd", data[13] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mrtl_stat_cd", data[14] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sexual_ornt_type_cd", data[15] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@edu_lvl", data[16] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@veteran", ConvertTo(data[17]) ?? (object)DBNull.Value);//17 MISSING
-                    command.Parameters.AddWithValue("@email", data[18] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_cntct_email_ind", ConvertToIntOrNull(data[19]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@prsn_mobile_phn", data[20] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_cntct_mobile_ind", ConvertToIntOrNull(data[21]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_msgs_mobile_ind", ConvertToIntOrNull(data[22]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_vm_mobile_ind", ConvertToIntOrNull(data[23]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@emergency_cntct_nm", data[24] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@emergency_cntct_rltnshp", data[25] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@emergency_prsn_mobile_phn", data[26] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_emergency_cntct_ind", ConvertToIntOrNull(data[27]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_emergency_cntct_msgs_ind", ConvertToIntOrNull(data[28]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_emergency_cntct_vm_ind", ConvertToIntOrNull(data[29]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@agency_id", ConvertToIntOrNull(data[30]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@regstrn_dt", ConvertToDateTimeOrNull(data[31]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@agency_client_1", data[32] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@agency_client_2", data[33] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_agency_status_cd", data[34] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@agency_status_dt", ConvertToDateTimeOrNull(data[35]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@reloc_fk_state_cd", data[36] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@reloc_fk_county_cd", data[37] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_addr_type_cd", data[38] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@address_line_1", data[39] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@address_line_2", data[40] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@city", data[41] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_state_cd", data[42] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@county", data[43] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@zip", data[44] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@AddressSince", data[45] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mail_allw_ind", ConvertToIntOrNull(data[46]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@client_income_year", ConvertToIntOrNull(data[47]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@client_no_income_fin_res_ind", ConvertToIntOrNull(data[48]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@client_total_mth_incm", ConvertToDecimalOrNull(data[49]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hh_income_year", ConvertToIntOrNull(data[50]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hh_no_income_fin_res_ind", ConvertTo(data[51]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@earn_incm_frm_emplmnt", ConvertToDecimalOrNull(data[52]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@retirement_incm", ConvertToDecimalOrNull(data[53]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sup_sec_incm", ConvertToDecimalOrNull(data[54]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@soc_dis_ins_incm", ConvertToDecimalOrNull(data[55]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@othr_wlfr_asst_incm", ConvertToDecimalOrNull(data[56]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@pvt_disab_ins_incm", ConvertToDecimalOrNull(data[57]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@vtrn_dis_pymt_incm", ConvertToDecimalOrNull(data[58]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@reg_cntbr_othr_incm", ConvertToDecimalOrNull(data[59]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@wrkr_comp_incm", ConvertToDecimalOrNull(data[60]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@gnrl_asst_incm", ConvertToDecimalOrNull(data[61]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@unempl_ins_incm", ConvertToDecimalOrNull(data[62]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@othr_src_incm", ConvertToDecimalOrNull(data[63]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hshld_size", ConvertToIntOrNull(data[64]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_emplymnt_stat_cd", data[65] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_race_cd", data[66] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_race_dtl_cd", data[67] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_ethn_cd", data[68] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_ethn_dtl_cd", data[69] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@curr_hiv_stat_cd", data[70] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hiv_dx_dt", ConvertToDateTimeOrNull(data[71]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hiv_dx_src_txt", data[72] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@aids_dx_dt", ConvertToDateTimeOrNull(data[73]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@aids_dx_src_txt", data[74] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@perinatal_transmission", ConvertToIntOrNull(data[75]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@male_to_male_sexual_contact", ConvertTo(data[76]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@high_risk_heterosexual_contact", ConvertToIntOrNull(data[77]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@injection_drug_use", ConvertToIntOrNull(data[78]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hemophilia_coagulation_disorder", ConvertToIntOrNull(data[79]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@receipt_of_blood_transfusion", ConvertToIntOrNull(data[80]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@risk_factor_not_reported_identifier", ConvertToIntOrNull(data[81]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hiv_test_dt", ConvertToDateTimeOrNull(data[82]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hiv_rslt_stat_cd", data[83] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_ins_type_cd", data[84] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_ins_sub_type_cd", data[85] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@new_covrg_cvrs_old_cvrg_ind", ConvertToIntOrNull(data[86]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@start_date", ConvertToDateTimeOrNull(data[87]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@end_date", ConvertToDateTimeOrNull(data[88]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@notes", data[89] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@hsng_asstnc_cd", data[90] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@asstnc_start_dt", ConvertToDateTimeOrNull(data[91]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@asstnc_end_dt", ConvertToDateTimeOrNull(data[92]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_lvng_sttn_cd", data[93] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@fk_lvng_sttn_dtl_cd", data[94] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@housing_status", data[95] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@asof_dt", ConvertToDateTimeOrNull(data[96]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
-                    command.Parameters.AddWithValue("@SourceSystemName", Constants.Ochin);
-                    command.Parameters.AddWithValue("@UserID", Constants.Userid);
-                    command.Parameters.AddWithValue("@AgencyID", Constants.Agencyid);
-                    command.Parameters.AddWithValue("@sourceid", DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
+                    command.Parameters.AddWithValue(Constants.AtClntId, ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFirstNm, data[1] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtLastNm, data[2] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtMi, data[3] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtChsnNm, data[4] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtDob, ConvertToDateTimeOrNull(data[5]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtIsDecd, ConvertToIntOrNull(data[6]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtDtOfDeath, ConvertToDateTimeOrNull(data[7]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtPlaceOfDeath, data[8] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSsn, data[9] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHomelessFlg, ConvertToIntOrNull(data[10]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtGndrCd, data[11] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSexCd, data[12] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtLangPrefCd, data[13] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtMrtlStatCd, data[14] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSexualOrntTypeCd, data[15] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtEduLvl, data[16] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtVeteran, ConvertTo(data[17]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtEmail, data[18] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowCntctEmailInd, ConvertToIntOrNull(data[19]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtPrsnMobilePhn, data[20] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowCntctMobileInd, ConvertToIntOrNull(data[21]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowMsgsMobileInd, ConvertToIntOrNull(data[22]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowVmMobileInd, ConvertToIntOrNull(data[23]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtEmergencyCntctNm, data[24] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtEmergencyCntctRltnshp, data[25] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtEmergencyPrsnMobilePhn, data[26] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowEmergencyCntctInd, ConvertToIntOrNull(data[27]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowEmergencyCntctMsgsInd, ConvertToIntOrNull(data[28]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowEmergencyCntctVmInd, ConvertToIntOrNull(data[29]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAgencyId, ConvertToIntOrNull(data[30]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtRegstrnDt, ConvertToDateTimeOrNull(data[31]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAgencyClient1, data[32] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAgencyClient2, data[33] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkAgencyStatusCd, data[34] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAgencyStatusDt, ConvertToDateTimeOrNull(data[35]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtRelocFkStateCd, data[36] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtRelocFkCountyCd, data[37] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkAddrTypeCd, data[38] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAddressLine1, data[39] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAddressLine2, data[40] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtCity, data[41] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkStateCd, data[42] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtCounty, data[43] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtZip, data[44] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAddressSince, data[45] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtMailAllwInd, ConvertToIntOrNull(data[46]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtClientIncomeYear, ConvertToIntOrNull(data[47]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtClientNoIncomeFinResInd, ConvertToIntOrNull(data[48]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtClientTotalMthIncm, ConvertToDecimalOrNull(data[49]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHhIncomeYear, ConvertToIntOrNull(data[50]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHhNoIncomeFinResInd, ConvertTo(data[51]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtEarnIncmFrmEmplmnt, ConvertToDecimalOrNull(data[52]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtRetirementIncm, ConvertToDecimalOrNull(data[53]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSupSecIncm, ConvertToDecimalOrNull(data[54]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSocDisInsIncm, ConvertToDecimalOrNull(data[55]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtOthrWlfrAsstIncm, ConvertToDecimalOrNull(data[56]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtPvtDisabInsIncm, ConvertToDecimalOrNull(data[57]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtVtrnDisPymtIncm, ConvertToDecimalOrNull(data[58]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtRegCntbrOthrIncm, ConvertToDecimalOrNull(data[59]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtWrkrCompIncm, ConvertToDecimalOrNull(data[60]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtGnrlAsstIncm, ConvertToDecimalOrNull(data[61]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtUnemplInsIncm, ConvertToDecimalOrNull(data[62]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtOthrSrcIncm, ConvertToDecimalOrNull(data[63]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHshldSize, ConvertToIntOrNull(data[64]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkEmplymntStatCd, data[65] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkRaceCd, data[66] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkRaceDtlCd, data[67] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkEthnCd, data[68] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkEthnDtlCd, data[69] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtCurrHivStatCd, data[70] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHivDxDt, ConvertToDateTimeOrNull(data[71]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHivDxSrcTxt, data[72] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAidsDxDt, ConvertToDateTimeOrNull(data[73]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAidsDxSrcTxt, data[74] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtPerinatalTransmission, ConvertToIntOrNull(data[75]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtMaleToMaleSexualContact, ConvertTo(data[76]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHighRiskHeterosexualContact, ConvertToIntOrNull(data[77]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtInjectionDrugUse, ConvertToIntOrNull(data[78]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHemophiliaCoagulationDisorder, ConvertToIntOrNull(data[79]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtReceiptOfBloodTransfusion, ConvertToIntOrNull(data[80]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtRiskFactorNotReportedIdentifier, ConvertToIntOrNull(data[81]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHivTestDt, ConvertToDateTimeOrNull(data[82]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHivRsltStatCd, data[83] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkInsTypeCd, data[84] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkInsSubTypeCd, data[85] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtNewCovrgCvrsOldCvrgInd, ConvertToIntOrNull(data[86]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtStartDate, ConvertToDateTimeOrNull(data[87]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtEndDate, ConvertToDateTimeOrNull(data[88]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtNotes, data[89] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHsngAsstncCd, data[90] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAsstncStartDt, ConvertToDateTimeOrNull(data[91]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAsstncEndDt, ConvertToDateTimeOrNull(data[92]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkLvngSttnCd, data[93] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFkLvngSttnDtlCd, data[94] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHousingStatus, data[95] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAsofDt, ConvertToDateTimeOrNull(data[96]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
+                    command.Parameters.AddWithValue(Constants.AtSourceSystemName, Constants.Ochin);
+                    command.Parameters.AddWithValue(Constants.AtUserId, Constants.Userid);
+                    command.Parameters.AddWithValue(Constants.AtAgencyId, Constants.Agencyid);
+                    command.Parameters.AddWithValue(Constants.AtSourceId, DBNull.Value);
                     command.ExecuteNonQuery();
                 }
             }
@@ -598,36 +599,36 @@ namespace RWDE
         {
             try
             {
-                using (SqlCommand command = new SqlCommand("InsertClientInfoPHIWithURN", connection))
+                using (SqlCommand command = new SqlCommand(Constants.InsertClientInfoPhiWithUrn, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with appropriate conversion and null handling
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                    command.Parameters.AddWithValue("@clnt_id", ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@first_nm", data[1] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@last_nm", data[2] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mi", data[3] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@chsn_nm", data[4] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@dob", ConvertToDateTimeOrNull(data[5]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@is_decd", ConvertToIntOrNull(data[6]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@dt_of_death", ConvertToDateTimeOrNull(data[7]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@place_of_death", data[8] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@SSN", data[9] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@homeless_flg", ConvertToIntOrNull(data[10]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@gndr_cd", data[11] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sex_cd", data[12] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@lang_pref_cd", data[13] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mrtl_stat_cd", data[14] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sexual_ornt_type_cd", data[15] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@edu_lvl", data[16] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@veteran", ConvertTo(data[17]) ?? (object)DBNull.Value);//17 MISSING
-                    command.Parameters.AddWithValue("@email", data[18] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_cntct_email_ind", ConvertToIntOrNull(data[19]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@prsn_mobile_phn", data[20] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_cntct_mobile_ind", ConvertToIntOrNull(data[21]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_msgs_mobile_ind", ConvertToIntOrNull(data[22]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
+                    command.Parameters.AddWithValue(Constants.AtClntId, ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFirstNm, data[1] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtLastNm, data[2] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtMi, data[3] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtChsnNm, data[4] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtDob, ConvertToDateTimeOrNull(data[5]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtIsDecd, ConvertToIntOrNull(data[6]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtDtOfDeath, ConvertToDateTimeOrNull(data[7]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtPlaceOfDeath, data[8] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSsn, data[9] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHomelessFlg, ConvertToIntOrNull(data[10]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtGndrCd, data[11] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSexCd, data[12] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtLangPrefCd, data[13] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtMrtlStatCd, data[14] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSexualOrntTypeCd, data[15] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtEduLvl, data[16] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtVeteran, ConvertTo(data[17]) ?? (object)DBNull.Value);//17 MISSING
+                    command.Parameters.AddWithValue(Constants.AtEmail, data[18] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowCntctEmailInd, ConvertToIntOrNull(data[19]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtPrsnMobilePhn, data[20] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowCntctMobileInd, ConvertToIntOrNull(data[21]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowMsgsMobileInd, ConvertToIntOrNull(data[22]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@allow_vm_mobile_ind", ConvertToIntOrNull(data[23]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@emergency_cntct_nm", data[24] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@emergency_cntct_rltnshp", data[25] ?? (object)DBNull.Value);
@@ -702,7 +703,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@fk_lvng_sttn_dtl_cd", data[94] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@housing_status", data[95] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@asof_dt", ConvertToDateTimeOrNull(data[96]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
                     command.Parameters.AddWithValue("@SourceSystemName", Constants.Ochin);
                     command.Parameters.AddWithValue("@UserID", Constants.Userid);
                     command.Parameters.AddWithValue("@AgencyID", Constants.Agencyid);
@@ -840,30 +841,30 @@ namespace RWDE
 
                     // Add parameters with appropriate conversion and null handling
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                    command.Parameters.AddWithValue("@clnt_id", ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@first_nm", data[1] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@last_nm", data[2] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mi", data[3] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@chsn_nm", data[4] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@dob", ConvertToDateTimeOrNull(data[5]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@is_decd", ConvertToIntOrNull(data[6]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@dt_of_death", ConvertToDateTimeOrNull(data[7]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@place_of_death", data[8] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@SSN", data[9] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@homeless_flg", ConvertToIntOrNull(data[10]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@gndr_cd", data[11] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sex_cd", data[12] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@lang_pref_cd", data[13] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@mrtl_stat_cd", data[14] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@sexual_ornt_type_cd", data[15] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@edu_lvl", data[16] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@veteran", ConvertTo(data[17]) ?? (object)DBNull.Value);//17 MISSING
-                    command.Parameters.AddWithValue("@email", data[18] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_cntct_email_ind", ConvertToIntOrNull(data[19]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@prsn_mobile_phn", data[20] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_cntct_mobile_ind", ConvertToIntOrNull(data[21]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@allow_msgs_mobile_ind", ConvertToIntOrNull(data[22]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
+                    command.Parameters.AddWithValue(Constants.AtClntId, ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFirstNm, data[1] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtLastNm, data[2] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtMi, data[3] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtChsnNm, data[4] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtDob, ConvertToDateTimeOrNull(data[5]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtIsDecd, ConvertToIntOrNull(data[6]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtDtOfDeath, ConvertToDateTimeOrNull(data[7]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtPlaceOfDeath, data[8] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSsn, data[9] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtHomelessFlg, ConvertToIntOrNull(data[10]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtGndrCd, data[11] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSexCd, data[12] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtLangPrefCd, data[13] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtMrtlStatCd, data[14] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtSexualOrntTypeCd, data[15] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtEduLvl, data[16] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtVeteran, ConvertTo(data[17]) ?? (object)DBNull.Value);//17 MISSING
+                    command.Parameters.AddWithValue(Constants.AtEmail, data[18] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowCntctEmailInd, ConvertToIntOrNull(data[19]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtPrsnMobilePhn, data[20] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowCntctMobileInd, ConvertToIntOrNull(data[21]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtAllowMsgsMobileInd, ConvertToIntOrNull(data[22]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@allow_vm_mobile_ind", ConvertToIntOrNull(data[23]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@emergency_cntct_nm", data[24] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@emergency_cntct_rltnshp", data[25] ?? (object)DBNull.Value);
@@ -938,7 +939,7 @@ namespace RWDE
                     command.Parameters.AddWithValue("@fk_lvng_sttn_dtl_cd", data[94] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@housing_status", data[95] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@asof_dt", ConvertToDateTimeOrNull(data[96]) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
                     command.Parameters.AddWithValue("@SourceSystemName", Constants.Ochin);
                     command.Parameters.AddWithValue("@UserID", Constants.Userid);
                     command.Parameters.AddWithValue("@AgencyID", Constants.Agencyid);
@@ -1029,8 +1030,8 @@ namespace RWDE
                 command.Parameters.AddWithValue("@ExtractionDate", new DateTime(2024, 6, 2));
                 command.Parameters.AddWithValue("@CMSMatch", 2);
                 command.Parameters.AddWithValue("@CMSMatchDate", new DateTime(2024, 5, 2));
-                command.Parameters.AddWithValue("@CreatedBy", 6);
-                command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);  // Execute the command
+                command.Parameters.AddWithValue(Constants.AtCreatedBy, 6);
+                command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);  // Execute the command
                 command.ExecuteNonQuery();
                 return true;
             }
@@ -1089,8 +1090,8 @@ namespace RWDE
                 command.Parameters.AddWithValue("@ExtractionDate", new DateTime(2024, 6, 2));
                 command.Parameters.AddWithValue("@CMSMatch", 2);
                 command.Parameters.AddWithValue("@CMSMatchDate", new DateTime(2024, 5, 2));
-                command.Parameters.AddWithValue("@CreatedBy", 6);
-                command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);  // Execute the command
+                command.Parameters.AddWithValue(Constants.AtCreatedBy, 6);
+                command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);  // Execute the command
                 command.ExecuteNonQuery();
                 return true;
             }
@@ -1124,8 +1125,8 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Parse("2024-02-06")); // Assuming 2024-02-06 is the correct date
                     command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDateCode); // Assuming 2 is a valid value for CMSMatch
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Parse("2024-02-05")); // Assuming 2024-02-05 is the correct date
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming "Admin" is the correct creator
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Parse("2024-09-03")); // Assuming 2024-09-03 is the correct date
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming "Admin" is the correct creator
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Parse("2024-09-03")); // Assuming 2024-09-03 is the correct date
                     command.ExecuteNonQuery(); // Execute the SQL command to insert client data
                 }
             }
@@ -1170,8 +1171,8 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now); // Assuming current date/time
                     command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDateCode); // Assuming a value for CMSMatch
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now); // Assuming current date/time
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a value for CreatedBy
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now); // Assuming current date/time
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a value for CreatedBy
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now); // Assuming current date/time
 
                     // Execute the query
                     command.ExecuteNonQuery();
@@ -1220,8 +1221,8 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Now);
                     command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchDateCode);
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Now);
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
                     // Execute the query
                     command.ExecuteNonQuery();
                 }
@@ -1275,7 +1276,7 @@ namespace RWDE
                     string serviceId = ExtractServiceId(serviceNotes);
 
                     // Add parameters to the stored procedure
-                    command.Parameters.AddWithValue("@ServiceID", serviceId);
+                    command.Parameters.AddWithValue(Constants.AtServiceId, serviceId);
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@ClientID", GetStringData(data, 0)?.Trim('"')); // Treat ClientID as string
                     command.Parameters.AddWithValue("@ClientURN", GetStringData(data, 1)?.Trim('"'));
@@ -1285,8 +1286,8 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ExtractionDate", DBNull.Value);
                     command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchCode);
                     command.Parameters.AddWithValue("@CMSMatchDate", DBNull.Value);
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
                     command.ExecuteNonQuery(); // Execute the SQL command to insert data
                 }
@@ -1314,7 +1315,7 @@ namespace RWDE
                     string serviceId = ExtractServiceId(serviceNotes);
 
                     // Add parameters to the stored procedure
-                    command.Parameters.AddWithValue("@ServiceID", serviceId);
+                    command.Parameters.AddWithValue(Constants.AtServiceId, serviceId);
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue("@ClientID", GetStringData(data, 0)?.Trim('"')); // Treat ClientID as string
                     command.Parameters.AddWithValue("@ClientURN", GetStringData(data, 1)?.Trim('"'));
@@ -1324,8 +1325,8 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ExtractionDate", DBNull.Value);
                     command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchCode);
                     command.Parameters.AddWithValue("@CMSMatchDate", DBNull.Value);
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
                     command.ExecuteNonQuery(); // Execute the SQL command to insert data
                 }
@@ -1350,7 +1351,7 @@ namespace RWDE
                 }
 
                 // Define patterns to match service ID
-                string[] patterns = { "Id=", "ID=", "Id-", "Id:" };
+                string[] patterns = { "{Constants.AtIdEqualTto}", "{Constants.AtIdEqualTto}", "Id-", "Id:" };
                 foreach (var pattern in patterns)
                 {
                     if (serviceNotes.StartsWith(pattern, StringComparison.OrdinalIgnoreCase))
@@ -1410,16 +1411,16 @@ namespace RWDE
                     SqlCommand cmd = new SqlCommand("Loggererror", conn);
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.AddWithValue("@Type", Constants.Error); // Error type
+                    cmd.Parameters.AddWithValue(Constants.AtType, Constants.Error); // Error type
                     cmd.Parameters.AddWithValue("@Module", Constants.Hcc); // Module name
                     cmd.Parameters.AddWithValue("@Stack", stackTrace);
                     cmd.Parameters.AddWithValue("@Message", message);
-                    cmd.Parameters.AddWithValue("@FileName", fileName);
+                    cmd.Parameters.AddWithValue(Constants.AtFilename, fileName);
                     cmd.Parameters.AddWithValue("@LineNumber", lineNumber.HasValue ? (object)lineNumber.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@FunctionName", functionName);
-                    cmd.Parameters.AddWithValue("@Comments", DBNull.Value); // Assuming no comments
-                    cmd.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a specific user ID
-                    cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    cmd.Parameters.AddWithValue(Constants.AtComments, DBNull.Value); // Assuming no comments
+                    cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a specific user ID
+                    cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -1557,8 +1558,8 @@ namespace RWDE
                     command.Parameters.AddWithValue("@ExtractionDate", DateTime.Parse("2/3/4"));
                     command.Parameters.AddWithValue("@CMSMatch", Constants.CmsMatchCode);
                     command.Parameters.AddWithValue("@CMSMatchDate", DateTime.Parse("2/3/4"));
-                    command.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now); // Or provide the appropriate DateTime value
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now); // Or provide the appropriate DateTime value
 
                     command.ExecuteNonQuery();
                 }
@@ -1761,8 +1762,8 @@ namespace RWDE
                                             insertCmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                                             insertCmd.Parameters.AddWithValue("@AgencyClientID1", agencyClientId);
                                             insertCmd.Parameters.AddWithValue("@AriesID", ariesId);
-                                            insertCmd.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a constant value for CreatedBy
-                                            insertCmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now); // Current date/time
+                                            insertCmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a constant value for CreatedBy
+                                            insertCmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now); // Current date/time
                                             insertCmd.Parameters.AddWithValue("@EligibilityDocID", insertedCount % 3 + 1); // Incremental EligibilityDocumentID
 
                                             // Execute the insert command
@@ -1852,15 +1853,15 @@ namespace RWDE
                         insertCmd.Parameters.AddWithValue("@TotalCost", GetDecimalValue(serviceNode, "totalCost"));
                         insertCmd.Parameters.AddWithValue("@Notes", GetAttributeValue(serviceNode, "notes"));
                         insertCmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                        insertCmd.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a constant value for CreatedBy
+                        insertCmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a constant value for CreatedBy
                         insertCmd.Parameters.AddWithValue("@ActualMinutesSpent", GetAttributeValueOrDefault<object>(serviceNode, "actualTimeSpentMinutes", DBNull.Value));
-                        insertCmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                        insertCmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
                         // Extract and set ServiceID
                         string serviceId = ExtractServiceId(serviceNode);
                         if (!string.IsNullOrEmpty(serviceId))
                         {
-                            insertCmd.Parameters.AddWithValue("@ServiceID", serviceId);
+                            insertCmd.Parameters.AddWithValue(Constants.AtServiceId, serviceId);
                         }
                         insertCmd.ExecuteNonQuery();
                         insertedCount++; // Increment inserted count for each service line item
@@ -1951,16 +1952,16 @@ namespace RWDE
                     conn.Open();
                     SqlCommand cmd = new SqlCommand("INSERT INTO Logger (Type, Module, Stack, Message, FileName, LineNumber, FunctionName, Comments, CreatedBy, CreatedOn) " +
                                                     "VALUES (@Type, @Module, @Stack, @Message, @FileName, @LineNumber, @FunctionName, @Comments, @CreatedBy, @CreatedOn)", conn);
-                    cmd.Parameters.AddWithValue("@Type", Constants.ErrorCode); // Error type
+                    cmd.Parameters.AddWithValue(Constants.AtType, Constants.ErrorCode); // Error type
                     cmd.Parameters.AddWithValue("@Module", Constants.Module); // Module name
                     cmd.Parameters.AddWithValue("@Stack", stackTrace);
                     cmd.Parameters.AddWithValue("@Message", message);
-                    cmd.Parameters.AddWithValue("@FileName", fileName);
+                    cmd.Parameters.AddWithValue(Constants.AtFilename, fileName);
                     cmd.Parameters.AddWithValue("@LineNumber", lineNumber);
                     cmd.Parameters.AddWithValue("@FunctionName", functionName);
-                    cmd.Parameters.AddWithValue("@Comments", null);
-                    cmd.Parameters.AddWithValue("@CreatedBy", Constants.CreatedBy); // Assuming a specific user ID
-                    cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    cmd.Parameters.AddWithValue(Constants.AtComments, null);
+                    cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a specific user ID
+                    cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -1977,8 +1978,8 @@ namespace RWDE
         {
             string notes = GetAttributeValue(serviceNode, "notes");
 
-            // Check if notes attribute starts with "Id=", "ID=", "Id-", or "Id:"
-            if (notes.StartsWith("Id=") || notes.StartsWith("ID=") || notes.StartsWith("Id-") || notes.StartsWith("Id:"))
+            // Check if notes attribute starts with "{Constants.AtIdEqualTto}", "{Constants.AtIdEqualTto}", "Id-", or "Id:"
+            if (notes.StartsWith("{Constants.AtIdEqualTto}") || notes.StartsWith("{Constants.AtIdEqualTto}") || notes.StartsWith("Id-") || notes.StartsWith("Id:"))
             {
                 // Find the index of the first occurrence of "=", "-", or ":"
                 int separatorIndex = notes.IndexOfAny(new char[] { '=', '-', ':' });
@@ -2003,16 +2004,16 @@ namespace RWDE
                 {
                     SqlCommand command = new SqlCommand("InsertLog", connection);
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@Type", type);
+                    command.Parameters.AddWithValue(Constants.AtType, type);
                     command.Parameters.AddWithValue("@Message", message);
                     command.Parameters.AddWithValue("@Module", module);
-                    command.Parameters.AddWithValue("@FileName", baseFilename);
+                    command.Parameters.AddWithValue(Constants.AtFilename, baseFilename);
                     command.Parameters.AddWithValue("@LineNumber", DBNull.Value);
                     command.Parameters.AddWithValue("@FunctionName", DBNull.Value);
-                    command.Parameters.AddWithValue("@Comments", DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtComments, DBNull.Value);
 
-                    command.Parameters.AddWithValue("@CreatedBy", 100);
-                    command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    command.Parameters.AddWithValue(Constants.AtCreatedBy, 100);
+                    command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
@@ -2903,8 +2904,8 @@ namespace RWDE
                         command.Parameters.AddWithValue("@StartedDateTime", startedDateTime);
                         command.Parameters.AddWithValue("@EndedDateTime", endedDateTime);
                         command.Parameters.AddWithValue(Constants.AtStatus, statusValue);
-                        command.Parameters.AddWithValue("@CreatedBy", createdBy);
-                        command.Parameters.AddWithValue("@CreatedOn", createdOn);
+                        command.Parameters.AddWithValue(Constants.AtCreatedBy, createdBy);
+                        command.Parameters.AddWithValue(Constants.AtCreatedOn, createdOn);
 
                         // Add output parameter
                         SqlParameter outputParam = new SqlParameter("@Operation", SqlDbType.NVarChar, 50) { Direction = ParameterDirection.Output };
@@ -2976,8 +2977,8 @@ namespace RWDE
                         command.Parameters.AddWithValue("@StartedDateTime", startedDateTime);
                         command.Parameters.AddWithValue("@EndedDateTime", endedDateTime);
                         command.Parameters.AddWithValue(Constants.AtStatus, status);
-                        command.Parameters.AddWithValue("@CreatedBy", "sakku");
-                        command.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                        command.Parameters.AddWithValue(Constants.AtCreatedBy, "sakku");
+                        command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
                         connection.Open();
                         command.ExecuteNonQuery();
@@ -3277,7 +3278,7 @@ namespace RWDE
                 catch (Exception ex)
                 {
                     // Handle exceptions (logging, rethrowing, etc.)
-                    throw new Exception("An error occurred while loading data.", ex);
+                    throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
                 }
             }
 
@@ -3320,7 +3321,7 @@ namespace RWDE
                 catch (Exception ex)
                 {
                     // Handle exceptions (logging, rethrowing, etc.)
-                    throw new Exception("An error occurred while loading data.", ex);
+                    throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
                 }
             }
             return dt;
@@ -3422,7 +3423,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("An error occurred while loading data.", ex);
+                    throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
                 }
             }
             return dt;
@@ -3443,7 +3444,7 @@ namespace RWDE
                         cmd.Parameters.AddWithValue("@StartDate", startDate);
                         cmd.Parameters.AddWithValue("@EndDate", endDate);
                         cmd.Parameters.AddWithValue(Constants.AtBatchid, onebatch);
-                        cmd.Parameters.AddWithValue("@Type", filterType);
+                        cmd.Parameters.AddWithValue(Constants.AtType, filterType);
 
                         conn.Open();
 
@@ -3514,7 +3515,7 @@ namespace RWDE
                         cmd.Parameters.AddWithValue("@StartDate", startDate);
                         cmd.Parameters.AddWithValue("@EndDate", endDate);
                         cmd.Parameters.AddWithValue(Constants.AtBatchid, 0);
-                        cmd.Parameters.AddWithValue("@Type", filterType);
+                        cmd.Parameters.AddWithValue(Constants.AtType, filterType);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);

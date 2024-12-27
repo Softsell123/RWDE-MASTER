@@ -456,7 +456,7 @@ namespace RWDE
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
                 dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(GenerateXmlForServicesAsync), Constants.ServiceCttohcc, lineNumber);
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private async Task<XElement> GenerateXmlService(List<Dictionary<string, string>> data, List<Dictionary<string, string>> xmlStructure)

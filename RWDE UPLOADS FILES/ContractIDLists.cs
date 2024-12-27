@@ -742,7 +742,7 @@ namespace RWDE
                     {
                         MessageBox.Show($@"{ContractIdList.Contractupdatedsuccessfully}. {Constants.ContractId}: {currentContractId}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    else if (operation == ContractIdList.Insert)
+                    else if (operation == Constants.Insert)
                     {
                         MessageBox.Show(ContractIdList.Contractsavedsuccessfully, Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }

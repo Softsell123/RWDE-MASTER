@@ -61,24 +61,24 @@ namespace RWDE
         {
             dataGridView.DataSource = null;
             dataGridView.Columns.Clear();
-            dataGridView.Columns.Add("Sl No", "Sl No");
+            dataGridView.Columns.Add(Constants.SlNo, Constants.SlNo);
             dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
-            dataGridView.Columns.Add("Staff", "Staff");
-            dataGridView.Columns.Add("HCCID", "HCC ID");
-            dataGridView.Columns.Add("HCCConsentExpiryDate", "HCC Consent Expiry Date");
-            dataGridView.Columns.Add("RWEligibilityExpiryDate", "RW Eligibility Expiry Date");
+            dataGridView.Columns.Add(Constants.Staff, Constants.Staff);
+            dataGridView.Columns.Add(Constants.HccId, Constants.HccIdsp);
+            dataGridView.Columns.Add(Constants.HccConsentExpiryDate, Constants.HccConsentExpiryDatesp);
+            dataGridView.Columns.Add(Constants.RwEligibilityExpiryDate, Constants.RwEligibilityExpiryDatesp);
             dataGridView.Columns.Add(Constants.Service, Constants.Service);
-            dataGridView.Columns.Add(Constants.ServiceCodeId, "Service Code ID");
-            dataGridView.Columns.Add("HCCContractID", "HCC Contract ID");
-            dataGridView.Columns.Add("UnitsOfServices", "Units of Services");
-            dataGridView.Columns.Add("ActualMinutesSpent", "Actual Minutes Spent");
-            dataGridView.Columns.Add("ServiceID", "Service ID");
-            dataGridView.Columns.Add("ServiceExportedToHCC", "Service Exported to HCC");
-            dataGridView.Columns.Add(Constants.ServiceDate, "Service Date");
-            dataGridView.Columns.Add("EntryDate", "Entry Date");
-            dataGridView.Columns.Add("Lag", "Lag");
-            dataGridView.Columns.Add("Lag Status", "Lag Status");
-            dataGridView.Columns.Add("HCCExportFailureReason", "HCC Export Failure Reason");
+            dataGridView.Columns.Add(Constants.ServiceCodeId, Constants.ServiceCodeIdsp);
+            dataGridView.Columns.Add(Constants.HccContractId, Constants.HccContractIdSp);
+            dataGridView.Columns.Add(Constants.UnitsOfServices, Constants.UnitsOfServicesSp);
+            dataGridView.Columns.Add(Constants.ActualMinutesSpent, Constants.ActualMinutesSpentSp);
+            dataGridView.Columns.Add(Constants.ServiceId, Constants.ServiceIdSp);
+            dataGridView.Columns.Add(Constants.ServiceExportedToHcc, Constants.ServiceExportedToHccSp);
+            dataGridView.Columns.Add(Constants.ServiceDate, Constants.ServiceDateSp);
+            dataGridView.Columns.Add(Constants.EntryDate, Constants.EntryDateSp);
+            dataGridView.Columns.Add(Constants.Lag, Constants.Lag);
+            dataGridView.Columns.Add(Constants.LagStatus, Constants.LagStatusSp);
+            dataGridView.Columns.Add(Constants.HccExportFailureReason, Constants.HccExportFailureReasonSp);
             dataGridView.AutoGenerateColumns = false;
         }
         private void btnReport_Click(object sender, EventArgs e)
@@ -118,13 +118,13 @@ namespace RWDE
                             filterType = Constants.CreatedDate;
                             break;
                         default:
-                            MessageBox.Show("Please select a valid filter type from the dropdown.", Constants.FilterSelectionRequired);
+                            MessageBox.Show(Constants.PleaseSelectAValidFilterTypeFromTheDropdown, Constants.FilterSelectionRequired);
                             return;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a valid Batch ID or select a filter type.", Constants.InputError);
+                    MessageBox.Show(Constants.PleaseEnterAValidBatchIdOrSelectAFilterType, Constants.InputError);
                     DisplayHeadersOnly();
                     return;
                 }
@@ -149,7 +149,7 @@ namespace RWDE
                     }
                     else
                     {
-                        MessageBox.Show("Please enter valid Batch IDs.", "Invalid Input");
+                        MessageBox.Show(Constants.PleaseEnterValidBatchIds, Constants.InvalidInput);
                         DisplayHeadersOnly();
                         return;
                     }
@@ -166,10 +166,10 @@ namespace RWDE
 
                 // Add serial numbers (Sl No) to the DataTable before binding
                 int serialNumber = 1;
-                result.Columns["Sl No"].ReadOnly = false;
+                result.Columns[Constants.SlNo].ReadOnly = false;
                 foreach (DataRow row in result.Rows)
                 {
-                    row["Sl No"] = serialNumber++; // Assign the serial number
+                    row[Constants.SlNo] = serialNumber++; // Assign the serial number
                 }
 
                 // Bind the data to the DataGridView
@@ -179,7 +179,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 DisplayHeadersOnly();
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
             }
         }
         private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -188,7 +188,7 @@ namespace RWDE
             if (e.Value != null)
             {
                 // Example condition to change color
-                if (e.Value.ToString() == "YourCondition") // Replace with your actual condition
+                if (e.Value.ToString() == Constants.YourCondition) // Replace with your actual condition
                 {
                     e.CellStyle.ForeColor = Color.Red; // Set desired color for the condition
                 }
@@ -247,7 +247,7 @@ namespace RWDE
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
                             // Base file name and directory
-                            string baseFileName = Constants.ServiceReconciliationReport;
+                            string baseFileName = Constants.ServiceReconciliationReportFilename;
                             string directoryPath = folderBrowserDialog.SelectedPath;
                             string fileExtension = Constants.XlsxExtention;
 
@@ -264,7 +264,7 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", Constants.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($@"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", Constants.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }

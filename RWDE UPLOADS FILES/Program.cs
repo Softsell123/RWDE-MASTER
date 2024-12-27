@@ -18,9 +18,9 @@ namespace RWDE
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            string currentConnectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+            string currentConnectionString = ConfigurationManager.ConnectionStrings[Constants.MyConnection].ConnectionString;
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(currentConnectionString);
-            if (builder.DataSource == "PLACEHOLDER")
+            if (builder.DataSource == Constants.PlaceHolder)
             {
                 // Show Connection Setup Form
                 using (var connectionSetupForm = new FrmConnectionSetup())

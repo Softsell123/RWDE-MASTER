@@ -962,7 +962,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void dtpStartDate_ValueChanged_1(object sender, EventArgs e)//to format dateY

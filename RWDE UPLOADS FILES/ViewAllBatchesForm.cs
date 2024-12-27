@@ -38,7 +38,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorInitializingForm}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorInitializingForm}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void Control_MouseHover(object sender, EventArgs e)
@@ -113,7 +113,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorLoadingData}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorLoadingData}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void PopulateDataGridViewLoad()
@@ -163,7 +163,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorLoadingData}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorLoadingData}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         //Add a Color to the Delete button
@@ -214,7 +214,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorLoadingData}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorLoadingData}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void dataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -304,7 +304,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorAddingColumn}{headerText}: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorAddingColumn}{headerText}: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -324,7 +324,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorAddingColumn}{headerText}: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorAddingColumn}{headerText}: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -338,7 +338,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorAdjustingColumnWidths}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorAdjustingColumnWidths}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -384,7 +384,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorAdjustingColumnWidth}{columnName}: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorAdjustingColumnWidth}{columnName}: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -400,7 +400,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorHandlingCellClick}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorHandlingCellClick}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -415,7 +415,9 @@ namespace RWDE
                     string batchId = dataGridView.Rows[rowIndex].Cells[Constants.BatchId].Value?.ToString();
                     string type = dataGridView.Rows[rowIndex].Cells[Constants.Type].Value?.ToString();
                     string description = dataGridView.Rows[rowIndex].Cells[Constants.Description].Value?.ToString();
-                    DialogResult result = MessageBox.Show($"{Constants.ConfirmationMessage} {batchId}? \n{Constants.Type}  : {type} \n{Constants.Description} : {description}", Constants.ConfirmationTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    DialogResult result = MessageBox.Show($@"{Constants.ConfirmationMessage} {batchId}? 
+{Constants.Type}  : {type} 
+{Constants.Description} : {description}", Constants.ConfirmationTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
                         if (!string.IsNullOrEmpty(batchId) && !string.IsNullOrEmpty(type))
@@ -437,7 +439,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorHandlingDeleteButtonClick}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorHandlingDeleteButtonClick}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -451,7 +453,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.ErrorClosingForm}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.ErrorClosingForm}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         // Handle the Filter Data
@@ -488,7 +490,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log the exception or display an error message
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

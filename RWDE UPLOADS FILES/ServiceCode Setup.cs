@@ -959,11 +959,11 @@ namespace RWDE
 
                 if (currentStatus != selectedStatus)
                 {
-                    string message = selectedStatus == "Active"
-                        ? $"Do you want to make the contract {serviceCodeId} active?"
-                        : $"Do you want to make the contract {serviceCodeId} inactive?";
+                    string message = selectedStatus == Constants.ActiveSmall
+                        ? string.Format(Constants.AreYouSureMakeActive, selectedStatus)
+                        : string.Format(Constants.AreYouSureMakeInactive, selectedStatus);
 
-                    var result = MessageBox.Show(message, $"Confirm {selectedStatus} Status", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var result = MessageBox.Show(message, string.Format(Constants.ConfirmStatus, selectedStatus), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
                         // Update the status cell value

@@ -155,7 +155,7 @@ namespace RWDE
             {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show(Constants.Nodataavailabletodownload, Constants.Warning, MessageBoxButtons.OK,
+                    MessageBox.Show(Constants.NoDataAvailableToDownload, Constants.Warning, MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
                     
                     return; // Exit the method if there is no data
@@ -217,7 +217,7 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.Datasuccessfullysaved}{Path.GetFileName(filePath)}", Constants.Success,MessageBoxButtons.OK, MessageBoxIcon.Information); 
+                            MessageBox.Show($@"{Constants.Datasuccessfullysaved}{Path.GetFileName(filePath)}", Constants.Success,MessageBoxButtons.OK, MessageBoxIcon.Information); 
                         }
                     }
                 }

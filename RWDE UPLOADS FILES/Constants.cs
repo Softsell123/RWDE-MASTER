@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using RWDE.Properties;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Windows.Forms;
 using static Spire.Pdf.General.Render.Decode.Jpeg2000.j2k.codestream.HeaderInfo;
@@ -20,6 +21,8 @@ namespace RWDE
         public const string AgencyCode = "246_";
 
         public const string MyConnection = "MyConnection";
+        public const string PlaceHolder = "PLACEHOLDER";
+        
         public const string ConnectionStrings = "connectionStrings";
 
 
@@ -149,7 +152,7 @@ namespace RWDE
         public const string Selecrthefoldertosave  = "Select the folder to save the data";
         public const string Startdatemustbeearlierthenenddate = "Start date must be earlier than End date.";
         public const string Datasuccessfullysaved = "Data successfully saved in the selected folder";
-        public const string ServiceReconciliationReport = "Service_Reconciliation Report";
+        public const string ServiceReconciliationReportFilename = "Service_Reconciliation Report";
         public const string DeceasedClients = "Deceased_Clients";
         public const string Nodatafoundbetweenselecteddates = "No data found between selected dates";
         public const string NoDataAvailableToDownload = "No data available to download.";
@@ -267,6 +270,7 @@ namespace RWDE
         public const string Name = "Name";
         public const string ContractId = "ContractID";
         public const string Active = "ACTIVE";
+        public const string ActiveSmall = "Active";
         public const string Inactive = "INACTIVE";
         public const string ActiveContractstatus = "29";
         public const string InactiveContractstatus = "28";
@@ -275,6 +279,8 @@ namespace RWDE
         public const string AreYouSureDeleteContract = "Are you sure you want to delete contract '{0}'?";
         public const string AreYouSureMakeActive = "Do you want to make the contract '{0}' active?";
         public const string AreYouSureMakeInactive = "Do you want to make the contract '{0}' inactive?";
+        public const string ConfirmStatus = "Confirm '{0}' Status";
+
         //
         //DeceasedClientReport
         //
@@ -325,6 +331,7 @@ namespace RWDE
         public const string DdMMyyyyHHmmss= "dd-MM-yyyy HH:mm:ss";
         public const string YyyyMMdd = "yyyyMMdd";
         public const string DdMMyyyy = "ddMMyyyy";
+        public const string DdMMyyyyHyphen = "dd-MM-yyyy";
         public const string MMddyyyybkslash = "MM/dd/yyyy";
         public const string HHmmss = "HH:mm:ss";
 
@@ -371,6 +378,7 @@ namespace RWDE
         public const string PleaseSelectAValidFilterTypeFromTheDropdown = "Please select a valid filter type from the dropdown.";
         public const string PleaseEnterAValidBatchIdOrSelectAFilterType = "Please enter a valid Batch ID or select a filter type.";
         public const string PleaseSelectABatchBeforeStartingTheConversion = "Please select a batch before starting the conversion";
+        public const string InvalidInput = "Invalid Input";
 
 
 
@@ -382,7 +390,10 @@ namespace RWDE
         public const string Errorupdatingbatch = "Error updating batch: ";
         public const string ErrorUpdatingFileProgress= "Error updating file progress: ";
         public const string AnErrorOccurred = "An error occurred: ";
+        public const string AnErrorOccurredWhileLoadingData = "An error occurred while loading data.";
+
         public const string SqlError  = "SQL Error: ";
+        public const string DataInsertedSuccessfully = "Data inserted successfully.";
         public const string ErrorGettingTotalRows = "Error getting total rows: ";
         public const string ErrorUpdatingGridStatus = "Error updating grid status: ";
         public const string ErrorClearingtables = "Error clearing tables: ";
@@ -408,6 +419,8 @@ namespace RWDE
         public const string UploadHccCsv = "UPLOAD HCC CSV";
         public const string UploadOchinCsv = "UPLOAD OCHIN CSV";
         public const string XmlFileUpload = "XML File Upload";
+        public const string ServiceReconciliationReport = "Service Reconciliation Report";
+
 
 
         public const string Areyousureyouwanttoabort = "Are you sure you want to abort?";
@@ -462,7 +475,17 @@ namespace RWDE
         public const string CountCmsClients = "COUNTCMSCLIENTS";
         public const string UpdateBatch = "Updatebatch";
         public const string AbortConversionDelete = "abortconversiondelete";
-
+        //DbHelper
+        public const string ConversionCompletion = "Conversioncompletion";
+        public const string ClientConversionCompletion = "ClientCONVERSIONCOMPLETION";
+        public const string ClientGenerationCompletion = "ClientgenerationCOMPLETION";
+        public const string ServiceGenerationCompletion = "ServicegenerationCOMPLETION";
+        public const string UpdateHcServicesWithErrors = "UpdateHCCServicesWithErrors";
+        public const string SpServiceReconBatchId = "sp_service_reconbatchid";
+        public const string InsertBatchTable = "insertbatchtable";
+        public const string InsertClientServices = "InsertClientServices";
+        public const string InsertClientInfoTest = "InsertClientInfotest";
+        public const string InsertClientInfoPhiWithUrn = "InsertClientInfoPHIWithURN";
 
 
 
@@ -496,6 +519,9 @@ namespace RWDE
         public const string AddRemoveBatchIdQuery = "INSERT INTO RemovedBatchIDs(BatchID) VALUES(@BatchID)";
 
 
+        public const string GetNextBatchIdQuery = "SELECT ISNULL(MAX(BatchID), 0) FROM Batch";
+        public const string GetMaxXmlBatchIdQuery = "SELECT ISNULL(MAX(BatchID), 0) FROM CTClients";
+
         //
         //SPparametersConstants
         //
@@ -518,8 +544,137 @@ namespace RWDE
         public const string AtErrorMessage = "@ErrorMessage";
         public const string AtSourceFileName = "@SourceFileName";
         public const string AtFilename = "@Filename";
+        public const string AtDescription = "@Description";
+        public const string AtPath = "@Path";
+        public const string AtType = "@Type";
+        public const string AtUploadStartedAt = "@UploadStartedAt";
+        public const string AtUploadEndedAt = "@UploadEndedAt";
+        public const string AtTotalRows = "@TotalRows";
+        public const string AtSuccessfulRows = "@SuccessfulRows";
+        public const string AtFailedRows = "@FailedRows";
+        public const string AtCreatedBy = "@CreatedBy";
+        public const string AtCreatedOn = "@CreatedOn";
+        public const string AtComments = "@Comments";
+        public const string AtClntId = "@clnt_id";
+        public const string AtServiceDate = "@Service_date";
+        public const string AtContractId = "@Contract_id";
+        public const string AtStaffId = "@Staff_id";
+        public const string AtPrimServDesc = "@Prim_serv_desc";
+        public const string AtIdEqualTto = "Id=";
+        public const string AtQuantityServed = "@Quantity_served";
+        public const string AtUnitCd = "@Unit_cd";
+        public const string AtActualMinutesSpent = "@Actual_minutes_spent";
+        public const string AtServiceId = "@ServiceID";
+        public const string AtAdditionalServiceInformation = "@AdditionalServiceInformation";
+
+        public const string AtFirstNm = "@first_nm";
+        public const string AtLastNm = "@last_nm";
+        public const string AtMi = "@mi";
+        public const string AtChsnNm = "@chsn_nm";
+        public const string AtDob = "@dob";
+        public const string AtIsDecd = "@is_decd";
+        public const string AtDtOfDeath = "@dt_of_death";
+        public const string AtPlaceOfDeath = "@place_of_death";
+        public const string AtSsn = "@SSN";
+        public const string AtHomelessFlg = "@homeless_flg";
+        public const string AtGndrCd = "@gndr_cd";
+        public const string AtSexCd = "@sex_cd";
+        public const string AtLangPrefCd = "@lang_pref_cd";
+        public const string AtMrtlStatCd = "@mrtl_stat_cd";
+        public const string AtSexualOrntTypeCd = "@sexual_ornt_type_cd";
+        public const string AtEduLvl = "@edu_lvl";
+        public const string AtVeteran = "@veteran";
+        public const string AtEmail = "@email";
+        public const string AtAllowCntctEmailInd = "@allow_cntct_email_ind";
+        public const string AtPrsnMobilePhn = "@prsn_mobile_phn";
+        public const string AtAllowCntctMobileInd = "@allow_cntct_mobile_ind";
+        public const string AtAllowMsgsMobileInd = "@allow_msgs_mobile_ind";
+        public const string AtAllowVmMobileInd = "@allow_vm_mobile_ind";
+        public const string AtEmergencyCntctNm = "@emergency_cntct_nm";
+        public const string AtEmergencyCntctRltnshp = "@emergency_cntct_rltnshp";
+        public const string AtEmergencyPrsnMobilePhn = "@emergency_prsn_mobile_phn";
+        public const string AtAllowEmergencyCntctInd = "@allow_emergency_cntct_ind";
+        public const string AtAllowEmergencyCntctMsgsInd = "@allow_emergency_cntct_msgs_ind";
+        public const string AtAllowEmergencyCntctVmInd = "@allow_emergency_cntct_vm_ind";
+        public const string AtAgencyId = "@agency_id";
+        public const string AtRegstrnDt = "@regstrn_dt";
+        public const string AtAgencyClient1 = "@agency_client_1";
+        public const string AtAgencyClient2 = "@agency_client_2";
+        public const string AtFkAgencyStatusCd = "@fk_agency_status_cd";
+        public const string AtAgencyStatusDt = "@agency_status_dt";
+        public const string AtRelocFkStateCd = "@reloc_fk_state_cd";
+        public const string AtRelocFkCountyCd = "@reloc_fk_county_cd";
+        public const string AtFkAddrTypeCd = "@fk_addr_type_cd";
+        public const string AtAddressLine1 = "@address_line_1";
+        public const string AtAddressLine2 = "@address_line_2";
+        public const string AtCity = "@city";
+        public const string AtFkStateCd = "@fk_state_cd";
+        public const string AtCounty = "@county";
+        public const string AtZip = "@zip";
+        public const string AtAddressSince = "@AddressSince";
+        public const string AtMailAllwInd = "@mail_allw_ind";
+        public const string AtClientIncomeYear = "@client_income_year";
+        public const string AtClientNoIncomeFinResInd = "@client_no_income_fin_res_ind";
+        public const string AtClientTotalMthIncm = "@client_total_mth_incm";
+        public const string AtHhIncomeYear = "@hh_income_year";
+        public const string AtHhNoIncomeFinResInd = "@hh_no_income_fin_res_ind";
+        public const string AtEarnIncmFrmEmplmnt = "@earn_incm_frm_emplmnt";
+        public const string AtRetirementIncm = "@retirement_incm";
+        public const string AtSupSecIncm = "@sup_sec_incm";
+        public const string AtSocDisInsIncm = "@soc_dis_ins_incm";
+        public const string AtOthrWlfrAsstIncm = "@othr_wlfr_asst_incm";
+        public const string AtPvtDisabInsIncm = "@pvt_disab_ins_incm";
+        public const string AtVtrnDisPymtIncm = "@vtrn_dis_pymt_incm";
+        public const string AtRegCntbrOthrIncm = "@reg_cntbr_othr_incm";
+        public const string AtWrkrCompIncm = "@wrkr_comp_incm";
+        public const string AtGnrlAsstIncm = "@gnrl_asst_incm";
+        public const string AtUnemplInsIncm = "@unempl_ins_incm";
+        public const string AtOthrSrcIncm = "@othr_src_incm";
+        public const string AtHshldSize = "@hshld_size";
+        public const string AtFkEmplymntStatCd = "@fk_emplymnt_stat_cd";
+        public const string AtFkRaceCd = "@fk_race_cd";
+        public const string AtFkRaceDtlCd = "@fk_race_dtl_cd";
+        public const string AtFkEthnCd = "@fk_ethn_cd";
+        public const string AtFkEthnDtlCd = "@fk_ethn_dtl_cd";
+        public const string AtCurrHivStatCd = "@curr_hiv_stat_cd";
+        public const string AtHivDxDt = "@hiv_dx_dt";
+        public const string AtHivDxSrcTxt = "@hiv_dx_src_txt";
+        public const string AtAidsDxDt = "@aids_dx_dt";
+        public const string AtAidsDxSrcTxt = "@aids_dx_src_txt";
+        public const string AtPerinatalTransmission = "@perinatal_transmission";
+        public const string AtMaleToMaleSexualContact = "@male_to_male_sexual_contact";
+        public const string AtHighRiskHeterosexualContact = "@high_risk_heterosexual_contact";
+        public const string AtInjectionDrugUse = "@injection_drug_use";
+        public const string AtHemophiliaCoagulationDisorder = "@hemophilia_coagulation_disorder";
+        public const string AtReceiptOfBloodTransfusion = "@receipt_of_blood_transfusion";
+        public const string AtRiskFactorNotReportedIdentifier = "@risk_factor_not_reported_identifier";
+        public const string AtHivTestDt = "@hiv_test_dt";
+        public const string AtHivRsltStatCd = "@hiv_rslt_stat_cd";
+        public const string AtFkInsTypeCd = "@fk_ins_type_cd";
+        public const string AtFkInsSubTypeCd = "@fk_ins_sub_type_cd";
+        public const string AtNewCovrgCvrsOldCvrgInd = "@new_covrg_cvrs_old_cvrg_ind";
+        public const string AtStartDate = "@start_date";
+        public const string AtEndDate = "@end_date";
+        public const string AtNotes = "@notes";
+        public const string AtHsngAsstncCd = "@hsng_asstnc_cd";
+        public const string AtAsstncStartDt = "@asstnc_start_dt";
+        public const string AtAsstncEndDt = "@asstnc_end_dt";
+        public const string AtFkLvngSttnCd = "@fk_lvng_sttn_cd";
+        public const string AtFkLvngSttnDtlCd = "@fk_lvng_sttn_dtl_cd";
+        public const string AtHousingStatus = "@housing_status";
+        public const string AtAsofDt = "@asof_dt";
+        public const string AtSourceSystemName = "@SourceSystemName";
+        public const string AtUserId = "@UserID";
+        public const string AtSourceId = "@sourceid";
 
 
+
+
+        //
+        //DbHelper
+        //
+        public const string OchinToRwdeOnAt = "OCHIN TO RWDE On '{0}' at '{1}'";
+        public const string ErrorInsertingBatch = "Error inserting batch: {0}"; 
 
 
 
@@ -657,6 +812,41 @@ namespace RWDE
         public const string UnitValue = "UnitValue";
         public const string Update = "Update";
         public const string Insert = "Insert";
+
+
+
+        //
+        //ServiceReconciliationReport
+        //
+        public const string SlNo = "Sl No";
+        public const string Staff = "Staff";
+        public const string HccConsentExpiryDate = "HCCConsentExpiryDate";
+        public const string HccConsentExpiryDatesp = "HCC Consent Expiry Date";
+        public const string RwEligibilityExpiryDate = "RWEligibilityExpiryDate";
+        public const string RwEligibilityExpiryDatesp = "RW Eligibility Expiry Date";
+        public const string ServiceCodeIdsp = "Service Code ID";
+
+        public const string HccContractIdSp = "HCC Contract ID";
+        public const string UnitsOfServices = "UnitsOfServices";
+        public const string UnitsOfServicesSp = "Units of Services";
+        public const string ActualMinutesSpent = "ActualMinutesSpent";
+        public const string ActualMinutesSpentSp = "Actual Minutes Spent";
+        public const string ServiceId = "ServiceID";
+        public const string ServiceIdSp = "Service ID";
+        public const string ServiceExportedToHcc = "ServiceExportedToHCC";
+        public const string ServiceExportedToHccSp = "Service Exported to HCC";
+        public const string ServiceDateSp = "Service Date";
+        public const string EntryDate = "EntryDate";
+        public const string EntryDateSp = "Entry Date";
+        public const string Lag = "Lag";
+        public const string LagStatus = "LagStatus";
+        public const string LagStatusSp = "Lag Status";
+        public const string HccExportFailureReason = "HCCExportFailureReason";
+        public const string HccExportFailureReasonSp = "HCC Export Failure Reason";
+
+        public const string PleaseEnterValidBatchIds = "Please enter valid Batch IDs.";
+        public const string YourCondition = "YourCondition";
+
 
 
 

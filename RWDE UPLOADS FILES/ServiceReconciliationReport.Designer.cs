@@ -359,7 +359,7 @@ namespace RWDE
             // SerialNo
             // 
             this.SerialNo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.SerialNo.HeaderText = "Sl No";
+            this.SerialNo.HeaderText = Constants.SlNo;
             this.SerialNo.MinimumWidth = 6;
             this.SerialNo.Name = "SerialNo";
             this.SerialNo.ReadOnly = true;
@@ -394,7 +394,7 @@ namespace RWDE
             // Agency_client_2
             // 
             this.Agency_client_2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Agency_client_2.HeaderText = "HCC ID";
+            this.Agency_client_2.HeaderText = Constants.HccIdsp;
             this.Agency_client_2.MinimumWidth = 6;
             this.Agency_client_2.Name = "Agency_client_2";
             this.Agency_client_2.ReadOnly = true;
@@ -410,7 +410,7 @@ namespace RWDE
             // AriesConsentExprireDate
             // 
             this.AriesConsentExprireDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.AriesConsentExprireDate.HeaderText = "HCC Consent Expiry Date";
+            this.AriesConsentExprireDate.HeaderText = Constants.HccConsentExpiryDatesp;
             this.AriesConsentExprireDate.MinimumWidth = 6;
             this.AriesConsentExprireDate.Name = "AriesConsentExprireDate";
             this.AriesConsentExprireDate.ReadOnly = true;

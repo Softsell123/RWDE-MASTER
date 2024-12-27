@@ -350,7 +350,7 @@ namespace RWDE
             // 
             this.CaseManager.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.CaseManager.FillWeight = 88.62742F;
-            this.CaseManager.HeaderText = "HCC ID";
+            this.CaseManager.HeaderText = Constants.HccIdsp;
             this.CaseManager.MinimumWidth = 6;
             this.CaseManager.Name = "CaseManager";
             this.CaseManager.Width = 123;

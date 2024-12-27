@@ -219,13 +219,13 @@ namespace RWDE
                 }
                 else
                 {
-                    MessageBox.Show($"{Constants.TheFileIsAlreadyUploaded}", Constants.XmlFileUpload, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($@"{Constants.TheFileIsAlreadyUploaded}", Constants.XmlFileUpload, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     btnUploadXML.Enabled = true;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 btnUploadXML.Enabled = true;
                 btnClose.Text = Constants.Close;
             }
