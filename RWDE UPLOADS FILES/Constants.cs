@@ -1,4 +1,8 @@
 ﻿
+using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Vml;
+using System.Windows.Forms;
+
 namespace RWDE
 {
     /// <summary>
@@ -7,6 +11,8 @@ namespace RWDE
     public static class Constants
     {
         public const string Sakku = "sakku ";
+        public const string Sakkusmall = "sakku";
+
         public const string AgencyCode = "246_";
 
         public const string MyConnection = "MyConnection";
@@ -70,7 +76,7 @@ namespace RWDE
         public const string Servicedate = "Service Date";
         public const int StatusCode = 11;
         public const int OchinCode = 23;
-        public const int ClientTrack = 24;
+        public const int ClientTrackCode = 24;
         public const int Hcc = 25;
         public const int Hccxmlstatusf = 20;
         public const int Hccxmlstatusg = 21;
@@ -320,6 +326,7 @@ namespace RWDE
         public const string DdMMyyyyHHmmss = "dd-MM-yyyy HH:mm:ss";
         public const string YyyyMMdd = "yyyyMMdd";
         public const string YyyyMmDd = "yyyy-MM-dd";
+        public const string YyyyMmDdSlash = "yyyy/MM/dd";
         public const string DdMMyyyy = "ddMMyyyy";
         public const string YyyyMMddHHmmss = "yyyy-MM-dd HH:mm:ss";
         public const string MMddyyyyHHmm = "MM-dd-yyyy HH:mm";
@@ -435,7 +442,7 @@ namespace RWDE
         public const string TheSelectedFolderIsEmpty = "The selected folder is empty. Please select a folder containing .csv files.";
         public const string TheFolderContainsNonXmlFiles = "The folder contains non-XML files or folder is empty. Upload is allowed only for XML files.";
 
-
+        public const string ErrorFetchingTheBatchId = "Error fetching the batch ID: ";
 
 
 
@@ -496,19 +503,50 @@ namespace RWDE
         public const string InsertDlEligibility = "InsertDlEligibility";
         public const string InsertDlServices = "InsertDlServices";
         public const string InsertDlServicesPhi = "InsertDlServicesPHI";
-
-
-
-
-
-
-
-
-
-
-
-
-
+        public const string LoggerError = "Loggererror";
+        public const string UpdateConversionServices = "updateconversionservices";
+        public const string UpdateConversionClient = "updateconversionclient";
+        public const string InsertDlFinancial = "InsertDlFinancial";
+        public const string InsertCtClientsFromXmlPhiMaskingTest = "InsertCTClientsFromXMLPHIMASKINGTEST";
+        public const string InsertCtClientsFromXml = "InsertCTClientsFromXML";
+        public const string InsertServiceLineItemFromXmlPhi = "InsertServiceLineItemFromXMLPHI";
+        public const string InsertLog = "InsertLog";
+        public const string DeleteOchinBatchDatas = "DeleteochinBatchDatas";
+        public const string DeleteBatchData = "DeleteBatchData";
+        public const string DeleteHccBatchData = "DeleteHccBatchData";
+        public const string OchinDataDelete = "OCHINDATADELETE";
+        public const string ViewAllBatchDatas = "ViewAllBatchDatas";
+        public const string ViewAllBatchDatasLoad = "ViewAllBatchDatasLOAD";
+        public const string ViewAllBatchDatasHcc = "ViewAllBatchDatasHCC";
+        public const string GetParticularBatchDatas = "GetParticularBatchDatas";
+        public const string GetParticularConversionDatas = "GetParticularConversionDatas";
+        public const string GetAllBatchType = "GETALLBATCHTYPE";
+        public const string GetAllBatchTypeHcc = "GETALLBATCHTYPEHCC";
+        public const string GETALLBATCHTYPEview = "GETALLBATCHTYPEview";
+        public const string GetParticularnGenerationDatasConversionXml = "GetParticularnGenerationDatasCONVERSIONxml";
+        public const string GetParticularnGenerationDatasConversion = "GetParticularnGenerationDatasCONVERSION";
+        public const string GetParticularnGenerationDatasConversionHcc = "GetParticularnGenerationDatasCONVERSIONHCC";
+        public const string GetAllContractLists = "GetAllContractLists";
+        public const string Sp_GetTopServiceCodeSetup = "sp_GetTopServiceCodeSetup";
+        public const string InsertXmlgeneratorTimeServices = "insertXMLgeneratortimeServices";
+        public const string SpCreateDeceasedClientViewCount = "spCreateDeceasedClientViewcount";
+        public const string ClientGeneratorXmlDemo = "clientgeneratorXMLDEMO";
+        public const string InsertXmlgeneratorTimeClient = "insertXMLgeneratortimeClient";
+        public const string FetchSubClientDataFromMedCd4 = "FetchSubClientDataFromMedCD4";
+        public const string FetchSubClientDataFromMedVl = "FetchSubClientDataFromMedVL";
+        public const string FetchSubClientDataFromHivTest = "FetchSubClientDataFromHIVTest";
+        public const string FetchSubClientDataFromInsur = "FetchSubClientDataFromInsur";
+        public const string FetchSubClientDataFromRace = "FetchSubClientDataFromRace";
+        public const string InsertOrUpdateContract = "InsertOrUpdateContract";
+        public const string UpdateContractStatus = "UpdateContractStatus";
+        public const string UpdateContract = "UpdateContract";
+        public const string UpdateServiceCodeStatus = "UpdateServiceCodeStatus";
+        public const string InsertOrUpdateServiceCode = "InsertOrUpdateServiceCode";
+        public const string GetActiveContracts = "GetActiveContracts";
+        public const string SpUploadDashboardReport = "sp_Upload_DashboardREPORT";
+        public const string UpdateHccServicesWithErrors = "UpdateHCCServicesWithErrors";
+        public const string SpHccRecon = "sp_HCCRecon";
+        public const string ManualUploadReport = "ManualUploadReport";
 
 
 
@@ -538,8 +576,66 @@ namespace RWDE
 
 
         public const string GetNextBatchIdQuery = "SELECT ISNULL(MAX(BatchID), 0) FROM Batch";
+        public const string GetAbortBatchIdQuery = "SELECT MAX(batchid) FROM Batch";
         public const string GetMaxXmlBatchIdQuery = "SELECT ISNULL(MAX(BatchID), 0) FROM CTClients";
-    
+        public const string GetMXmlBatchIdQuery = "SELECT Max(batchid) FROM Batch WHERE FileName LIKE '%XML%'";
+
+        public const string CTClientsEligibilityDocQuery = "INSERT INTO [RWDE].[dbo].[CTClientsEligibilityDoc] (DocumentType, DocumentDate, ObtainDate, ExpireDate, Source, Notes, BatchID, AgencyClientID1, AriesID, CreatedBy, CreatedOn, EligibilityDocID) VALUES (@DocumentType, @DocumentDate, @ObtainDate, @ExpireDate, @Source, @Notes, @BatchID, @AgencyClientID1, @AriesID, @CreatedBy, @CreatedOn, @EligibilityDocID)";
+        public const string LoggingErrorQuery = "INSERT INTO Logger (Type, Module, Stack, Message, FileName, LineNumber, FunctionName, Comments, CreatedBy, CreatedOn) VALUES (@Type, @Module, @Stack, @Message, @FileName, @LineNumber, @FunctionName, @Comments, @CreatedBy, @CreatedOn)";
+        public const string GetClientIdsQuery = "SELECT Clnt_id,Agency_client_2 FROM HCCClients WHERE CreatedOn >= @StartDate AND CreatedOn <= @EndDate";
+        public const string GetServiceIdsQuery = "SELECT ServiceID, Service_date FROM HCCServices WHERE CreatedOn >= @StartDate AND CreatedOn <= @EndDate";
+        public const string GetFilteredDataQuery = @"SELECT * FROM vwDeceased_Client WHERE [Download Date] BETWEEN @StartDate AND @EndDate;";
+        public const string LoadDataMonthYearQuery = @"SELECT * FROM HCCServices WHERE YEAR(CreatedOn) = @Year AND MONTH(CreatedOn) = @Month AND Status IN ('Upload Succeeded', 'Upload Failed')";
+
+        public const string LoadDataQuery = @"
+                    SELECT
+                    FORMAT(HCCServices.CreatedOn, 'MMM-yyyy') AS 'Monthyear',
+                    COUNT(CASE WHEN Status = 'Upload Succeeded' THEN HCCServices.ServiceID END) AS 'Service Entries Uploaded',
+                    SUM(CASE WHEN Status = 'Upload Succeeded' THEN CAST(HCCServices.Quantity_served AS DECIMAL(18, 2)) ELSE 0 END) AS 'Units of Service Uploaded',
+                    SUM(CASE WHEN Status = 'Upload Succeeded' THEN CAST(HCCServices.Price_served AS DECIMAL(18, 2)) ELSE 0 END) AS 'Cost of Services Uploaded',
+                    COUNT(CASE WHEN Status = 'Upload Failed' THEN HCCServices.ServiceID END) AS 'Service Entries Failed',
+                    SUM(CASE WHEN Status = 'Upload Failed' THEN CAST(HCCServices.Quantity_served AS DECIMAL(18, 2)) ELSE 0 END) AS 'Units of Service Failed',
+                    SUM(CASE WHEN Status = 'Upload Failed' THEN CAST(HCCServices.Price_served AS DECIMAL(18, 2)) ELSE 0 END) AS 'Cost of Services Failed'
+                FROM HCCServices
+                WHERE HCCServices.CreatedOn BETWEEN @StartDate AND @EndDate
+                GROUP BY FORMAT(HCCServices.CreatedOn, 'MMM-yyyy')
+                ORDER BY FORMAT(HCCServices.CreatedOn, 'yyyy-MM') DESC";
+
+        public const string ServiceReconServiceDateQuery = @"SELECT * FROM vwService_Reconciliationdatefilter WHERE ServiceDate BETWEEN @StartDate AND @EndDate OR ServiceDate = @StartDate OR ServiceDate = @EndDate";
+        public const string ServiceReconCreatedDateQuery = @"SELECT * FROM vwService_ReconciliationCreatedDateFilter WHERE EntryDate BETWEEN @StartDate AND @EndDate OR EntryDate = @StartDate OR EntryDate = @EndDate";
+        public const string ServiceReconBatchIdQuery = @"SELECT * FROM vwService_Reconciliationtest WHERE BatchID = @BatchID";
+
+        public const string ClientDemographicsQuery = @"select * from vw_ClientDemographics where [Created On]  between @StartDate and @EndDate";
+
+        public const string LoadLogErrorQuery = @"SELECT * FROM vw_ErrorLog WHERE  Date  BETWEEN @StartDate AND @EndDate";
+
+        public const string GetHccServicesQuery = "SELECT  ServiceID,Actual_minutes_spent,Staff_id,Clnt_id, Service_date, CreatedOn,Contract_id,MappedToHCC,Quantity_served FROM HCCServices";
+        public const string GetHccClientsQuery = "SELECT Clnt_id,CreatedOn,Agency_client_1 FROM HCCClients";
+        public const string GetHccClientsFilterQuery = @" SELECT  Staff_id,  Clnt_id, Service_date,  CreatedOn, DATEADD(day, -1, CreatedOn) AS CreatedOnMinusOne -- Subtract 1 day from CreatedOn FROM HCCServices WHERE CreatedOn >= @StartDate AND CreatedOn <= @EndDate";
+
+        public const string ServiceCodeSetupQuery = "SELECT HCC_ExportToAries FROM ServiceCodeSetup";
+        public const string GetAgencyClientIdQuery = "SELECT Agency_client_1 FROM HCCClients";
+
+        public const string GetTotalServiceQuery = "SELECT COUNT(CMSServiceID) FROM CMSServices";
+        public const string GetNotMappedServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE MappedToHCC = 'False'";
+        public const string GetMappedServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Status = 'Succeeded'";
+        public const string GetNotExportedServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Status <> 'Succeeded'";
+        public const string GetMhServiceCountQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Service = 'MH'";
+        public const string GetPostTimeBoxServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE PostTimeBox = 1";
+        public const string GetMissingExpiryServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE HCCconsentExpired = '1'";
+        public const string GetMissingHccIdServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE HCCID IS NULL";
+        public const string GetNotEnrolledServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE ProgramEnrolled IS NULL";
+        public const string GetPreRegServiceCountQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE PreReg = 1";
+        public const string GetEligibilityMissingServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE RWEligibilityExpired = 1";
+        public const string GetStaffMissingServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE StaffloginMissing = 1";
+        public const string GetZerUnitOfServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Unit_cd = 0";
+        public const string GetWaiverServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Service = 'Waiver'";
+        public const string GetServiceDatesQuery = @"SELECT Service_date  FROM HCCServices";
+        public const string GetItDropServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE DataTeamInvestigationforErrors = 'True'";
+
+
+
+
         //
         //SPparametersConstants
         //
@@ -579,7 +675,12 @@ namespace RWDE
         public const string AtStaffId = "@Staff_id";
         public const string AtPrimServDesc = "@Prim_serv_desc";
         public const string AtIdEqualTto = "Id=";
-        public const string AtIdEqualTtoCaps = "Id=";
+        public const string IdHyphen = "Id-";
+        public const string IdColon = "Id:";
+        public const char EqualTo = '=';
+        public const char Hyphen = '-';
+        public const char Colon = ':';
+        public const string AtIdEqualTtoCaps = "ID=";
         public const string AtQuantityServed = "@Quantity_served";
         public const string AtUnitCd = "@Unit_cd";
         public const string AtActualMinutesSpent = "@Actual_minutes_spent";
@@ -725,6 +826,107 @@ namespace RWDE
         public const string AtClientUrn = "@ClientURN";
         public const string AtServiceNotes = "@ServiceNotes";
 
+        public const string AtModule = "@Module";
+        public const string AtStack = "@Stack";
+        public const string AtMessage = "@Message";
+        public const string AtLineNumber = "@LineNumber";
+        public const string AtFunctionName = "@FunctionName";
+
+        public const string AtFinancialTotalIncomeMonthly = "@FinancialTotalIncomeMonthly";
+        public const string AtFinancialTotalIncomeAnnual = "@FinancialTotalIncomeAnnual";
+        public const string AtFinancialIsClientIncomeMonthly = "@FinancialIsClientIncomeMonthly";
+        public const string AtFinancialEmploymentStatus = "@FinancialEmploymentStatus";
+        public const string AtFinancialPublicAssistance = "@FinancialPublicAssistance";
+        public const string AtFinancialEmploymentSalaryWages = "@FinancialEmploymentSalaryWages";
+        public const string AtFinancialUnemploymentBenefits = "@FinancialUnemploymentBenefits";
+        public const string AtFinancialVeteransBenefits = "@FinancialVeteransBenefits";
+        public const string AtFinancialSsi = "@FinancialSSI";
+        public const string AtFinancialSsdi = "@FinancialSSDI";
+        public const string AtFinancialSsa = "@FinancialSSA";
+        public const string AtFinancialGeneralAssistance = "@FinancialGeneralAssistance";
+        public const string AtFinancialTanf = "@FinancialTANF";
+        public const string AtFinancialFoodStamps = "@FinancialFoodStamps";
+        public const string AtFinancialStateDisability = "@FinancialStateDisability";
+        public const string AtFinancialLongTermDisability = "@FinancialLongTermDisability";
+        public const string AtFinancialGift = "@FinancialGift";
+        public const string AtFinancialRetirement = "@FinancialRetirement";
+        public const string AtFinancialAlimony = "@FinancialAlimony";
+        public const string AtFinancialInvestment = "@FinancialInvestment";
+        public const string AtFinancialWorkersCompensation = "@FinancialWorkersCompensation";
+        public const string AtFinancialOther1 = "@FinancialOther1";
+        public const string AtFinancialOtherAmount1 = "@FinancialOtherAmount1";
+        public const string AtFinancialOther2 = "@FinancialOther2";
+        public const string AtFinancialOtherAmount2 = "@FinancialOtherAmount2";
+        public const string AtFinancialOther3 = "@FinancialOther3";
+        public const string AtFinancialOtherAmount3 = "@FinancialOtherAmount3";
+        public const string AtFinancialHasNoSourceOfIncome = "@FinancialHasNoSourceOfIncome";
+        public const string AtFinancialHouseholdIncome = "@FinancialHouseholdIncome";
+        public const string AtFinancialIsHouseholdIncomeMonthly = "@FinancialIsHouseholdIncomeMonthly";
+        public const string AtFinancialPeopleInHousehold = "@FinancialPeopleInHousehold";
+        public const string AtFinancialChildrenInHousehold = "@FinancialChildrenInHousehold";
+        public const string AtFinancialHivPositiveInHousehold = "@FinancialHIVPositiveInHousehold";
+        public const string AtFinancialHouseholdPovertyLevelbyGroup = "@FinancialHouseholdPovertyLevelbyGroup";
+        public const string AtFinancialHouseholdPovertyLevel = "@FinancialHouseholdPovertyLevel";
+        public const string AtFinancialFamilyIncome = "@FinancialFamilyIncome";
+        public const string AtFinancialIsFamilyIncomeMonthly = "@FinancialIsFamilyIncomeMonthly";
+        public const string AtFinancialPeopleInFamily = "@FinancialPeopleInFamily";
+        public const string AtFinancialFamilyPovertyLevel = "@FinancialFamilyPovertyLevel";
+        public const string AtFinancialOwnsHouse = "@FinancialOwnsHouse";
+        public const string AtFinancialOwnsCar = "@FinancialOwnsCar";
+        public const string AtFinancialHasOtherAssets = "@FinancialHasOtherAssets";
+        public const string AtFinancialOtherAssets = "@FinancialOtherAssets";
+        public const string AtFinancialLastSavedDate = "@FinancialLastSavedDate";
+        public const string AtFinancialCreateSource = "@FinancialCreateSource";
+
+        public const string XmlData = "@XmlData";
+        public const string AtNotesCaps = "@Notes";
+        public const string AtAriesID = "@AriesID";
+        public const string AtEligibilityDocID = "@EligibilityDocID";
+
+        public const string AtClientAriesID = "@ClientAriesID";
+        public const string AtClientUrnExt = "@ClientURNExt";
+        public const string AtSiteName = "@SiteName";
+        public const string AtStaffLogin = "@StaffLogin";
+        public const string AtContractName = "@ContractName";
+        public const string AtServiceDateCaps = "@ServiceDate";
+        public const string AtProgram = "@Program";
+        public const string AtPrimaryService = "@PrimaryService";
+        public const string AtSecondaryService = "@SecondaryService";
+        public const string AtSubservice = "@Subservice";
+        public const string AtUnitsOfService = "@UnitsOfService";
+        public const string AtRateForUnitOfService = "@RateForUnitOfService";
+        public const string AtMeasurementUnit = "@MeasurementUnit";
+        public const string AtTotalCost = "@TotalCost";
+        public const string AtActualMinutesSpentCaps = "@ActualMinutesSpent";
+
+        public const string AtBatchType = "@BatchType";
+        public const string AtFromDate = "@FromDate";
+        public const string AtEndDateCaps = "@EndDate";
+
+        public const string AtClientid = "@Clientid";
+        public const string AtDatetime = "@Datetime";
+
+        public const string AtContractID = "@ContractID";
+        public const string AtStartedDateTime = "@StartedDateTime";
+        public const string AtEndedDateTime = "@EndedDateTime";
+        public const string AtOperation = "@Operation";
+        public const string AtServiceCodeID = "@ServiceCodeID";
+
+        public const string AtService = "@Service";
+        public const string AtHCCExportToAries = "@HCC_ExportToAries";
+        public const string AtHCCContractID = "@HCC_ContractID";
+        public const string AtHCCPrimaryService = "@HCC_PrimaryService";
+        public const string AtHccSecondaryService = "@HCC_SecondaryService";
+        public const string AtHccSubservice = "@HCC_Subservice";
+        public const string AtUnitsOfMeasure = "@UnitsOfMeasure";
+        public const string AtUnitValue = "@UnitValue";
+
+        public const string AtStartDateCaps = "@StartDate";
+        public const string AtYear = "@Year";
+        public const string AtMonth = "@Month";
+
+
+
 
 
 
@@ -735,6 +937,63 @@ namespace RWDE
         public const string ErrorInsertingBatch = "Error inserting batch: {0}";
         public const string ConsentData = "ConsentData";
         public const string FailedToParseDate = "Failed to parse date: {0}";
+        public const string ServiceNotesCannotBeNullOrEmpty = "Service notes cannot be null or empty.";
+        public const string TwoThreeFour = "2/3/4";
+        public const string ErrorInsertingClientParametersIntoTheTable = "Error inserting client parameters into the table: ";
+        public const string ErrorInsertingServiceLineItems = "Error inserting service line items: ";
+        public const string ErrorLoggingMessage = "Error logging message: ";
+        public const string ErrorDeletingBatch = "Error deleting batch: ";
+        public const string ErrorRetrievingBatchData = "Error retrieving batch data";
+        public const string ErrorRetrievingData = "Error retrieving data";
+        public const string ErrorInInsertOrUpdateContractMethod = "Error in InsertOrUpdateContract method: ";
+
+
+        public const string DlFinancials = "DlFinancials";
+        public const string InvalidDecimalValue  = "Invalid decimal value: ";
+        public const string InvalidIntegerValue = "Invalid integer value: ";
+        public const string BkslashClient = "//Client";
+        public const string BkslashServiceLineItem = "//ServiceLineItem";
+        public const string ClientAriesID = "_clientAriesID";
+
+        public const string AriesId = "ariesID";
+        public const string EligibilityDocument = "EligibilityDocument";
+        public const string AgencySpecifics = "AgencySpecifics";
+        public const string AgencyClientId1 = "agencyClientID1";
+        public const string DocumentType = "documentType";
+        public const string DocumentDate = "documentDate";
+        public const string ObtainDate = "obtainDate";
+        public const string ExpireDate = "expireDate";
+        public const string Source = "source";
+        public const string Notes = "notes";
+        public const string ErrorInsertingEligibilityDocuments = "Error inserting eligibility documents: ";
+        public const string ClientariesIDEligibilityDocument = "//Client[@ariesID='{0}']/EligibilityDocument";
+
+        public const string ClientUrnExt = "_clientURNExt";
+        public const string SiteName = "_siteName";
+        public const string StaffLogin = "_staffLogin";
+        public const string ContractNamesmall = "_contractName"; 
+        public const string ServiceDatesmall = "serviceDate";
+        public const string Program = "program";
+        public const string PrimaryServiceSmall = "primaryService";
+        public const string SecondaryServiceSmall = "secondaryService";
+        public const string Subservice = "subservice";
+        public const string UnitsOfService = "unitsOfService";
+        public const string RateForUnitOfService = "rateForUnitOfService";
+        public const string MeasurementUnit = "measurementUnit";
+        public const string TotalCost = "totalCost";
+        public const string ActualTimeSpentMinutes = "actualTimeSpentMinutes";
+        public const string ClientTrack = "Client Track";
+        public const string Value = "Value";
+        public const string QueryExecutedButNoDataFound = "Query executed, but no data found.";
+        public const string Clntid = "Clnt_id";
+
+        public const string AgencyClient1 = "Agency_client_1";
+
+
+        public const string One = "1";
+        public const string Zero = "0";
+
+
 
 
 
@@ -827,7 +1086,7 @@ namespace RWDE
         //
         //frmUploadXMLFile
         //
-        public const string ServiceDate = "ServiceDate";
+        public const string ServiceDate = Constants.ServiceDatesmall;
         public const string CreatedDate = "CreatedDate";
 
 
@@ -1002,7 +1261,6 @@ namespace RWDE
 
 
         public const string DelimiterxmlGeneratorId = "DelimiterxmlGeneratorID";
-        public const string Clntid = "Clnt_id";
         // TagNumber 
         public const string TagNumberFive = "5";
         public const string TagNumberTen = "10";

@@ -109,7 +109,7 @@ namespace RWDE
                 }
                 else if (dtpDateFilter.SelectedItem != null)
                 {
-                    switch (dtpDateFilter.SelectedItem.ToString())
+                    switch (dtpDateFilter.SelectedItem.ToString().Replace(" ", string.Empty))
                     {
                         case Constants.Servicedate:
                             filterType = Constants.ServiceDate;

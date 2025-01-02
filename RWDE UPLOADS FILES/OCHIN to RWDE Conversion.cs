@@ -335,7 +335,7 @@ namespace RWDE
                 UpdateGridStatus(selectedBatchId, Constants.Hccstartcon);//update the Status label in Status Column
                 dataGridView.Refresh();
                 string baseFilename = Constants.ServiceCttohcc;
-                dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrack, baseFilename, Constants.Uploadct);
+                dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
 
                 DateTime startTime = DateTime.Now;
                 dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = 17;
@@ -395,7 +395,7 @@ namespace RWDE
                         dbHelper.UpdateBatchclient(selectedBatchId, startTime, endedTime, totalRows);//to insert batch client
                         
                         PopulateDataGridView();//populate data
-                        dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrack, baseFilename, Constants.Uploadct);
+                        dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
                         btnClose.Text = Constants.Close;
                         btnConversion.Enabled = true;
 
@@ -534,7 +534,7 @@ namespace RWDE
                                 DateTime endTime = DateTime.Now;
                                 UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update the Status label in batch table
 
-                                dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrack, baseFilename, Constants.Uploadct);
+                                dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
                                 //Record the end time
                                 
                                 Console.WriteLine(Constants.MappingcompletedsuccessfullyforBatchId + selectedBatchId);

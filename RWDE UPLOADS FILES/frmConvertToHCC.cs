@@ -240,7 +240,7 @@ namespace RWDE
                 UpdateGridStatus(selectedBatchId, Constants.Hccstartcon);//update the Status label in Status Column
                 dataGridView.Refresh();
                 string baseFilename = Constants.ServiceCttohcc;
-                dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrack, baseFilename, Constants.Uploadct);
+                dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
 
                 DateTime startTime = DateTime.Now;
                 dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = 17;
@@ -291,7 +291,7 @@ namespace RWDE
                         UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update Status label in Status Column 
                         dataGridView.Refresh();
 
-                        dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrack, baseFilename, Constants.Uploadct);
+                        dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
                         _ = GetservicesAsync(selectedBatchId);
                     }
                 }
@@ -386,7 +386,7 @@ namespace RWDE
                             DateTime endTime = DateTime.Now;
                             UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update the Status label in batch table
 
-                            dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrack, baseFilename, Constants.Uploadct);
+                            dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
 
                             Console.WriteLine( Constants.MappingcompletedsuccessfullyforBatchId + selectedBatchId);
                             RemoveSelectedRow(selectedBatchId, "");

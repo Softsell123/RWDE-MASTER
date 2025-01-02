@@ -189,7 +189,7 @@ namespace RWDE
 
         public DataTable LoadDatafilterServiceReconbatchid(int[] batchids)
         {
-            DataTable dy = new DataTable();
+            DataTable dy;
             List<DataTable> result = new List<DataTable>();
             List<int> noDataIds = new List<int>();
             try
@@ -1343,17 +1343,17 @@ namespace RWDE
             {
                 if (string.IsNullOrWhiteSpace(serviceNotes))
                 {
-                    throw new ArgumentException("Service notes cannot be null or empty.");
+                    throw new ArgumentException(Constants.ServiceNotesCannotBeNullOrEmpty);
                 }
 
                 // Define patterns to match service ID
-                string[] patterns = { $"{Constants.AtIdEqualTto}", $"{Constants.AtIdEqualTto}", "Id-", "Id:" };
+                string[] patterns = { $"{Constants.AtIdEqualTto}", $"{Constants.AtIdEqualTto}", Constants.IdHyphen, Constants.IdColon };
                 foreach (var pattern in patterns)
                 {
                     if (serviceNotes.StartsWith(pattern, StringComparison.OrdinalIgnoreCase))
                     {
                         // Find the index of the first occurrence of "=", "-", or ":"
-                        int separatorIndex = serviceNotes.IndexOfAny(new char[] { '=', '-', ':' });
+                        int separatorIndex = serviceNotes.IndexOfAny(new char[] { Constants.EqualTo, Constants.Hyphen, Constants.Colon });
 
                         if (separatorIndex != -1)
                         {
@@ -1404,16 +1404,16 @@ namespace RWDE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("Loggererror", conn);
+                    SqlCommand cmd = new SqlCommand(Constants.LoggerError, conn);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue(Constants.AtType, Constants.Error); // Error type
-                    cmd.Parameters.AddWithValue("@Module", Constants.Hcc); // Module name
-                    cmd.Parameters.AddWithValue("@Stack", stackTrace);
-                    cmd.Parameters.AddWithValue("@Message", message);
+                    cmd.Parameters.AddWithValue(Constants.AtModule, Constants.Hcc); // Module name
+                    cmd.Parameters.AddWithValue(Constants.AtStack, stackTrace);
+                    cmd.Parameters.AddWithValue(Constants.AtMessage, message);
                     cmd.Parameters.AddWithValue(Constants.AtFilename, fileName);
-                    cmd.Parameters.AddWithValue("@LineNumber", lineNumber.HasValue ? (object)lineNumber.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue("@FunctionName", functionName);
+                    cmd.Parameters.AddWithValue(Constants.AtLineNumber, lineNumber.HasValue ? (object)lineNumber.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue(Constants.AtFunctionName, functionName);
                     cmd.Parameters.AddWithValue(Constants.AtComments, DBNull.Value); // Assuming no comments
                     cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a specific user ID
                     cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
@@ -1439,7 +1439,7 @@ namespace RWDE
                     connection.Open();
 
                     // Define the SQL query to update the ConversionStartedAt and ConversionEndedAt columns
-                    string updateQuery = "updateconversionservices";
+                    string updateQuery = Constants.UpdateConversionServices;
 
                     using (SqlCommand command = new SqlCommand(updateQuery, connection))
                     {
@@ -1457,7 +1457,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{Constants.Errorupdatingbatch}{ex.Message}");
+                Console.WriteLine($@"{Constants.Errorupdatingbatch}{ex.Message}");
                 // Log or handle the exception appropriately
             }
         }
@@ -1471,7 +1471,7 @@ namespace RWDE
                     connection.Open();
 
                     // Define the SQL query to update the ConversionStartedAt and ConversionEndedAt columns
-                    string updateQuery = "updateconversionclient";
+                    string updateQuery = Constants.UpdateConversionClient;
 
                     using (SqlCommand command = new SqlCommand(updateQuery, connection))
                     {
@@ -1489,7 +1489,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{Constants.Errorupdatingbatch}{ex.Message}");
+                Console.WriteLine($@"{Constants.Errorupdatingbatch}{ex.Message}");
                 // Log or handle the exception appropriately
             }
         }
@@ -1497,63 +1497,63 @@ namespace RWDE
         {
             try
             {
-                using (SqlCommand command = new SqlCommand("InsertDlFinancial", connection))
+                using (SqlCommand command = new SqlCommand(Constants.InsertDlFinancial, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with proper null or empty value checks
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue(Constants.AtClientIdCaps, GetStringValue(data, 0)?.Trim('"'));
-                    AddDecimalParameter(command, "@FinancialTotalIncomeMonthly", GetStringValue(data, 1));
-                    AddDecimalParameter(command, "@FinancialTotalIncomeAnnual", GetStringValue(data, 2));
-                    command.Parameters.AddWithValue("@FinancialIsClientIncomeMonthly", GetStringValue(data, 3)?.Trim('"'));
-                    command.Parameters.AddWithValue("@FinancialEmploymentStatus", GetStringValue(data, 4)?.Trim('"'));
-                    command.Parameters.AddWithValue("@FinancialPublicAssistance", GetStringValue(data, 5)?.Trim('"'));
-                    AddDecimalParameter(command, "@FinancialEmploymentSalaryWages", GetStringValue(data, 6));
-                    AddDecimalParameter(command, "@FinancialUnemploymentBenefits", GetStringValue(data, 7));
-                    AddDecimalParameter(command, "@FinancialVeteransBenefits", GetStringValue(data, 8));
-                    AddDecimalParameter(command, "@FinancialSSI", GetStringValue(data, 9));
-                    AddDecimalParameter(command, "@FinancialSSDI", GetStringValue(data, 10));
-                    AddDecimalParameter(command, "@FinancialSSA", GetStringValue(data, 11));
-                    AddDecimalParameter(command, "@FinancialGeneralAssistance", GetStringValue(data, 12));
-                    AddDecimalParameter(command, "@FinancialTANF", GetStringValue(data, 13));
-                    AddDecimalParameter(command, "@FinancialFoodStamps", GetStringValue(data, 14));
-                    AddDecimalParameter(command, "@FinancialStateDisability", GetStringValue(data, 15));
-                    AddDecimalParameter(command, "@FinancialLongTermDisability", GetStringValue(data, 16));
-                    AddDecimalParameter(command, "@FinancialGift", GetStringValue(data, 17));
-                    AddDecimalParameter(command, "@FinancialRetirement", GetStringValue(data, 18));
-                    AddDecimalParameter(command, "@FinancialAlimony", GetStringValue(data, 19));
-                    AddDecimalParameter(command, "@FinancialInvestment", GetStringValue(data, 20));
-                    AddDecimalParameter(command, "@FinancialWorkersCompensation", GetStringValue(data, 21));
-                    command.Parameters.AddWithValue("@FinancialOther1", GetStringValue(data, 22)?.Trim('"'));
-                    AddDecimalParameter(command, "@FinancialOtherAmount1", GetStringValue(data, 23));
-                    command.Parameters.AddWithValue("@FinancialOther2", GetStringValue(data, 24)?.Trim('"'));
-                    AddDecimalParameter(command, "@FinancialOtherAmount2", GetStringValue(data, 25));
-                    command.Parameters.AddWithValue("@FinancialOther3", GetStringValue(data, 26)?.Trim('"'));
-                    AddDecimalParameter(command, "@FinancialOtherAmount3", GetStringValue(data, 27));
-                    command.Parameters.AddWithValue("@FinancialHasNoSourceOfIncome", GetStringValue(data, 28)?.Trim('"'));
-                    AddDecimalParameter(command, "@FinancialHouseholdIncome", GetStringValue(data, 29));
-                    command.Parameters.AddWithValue("@FinancialIsHouseholdIncomeMonthly", GetStringValue(data, 30)?.Trim('"'));
-                    AddIntParameter(command, "@FinancialPeopleInHousehold", GetStringValue(data, 31));
-                    AddIntParameter(command, "@FinancialChildrenInHousehold", GetStringValue(data, 32));
-                    command.Parameters.AddWithValue("@FinancialHIVPositiveInHousehold", GetStringValue(data, 33)?.Trim('"'));
-                    command.Parameters.AddWithValue("@FinancialHouseholdPovertyLevelbyGroup", GetStringValue(data, 34)?.Trim('"'));
-                    command.Parameters.AddWithValue("@FinancialHouseholdPovertyLevel", GetStringValue(data, 35)?.Trim('"'));
-                    AddDecimalParameter(command, "@FinancialFamilyIncome", GetStringValue(data, 36));
-                    command.Parameters.AddWithValue("@FinancialIsFamilyIncomeMonthly", GetStringValue(data, 37)?.Trim('"'));
-                    AddIntParameter(command, "@FinancialPeopleInFamily", GetStringValue(data, 38));
-                    command.Parameters.AddWithValue("@FinancialFamilyPovertyLevel", GetStringValue(data, 39)?.Trim('"'));
-                    command.Parameters.AddWithValue("@FinancialOwnsHouse", GetStringValue(data, 40)?.Trim('"'));
-                    command.Parameters.AddWithValue("@FinancialOwnsCar", GetStringValue(data, 41)?.Trim('"'));
-                    command.Parameters.AddWithValue("@FinancialHasOtherAssets", GetStringValue(data, 42)?.Trim('"'));
-                    AddDecimalParameter(command, "@FinancialOtherAssets", GetStringValue(data, 43));
-                    command.Parameters.AddWithValue("@FinancialLastSavedDate", GetStringValue(data, 44)?.Trim('"'));
-                    command.Parameters.AddWithValue("@FinancialCreateSource", GetStringValue(data, 45)?.Trim('"'));
-                    command.Parameters.AddWithValue(Constants.AtDownloadDate, DateTime.Parse("2/3/4"));
+                    AddDecimalParameter(command, Constants.AtFinancialTotalIncomeMonthly, GetStringValue(data, 1));
+                    AddDecimalParameter(command, Constants.AtFinancialTotalIncomeAnnual, GetStringValue(data, 2));
+                    command.Parameters.AddWithValue(Constants.AtFinancialIsClientIncomeMonthly, GetStringValue(data, 3)?.Trim('"'));
+                    command.Parameters.AddWithValue(Constants.AtFinancialEmploymentStatus, GetStringValue(data, 4)?.Trim('"'));
+                    command.Parameters.AddWithValue(Constants.AtFinancialPublicAssistance, GetStringValue(data, 5)?.Trim('"'));
+                    AddDecimalParameter(command, Constants.AtFinancialEmploymentSalaryWages, GetStringValue(data, 6));
+                    AddDecimalParameter(command, Constants.AtFinancialUnemploymentBenefits, GetStringValue(data, 7));
+                    AddDecimalParameter(command, Constants.AtFinancialVeteransBenefits, GetStringValue(data, 8));
+                    AddDecimalParameter(command, Constants.AtFinancialSsi, GetStringValue(data, 9));
+                    AddDecimalParameter(command, Constants.AtFinancialSsdi, GetStringValue(data, 10));
+                    AddDecimalParameter(command, Constants.AtFinancialSsa, GetStringValue(data, 11));
+                    AddDecimalParameter(command, Constants.AtFinancialGeneralAssistance, GetStringValue(data, 12));
+                    AddDecimalParameter(command, Constants.AtFinancialTanf, GetStringValue(data, 13));
+                    AddDecimalParameter(command, Constants.AtFinancialFoodStamps, GetStringValue(data, 14));
+                    AddDecimalParameter(command, Constants.AtFinancialStateDisability, GetStringValue(data, 15));
+                    AddDecimalParameter(command, Constants.AtFinancialLongTermDisability, GetStringValue(data, 16));
+                    AddDecimalParameter(command, Constants.AtFinancialGift, GetStringValue(data, 17));
+                    AddDecimalParameter(command, Constants.AtFinancialRetirement, GetStringValue(data, 18));
+                    AddDecimalParameter(command, Constants.AtFinancialAlimony, GetStringValue(data, 19));
+                    AddDecimalParameter(command, Constants.AtFinancialInvestment, GetStringValue(data, 20));
+                    AddDecimalParameter(command, Constants.AtFinancialWorkersCompensation, GetStringValue(data, 21));
+                    command.Parameters.AddWithValue(Constants.AtFinancialOther1, GetStringValue(data, 22)?.Trim('"'));
+                    AddDecimalParameter(command, Constants.AtFinancialOtherAmount1, GetStringValue(data, 23));
+                    command.Parameters.AddWithValue(Constants.AtFinancialOther2, GetStringValue(data, 24)?.Trim('"'));
+                    AddDecimalParameter(command, Constants.AtFinancialOtherAmount2, GetStringValue(data, 25));
+                    command.Parameters.AddWithValue(Constants.AtFinancialOther3, GetStringValue(data, 26)?.Trim('"'));
+                    AddDecimalParameter(command, Constants.AtFinancialOtherAmount3, GetStringValue(data, 27));
+                    command.Parameters.AddWithValue(Constants.AtFinancialHasNoSourceOfIncome, GetStringValue(data, 28)?.Trim('"'));
+                    AddDecimalParameter(command, Constants.AtFinancialHouseholdIncome, GetStringValue(data, 29));
+                    command.Parameters.AddWithValue(Constants.AtFinancialIsHouseholdIncomeMonthly, GetStringValue(data, 30)?.Trim('"'));
+                    AddIntParameter(command, Constants.AtFinancialPeopleInHousehold, GetStringValue(data, 31));
+                    AddIntParameter(command, Constants.AtFinancialChildrenInHousehold, GetStringValue(data, 32));
+                    command.Parameters.AddWithValue(Constants.AtFinancialHivPositiveInHousehold, GetStringValue(data, 33)?.Trim('"'));
+                    command.Parameters.AddWithValue(Constants.AtFinancialHouseholdPovertyLevelbyGroup, GetStringValue(data, 34)?.Trim('"'));
+                    command.Parameters.AddWithValue(Constants.AtFinancialHouseholdPovertyLevel, GetStringValue(data, 35)?.Trim('"'));
+                    AddDecimalParameter(command, Constants.AtFinancialFamilyIncome, GetStringValue(data, 36));
+                    command.Parameters.AddWithValue(Constants.AtFinancialIsFamilyIncomeMonthly, GetStringValue(data, 37)?.Trim('"'));
+                    AddIntParameter(command, Constants.AtFinancialPeopleInFamily, GetStringValue(data, 38));
+                    command.Parameters.AddWithValue(Constants.AtFinancialFamilyPovertyLevel, GetStringValue(data, 39)?.Trim('"'));
+                    command.Parameters.AddWithValue(Constants.AtFinancialOwnsHouse, GetStringValue(data, 40)?.Trim('"'));
+                    command.Parameters.AddWithValue(Constants.AtFinancialOwnsCar, GetStringValue(data, 41)?.Trim('"'));
+                    command.Parameters.AddWithValue(Constants.AtFinancialHasOtherAssets, GetStringValue(data, 42)?.Trim('"'));
+                    AddDecimalParameter(command, Constants.AtFinancialOtherAssets, GetStringValue(data, 43));
+                    command.Parameters.AddWithValue(Constants.AtFinancialLastSavedDate, GetStringValue(data, 44)?.Trim('"'));
+                    command.Parameters.AddWithValue(Constants.AtFinancialCreateSource, GetStringValue(data, 45)?.Trim('"'));
+                    command.Parameters.AddWithValue(Constants.AtDownloadDate, DateTime.Parse(Constants.TwoThreeFour));
                     command.Parameters.AddWithValue(Constants.AtExtracted, Constants.ExtractedCode);
-                    command.Parameters.AddWithValue(Constants.AtExtractionDate, DateTime.Parse("2/3/4"));
+                    command.Parameters.AddWithValue(Constants.AtExtractionDate, DateTime.Parse(Constants.TwoThreeFour));
                     command.Parameters.AddWithValue(Constants.AtCmsMatch, Constants.CmsMatchCode);
-                    command.Parameters.AddWithValue(Constants.AtCmsMatchDate, DateTime.Parse("2/3/4"));
+                    command.Parameters.AddWithValue(Constants.AtCmsMatchDate, DateTime.Parse(Constants.TwoThreeFour));
                     command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
                     command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now); // Or provide the appropriate DateTime value
 
@@ -1562,9 +1562,9 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                error = $"Error inserting client parameters into the table: {ex.Message}\n{ex.StackTrace}";
+                error = $"{Constants.ErrorInsertingClientParametersIntoTheTable}{ex.Message}\n{ex.StackTrace}";
                 Console.WriteLine(error);
-                Log($"{ex.Message}", Constants.Error, "DlFinancials", Constants.Uploadct); // Assuming fileName is accessible here
+                Log($"{ex.Message}", Constants.Error, Constants.DlFinancials, Constants.Uploadct); // Assuming fileName is accessible here
                 throw;// Log the error
             }
         }
@@ -1581,7 +1581,7 @@ namespace RWDE
                     else
                     {
                         // Log or handle the invalid value
-                        Console.WriteLine($"Invalid decimal value: {value}");
+                        Console.WriteLine($"{Constants.InvalidDecimalValue}{value}");
                         command.Parameters.AddWithValue(parameterName, DBNull.Value);
                     }
                 }
@@ -1609,7 +1609,7 @@ namespace RWDE
                     else
                     {
                         // Log or handle the invalid value
-                        Console.WriteLine($"Invalid integer value: {value}");
+                        Console.WriteLine($"{Constants.InvalidIntegerValue}{value}");
                         command.Parameters.AddWithValue(parameterName, DBNull.Value);
                     }
                 }
@@ -1681,11 +1681,11 @@ namespace RWDE
                     SqlCommand cmd = conn.CreateCommand();
                     //cmd.Transaction = trans; // Assign the transaction to the command
                     cmd.CommandType = CommandType.StoredProcedure;
-                    var procedure = value ? "InsertCTClientsFromXMLPHIMASKINGTEST" : "InsertCTClientsFromXML";
+                    var procedure = value ? Constants.InsertCtClientsFromXmlPhiMaskingTest : Constants.InsertCtClientsFromXml;
                     cmd.CommandText = procedure;
 
                     // Set the parameters for the stored procedure
-                    SqlParameter xmlDataParam = new SqlParameter("@XmlData", SqlDbType.Xml);
+                    SqlParameter xmlDataParam = new SqlParameter(Constants.XmlData, SqlDbType.Xml);
                     xmlDataParam.Value = new SqlXml(new XmlTextReader(new StringReader(xmlDoc.OuterXml)));
                     cmd.Parameters.Add(xmlDataParam);
 
@@ -1715,38 +1715,34 @@ namespace RWDE
             try
             {
                 // Process each Client node in the XML document
-                foreach (XmlNode clientNode in xmlDoc.SelectNodes("//Client"))
+                foreach (XmlNode clientNode in xmlDoc.SelectNodes(Constants.BkslashClient))
                 {
-                    XmlAttribute ariesIdAttribute = clientNode.Attributes["ariesID"];
+                    XmlAttribute ariesIdAttribute = clientNode.Attributes[Constants.AriesId];
                     if (ariesIdAttribute != null && int.TryParse(ariesIdAttribute.Value, out int ariesId))
                     {
                         // Check if the Client node contains EligibilityDocument nodes
-                        if (clientNode.SelectNodes("EligibilityDocument").Count > 0)
+                        if (clientNode.SelectNodes(Constants.EligibilityDocument).Count > 0)
                         {
-                            XmlNode agencySpecificsNode = clientNode.SelectSingleNode("AgencySpecifics");
+                            XmlNode agencySpecificsNode = clientNode.SelectSingleNode(Constants.AgencySpecifics);
                             if (agencySpecificsNode != null && agencySpecificsNode.Attributes != null)
                             {
-                                int agencyClientId = int.Parse(agencySpecificsNode.Attributes["agencyClientID1"].Value);
+                                int agencyClientId = int.Parse(agencySpecificsNode.Attributes[Constants.AgencyClientId1].Value);
 
                                 // Check if the AgencyClientID and AriesID pair should be inserted
                                 if (ShouldInsertAgencyClient(agencyClientId, ariesId, xmlDoc))
                                 {
                                     // Process each EligibilityDocument node within the Client node
-                                    foreach (XmlNode eligibilityNode in clientNode.SelectNodes("EligibilityDocument"))
+                                    foreach (XmlNode eligibilityNode in clientNode.SelectNodes(Constants.EligibilityDocument))
                                     {
-                                        string documentType = GetAttributeValue(eligibilityNode, "documentType");
-                                        DateTime? documentDate = GetNullableDateTimeAttributeValue(eligibilityNode, "documentDate");
-                                        DateTime? obtainDate = GetNullableDateTimeAttributeValue(eligibilityNode, "obtainDate");
-                                        DateTime? expireDate = GetNullableDateTimeAttributeValue(eligibilityNode, "expireDate");
-                                        string source = GetAttributeValue(eligibilityNode, "source");
-                                        string notes = GetAttributeValue(eligibilityNode, "notes");
+                                        string documentType = GetAttributeValue(eligibilityNode, Constants.DocumentType);
+                                        DateTime? documentDate = GetNullableDateTimeAttributeValue(eligibilityNode, Constants.DocumentDate);
+                                        DateTime? obtainDate = GetNullableDateTimeAttributeValue(eligibilityNode, Constants.ObtainDate);
+                                        DateTime? expireDate = GetNullableDateTimeAttributeValue(eligibilityNode, Constants.ExpireDate);
+                                        string source = GetAttributeValue(eligibilityNode, Constants.Source);
+                                        string notes = GetAttributeValue(eligibilityNode, Constants.Notes);
 
                                         // Prepare and execute SQL command to insert into EligibilityDocuments table within the transaction
-                                        using (SqlCommand insertCmd = new SqlCommand(
-                                                   "INSERT INTO [RWDE].[dbo].[CTClientsEligibilityDoc] " +
-                                                   "(DocumentType, DocumentDate, ObtainDate, ExpireDate, Source, Notes, BatchID, AgencyClientID1, AriesID, CreatedBy, CreatedOn, EligibilityDocID) " +
-                                                   "VALUES (@DocumentType, @DocumentDate, @ObtainDate, @ExpireDate, @Source, @Notes, @BatchID, @AgencyClientID1, @AriesID, @CreatedBy, @CreatedOn, @EligibilityDocID)",
-                                                   conn))
+                                        using (SqlCommand insertCmd = new SqlCommand(Constants.CTClientsEligibilityDocQuery,conn))
                                         {
                                             // Set SQL parameters based on the values extracted from the XML document
                                             insertCmd.Parameters.AddWithValue(Constants.AtDocumentType, string.IsNullOrEmpty(documentType) ? (object)DBNull.Value : documentType);
@@ -1754,13 +1750,13 @@ namespace RWDE
                                             insertCmd.Parameters.AddWithValue(Constants.AtObtainDate, obtainDate ?? (object)DBNull.Value);
                                             insertCmd.Parameters.AddWithValue(Constants.AtExpireDate, expireDate ?? (object)DBNull.Value);
                                             insertCmd.Parameters.AddWithValue(Constants.AtSource, string.IsNullOrEmpty(source) ? (object)DBNull.Value : source);
-                                            insertCmd.Parameters.AddWithValue("@Notes", string.IsNullOrEmpty(notes) ? (object)DBNull.Value : notes);
+                                            insertCmd.Parameters.AddWithValue(Constants.AtNotesCaps, string.IsNullOrEmpty(notes) ? (object)DBNull.Value : notes);
                                             insertCmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                                             insertCmd.Parameters.AddWithValue(Constants.AtAgencyClientId1, agencyClientId);
-                                            insertCmd.Parameters.AddWithValue("@AriesID", ariesId);
+                                            insertCmd.Parameters.AddWithValue(Constants.AtAriesID, ariesId);
                                             insertCmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a constant value for CreatedBy
                                             insertCmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now); // Current date/time
-                                            insertCmd.Parameters.AddWithValue("@EligibilityDocID", insertedCount % 3 + 1); // Incremental EligibilityDocumentID
+                                            insertCmd.Parameters.AddWithValue(Constants.AtEligibilityDocID, insertedCount % 3 + 1); // Incremental EligibilityDocumentID
 
                                             // Execute the insert command
                                             insertCmd.ExecuteNonQuery();
@@ -1776,7 +1772,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log error for the main insertion process
-                Console.WriteLine("Error inserting eligibility documents: " + ex.Message);
+                Console.WriteLine(Constants.ErrorInsertingEligibilityDocuments + ex.Message);
                 LogError($"{ex.Message}", fileName);
                 // Return zero inserted count to indicate failure
                 return 0;
@@ -1788,7 +1784,7 @@ namespace RWDE
         private bool ShouldInsertAgencyClient(int agencyClientId, int ariesId, XmlDocument xmlDoc)
         {
             // Check if the AgencyClientID and AriesID pair has associated EligibilityDocument nodes in the XML
-            XmlNodeList eligibilityNodes = xmlDoc.SelectNodes($"//Client[@ariesID='{ariesId}']/EligibilityDocument");
+            XmlNodeList eligibilityNodes = xmlDoc.SelectNodes(string.Format(Constants.ClientariesIDEligibilityDocument, ariesId)); 
 
             return eligibilityNodes != null && eligibilityNodes.Count > 0;
         }
@@ -1818,39 +1814,39 @@ namespace RWDE
             try
             {
                 // Process each ServiceLineItem node in the XML document
-                foreach (XmlNode serviceNode in xmlDoc.SelectNodes("//ServiceLineItem"))
+                foreach (XmlNode serviceNode in xmlDoc.SelectNodes(Constants.BkslashServiceLineItem))
                 {
                     // Create SqlCommand for the stored procedure within the transaction
-                    using (SqlCommand insertCmd = new SqlCommand("InsertServiceLineItemFromXMLPHI", conn))
+                    using (SqlCommand insertCmd = new SqlCommand(Constants.InsertServiceLineItemFromXmlPhi, conn))
                     {
                         insertCmd.CommandType = CommandType.StoredProcedure;
-                        string clientAriesId = GetAttributeValue(serviceNode, "_clientAriesID");
+                        string clientAriesId = GetAttributeValue(serviceNode, Constants.ClientAriesID);
                         if (clientAriesId == null)
                         {
-                            insertCmd.Parameters.AddWithValue("@ClientAriesID", DBNull.Value);
+                            insertCmd.Parameters.AddWithValue(Constants.AtClientAriesID, DBNull.Value);
                         }
                         else
                         {
-                            insertCmd.Parameters.AddWithValue("@ClientAriesID", clientAriesId);
+                            insertCmd.Parameters.AddWithValue(Constants.AtClientAriesID, clientAriesId);
                         }
                         // Set parameters for the stored procedure based on node attributes
-                        insertCmd.Parameters.AddWithValue("@ClientURNExt", GetAttributeValue(serviceNode, "_clientURNExt"));
-                        insertCmd.Parameters.AddWithValue("@SiteName", GetAttributeValue(serviceNode, "_siteName"));
-                        insertCmd.Parameters.AddWithValue("@StaffLogin", GetAttributeValue(serviceNode, "_staffLogin"));
-                        insertCmd.Parameters.AddWithValue("@ContractName", GetAttributeValue(serviceNode, "_contractName"));
-                        insertCmd.Parameters.AddWithValue("@ServiceDate", GetDateTimeValue(serviceNode, "serviceDate"));
-                        insertCmd.Parameters.AddWithValue("@Program", GetAttributeValue(serviceNode, "program"));
-                        insertCmd.Parameters.AddWithValue("@PrimaryService", GetAttributeValue(serviceNode, "primaryService"));
-                        insertCmd.Parameters.AddWithValue("@SecondaryService", GetAttributeValue(serviceNode, "secondaryService"));
-                        insertCmd.Parameters.AddWithValue("@Subservice", GetAttributeValue(serviceNode, "subservice"));
-                        insertCmd.Parameters.AddWithValue("@UnitsOfService", GetDecimalValue(serviceNode, "unitsOfService"));
-                        insertCmd.Parameters.AddWithValue("@RateForUnitOfService", GetDecimalValue(serviceNode, "rateForUnitOfService"));
-                        insertCmd.Parameters.AddWithValue("@MeasurementUnit", GetAttributeValue(serviceNode, "measurementUnit"));
-                        insertCmd.Parameters.AddWithValue("@TotalCost", GetDecimalValue(serviceNode, "totalCost"));
-                        insertCmd.Parameters.AddWithValue("@Notes", GetAttributeValue(serviceNode, "notes"));
+                        insertCmd.Parameters.AddWithValue(Constants.AtClientUrnExt, GetAttributeValue(serviceNode, Constants.ClientUrnExt));
+                        insertCmd.Parameters.AddWithValue(Constants.AtSiteName, GetAttributeValue(serviceNode, Constants.SiteName));
+                        insertCmd.Parameters.AddWithValue(Constants.AtStaffLogin, GetAttributeValue(serviceNode, Constants.StaffLogin));
+                        insertCmd.Parameters.AddWithValue(Constants.AtContractName, GetAttributeValue(serviceNode, Constants.ContractNamesmall));
+                        insertCmd.Parameters.AddWithValue(Constants.AtServiceDateCaps, GetDateTimeValue(serviceNode, Constants.ServiceDatesmall));
+                        insertCmd.Parameters.AddWithValue(Constants.AtProgram, GetAttributeValue(serviceNode, Constants.Program));
+                        insertCmd.Parameters.AddWithValue(Constants.AtPrimaryService, GetAttributeValue(serviceNode, Constants.PrimaryServiceSmall));
+                        insertCmd.Parameters.AddWithValue(Constants.AtSecondaryService, GetAttributeValue(serviceNode, Constants.SecondaryServiceSmall));
+                        insertCmd.Parameters.AddWithValue(Constants.AtSubservice, GetAttributeValue(serviceNode, Constants.Subservice));
+                        insertCmd.Parameters.AddWithValue(Constants.AtUnitsOfService, GetDecimalValue(serviceNode, Constants.UnitsOfService));
+                        insertCmd.Parameters.AddWithValue(Constants.AtRateForUnitOfService, GetDecimalValue(serviceNode, Constants.RateForUnitOfService));
+                        insertCmd.Parameters.AddWithValue(Constants.AtMeasurementUnit, GetAttributeValue(serviceNode, Constants.MeasurementUnit));
+                        insertCmd.Parameters.AddWithValue(Constants.AtTotalCost, GetDecimalValue(serviceNode, Constants.TotalCost));
+                        insertCmd.Parameters.AddWithValue(Constants.AtNotesCaps, GetAttributeValue(serviceNode, Constants.Notes));
                         insertCmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         insertCmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a constant value for CreatedBy
-                        insertCmd.Parameters.AddWithValue("@ActualMinutesSpent", GetAttributeValueOrDefault<object>(serviceNode, "actualTimeSpentMinutes", DBNull.Value));
+                        insertCmd.Parameters.AddWithValue(Constants.AtActualMinutesSpentCaps, GetAttributeValueOrDefault<object>(serviceNode, Constants.ActualTimeSpentMinutes, DBNull.Value));
                         insertCmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
                         // Extract and set ServiceID
@@ -1868,7 +1864,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log error for the main insertion process
-                LogError($"Error inserting service line items: {ex.Message}", fileName);
+                LogError($"{Constants.ErrorInsertingServiceLineItems}{ex.Message}", fileName);
 
                 // Return zero inserted count to indicate failure
             }
@@ -1946,15 +1942,14 @@ namespace RWDE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO Logger (Type, Module, Stack, Message, FileName, LineNumber, FunctionName, Comments, CreatedBy, CreatedOn) " +
-                                                    "VALUES (@Type, @Module, @Stack, @Message, @FileName, @LineNumber, @FunctionName, @Comments, @CreatedBy, @CreatedOn)", conn);
+                    SqlCommand cmd = new SqlCommand(Constants.LoggingErrorQuery, conn);
                     cmd.Parameters.AddWithValue(Constants.AtType, Constants.ErrorCode); // Error type
-                    cmd.Parameters.AddWithValue("@Module", Constants.Module); // Module name
-                    cmd.Parameters.AddWithValue("@Stack", stackTrace);
-                    cmd.Parameters.AddWithValue("@Message", message);
+                    cmd.Parameters.AddWithValue(Constants.AtModule, Constants.Module); // Module name
+                    cmd.Parameters.AddWithValue(Constants.AtStack, stackTrace);
+                    cmd.Parameters.AddWithValue(Constants.AtMessage, message);
                     cmd.Parameters.AddWithValue(Constants.AtFilename, fileName);
-                    cmd.Parameters.AddWithValue("@LineNumber", lineNumber);
-                    cmd.Parameters.AddWithValue("@FunctionName", functionName);
+                    cmd.Parameters.AddWithValue(Constants.AtLineNumber, lineNumber);
+                    cmd.Parameters.AddWithValue(Constants.AtFunctionName, functionName);
                     cmd.Parameters.AddWithValue(Constants.AtComments, null);
                     cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a specific user ID
                     cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
@@ -1972,13 +1967,13 @@ namespace RWDE
         }
         private string ExtractServiceId(XmlNode serviceNode)//extracting variables according to the format
         {
-            string notes = GetAttributeValue(serviceNode, "notes");
+            string notes = GetAttributeValue(serviceNode, Constants.Notes);
 
-            // Check if notes attribute starts with "{Constants.AtIdEqualTto}", "{Constants.AtIdEqualTtoCaps}", "Id-", or "Id:"
-            if (notes.StartsWith($"{Constants.AtIdEqualTto}") || notes.StartsWith($"{Constants.AtIdEqualTtoCaps}") || notes.StartsWith("Id-") || notes.StartsWith("Id:"))
+            // Check if notes attribute starts with "{Constants.AtIdEqualTto}", "{Constants.AtIdEqualTtoCaps}", Constants.IdHyphen, or Constants.IdColon
+            if (notes.StartsWith($"{Constants.AtIdEqualTto}") || notes.StartsWith($"{Constants.AtIdEqualTtoCaps}") || notes.StartsWith(Constants.IdHyphen) || notes.StartsWith(Constants.IdColon))
             {
                 // Find the index of the first occurrence of "=", "-", or ":"
-                int separatorIndex = notes.IndexOfAny(new char[] { '=', '-', ':' });
+                int separatorIndex = notes.IndexOfAny(new char[] { Constants.EqualTo, Constants.Hyphen, Constants.Colon });
 
                 // If separatorIndex is found
                 if (separatorIndex != -1)
@@ -1998,14 +1993,14 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand("InsertLog", connection);
+                    SqlCommand command = new SqlCommand(Constants.InsertLog, connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue(Constants.AtType, type);
-                    command.Parameters.AddWithValue("@Message", message);
-                    command.Parameters.AddWithValue("@Module", module);
+                    command.Parameters.AddWithValue(Constants.AtMessage, message);
+                    command.Parameters.AddWithValue(Constants.AtModule, module);
                     command.Parameters.AddWithValue(Constants.AtFilename, baseFilename);
-                    command.Parameters.AddWithValue("@LineNumber", DBNull.Value);
-                    command.Parameters.AddWithValue("@FunctionName", DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtLineNumber, DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtFunctionName, DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtComments, DBNull.Value);
 
                     command.Parameters.AddWithValue(Constants.AtCreatedBy, 100);
@@ -2016,7 +2011,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error logging message: {ex.Message}");
+                Console.WriteLine($"{Constants.ErrorLoggingMessage}{ex.Message}");
             }
         }
         public void DeleteBatchochin(string batchId)//Delete All Values form all tables 
@@ -2028,7 +2023,7 @@ namespace RWDE
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
 
-                    using (SqlCommand command = new SqlCommand("DeleteochinBatchDatas", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.DeleteOchinBatchDatas, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
@@ -2064,27 +2059,27 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exception (logging, rethrow, etc.)
-                throw new Exception($"Error deleting batch: {batchId}", ex);
+                throw new Exception($"{Constants.ErrorDeletingBatch}{batchId}", ex);
             }
         }
         private string GetStoredProcedureByType(string type)//Calling storeProcedure 
         {
             // Adjust the stored procedure name based on the batch type
-            if (type == "Client Track")
+            if (type == Constants.ClientTrack)
             {
-                return "DeleteBatchData";
+                return Constants.DeleteBatchData;
             }
-            else if (type == "HCC")
+            else if (type ==Constants.Hccdata)
             {
-                return "DeleteHccBatchData";
+                return Constants.DeleteHccBatchData;
             }
-            else if (type == "OCHIN")
+            else if (type ==Constants.Ochin)
             {
-                return "OCHINDATADELETE";
+                return Constants.OchinDataDelete;
             }
             else
             {
-                return "OCHINDATADELETE";
+                return Constants.OchinDataDelete;
             }
         }
         public DataTable GetAllBatches()//Get all Values from Batch Table
@@ -2094,7 +2089,7 @@ namespace RWDE
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
-                using (SqlCommand command = new SqlCommand("ViewAllBatchDatas", connection))
+                using (SqlCommand command = new SqlCommand(Constants.ViewAllBatchDatas, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
@@ -2106,7 +2101,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exception (logging, rethrow, etc.)
-                throw new Exception("Error retrieving batch data", ex);
+                throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
             return dataTable;
         }
@@ -2118,7 +2113,7 @@ namespace RWDE
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
-                using (SqlCommand command = new SqlCommand("ViewAllBatchDatasLOAD", connection))
+                using (SqlCommand command = new SqlCommand(Constants.ViewAllBatchDatasLoad, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
@@ -2130,7 +2125,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exception (logging, rethrow, etc.)
-                throw new Exception("Error retrieving batch data", ex);
+                throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
             return dataTable;
         }
@@ -2142,7 +2137,7 @@ namespace RWDE
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
-                using (SqlCommand command = new SqlCommand("ViewAllBatchDatasHCC", connection))
+                using (SqlCommand command = new SqlCommand(Constants.ViewAllBatchDatasHcc, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
@@ -2154,7 +2149,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exception (logging, rethrow, etc.)
-                throw new Exception("Error retrieving batch data", ex);
+                throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
             return dataTable;
         }
@@ -2167,7 +2162,7 @@ namespace RWDE
                 {
                     connection.Open();
 
-                    SqlCommand command = new SqlCommand("SELECT ISNULL(MAX(BatchID), 0) FROM Batch", connection);
+                    SqlCommand command = new SqlCommand(Constants.GetNextBatchIdQuery, connection);
                     int lastBatchIdFromDb = (int)command.ExecuteScalar();
 
                     if (batchId || !batchIdIncremented)
@@ -2193,12 +2188,12 @@ namespace RWDE
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
-                using (SqlCommand command = new SqlCommand("GetParticularBatchDatas", connection))
+                using (SqlCommand command = new SqlCommand(Constants.GetParticularBatchDatas, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@BatchType", batchType);
-                    command.Parameters.AddWithValue("@FromDate", fromDate);
-                    command.Parameters.AddWithValue("@EndDate", endDate);
+                    command.Parameters.AddWithValue(Constants.AtBatchType, batchType);
+                    command.Parameters.AddWithValue(Constants.AtFromDate, fromDate);
+                    command.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
                         adapter.Fill(dataTable);
@@ -2208,7 +2203,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exception (logging, rethrow, etc.)
-                throw new Exception("Error retrieving batch data", ex);
+                throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
             return dataTable;
         }
@@ -2217,7 +2212,7 @@ namespace RWDE
             List<string> batchTypeValues = new List<string>();
             try
             {
-                string query = "GETALLBATCHTYPE";
+                string query = Constants.GetAllBatchType;
 
                 using (SqlConnection sql = new SqlConnection(connectionString))
                 {
@@ -2229,7 +2224,7 @@ namespace RWDE
                         {
                             while (reader.Read())
                             {
-                                batchTypeValues.Add(reader["Value"].ToString());
+                                batchTypeValues.Add(reader[Constants.Value].ToString());
                             }
                         }
                     }
@@ -2248,7 +2243,7 @@ namespace RWDE
             List<string> batchTypeValues = new List<string>();
             try
             {
-                string query = "GETALLBATCHTYPEHCC";
+                string query = Constants.GetAllBatchTypeHcc;
 
                 using (SqlConnection sql = new SqlConnection(connectionString))
                 {
@@ -2260,7 +2255,7 @@ namespace RWDE
                         {
                             while (reader.Read())
                             {
-                                batchTypeValues.Add(reader["Value"].ToString());
+                                batchTypeValues.Add(reader[Constants.Value].ToString());
                             }
                         }
                     }
@@ -2279,7 +2274,7 @@ namespace RWDE
             List<string> batchTypeValues = new List<string>();
             try
             {
-                string query = "GETALLBATCHTYPEview";
+                string query = Constants.GETALLBATCHTYPEview;
 
                 using (SqlConnection sql = new SqlConnection(connectionString))
                 {
@@ -2291,7 +2286,7 @@ namespace RWDE
                         {
                             while (reader.Read())
                             {
-                                batchTypeValues.Add(reader["Value"].ToString());
+                                batchTypeValues.Add(reader[Constants.Value].ToString());
                             }
                         }
                     }
@@ -2312,12 +2307,12 @@ namespace RWDE
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
-                using (SqlCommand command = new SqlCommand("GetParticularConversionDatas", connection))
+                using (SqlCommand command = new SqlCommand(Constants.GetParticularConversionDatas, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@BatchType", batchType);
-                    command.Parameters.AddWithValue("@FromDate", fromDate);
-                    command.Parameters.AddWithValue("@EndDate", endDate);
+                    command.Parameters.AddWithValue(Constants.AtBatchType, batchType);
+                    command.Parameters.AddWithValue(Constants.AtFromDate, fromDate);
+                    command.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
                         adapter.Fill(dataTable);
@@ -2339,12 +2334,12 @@ namespace RWDE
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
-                using (SqlCommand command = new SqlCommand("GetParticularnGenerationDatasCONVERSIONxml", connection))
+                using (SqlCommand command = new SqlCommand(Constants.GetParticularnGenerationDatasConversionXml, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@BatchType", batchType);
-                    command.Parameters.AddWithValue("@FromDate", fromDate);
-                    command.Parameters.AddWithValue("@EndDate", endDate);
+                    command.Parameters.AddWithValue(Constants.AtBatchType, batchType);
+                    command.Parameters.AddWithValue(Constants.AtFromDate, fromDate);
+                    command.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
                         adapter.Fill(dataTable);
@@ -2354,7 +2349,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exception (logging, rethrow, etc.)
-                throw new Exception("Error retrieving batch data", ex);
+                throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
             return dataTable;
         }
@@ -2365,12 +2360,12 @@ namespace RWDE
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
-                using (SqlCommand command = new SqlCommand("GetParticularnGenerationDatasCONVERSION", connection))
+                using (SqlCommand command = new SqlCommand(Constants.GetParticularnGenerationDatasConversion, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@BatchType", batchType);
-                    command.Parameters.AddWithValue("@FromDate", fromDate);
-                    command.Parameters.AddWithValue("@EndDate", endDate);
+                    command.Parameters.AddWithValue(Constants.AtBatchType, batchType);
+                    command.Parameters.AddWithValue(Constants.AtFromDate, fromDate);
+                    command.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
                         adapter.Fill(dataTable);
@@ -2380,7 +2375,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exception (logging, rethrow, etc.)
-                throw new Exception("Error retrieving batch data", ex);
+                throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
             return dataTable;
         }
@@ -2393,12 +2388,12 @@ namespace RWDE
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
-                using (SqlCommand command = new SqlCommand("GetParticularnGenerationDatasCONVERSIONHCC", connection))
+                using (SqlCommand command = new SqlCommand(Constants.GetParticularnGenerationDatasConversionHcc, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@BatchType", batchType);
-                    command.Parameters.AddWithValue("@FromDate", fromDate);
-                    command.Parameters.AddWithValue("@EndDate", endDate);
+                    command.Parameters.AddWithValue(Constants.AtBatchType, batchType);
+                    command.Parameters.AddWithValue(Constants.AtFromDate, fromDate);
+                    command.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
                         adapter.Fill(dataTable);
@@ -2408,7 +2403,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exception (logging, rethrow, etc.)
-                throw new Exception("Error retrieving batch data", ex);
+                throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
 
             return dataTable;
@@ -2419,7 +2414,7 @@ namespace RWDE
             DataTable dataTable = new DataTable();
 
             // Define the name of the stored procedure
-            string storedProcedureName = "GetAllContractLists"; // Change to the actual stored procedure name
+            string storedProcedureName = Constants.GetAllContractLists; // Change to the actual stored procedure name
 
             try
             {
@@ -2456,7 +2451,7 @@ namespace RWDE
         public DataTable GetAllServiceLists()//to retrive the service list data
         {
             DataTable dataTable = new DataTable();
-            string query = "sp_GetTopServiceCodeSetup";
+            string query = Constants.Sp_GetTopServiceCodeSetup;
 
             try
             {
@@ -2473,7 +2468,7 @@ namespace RWDE
                 }
                 if (dataTable.Rows.Count == 0)
                 {
-                    Console.WriteLine("Query executed, but no data found.");
+                    Console.WriteLine(Constants.QueryExecutedButNoDataFound);
                 }
             }
             catch (Exception ex)
@@ -2545,13 +2540,13 @@ namespace RWDE
                                 results.Add(row);
 
                                 // Collect data for batch insert
-                                int clientId = Convert.ToInt32(reader["Clnt_id"]); // Replace with actual column name
+                                int clientId = Convert.ToInt32(reader[Constants.Clntid]); // Replace with actual column name
                                 DateTime date = DateTime.Now;
 
                                 insertData.Add(new SqlParameter[]
                                 {
-                                    new SqlParameter("@Clientid", clientId),
-                                    new SqlParameter("@Datetime", date)
+                                    new SqlParameter(Constants.AtClientid, clientId),
+                                    new SqlParameter(Constants.AtDatetime, date)
                                 });
                             }
                         }
@@ -2569,7 +2564,7 @@ namespace RWDE
                         {
                             foreach (var parameters in insertData)
                             {
-                                using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", connection, transaction))
+                                using (SqlCommand cmd = new SqlCommand(Constants.InsertXmlgeneratorTimeServices, connection, transaction))
                                 {
                                     cmd.CommandType = CommandType.StoredProcedure;
                                     cmd.Parameters.AddRange(parameters);
@@ -2580,7 +2575,6 @@ namespace RWDE
                         }
                     }
                 }
-
                 return results;
             }
             catch (Exception ex)
@@ -2617,13 +2611,13 @@ namespace RWDE
                                 results.Add(row);
 
                                 // Collect data for batch insert
-                                int clientId = Convert.ToInt32(reader["Clnt_id"]); // Replace with actual column name
+                                int clientId = Convert.ToInt32(reader[Constants.Clntid]); // Replace with actual column name
                                 DateTime date = DateTime.Now;
 
                                 insertData.Add(new SqlParameter[]
                                 {
-                                    new SqlParameter("@Clientid", clientId),
-                                    new SqlParameter("@Datetime", date)
+                                    new SqlParameter(Constants.AtClientid, clientId),
+                                    new SqlParameter(Constants.AtDatetime, date)
                                 });
                             }
                         }
@@ -2641,7 +2635,7 @@ namespace RWDE
                         {
                             foreach (var parameters in insertData)
                             {
-                                using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeServices", connection, transaction))
+                                using (SqlCommand cmd = new SqlCommand(Constants.InsertXmlgeneratorTimeServices, connection, transaction))
                                 {
                                     cmd.CommandType = CommandType.StoredProcedure;
                                     cmd.Parameters.AddRange(parameters);
@@ -2695,7 +2689,7 @@ namespace RWDE
         public DataTable GetDataFromDatabase()//get clients rows count from table
         {
             DataTable dataTable = new DataTable();
-            string storedProcedureName = "spCreateDeceasedClientViewcount";
+            string storedProcedureName = Constants.SpCreateDeceasedClientViewCount;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -2760,7 +2754,7 @@ namespace RWDE
                 var results = new List<Dictionary<string, string>>();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand("clientgeneratorXMLDEMO", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.ClientGeneratorXmlDemo, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
@@ -2776,7 +2770,7 @@ namespace RWDE
                                     var value = reader[i];
                                     if (value is bool)
                                     {
-                                        row[columnName] = (bool)value ? "1" : "0";
+                                        row[columnName] = (bool)value ? Constants.One : Constants.Zero;
                                     }
                                     else
                                     {
@@ -2786,12 +2780,12 @@ namespace RWDE
                                 results.Add(row);
                                 using (SqlConnection con = new SqlConnection(connectionString))
                                 {
-                                    using (SqlCommand cmd = new SqlCommand("insertXMLgeneratortimeClient", con))
+                                    using (SqlCommand cmd = new SqlCommand(Constants.InsertXmlgeneratorTimeClient, con))
                                     {
                                         cmd.CommandType = CommandType.StoredProcedure;
                                         DateTime date = DateTime.Now;
-                                        cmd.Parameters.AddWithValue("@Clientid", Convert.ToInt32(reader[32])); // Convert clientid to int
-                                        cmd.Parameters.AddWithValue("@Datetime", date);
+                                        cmd.Parameters.AddWithValue(Constants.AtClientid, Convert.ToInt32(reader[32])); // Convert clientid to int
+                                        cmd.Parameters.AddWithValue(Constants.AtDatetime, date);
                                         con.Open();
                                         // Execute the second command here, after the reader is done with the row data
                                         cmd.ExecuteNonQuery();
@@ -2835,12 +2829,12 @@ namespace RWDE
 
                                     if (value is bool)
                                     {
-                                        row[columnName] = (bool)value ? "1" : "0";
+                                        row[columnName] = (bool)value ? Constants.One : Constants.Zero;
                                     }
                                     else if (value is DateTime dateValue)
                                     {
                                         // Format date as yyyy/MM/dd
-                                        row[columnName] = dateValue.ToString("yyyy/MM/dd");
+                                        row[columnName] = dateValue.ToString(Constants.YyyyMmDdSlash);
                                     }
                                     else
                                     {
@@ -2856,28 +2850,28 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                throw new Exception("Error retrieving data", ex);
+                throw new Exception(Constants.ErrorRetrievingData, ex);
             }
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromMedC4(string clientid, int batchid)
         {
-            return FetchSubClientValues(clientid, batchid, "FetchSubClientDataFromMedCD4");
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedCd4);
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromMedVl(string clientid, int batchid)
         {
-            return FetchSubClientValues(clientid, batchid, "FetchSubClientDataFromMedVL");
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedVl);
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromHivTest(string clientid, int batchid)
         {
-            return FetchSubClientValues(clientid, batchid, "FetchSubClientDataFromHIVTest");
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromHivTest);
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromInsur(string clientid, int batchid)
         {
-            return FetchSubClientValues(clientid, batchid, "FetchSubClientDataFromInsur");
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromInsur);
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromRace(string clientid, int batchid)
         {
-            return FetchSubClientValues(clientid, batchid, "FetchSubClientDataFromRace");
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromRace);
         }
 
         private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;
@@ -2891,20 +2885,20 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertOrUpdateContract", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.InsertOrUpdateContract, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        command.Parameters.AddWithValue("@ContractID", contractId);
-                        command.Parameters.AddWithValue("@ContractName", contractName);
-                        command.Parameters.AddWithValue("@StartedDateTime", startedDateTime);
-                        command.Parameters.AddWithValue("@EndedDateTime", endedDateTime);
+                        command.Parameters.AddWithValue(Constants.AtContractID, contractId);
+                        command.Parameters.AddWithValue(Constants.AtContractName, contractName);
+                        command.Parameters.AddWithValue(Constants.AtStartedDateTime, startedDateTime);
+                        command.Parameters.AddWithValue(Constants.AtEndedDateTime, endedDateTime);
                         command.Parameters.AddWithValue(Constants.AtStatus, statusValue);
                         command.Parameters.AddWithValue(Constants.AtCreatedBy, createdBy);
                         command.Parameters.AddWithValue(Constants.AtCreatedOn, createdOn);
 
                         // Add output parameter
-                        SqlParameter outputParam = new SqlParameter("@Operation", SqlDbType.NVarChar, 50) { Direction = ParameterDirection.Output };
+                        SqlParameter outputParam = new SqlParameter(Constants.AtOperation, SqlDbType.NVarChar, 50) { Direction = ParameterDirection.Output };
                         command.Parameters.Add(outputParam);
 
                         connection.Open();
@@ -2918,7 +2912,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log the exception or handle it as per your application's error handling strategy
-                Console.WriteLine($"Error in InsertOrUpdateContract method: {ex.Message}");
+                Console.WriteLine($"{Constants.ErrorInInsertOrUpdateContractMethod}{ex.Message}");
                 throw; // Re-throw the exception to propagate it to the caller
             }
             return operation;
@@ -2931,7 +2925,7 @@ namespace RWDE
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
                 {
                     // Define the name of the stored procedure
-                    string storedProcedureName = "UpdateContractStatus";
+                    string storedProcedureName = Constants.UpdateContractStatus;
 
                     // Use a using statement to ensure the SqlCommand is properly disposed of after use
                     using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
@@ -2940,7 +2934,7 @@ namespace RWDE
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Add parameters to the SqlCommand
-                        command.Parameters.AddWithValue("@ContractID", contractId);
+                        command.Parameters.AddWithValue(Constants.AtContractID, contractId);
                         command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Open the database connection
@@ -2965,15 +2959,15 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand("UpdateContract", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.UpdateContract, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@ContractID", contractId);
-                        command.Parameters.AddWithValue("@ContractName", contractName);
-                        command.Parameters.AddWithValue("@StartedDateTime", startedDateTime);
-                        command.Parameters.AddWithValue("@EndedDateTime", endedDateTime);
+                        command.Parameters.AddWithValue(Constants.AtContractID, contractId);
+                        command.Parameters.AddWithValue(Constants.AtContractName, contractName);
+                        command.Parameters.AddWithValue(Constants.AtStartedDateTime, startedDateTime);
+                        command.Parameters.AddWithValue(Constants.AtEndedDateTime, endedDateTime);
                         command.Parameters.AddWithValue(Constants.AtStatus, status);
-                        command.Parameters.AddWithValue(Constants.AtCreatedBy, "sakku");
+                        command.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.Sakkusmall);
                         command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
                         connection.Open();
@@ -2993,7 +2987,7 @@ namespace RWDE
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
                 {
                     // Define the name of the stored procedure
-                    string storedProcedureName = "UpdateServiceCodeStatus";
+                    string storedProcedureName = Constants.UpdateServiceCodeStatus;
 
                     // Use a using statement to ensure the SqlCommand is properly disposed of after use
                     using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
@@ -3002,7 +2996,7 @@ namespace RWDE
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Add parameters to the SqlCommand
-                        command.Parameters.AddWithValue("@ServiceCodeID", serviceCodeId);
+                        command.Parameters.AddWithValue(Constants.AtServiceCodeID, serviceCodeId);
                         command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Open the database connection
@@ -3025,26 +3019,26 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertOrUpdateServiceCode", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.InsertOrUpdateServiceCode, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Add parameters
-                        command.Parameters.AddWithValue("@ServiceCodeID", serviceCodeId);
-                        command.Parameters.AddWithValue("@Service", service);
-                        command.Parameters.AddWithValue("@HCC_ExportToAries", hccExportToAries);
-                        command.Parameters.AddWithValue("@HCC_ContractID", hccContractId);
-                        command.Parameters.AddWithValue("@HCC_PrimaryService", hccPrimaryService);
-                        command.Parameters.AddWithValue("@HCC_SecondaryService", hccSecondaryService);
-                        command.Parameters.AddWithValue("@HCC_Subservice", hccSubservice);
-                        command.Parameters.AddWithValue("@UnitsOfMeasure", unitsOfMeasure);
-                        command.Parameters.AddWithValue("@UnitValue", unitValue);
+                        command.Parameters.AddWithValue(Constants.AtServiceCodeID, serviceCodeId);
+                        command.Parameters.AddWithValue(Constants.AtService, service);
+                        command.Parameters.AddWithValue(Constants.AtHCCExportToAries, hccExportToAries);
+                        command.Parameters.AddWithValue(Constants.AtHCCContractID, hccContractId);
+                        command.Parameters.AddWithValue(Constants.AtHCCPrimaryService, hccPrimaryService);
+                        command.Parameters.AddWithValue(Constants.AtHccSecondaryService, hccSecondaryService);
+                        command.Parameters.AddWithValue(Constants.AtHccSubservice, hccSubservice);
+                        command.Parameters.AddWithValue(Constants.AtUnitsOfMeasure, unitsOfMeasure);
+                        command.Parameters.AddWithValue(Constants.AtUnitValue, unitValue);
                         command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Add output parameter
                         SqlParameter outputParameter = new SqlParameter
                         {
-                            ParameterName = "@Operation",
+                            ParameterName = Constants.AtOperation,
                             SqlDbType = SqlDbType.NVarChar,
                             Size = 50,
                             Direction = ParameterDirection.Output
@@ -3078,26 +3072,26 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertOrUpdateServiceCode", connection))
+                    using (SqlCommand command = new SqlCommand(Constants.InsertOrUpdateServiceCode, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Add parameters
-                        command.Parameters.AddWithValue("@ServiceCodeID", serviceCodeId);
-                        command.Parameters.AddWithValue("@Service", service);
-                        command.Parameters.AddWithValue("@HCC_ExportToAries", hccExportToAries);
-                        command.Parameters.AddWithValue("@HCC_ContractID", hccContractId);
-                        command.Parameters.AddWithValue("@HCC_PrimaryService", hccPrimaryService);
-                        command.Parameters.AddWithValue("@HCC_SecondaryService", hccSecondaryService);
-                        command.Parameters.AddWithValue("@HCC_Subservice", hccSubservice);
-                        command.Parameters.AddWithValue("@UnitsOfMeasure", unitsOfMeasure);
-                        command.Parameters.AddWithValue("@UnitValue", unitValue);
+                        command.Parameters.AddWithValue(Constants.AtServiceCodeID, serviceCodeId);
+                        command.Parameters.AddWithValue(Constants.AtService, service);
+                        command.Parameters.AddWithValue(Constants.AtHCCExportToAries, hccExportToAries);
+                        command.Parameters.AddWithValue(Constants.AtHCCContractID, hccContractId);
+                        command.Parameters.AddWithValue(Constants.AtHCCPrimaryService, hccPrimaryService);
+                        command.Parameters.AddWithValue(Constants.AtHccSecondaryService, hccSecondaryService);
+                        command.Parameters.AddWithValue(Constants.AtHccSubservice, hccSubservice);
+                        command.Parameters.AddWithValue(Constants.AtUnitsOfMeasure, unitsOfMeasure);
+                        command.Parameters.AddWithValue(Constants.AtUnitValue, unitValue);
                         command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Add output parameter
                         SqlParameter outputParameter = new SqlParameter
                         {
-                            ParameterName = "@Operation",
+                            ParameterName = Constants.AtOperation,
                             SqlDbType = SqlDbType.NVarChar,
                             Size = 50,
                             Direction = ParameterDirection.Output
@@ -3128,7 +3122,7 @@ namespace RWDE
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     // Define the name of the stored procedure
-                    string storedProcedureName = "GetActiveContracts";
+                    string storedProcedureName = Constants.GetActiveContracts;
 
                     // Use a using statement to ensure the SqlCommand is properly disposed of after use
                     using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
@@ -3166,11 +3160,11 @@ namespace RWDE
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT Clnt_id,Agency_client_2 FROM HCCClients WHERE CreatedOn >= @StartDate AND CreatedOn <= @EndDate";
+                    string query = Constants.GetClientIdsQuery;
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.Add(new SqlParameter("@StartDate", SqlDbType.DateTime)).Value = startDate;
-                        cmd.Parameters.Add(new SqlParameter("@EndDate", SqlDbType.DateTime)).Value = endDate;
+                        cmd.Parameters.Add(new SqlParameter(Constants.AtStartDateCaps, SqlDbType.DateTime)).Value = startDate;
+                        cmd.Parameters.Add(new SqlParameter(Constants.AtEndDateCaps, SqlDbType.DateTime)).Value = endDate;
 
                         using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                         {
@@ -3199,11 +3193,11 @@ namespace RWDE
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT ServiceID, Service_date FROM HCCServices WHERE CreatedOn >= @StartDate AND CreatedOn <= @EndDate";
+                    string query = Constants.GetServiceIdsQuery;
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.Add(new SqlParameter("@StartDate", SqlDbType.DateTime)).Value = startDate;
-                        cmd.Parameters.Add(new SqlParameter("@EndDate", SqlDbType.DateTime)).Value = endDate;
+                        cmd.Parameters.Add(new SqlParameter(Constants.AtStartDateCaps, SqlDbType.DateTime)).Value = startDate;
+                        cmd.Parameters.Add(new SqlParameter(Constants.AtEndDateCaps, SqlDbType.DateTime)).Value = endDate;
 
                         using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                         {
@@ -3224,15 +3218,13 @@ namespace RWDE
             try
             {
                 DataTable dataTable = new DataTable();
-                string query = @"
-                             SELECT * FROM vwDeceased_Client 
-                    WHERE [Download Date] BETWEEN @StartDate AND @EndDate;"; 
+                string query = Constants.GetFilteredDataQuery; 
                 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@StartDate", startDate);
-                    command.Parameters.AddWithValue("@EndDate", endDate);
+                    command.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                    command.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
 
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     adapter.Fill(dataTable);
@@ -3254,17 +3246,13 @@ namespace RWDE
                 try
                 {
                     conn.Open();
-                    string query = @"
-                SELECT *
-                FROM HCCServices
-                WHERE YEAR(CreatedOn) = @Year AND MONTH(CreatedOn) = @Month
-                AND Status IN ('Upload Succeeded', 'Upload Failed')";
+                    string query = Constants.LoadDataMonthYearQuery;
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         // Add parameters with appropriate values
-                        cmd.Parameters.AddWithValue("@Year", year);
-                        cmd.Parameters.AddWithValue("@Month", month);
+                        cmd.Parameters.AddWithValue(Constants.AtYear, year);
+                        cmd.Parameters.AddWithValue(Constants.AtMonth, month);
 
                         // Execute query and fill the DataTable
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
@@ -3277,7 +3265,6 @@ namespace RWDE
                     throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
                 }
             }
-
             return dt;
         }
         public DataTable LoadData(DateTime startDate, DateTime endDate)
@@ -3289,25 +3276,13 @@ namespace RWDE
                 try
                 {
                     conn.Open();
-                    string query = @"
-                    SELECT
-                    FORMAT(HCCServices.CreatedOn, 'MMM-yyyy') AS 'Monthyear',
-                    COUNT(CASE WHEN Status = 'Upload Succeeded' THEN HCCServices.ServiceID END) AS 'Service Entries Uploaded',
-                    SUM(CASE WHEN Status = 'Upload Succeeded' THEN CAST(HCCServices.Quantity_served AS DECIMAL(18, 2)) ELSE 0 END) AS 'Units of Service Uploaded',
-                    SUM(CASE WHEN Status = 'Upload Succeeded' THEN CAST(HCCServices.Price_served AS DECIMAL(18, 2)) ELSE 0 END) AS 'Cost of Services Uploaded',
-                    COUNT(CASE WHEN Status = 'Upload Failed' THEN HCCServices.ServiceID END) AS 'Service Entries Failed',
-                    SUM(CASE WHEN Status = 'Upload Failed' THEN CAST(HCCServices.Quantity_served AS DECIMAL(18, 2)) ELSE 0 END) AS 'Units of Service Failed',
-                    SUM(CASE WHEN Status = 'Upload Failed' THEN CAST(HCCServices.Price_served AS DECIMAL(18, 2)) ELSE 0 END) AS 'Cost of Services Failed'
-                FROM HCCServices
-                WHERE HCCServices.CreatedOn BETWEEN @StartDate AND @EndDate
-                GROUP BY FORMAT(HCCServices.CreatedOn, 'MMM-yyyy')
-                ORDER BY FORMAT(HCCServices.CreatedOn, 'yyyy-MM') DESC";
+                    string query = Constants.LoadDataQuery;
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         // Add parameters with appropriate date values
-                        cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                        cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
 
                         // Execute query and fill the DataTable
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
@@ -3333,15 +3308,15 @@ namespace RWDE
                 {
                     conn.Open();
 
-                    string query = "sp_Upload_DashboardREPORT"; // Ensure this is the correct stored procedure name
+                    string query = Constants.SpUploadDashboardReport; // Ensure this is the correct stored procedure name
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure; // Specify that it is a stored procedure
 
                         // Add start and end date parameters directly as DateTime
-                        cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                        cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
@@ -3368,7 +3343,7 @@ namespace RWDE
                     conn.Open();
 
                     // Execute the stored procedure to update HCCServices if needed
-                    using (SqlCommand updateCmd = new SqlCommand("UpdateHCCServicesWithErrors", conn))
+                    using (SqlCommand updateCmd = new SqlCommand(Constants.UpdateHccServicesWithErrors, conn))
                     {
                         updateCmd.CommandType = CommandType.StoredProcedure;
                         updateCmd.ExecuteNonQuery();
@@ -3377,28 +3352,16 @@ namespace RWDE
                     // Select query based on filter type
                     if (filterType == Constants.ServiceDate)
                     {
-                        query = @"SELECT*
-    FROM vwService_Reconciliationdatefilter
-    WHERE ServiceDate BETWEEN @StartDate AND @EndDate
-    OR ServiceDate = @StartDate
-    OR ServiceDate = @EndDate";
+                        query = Constants.ServiceReconServiceDateQuery;
 
                     }
                     else if (filterType == Constants.CreatedDate)
                     {
-                        query = @"
-                    SELECT * 
-                    FROM vwService_ReconciliationCreatedDateFilter
-                    WHERE EntryDate BETWEEN @StartDate AND @EndDate
- OR EntryDate = @StartDate
-    OR EntryDate = @EndDate";
+                        query = Constants.ServiceReconCreatedDateQuery;
                     }
                     else
                     {
-                        query = @"
-                    SELECT * 
-                    FROM vwService_Reconciliationtest
-                    WHERE BatchID = @BatchID";
+                        query = Constants.ServiceReconBatchIdQuery;
                     }
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -3406,8 +3369,8 @@ namespace RWDE
                         // Add parameters based on the filter type
                         if (filterType == Constants.ServiceDate || filterType == Constants.CreatedDate)
                         {
-                            cmd.Parameters.AddWithValue("@StartDate", startDate);
-                            cmd.Parameters.AddWithValue("@EndDate", endDate);
+                            cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                            cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
                         }
                         else if (filterType == Constants.BatchId)
                         {
@@ -3434,11 +3397,11 @@ namespace RWDE
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        SqlCommand cmd = new SqlCommand("sp_HCCRecon", conn);
+                        SqlCommand cmd = new SqlCommand(Constants.SpHccRecon, conn);
                         
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                        cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
                         cmd.Parameters.AddWithValue(Constants.AtBatchid, onebatch);
                         cmd.Parameters.AddWithValue(Constants.AtType, filterType);
 
@@ -3501,15 +3464,15 @@ namespace RWDE
                     conn.Open();
 
                     // Choose stored procedure based on filterType
-                    string query = "sp_HCCRecon";
+                    string query = Constants.SpHccRecon; 
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure; // Specify that it is a stored procedure
 
                         // Add start and end date parameters directly as DateTime
-                        cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                        cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
                         cmd.Parameters.AddWithValue(Constants.AtBatchid, 0);
                         cmd.Parameters.AddWithValue(Constants.AtType, filterType);
 
@@ -3533,12 +3496,12 @@ namespace RWDE
                 try
                 {
                     conn.Open();
-                    string query = @"select * from vw_ClientDemographics where [Created On]  between @StartDate and @EndDate"; // Ordering by the minimum date in each group
+                    string query = Constants.ClientDemographicsQuery; // Ordering by the minimum date in each group
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                        cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
@@ -3561,13 +3524,13 @@ namespace RWDE
                 try
                 {
                     conn.Open();
-                    string query = "ManualUploadReport"; // Ordering by the minimum date in each group
+                    string query = Constants.ManualUploadReport; // Ordering by the minimum date in each group
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                        cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
@@ -3590,12 +3553,12 @@ namespace RWDE
                 try
                 {
                     conn.Open();
-                    string query = @"SELECT * FROM vw_ErrorLog WHERE  Date  BETWEEN @StartDate AND @EndDate"; // Ordering by the minimum date in each group
+                    string query = Constants.LoadLogErrorQuery; // Ordering by the minimum date in each group
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@StartDate", startDate);
-                        cmd.Parameters.AddWithValue("@EndDate", endDate);
+                        cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                        cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
@@ -3618,7 +3581,7 @@ namespace RWDE
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT  ServiceID,Actual_minutes_spent,Staff_id,Clnt_id, Service_date, CreatedOn,Contract_id,MappedToHCC,Quantity_served FROM HCCServices";
+                    string query = Constants.GetHccServicesQuery;
 
                     SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
                     adapter.Fill(hccServices);
@@ -3640,7 +3603,7 @@ namespace RWDE
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT Clnt_id,CreatedOn,Agency_client_1 FROM HCCClients";
+                    string query = Constants.GetHccClientsQuery;
 
                     SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
                     adapter.Fill(hccClients);
@@ -3663,21 +3626,13 @@ namespace RWDE
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     // Modify the query to subtract one day from CreatedOn
-                    string query = @"
-            SELECT 
-                Staff_id,
-                Clnt_id,
-                Service_date,
-                CreatedOn,
-                DATEADD(day, -1, CreatedOn) AS CreatedOnMinusOne -- Subtract 1 day from CreatedOn
-            FROM HCCServices
-            WHERE CreatedOn >= @StartDate AND CreatedOn <= @EndDate";
+                    string query = Constants.GetHccClientsFilterQuery;
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         // Add parameters to the command
-                        command.Parameters.AddWithValue("@StartDate", startDate);
-                        command.Parameters.AddWithValue("@EndDate", endDate);
+                        command.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                        command.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
 
                         SqlDataAdapter adapter = new SqlDataAdapter(command);
                         adapter.Fill(hccClients);
@@ -3699,7 +3654,7 @@ namespace RWDE
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT HCC_ExportToAries FROM ServiceCodeSetup";
+                    string query = Constants.ServiceCodeSetupQuery;
 
                     SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
                     adapter.Fill(hccServicecodesetup);
@@ -3717,7 +3672,7 @@ namespace RWDE
             try
             {
                 List<string> clientIds = new List<string>();
-                string query = "SELECT Agency_client_1 FROM HCCClients";
+                string query = Constants.GetAgencyClientIdQuery;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3728,7 +3683,7 @@ namespace RWDE
                         {
                             while (reader.Read())
                             {
-                                clientIds.Add(reader["Agency_client_1"].ToString());
+                                clientIds.Add(reader[Constants.AgencyClient1].ToString());
                             }
                         }
                     }
@@ -3747,7 +3702,7 @@ namespace RWDE
             try
             {
                 int totalServiceEntries = 0;
-                string query = "SELECT COUNT(CMSServiceID) FROM CMSServices";
+                string query = Constants.GetTotalServiceQuery;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3770,7 +3725,7 @@ namespace RWDE
             try
             {
                 int serviceEntriesNotMappedToHcc = 0;
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE MappedToHCC = 'False'";
+                string query = Constants.GetNotMappedServicesQuery;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3793,7 +3748,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Status = 'Succeeded'";
+                string query = Constants.GetMappedServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3807,7 +3762,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Status <> 'Succeeded'";
+                string query = Constants.GetNotExportedServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3821,7 +3776,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Service = 'MH'";
+                string query = Constants.GetMhServiceCountQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3835,7 +3790,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE PostTimeBox = 1";
+                string query = Constants.GetPostTimeBoxServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3850,7 +3805,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE HCCconsentExpired = '1'";
+                string query = Constants.GetMissingExpiryServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3864,7 +3819,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE HCCID IS NULL";
+                string query = Constants.GetMissingHccIdServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3878,7 +3833,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE ProgramEnrolled IS NULL";
+                string query = Constants.GetNotEnrolledServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3892,7 +3847,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE PreReg = 1";
+                string query = Constants.GetPreRegServiceCountQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3906,7 +3861,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE RWEligibilityExpired = 1";
+                string query = Constants.GetEligibilityMissingServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3920,7 +3875,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE StaffloginMissing = 1";
+                string query = Constants.GetStaffMissingServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3934,7 +3889,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Unit_cd = 0";
+                string query = Constants.GetZerUnitOfServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3948,7 +3903,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Service = 'Waiver'";
+                string query = Constants.GetWaiverServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -3962,9 +3917,7 @@ namespace RWDE
         {
             try
             {
-                string query = @"
-    SELECT Service_date
-    FROM HCCServices";
+                string query = Constants.GetServiceDatesQuery;
 
                 var serviceDates = new List<DateTime>();
 
@@ -4027,7 +3980,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT COUNT(ServiceID) FROM HCCServices WHERE DataTeamInvestigationforErrors = 'True'";
+                string query = Constants.GetItDropServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -4065,7 +4018,7 @@ namespace RWDE
             int currentBatchId = 0;
 
             // SQL query to get the latest batch ID from the database
-            string query = "SELECT MAX(batchid) FROM Batch"; // Replace BatchTable with your actual table name
+            string query = Constants.GetAbortBatchIdQuery; // Replace BatchTable with your actual table name
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
@@ -4091,7 +4044,7 @@ namespace RWDE
                 catch (Exception ex)
                 {
                     // Handle any exceptions, like logging or showing a message
-                    MessageBox.Show("Error fetching the batch ID: " + ex.Message);
+                    MessageBox.Show(Constants.ErrorFetchingTheBatchId + ex.Message);
                 }
                 finally
                 {
@@ -4105,7 +4058,7 @@ namespace RWDE
         {
             try
             {
-                string query = "SELECT Max(batchid) FROM Batch WHERE FileName LIKE '%XML%'";
+                string query = Constants.GetMXmlBatchIdQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
@@ -4116,11 +4069,11 @@ namespace RWDE
         }
         public static string GetFileName(bool includeClient)
         {
-            string fileName = DateTime.Now.ToString("yyyyMMdd");
+            string fileName = DateTime.Now.ToString(Constants.YyyyMMdd);
 
             if (includeClient)
             {
-                fileName = "Client_" + fileName;
+                fileName = Constants.Clients + fileName;
             }
 
             return fileName + Constants.XmlExtention;

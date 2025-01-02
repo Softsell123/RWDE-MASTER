@@ -201,7 +201,7 @@ namespace RWDE
 
                             int successfulRows = TotalRows;
                             string description = $"{Constants.Batch} {batchId} - {FileName}";
-                            dbHelper.InsertBatch(batchId, FileName, xmlFilePath, Constants.ClientTrack, description, uploadStartedAt, TotalRows, successfulRows, Constants.StatusCode);
+                            dbHelper.InsertBatch(batchId, FileName, xmlFilePath, Constants.ClientTrackCode, description, uploadStartedAt, TotalRows, successfulRows, Constants.StatusCode);
 
                             processedXmlFiles++;
                             UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);
@@ -245,7 +245,7 @@ namespace RWDE
             string baseFilename = System.IO.Path.GetFileNameWithoutExtension(xmlFilePath);
             try
             {
-                dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrack, baseFilename, Constants.Uploadct);// Log the start of the upload process for the given base filename
+                dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrackCode, baseFilename, Constants.Uploadct);// Log the start of the upload process for the given base filename
 
                 int insertedClients = dbHelper.InsertClients(xmlDoc, batchId, conn, FileName, value);
                 totalInsertedRows += insertedClients;
@@ -257,7 +257,7 @@ namespace RWDE
                 totalInsertedRows += insertedServiceLineItems;
 
                 await UpdateProgressBar(totalRows);// Update the progress bar to reflect the total number of rows being processed.
-                dbHelper.Log($"{Constants.UploadForBaseFileNameHasCompleted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrack, baseFilename, Constants.Uploadct);// Log the end of the upload process for the given base filename
+                dbHelper.Log($"{Constants.UploadForBaseFileNameHasCompleted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrackCode, baseFilename, Constants.Uploadct);// Log the end of the upload process for the given base filename
             }
             catch (Exception ex)
             {
@@ -394,7 +394,7 @@ namespace RWDE
                 DateTime currentTime = DateTime.Now;
                 int successfulRows = 0;
                 // Insert batch details into the database, including batch ID, file name, path, timestamps, row counts, and status.
-                dbHelper.InsertBatch(batchId+1, fileName, path, Constants.ClientTrack, null, currentTime, TotalRows, successfulRows, Constants.Fileaborted);
+                dbHelper.InsertBatch(batchId+1, fileName, path, Constants.ClientTrackCode, null, currentTime, TotalRows, successfulRows, Constants.Fileaborted);
                 ClearTables(batchId+1);
             }
             catch (Exception ex)

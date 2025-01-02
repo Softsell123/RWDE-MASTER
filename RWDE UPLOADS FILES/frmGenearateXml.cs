@@ -414,7 +414,7 @@ namespace RWDE
                     List<Dictionary<string, string>> xmlStructure = dbHelper.GetXmlStructure();//generate xml
 
                     string baseFilename = Constants.ServiceCttohcc;
-                    dbHelper.Log(Constants.GeneratetoHcCforbatchIdStarted, Constants.ClientTrack, baseFilename, Constants.Uploadct);
+                    dbHelper.Log(Constants.GeneratetoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
 
                     //calling Service xml file generation Method
                     XElement xml = await GenerateXmlService(data, xmlStructure);//generate xml
@@ -448,7 +448,7 @@ namespace RWDE
                     btnClose.Text = Constants.Close;
                     UpdateStatusColumnServices(selectedBatchId, Constants.Hccxmlstatusf, startTime, endTime);
                     PopulateDataGridView(new DataTable());//populate data
-                    dbHelper.Log(Constants.GeneratetoHcCformatcompletedsuccessfully, Constants.ClientTrack, baseFilename, Constants.Uploadct);
+                    dbHelper.Log(Constants.GeneratetoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
             }
             catch (Exception ex)
             {
@@ -594,7 +594,7 @@ namespace RWDE
                                     var clientDemoRow = xmlStructure.FirstOrDefault(x => x[XmlConstants.TagNumber] == tagNumber);
                                     if (clientDemoRow != null)
                                     {
-                                        string clientDemoTagName = clientDemoRow[XmlConstants.Tag].Split(' ')[0]; currentDemoTitle = clientDemoRow[XmlConstants.Tag].Contains(XmlConstants.ContractServicesTitleIdentifier) ? clientDemoRow[XmlConstants.Tag].Split('=')[1].Trim(' ', '"') : null;
+                                        string clientDemoTagName = clientDemoRow[XmlConstants.Tag].Split(' ')[0]; currentDemoTitle = clientDemoRow[XmlConstants.Tag].Contains(XmlConstants.ContractServicesTitleIdentifier) ? clientDemoRow[XmlConstants.Tag].Split(Constants.EqualTo)[1].Trim(' ', '"') : null;
                                         currentDemoElement = new XElement(clientDemoTagName);
 
                                         if (!string.IsNullOrEmpty(currentDemoTitle))
@@ -675,7 +675,7 @@ namespace RWDE
         {
             try
             {
-                string clientId = dataRow.ContainsKey(XmlConstants.Clntid) ? dataRow[XmlConstants.Clntid] : null;
+                string clientId = dataRow.ContainsKey(Constants.Clntid) ? dataRow[Constants.Clntid] : null;
                 if (!string.IsNullOrEmpty(clientId))
                 {
                     // Retrieve the Rece values using FetchSubClientFromRace Method
@@ -731,7 +731,7 @@ namespace RWDE
                     if (clientDemoRow != null)
                     {
                         string clientDemoTag = clientDemoRow[XmlConstants.Tag].Split(' ')[0];
-                        string currentDemo = clientDemoRow[XmlConstants.Tag].Contains(XmlConstants.ContractServicesTitleIdentifier) ? clientDemoRow[XmlConstants.Tag].Split('=')[1].Trim(' ', '"') : null;
+                        string currentDemo = clientDemoRow[XmlConstants.Tag].Contains(XmlConstants.ContractServicesTitleIdentifier) ? clientDemoRow[XmlConstants.Tag].Split(Constants.EqualTo)[1].Trim(' ', '"') : null;
                         medicalChild = new XElement(clientDemoTag);
 
                         if (!string.IsNullOrEmpty(currentDemo))
@@ -752,7 +752,7 @@ namespace RWDE
                 // medical Child values
                 if (parsedTagNumber == 710 || parsedTagNumber == 825 || parsedTagNumber == 940 || parsedTagNumber == 1010)
                 {
-                    string clientId = dataRow.ContainsKey(XmlConstants.Clntid) ? dataRow[XmlConstants.Clntid] : null;
+                    string clientId = dataRow.ContainsKey(Constants.Clntid) ? dataRow[Constants.Clntid] : null;
                     //This method to handle Medical child values
                     HandleMedicalChildValues(parsedTagNumber, clientId, batchId, xmlStructure, medicalChild, medicalSubChild, dataRow);
                 }
@@ -801,7 +801,7 @@ namespace RWDE
                     if (clientDemoRow != null)
                     {
                         string clientDemoTag = clientDemoRow[XmlConstants.Tag].Split(' ')[0];
-                        string currentDemo = clientDemoRow[XmlConstants.Tag].Contains(XmlConstants.ContractServicesTitleIdentifier) ? clientDemoRow[XmlConstants.Tag].Split('=')[1].Trim(' ', '"') : null;
+                        string currentDemo = clientDemoRow[XmlConstants.Tag].Contains(XmlConstants.ContractServicesTitleIdentifier) ? clientDemoRow[XmlConstants.Tag].Split(Constants.EqualTo)[1].Trim(' ', '"') : null;
 
                         livingChild = new XElement(clientDemoTag);
 
@@ -1045,7 +1045,7 @@ namespace RWDE
             try
             {
                 var contractServicesRow = xmlStructure.FirstOrDefault(x => x[XmlConstants.TagNumber] == tagNumber && x[XmlConstants.Tag].StartsWith(GetContractServiceTagName(xmlStructure, tagNumber)));
-                return contractServicesRow[XmlConstants.Tag].Contains(XmlConstants.ContractServicesTitleIdentifier) ? contractServicesRow[XmlConstants.Tag].Split('=')[1].Trim(' ', '"') : null;
+                return contractServicesRow[XmlConstants.Tag].Contains(XmlConstants.ContractServicesTitleIdentifier) ? contractServicesRow[XmlConstants.Tag].Split(Constants.EqualTo)[1].Trim(' ', '"') : null;
             }
             catch (Exception ex)
             {
