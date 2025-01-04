@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Security.AccessControl;
 using System.Windows.Forms;
 
 namespace RWDE
@@ -21,7 +22,7 @@ namespace RWDE
             txtDataSource.Text = builder.DataSource; // Load current Data Source
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)//To Save the Given DataSource
         {
             string newDataSource = txtDataSource.Text.Trim();
 
@@ -30,18 +31,20 @@ namespace RWDE
                 MessageBox.Show(Constants.DataSourcecannotbeempty, Constants.ValidationError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            // Validate if the Data Source is accessible
             if (ValidateDataSource(newDataSource))
             {
-                UpdateConnectionString(newDataSource);
+                // Update only the Data Source in the connection string
+                UpdateConnectionString(newDataSource);//to update the new Data Source in connectionString
                 MessageBox.Show(Constants.DataSourceupdatedsuccessfully, Constants.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
             }
             else
             {
                 MessageBox.Show(Constants.UnabletoconnectPleasecheckandtryagain ,Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)// to close the Application
         {
             Application.Exit(); // Exit if no Data Source is set
         }

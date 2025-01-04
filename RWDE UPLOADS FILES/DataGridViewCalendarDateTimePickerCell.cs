@@ -1,5 +1,8 @@
 ﻿using System.Windows.Forms;
 
-internal class DataGridViewCalendarDateTimePickerCell : DataGridViewCell
+namespace RWDE
 {
+    internal class DataGridViewCalendarDateTimePickerCell : DataGridViewCell
+    {
+    }
 }

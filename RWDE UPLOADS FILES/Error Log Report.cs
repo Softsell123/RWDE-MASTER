@@ -13,24 +13,24 @@ namespace RWDE
         public ErrorLogReport()//initialize data
         {
             InitializeComponent();
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             ;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
@@ -42,6 +42,7 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to child Controls
                     RegisterEvents(control);
                 }
             }
@@ -87,7 +88,7 @@ namespace RWDE
         {
             try { 
                 // Close the current form (dispose it)
-                this.Close();
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)

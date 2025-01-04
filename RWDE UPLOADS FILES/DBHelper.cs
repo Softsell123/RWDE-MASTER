@@ -12,16 +12,14 @@ using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Configuration;
+// ReSharper disable PossibleNullReferenceException
 namespace RWDE
 {
     public class DbHelper
     {
         private readonly string connectionString; // Stores the connection string for the database
-        private string error;
-        private bool batchIdIncremented; // Stores any error messages encountered during database operations
-/*
-        private bool batchIdIncre;
-*/
+        private string error;  // Stores any error messages encountered during database operations
+        private bool batchIdIncremented; 
         private bool errorLogged;
 
         // Constructor to initialize the DBHelper class with a connection string
@@ -75,8 +73,7 @@ namespace RWDE
             }
         }
 
-        public async Task<BatchDetails>
-            GetBatchDetailsFromSpAsyncclients(int batchId) //to check whether the generation completed or not
+        public async Task<BatchDetails> GetBatchDetailsFromSpAsyncclients(int batchId) //to check whether the generation completed or not
         {
             try
             {
@@ -113,8 +110,7 @@ namespace RWDE
             }
         }
 
-        public async Task<BatchDetailsgeneration>
-            GetBatchDetailsFromSpAgenearationlients(int batchId) //to check whether the generation completed or not
+        public async Task<BatchDetailsgeneration>GetBatchDetailsFromSpAgenearationlients(int batchId) //to check whether the generation completed or not
         {
             try
             {
@@ -187,7 +183,7 @@ namespace RWDE
             }
         }
 
-        public DataTable LoadDatafilterServiceReconbatchid(int[] batchids)
+        public DataTable LoadDatafilterServiceReconbatchid(int[] batchids)//to display the data based on BatchId
         {
             DataTable dy;
             List<DataTable> result = new List<DataTable>();
@@ -263,17 +259,17 @@ namespace RWDE
             }
         }
 
-        public class BatchDetailsgeneration
+        public class BatchDetailsgeneration //to set and get the batch generation timings 
         {
             public DateTime? GenerationStartedAt { get; set; }
             public DateTime? GenerationEndedAt { get; set; }
         }
-        public class BatchDetails
+        public class BatchDetails //to set and get the batch timings
         {
             public DateTime? ConversionStartedAt { get; set; }
             public DateTime? ConversionEndedAt { get; set; }
         }
-        // Method to map LogType enum values to database code
+     
         public int GetNextBatchId()//Getting BatchId for particular file insertion
         {
             try
@@ -399,7 +395,7 @@ namespace RWDE
                     cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     cmd.Parameters.AddWithValue(Constants.AtClntId, int.Parse(data[0]));
                     cmd.Parameters.AddWithValue(Constants.AtServiceDate, DateTime.Parse(data[1]));
-                    cmd.Parameters.AddWithValue(Constants.AtContractId, int.Parse(data[2]));
+                    cmd.Parameters.AddWithValue(Constants.AtContractIdsp, int.Parse(data[2]));
                     cmd.Parameters.AddWithValue(Constants.AtStaffId,data[3]);
                     cmd.Parameters.AddWithValue(Constants.AtPrimServDesc, data[4]);
                     cmd.Parameters.AddWithValue(Constants.AtQuantityServed, decimal.Parse(data[6]));
@@ -413,7 +409,7 @@ namespace RWDE
                     cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
                     cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
-                    if (connection.State != System.Data.ConnectionState.Open)
+                    if (connection.State != ConnectionState.Open)
                     {
                         connection.Open();
                     }
@@ -427,7 +423,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($@"{Constants.Errorsp}{ex.Message}");
             }
         }
         public void InsertClientServiceDataPhi(SqlConnection connection, string[] data, int batchId)//insertion client data phi masked
@@ -443,7 +439,7 @@ namespace RWDE
                     cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId-1);
                     cmd.Parameters.AddWithValue(Constants.AtClntId, int.Parse(data[0]));
                     cmd.Parameters.AddWithValue(Constants.AtServiceDate, DateTime.Parse(data[1]));
-                    cmd.Parameters.AddWithValue(Constants.AtContractId, int.Parse(data[2]));
+                    cmd.Parameters.AddWithValue(Constants.AtContractIdsp, int.Parse(data[2]));
                     cmd.Parameters.AddWithValue(Constants.AtStaffId, int.Parse(data[3]));
                     cmd.Parameters.AddWithValue(Constants.AtPrimServDesc, data[4]);
                     cmd.Parameters.AddWithValue(Constants.AtQuantityServed, decimal.Parse(data[5]));
@@ -456,7 +452,7 @@ namespace RWDE
 
                     cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy);
                     cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
-                    if (connection.State != System.Data.ConnectionState.Open)
+                    if (connection.State != ConnectionState.Open)
                     {
                         connection.Open();
                     }
@@ -716,6 +712,7 @@ namespace RWDE
                 Console.WriteLine(ex.Message);
             }
         }
+        // Helper methods for conversions
         private int? ConvertToIntOrNull(string input)//convert to int
         {
             try
@@ -760,22 +757,14 @@ namespace RWDE
             }
             return null;
         }
-        private bool ConvertToBoolean(string value)
+        private bool ConvertToBoolean(string value)//convert to boolean
         {
             if (string.IsNullOrEmpty(value))
             {
                 return false;
             }
 
-            bool parsedBool;
-            if (bool.TryParse(value, out parsedBool))
-            {
-                return parsedBool;
-            }
-            else
-            {
-                return false;
-            }
+            return bool.TryParse(value, out bool parsedBool) && parsedBool;
         }
         private DateTime? ConvertToDateTime(string value)//convert to date and time
         {
@@ -783,8 +772,8 @@ namespace RWDE
             {
                 return null;
             }
-            DateTime parsedDate;
-            if (DateTime.TryParse(value, out parsedDate))
+
+            if (DateTime.TryParse(value, out DateTime parsedDate))
             {
                 return parsedDate;
             }
@@ -804,8 +793,7 @@ namespace RWDE
                 return null;
             }
 
-            decimal parsedDecimal;
-            if (decimal.TryParse(value, out parsedDecimal))
+            if (decimal.TryParse(value, out decimal parsedDecimal))
             {
                 return parsedDecimal;
             }
@@ -814,7 +802,7 @@ namespace RWDE
                 return null;
             }
         }
-        // Helper methods for conversions
+        
         private string ConvertToString(object value)//convert to string
         {
             return value == null || value == DBNull.Value ? (string)null : value.ToString();
@@ -973,7 +961,7 @@ namespace RWDE
             return null;
         }
 
-        private DateTime? ConvertToNullableDateTime(string value)
+        private DateTime? ConvertToNullableDateTime(string value)//parse data to DateTime
         {
             if (DateTime.TryParse(value, out DateTime result))
             {
@@ -1000,14 +988,13 @@ namespace RWDE
                 command.Parameters.AddWithValue(Constants.AtClientMiddleInitial, data[2]?.Trim()); // Trim leading and trailing whitespaces
                 command.Parameters.AddWithValue(Constants.AtClientMothersMaidenNameFirstAndThirdCharacters, data[3]?.Trim()); // Trim leading and trailing whitespaces
 
-                DateTime clientDateOfBirth;
-                string[] dateFormats = { Constants.MdYyyySlash, Constants.DMYyyy, Constants.DMYyyySlash, Constants.MdYyyy, Constants.DMmmYyyy, Constants.MmmDYyyy, Constants.YyyyMd };
+                string[] dateFormats = { Constants.MdYyyySlash, Constants.DmYyyy, Constants.DmYyyySlash, Constants.MdYyyy, Constants.DMmmYyyy, Constants.MmmDYyyy, Constants.YyyyMd };
 
                 string[] parts = data[4].Split(' ');
 
                 string dateString = parts[0].Replace("\"", "").Trim(); // Remove double quotes and trim
 
-                if (dateString.Length > 0 && DateTime.TryParseExact(dateString, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out clientDateOfBirth))
+                if (dateString.Length > 0 && DateTime.TryParseExact(dateString, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime clientDateOfBirth))
                 {
                     // If parsing succeeds, use the parsed date
                     command.Parameters.AddWithValue(Constants.AtClientDateOfBirth, clientDateOfBirth);
@@ -1034,8 +1021,8 @@ namespace RWDE
             catch (Exception ex)
             {
                 var st = new StackTrace(ex, true);
-                var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
                 LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClientData), fileName, lineNumber);
                 throw;
             }
@@ -1060,14 +1047,13 @@ namespace RWDE
                 command.Parameters.AddWithValue(Constants.AtClientMiddleInitial, data[2]?.Trim()); // Trim leading and trailing whitespaces
                 command.Parameters.AddWithValue(Constants.AtClientMothersMaidenNameFirstAndThirdCharacters, data[3]?.Trim()); // Trim leading and trailing whitespaces
 
-                DateTime clientDateOfBirth;
-                string[] dateFormats = { Constants.MdYyyySlash, Constants.DMYyyy, Constants.DMYyyySlash, Constants.MdYyyy, Constants.DMmmYyyy, Constants.MmmDYyyy, Constants.YyyyMd };
+                string[] dateFormats = { Constants.MdYyyySlash, Constants.DmYyyy, Constants.DmYyyySlash, Constants.MdYyyy, Constants.DMmmYyyy, Constants.MmmDYyyy, Constants.YyyyMd };
 
                 string[] parts = data[4].Split(' ');
 
                 string dateString = parts[0].Replace("\"", "").Trim(); // Remove double quotes and trim
 
-                if (dateString.Length > 0 && DateTime.TryParseExact(dateString, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out clientDateOfBirth))
+                if (dateString.Length > 0 && DateTime.TryParseExact(dateString, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime clientDateOfBirth))
                 {
                     // If parsing succeeds, use the parsed date
                     command.Parameters.AddWithValue(Constants.AtClientDateOfBirth, clientDateOfBirth);
@@ -1094,8 +1080,8 @@ namespace RWDE
             catch (Exception ex)
             {
                 var st = new StackTrace(ex, true);
-                var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
                 LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClientData), fileName, lineNumber);
                 throw;
             }
@@ -1183,7 +1169,7 @@ namespace RWDE
                 throw;
             }
         }
-        public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid, string fileName)
+        public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid, string fileName)//Eligibility Table insertion
         {
             try
             {
@@ -1230,7 +1216,7 @@ namespace RWDE
                 throw;
             }
         }
-        private DateTime? ParseDateTime(string value)
+        private DateTime? ParseDateTime(string value)//parsing the datetime in required format
         {
             DateTime? result = null;
             if (!string.IsNullOrEmpty(value))
@@ -1254,12 +1240,12 @@ namespace RWDE
             return result;
         }
 
-        private string GetStringValuedata(string[] data, int index)
+        private string GetStringValuedata(string[] data, int index)//to get the eaxct string values
         {
             return data.Length > index ? data[index].Trim('"') : string.Empty;
         }
 
-        public void InsertDlServices(SqlConnection connection, string[] data, int batchid, string fileName, int rowNumber) // Services table insertion
+        public void InsertDlServices(SqlConnection connection, string[] data, int batchid, string fileName, int rowNumber) // DlServices table insertion
         {
             try
             {
@@ -1293,12 +1279,12 @@ namespace RWDE
                 // Get detailed error information from the stack trace
 
                 var st = new StackTrace(ex, true);
-                var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
                 LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertDlServices), fileName, rowNumber);
             }
         }
-        public void InsertDlServicesPhi(SqlConnection connection, string[] data, int batchid, string fileName, int rowNumber) // Services table insertion
+        public void InsertDlServicesPhi(SqlConnection connection, string[] data, int batchid, string fileName, int rowNumber) // DlServices table insertion with PHI
         {
             try
             {
@@ -1332,8 +1318,8 @@ namespace RWDE
                 // Get detailed error information from the stack trace
 
                 var st = new StackTrace(ex, true);
-                var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
                 LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertDlServices), fileName, rowNumber);
             }
         }
@@ -1372,7 +1358,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
                 return null;
             }
         }
@@ -1581,7 +1567,7 @@ namespace RWDE
                     else
                     {
                         // Log or handle the invalid value
-                        Console.WriteLine($"{Constants.InvalidDecimalValue}{value}");
+                        Console.WriteLine($@"{Constants.InvalidDecimalValue}{value}");
                         command.Parameters.AddWithValue(parameterName, DBNull.Value);
                     }
                 }
@@ -1609,7 +1595,7 @@ namespace RWDE
                     else
                     {
                         // Log or handle the invalid value
-                        Console.WriteLine($"{Constants.InvalidIntegerValue}{value}");
+                        Console.WriteLine($@"{Constants.InvalidIntegerValue}{value}");
                         command.Parameters.AddWithValue(parameterName, DBNull.Value);
                     }
                 }
@@ -1671,7 +1657,7 @@ namespace RWDE
             }
             return null; // Return null if parsing fails
         }
-        public int InsertClients(XmlDocument xmlDoc, int batchId, SqlConnection conn, string xmlFilePath, bool value)//insert clients
+        public int InsertClients(XmlDocument xmlDoc, int batchId, SqlConnection conn, string xmlFilePath, bool value)//insert clients into database from Xml
         {
             string fileName = Path.GetFileName(xmlFilePath);
             int insertedCount = 0;
@@ -1683,25 +1669,26 @@ namespace RWDE
                     cmd.CommandType = CommandType.StoredProcedure;
                     var procedure = value ? Constants.InsertCtClientsFromXmlPhiMaskingTest : Constants.InsertCtClientsFromXml;
                     cmd.CommandText = procedure;
+                    cmd.CommandTimeout = 120;
 
-                    // Set the parameters for the stored procedure
-                    SqlParameter xmlDataParam = new SqlParameter(Constants.XmlData, SqlDbType.Xml);
+                // Set the parameters for the stored procedure
+                SqlParameter xmlDataParam = new SqlParameter(Constants.XmlData, SqlDbType.Xml);
                     xmlDataParam.Value = new SqlXml(new XmlTextReader(new StringReader(xmlDoc.OuterXml)));
                     cmd.Parameters.Add(xmlDataParam);
 
                     cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
 
                     // Execute the command to insert clients
-                    cmd.ExecuteNonQuery();
-
+                    cmd.ExecuteNonQuery(); 
+                    
                     // Return the number of inserted clients
                     return insertedCount++;
                 }
                 catch (Exception ex)
                 {
                     var st = new StackTrace(ex, true);
-                    var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                    int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
+                    var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                    int lineNumber = frame?.GetFileLineNumber() ?? 0;
                     LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClients), fileName, lineNumber);
                     LogError($"{ex.Message}", fileName); // Handle the exception within the transaction (e.g., log it)
                     throw;
@@ -1742,7 +1729,7 @@ namespace RWDE
                                         string notes = GetAttributeValue(eligibilityNode, Constants.Notes);
 
                                         // Prepare and execute SQL command to insert into EligibilityDocuments table within the transaction
-                                        using (SqlCommand insertCmd = new SqlCommand(Constants.CTClientsEligibilityDocQuery,conn))
+                                        using (SqlCommand insertCmd = new SqlCommand(Constants.CtClientsEligibilityDocQuery,conn))
                                         {
                                             // Set SQL parameters based on the values extracted from the XML document
                                             insertCmd.Parameters.AddWithValue(Constants.AtDocumentType, string.IsNullOrEmpty(documentType) ? (object)DBNull.Value : documentType);
@@ -1753,10 +1740,10 @@ namespace RWDE
                                             insertCmd.Parameters.AddWithValue(Constants.AtNotesCaps, string.IsNullOrEmpty(notes) ? (object)DBNull.Value : notes);
                                             insertCmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                                             insertCmd.Parameters.AddWithValue(Constants.AtAgencyClientId1, agencyClientId);
-                                            insertCmd.Parameters.AddWithValue(Constants.AtAriesID, ariesId);
+                                            insertCmd.Parameters.AddWithValue(Constants.AtAriesId, ariesId);
                                             insertCmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a constant value for CreatedBy
                                             insertCmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now); // Current date/time
-                                            insertCmd.Parameters.AddWithValue(Constants.AtEligibilityDocID, insertedCount % 3 + 1); // Incremental EligibilityDocumentID
+                                            insertCmd.Parameters.AddWithValue(Constants.AtEligibilityDocId, insertedCount % 3 + 1); // Incremental EligibilityDocumentID
 
                                             // Execute the insert command
                                             insertCmd.ExecuteNonQuery();
@@ -1784,7 +1771,7 @@ namespace RWDE
         private bool ShouldInsertAgencyClient(int agencyClientId, int ariesId, XmlDocument xmlDoc)
         {
             // Check if the AgencyClientID and AriesID pair has associated EligibilityDocument nodes in the XML
-            XmlNodeList eligibilityNodes = xmlDoc.SelectNodes(string.Format(Constants.ClientariesIDEligibilityDocument, ariesId)); 
+            XmlNodeList eligibilityNodes = xmlDoc.SelectNodes(string.Format(Constants.ClientariesIdEligibilityDocument, ariesId)); 
 
             return eligibilityNodes != null && eligibilityNodes.Count > 0;
         }
@@ -1820,14 +1807,14 @@ namespace RWDE
                     using (SqlCommand insertCmd = new SqlCommand(Constants.InsertServiceLineItemFromXmlPhi, conn))
                     {
                         insertCmd.CommandType = CommandType.StoredProcedure;
-                        string clientAriesId = GetAttributeValue(serviceNode, Constants.ClientAriesID);
+                        string clientAriesId = GetAttributeValue(serviceNode, Constants.ClientAriesId);
                         if (clientAriesId == null)
                         {
-                            insertCmd.Parameters.AddWithValue(Constants.AtClientAriesID, DBNull.Value);
+                            insertCmd.Parameters.AddWithValue(Constants.AtClientAriesId, DBNull.Value);
                         }
                         else
                         {
-                            insertCmd.Parameters.AddWithValue(Constants.AtClientAriesID, clientAriesId);
+                            insertCmd.Parameters.AddWithValue(Constants.AtClientAriesId, clientAriesId);
                         }
                         // Set parameters for the stored procedure based on node attributes
                         insertCmd.Parameters.AddWithValue(Constants.AtClientUrnExt, GetAttributeValue(serviceNode, Constants.ClientUrnExt));
@@ -1875,7 +1862,7 @@ namespace RWDE
             return insertedCount;
         }
 
-        private T GetAttributeValue<T>(XmlNode node, string attributeName)//getting value
+        private T GetAttributeValue<T>(XmlNode node, string attributeName)//getting value to the XMl nodes
         {
             if (node == null || string.IsNullOrEmpty(attributeName))//
             {
@@ -1889,7 +1876,7 @@ namespace RWDE
             }
             return default(T);
         }
-        private T GetAttributeValueOrDefault<T>(XmlNode node, string attributeName, T defaultValue)//Getting values
+        private T GetAttributeValueOrDefault<T>(XmlNode node, string attributeName, T defaultValue)//Getting or setting values to the XMl nodes
         {
             if (node == null || string.IsNullOrEmpty(attributeName))
             {
@@ -1908,8 +1895,7 @@ namespace RWDE
             string dateString = GetAttributeValue<string>(node, attributeName);
             if (!string.IsNullOrEmpty(dateString))
             {
-                DateTime result;
-                if (DateTime.TryParse(dateString, out result))
+                if (DateTime.TryParse(dateString, out DateTime result))
                 {
                     return result;
                 }
@@ -1919,8 +1905,7 @@ namespace RWDE
         private decimal GetDecimalValue(XmlNode node, string attributeName)//getting decimal value
         {
             string decimalString = GetAttributeValue<string>(node, attributeName);
-            decimal result;
-            if (!string.IsNullOrEmpty(decimalString) && decimal.TryParse(decimalString, out result))
+            if (!string.IsNullOrEmpty(decimalString) && decimal.TryParse(decimalString, out decimal result))
             {
                 return result;
             }
@@ -2011,10 +1996,10 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{Constants.ErrorLoggingMessage}{ex.Message}");
+                Console.WriteLine($@"{Constants.ErrorLoggingMessage}{ex.Message}");
             }
         }
-        public void DeleteBatchochin(string batchId)//Delete All Values form all tables 
+        public void DeleteBatchochin(string batchId)//Delete All Values form all Ochin tables 
         {
             string connectionString = GetConnectionString();
 
@@ -2062,7 +2047,7 @@ namespace RWDE
                 throw new Exception($"{Constants.ErrorDeletingBatch}{batchId}", ex);
             }
         }
-        private string GetStoredProcedureByType(string type)//Calling storeProcedure 
+        private string GetStoredProcedureByType(string type)//to select the storeProcedure to call 
         {
             // Adjust the stored procedure name based on the batch type
             if (type == Constants.ClientTrack)
@@ -2238,7 +2223,7 @@ namespace RWDE
             return batchTypeValues;
         }
 
-        public List<string> GetAllBatchTypesHcc()//get all batches type
+        public List<string> GetAllBatchTypesHcc()//get all batches type except Client Track
         {
             List<string> batchTypeValues = new List<string>();
             try
@@ -2274,7 +2259,7 @@ namespace RWDE
             List<string> batchTypeValues = new List<string>();
             try
             {
-                string query = Constants.GETALLBATCHTYPEview;
+                string query = Constants.GetallbatchtypEview;
 
                 using (SqlConnection sql = new SqlConnection(connectionString))
                 {
@@ -2303,10 +2288,10 @@ namespace RWDE
         public DataTable GetParticularConversionDatas(string batchType, DateTime fromDate, DateTime endDate)//retrieve data for according to the start and end date
         {
             DataTable dataTable = new DataTable();
-            string connectionString = GetConnectionString();
+            string connectionStringLocal = GetConnectionString();//to get the Connection String
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 using (SqlCommand command = new SqlCommand(Constants.GetParticularConversionDatas, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -2329,11 +2314,11 @@ namespace RWDE
         public DataTable GetParticularnGenerationDatas(string batchType, DateTime fromDate, DateTime endDate)//get generation data according to start and end time
         {
             DataTable dataTable = new DataTable();
-            string connectionString = GetConnectionString();
+            string connectionStringLocal = GetConnectionString();//To get the Connection String
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 using (SqlCommand command = new SqlCommand(Constants.GetParticularnGenerationDatasConversionXml, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -2356,10 +2341,10 @@ namespace RWDE
         public DataTable GetParticularnGenerationDatasconversion(string batchType, DateTime fromDate, DateTime endDate)//get generation data according to start and end time
         {
             DataTable dataTable = new DataTable();
-            string connectionString = GetConnectionString();
+            string connectionStringLocal = GetConnectionString();//To get the Connection String
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 using (SqlCommand command = new SqlCommand(Constants.GetParticularnGenerationDatasConversion, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -2380,14 +2365,14 @@ namespace RWDE
             return dataTable;
         }
 
-        public DataTable GetParticularnGenerationDatasHcc(string batchType, DateTime fromDate, DateTime endDate)//get generation data according to start and end time
+        public DataTable GetParticularGenerationDatasHcc(string batchType, DateTime fromDate, DateTime endDate)//get generation data according to start and end time
         {
             DataTable dataTable = new DataTable();
-            string connectionString = GetConnectionString();
+            string connectionStringLocal = GetConnectionString();//To get the Connection String
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 using (SqlCommand command = new SqlCommand(Constants.GetParticularnGenerationDatasConversionHcc, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -2444,15 +2429,13 @@ namespace RWDE
                 // Catch any exceptions and write the error message to the console
                 Console.WriteLine(ex.Message);
             }
-
             // Return the populated DataTable
             return dataTable;
         }
-        public DataTable GetAllServiceLists()//to retrive the service list data
+        public DataTable GetAllServiceLists()//to retrieve the service list data
         {
             DataTable dataTable = new DataTable();
-            string query = Constants.Sp_GetTopServiceCodeSetup;
-
+            string query = Constants.SpGetTopServiceCodeSetup;
             try
             {
                 using (SqlConnection com = new SqlConnection(connectionString))
@@ -2484,7 +2467,7 @@ namespace RWDE
                 var results = new List<Dictionary<string, string>>();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(Constants.ServiceXmlGenerationQuery, connection))
+                    using (SqlCommand command = new SqlCommand(Constants.ServiceXmlGeneration, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
@@ -2512,7 +2495,7 @@ namespace RWDE
             }
         }
 
-        public List<Dictionary<string, string>> GetServices(int batchId)
+        public List<Dictionary<string, string>> GetServices(int batchId) //Get All Service Values from ServiceGenerator Procedure
         {
             try
             {
@@ -2521,7 +2504,7 @@ namespace RWDE
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand(Constants.ServiceXmlGenerationQuery, connection))
+                    using (SqlCommand command = new SqlCommand(Constants.ServiceXmlGeneration, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
@@ -2654,7 +2637,7 @@ namespace RWDE
                 return null;
             }
         }
-        public List<Dictionary<string, string>> GetXmlStructure() //Get All XmlServiceStructure Values from Xmlstructure Table
+        public List<Dictionary<string, string>> GetXmlStructure() //Get All XmlServiceStructure Values from XmlStructure Table
         {
             try
             {
@@ -2711,11 +2694,10 @@ namespace RWDE
                     MessageBox.Show(ex.Message);
                 }
             }
-
             return dataTable;
         }
 
-        public List<Dictionary<string, string>> GetClientFileXmlStructure() //Get All XmlClientStructure Values from Xmlstructure Table
+        public List<Dictionary<string, string>> GetClientFileXmlStructure() //Get All XmlClientStructure Values from XmlStructure Table
         {
             try
             {
@@ -2768,9 +2750,9 @@ namespace RWDE
                                 {
                                     var columnName = reader.GetName(i);
                                     var value = reader[i];
-                                    if (value is bool)
+                                    if (value is bool b)
                                     {
-                                        row[columnName] = (bool)value ? Constants.One : Constants.Zero;
+                                        row[columnName] = b ? Constants.One : Constants.Zero;
                                     }
                                     else
                                     {
@@ -2853,27 +2835,28 @@ namespace RWDE
                 throw new Exception(Constants.ErrorRetrievingData, ex);
             }
         }
-        public List<Dictionary<string, string>> FetchSubClientValuesFromMedC4(string clientid, int batchid)
+        public List<Dictionary<string, string>> FetchSubClientValuesFromMedC4(string clientid, int batchid)//fetch particular client Medical values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedCd4);
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedCd4);//fetch particular client data values
         }
-        public List<Dictionary<string, string>> FetchSubClientValuesFromMedVl(string clientid, int batchid)
+        public List<Dictionary<string, string>> FetchSubClientValuesFromMedVl(string clientid, int batchid)//fetch particular client Medical values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedVl);
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedVl);//fetch particular client data values
         }
-        public List<Dictionary<string, string>> FetchSubClientValuesFromHivTest(string clientid, int batchid)
+        public List<Dictionary<string, string>> FetchSubClientValuesFromHivTest(string clientid, int batchid)//fetch particular client HIV test values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromHivTest);
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromHivTest);//fetch particular client data values
         }
-        public List<Dictionary<string, string>> FetchSubClientValuesFromInsur(string clientid, int batchid)
+        public List<Dictionary<string, string>> FetchSubClientValuesFromInsur(string clientid, int batchid)//fetch particular client Insurance values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromInsur);
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromInsur);//fetch particular client data values
         }
-        public List<Dictionary<string, string>> FetchSubClientValuesFromRace(string clientid, int batchid)
+        public List<Dictionary<string, string>> FetchSubClientValuesFromRace(string clientid, int batchid)//fetch particular client Race values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromRace);
+            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromRace);//fetch particular client data values
         }
 
+        //to get the current file Path
         private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;
         private int GetCurrentLineNumber([CallerLineNumber] int lineNumber = 0) => lineNumber;
         private string GetCurrentMemberName([CallerMemberName] string memberName = "") => memberName;
@@ -2889,7 +2872,7 @@ namespace RWDE
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        command.Parameters.AddWithValue(Constants.AtContractID, contractId);
+                        command.Parameters.AddWithValue(Constants.AtContractId, contractId);
                         command.Parameters.AddWithValue(Constants.AtContractName, contractName);
                         command.Parameters.AddWithValue(Constants.AtStartedDateTime, startedDateTime);
                         command.Parameters.AddWithValue(Constants.AtEndedDateTime, endedDateTime);
@@ -2912,13 +2895,13 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log the exception or handle it as per your application's error handling strategy
-                Console.WriteLine($"{Constants.ErrorInInsertOrUpdateContractMethod}{ex.Message}");
+                Console.WriteLine($@"{Constants.ErrorInInsertOrUpdateContractMethod}{ex.Message}");
                 throw; // Re-throw the exception to propagate it to the caller
             }
             return operation;
         }
 
-        public void ContractIdUpdateStatus(int contractId, string status)
+        public void ContractIdUpdateStatus(int contractId, string status)//to update the status of the particular ContractID 
         {
             try
             {
@@ -2934,7 +2917,7 @@ namespace RWDE
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Add parameters to the SqlCommand
-                        command.Parameters.AddWithValue(Constants.AtContractID, contractId);
+                        command.Parameters.AddWithValue(Constants.AtContractId, contractId);
                         command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Open the database connection
@@ -2953,16 +2936,16 @@ namespace RWDE
         }
         public void ContractIdEdit(int contractId, String contractName, Object startedDateTime, Object endedDateTime, string status)//to modify particular contract id from contract list
         {
-            string connectionString = GetConnectionString();
+            string connectionStringLocal = GetConnectionString();
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 {
                     using (SqlCommand command = new SqlCommand(Constants.UpdateContract, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue(Constants.AtContractID, contractId);
+                        command.Parameters.AddWithValue(Constants.AtContractId, contractId);
                         command.Parameters.AddWithValue(Constants.AtContractName, contractName);
                         command.Parameters.AddWithValue(Constants.AtStartedDateTime, startedDateTime);
                         command.Parameters.AddWithValue(Constants.AtEndedDateTime, endedDateTime);
@@ -2996,7 +2979,7 @@ namespace RWDE
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Add parameters to the SqlCommand
-                        command.Parameters.AddWithValue(Constants.AtServiceCodeID, serviceCodeId);
+                        command.Parameters.AddWithValue(Constants.AtServiceCodeId, serviceCodeId);
                         command.Parameters.AddWithValue(Constants.AtStatus, status);
 
                         // Open the database connection
@@ -3024,11 +3007,11 @@ namespace RWDE
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Add parameters
-                        command.Parameters.AddWithValue(Constants.AtServiceCodeID, serviceCodeId);
+                        command.Parameters.AddWithValue(Constants.AtServiceCodeId, serviceCodeId);
                         command.Parameters.AddWithValue(Constants.AtService, service);
-                        command.Parameters.AddWithValue(Constants.AtHCCExportToAries, hccExportToAries);
-                        command.Parameters.AddWithValue(Constants.AtHCCContractID, hccContractId);
-                        command.Parameters.AddWithValue(Constants.AtHCCPrimaryService, hccPrimaryService);
+                        command.Parameters.AddWithValue(Constants.AtHccExportToAries, hccExportToAries);
+                        command.Parameters.AddWithValue(Constants.AtHccContractId, hccContractId);
+                        command.Parameters.AddWithValue(Constants.AtHccPrimaryService, hccPrimaryService);
                         command.Parameters.AddWithValue(Constants.AtHccSecondaryService, hccSecondaryService);
                         command.Parameters.AddWithValue(Constants.AtHccSubservice, hccSubservice);
                         command.Parameters.AddWithValue(Constants.AtUnitsOfMeasure, unitsOfMeasure);
@@ -3056,6 +3039,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
+        //To handle the Insertion or Deletion o Service Code 
         public string InsertOrUpdateServiceCode(
             int serviceCodeId,
             string service,
@@ -3077,11 +3061,11 @@ namespace RWDE
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Add parameters
-                        command.Parameters.AddWithValue(Constants.AtServiceCodeID, serviceCodeId);
+                        command.Parameters.AddWithValue(Constants.AtServiceCodeId, serviceCodeId);
                         command.Parameters.AddWithValue(Constants.AtService, service);
-                        command.Parameters.AddWithValue(Constants.AtHCCExportToAries, hccExportToAries);
-                        command.Parameters.AddWithValue(Constants.AtHCCContractID, hccContractId);
-                        command.Parameters.AddWithValue(Constants.AtHCCPrimaryService, hccPrimaryService);
+                        command.Parameters.AddWithValue(Constants.AtHccExportToAries, hccExportToAries);
+                        command.Parameters.AddWithValue(Constants.AtHccContractId, hccContractId);
+                        command.Parameters.AddWithValue(Constants.AtHccPrimaryService, hccPrimaryService);
                         command.Parameters.AddWithValue(Constants.AtHccSecondaryService, hccSecondaryService);
                         command.Parameters.AddWithValue(Constants.AtHccSubservice, hccSubservice);
                         command.Parameters.AddWithValue(Constants.AtUnitsOfMeasure, unitsOfMeasure);
@@ -3110,7 +3094,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log or handle the error as needed
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
                 return null; // or return an appropriate error value
             }
         }
@@ -3142,7 +3126,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Log or handle the error as needed
-                MessageBox.Show($"{Constants.AnErrorOccurred}{ex.Message}");
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
             }
 
             // Return the populated DataTable
@@ -3267,7 +3251,7 @@ namespace RWDE
             }
             return dt;
         }
-        public DataTable LoadData(DateTime startDate, DateTime endDate)
+        public DataTable LoadData(DateTime startDate, DateTime endDate)//DUP to load the data of the monthly Report
         {
             DataTable dt = new DataTable();
 
@@ -3307,8 +3291,7 @@ namespace RWDE
                 try
                 {
                     conn.Open();
-
-                    string query = Constants.SpUploadDashboardReport; // Ensure this is the correct stored procedure name
+                    string query = Constants.SpUploadDashboardReport; // Ensure this is the correct store procedure name
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -3331,10 +3314,9 @@ namespace RWDE
             return dt;
         }
 
-        public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, string filterType)
+        public DataTable LoadDatafilterServiceRecon(DateTime startDate, DateTime endDate, string filterType)//to load the service-recon for created and service date filter
         {
             DataTable dt = new DataTable();
-            string query;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -3350,10 +3332,10 @@ namespace RWDE
                     }
 
                     // Select query based on filter type
+                    string query;
                     if (filterType == Constants.ServiceDate)
                     {
                         query = Constants.ServiceReconServiceDateQuery;
-
                     }
                     else if (filterType == Constants.CreatedDate)
                     {
@@ -3374,7 +3356,7 @@ namespace RWDE
                         }
                         else if (filterType == Constants.BatchId)
                         {
-                          
+                           
                         }
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
@@ -3387,7 +3369,7 @@ namespace RWDE
             }
             return dt;
         }
-        public List<DataTable> LoadDatafilterhccreconBatchid(DateTime startDate, DateTime endDate, int[] batchids, String filterType)
+        public List<DataTable> LoadDatafilterhccreconBatchid(DateTime startDate, DateTime endDate, int[] batchids, String filterType)//to load the HCCRecon for Batch ID filter
         {
             List<DataTable> result = new List<DataTable>();
             List<int> noDataIds = new List<int>();
@@ -3433,7 +3415,7 @@ namespace RWDE
             return result;
         }
 
-        public DataTable CombineAllResults(List<DataTable> result)
+        public DataTable CombineAllResults(List<DataTable> result)//to combine all the data for different BatchID
         {
             DataTable dt = result[0].Clone();
             try
@@ -3453,10 +3435,9 @@ namespace RWDE
             }
             return dt;
         }
-        public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate, String filterType)
+        public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate, String filterType)//to load the HCCRecon for created and service date filter
         {
             DataTable dt = new DataTable();
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
@@ -3490,7 +3471,6 @@ namespace RWDE
         public DataTable LoadConfigurationfilter(DateTime startDate, DateTime endDate)//to get details of clients applied for services
         {
             DataTable dt = new DataTable();
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
@@ -3573,12 +3553,11 @@ namespace RWDE
             return dt;
         }
         
-        public DataTable GetHccServices()
+        public DataTable GetHccServices()//get created Services 
         {
             try
             {
                 DataTable hccServices = new DataTable();
-
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     string query = Constants.GetHccServicesQuery;
@@ -3586,7 +3565,6 @@ namespace RWDE
                     SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
                     adapter.Fill(hccServices);
                 }
-
                 return hccServices;
             }
             catch (Exception ex)
@@ -3600,15 +3578,12 @@ namespace RWDE
             try
             {
                 DataTable hccClients = new DataTable();
-
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     string query = Constants.GetHccClientsQuery;
-
                     SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
                     adapter.Fill(hccClients);
                 }
-
                 return hccClients;
             }
             catch (Exception ex)
@@ -3617,7 +3592,7 @@ namespace RWDE
                 return null;
             }
         }
-        public DataTable GetHccClientsFilter(DateTime startDate, DateTime endDate)//to filter data accordingly
+        public DataTable GetHccClientsFilter(DateTime startDate, DateTime endDate)//to filter Clients data accordingly
         {
             try
             {
@@ -3650,16 +3625,16 @@ namespace RWDE
         {
             try
             {
-                DataTable hccServicecodesetup = new DataTable();
+                DataTable hccServiceCodeSetup = new DataTable();
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     string query = Constants.ServiceCodeSetupQuery;
 
                     SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
-                    adapter.Fill(hccServicecodesetup);
+                    adapter.Fill(hccServiceCodeSetup);
                 }
-                return hccServicecodesetup;
+                return hccServiceCodeSetup;
             }
             catch (Exception ex)
             {
@@ -3667,7 +3642,7 @@ namespace RWDE
                 return null;
             }
         }
-        public List<string> GetClientsIds()//to retrive agency client data
+        public List<string> GetClientsIds()//to retrieve agency client data
         {
             try
             {
@@ -3772,7 +3747,7 @@ namespace RWDE
             }
         }
 
-        public int GetServiceEntriesForMHServicesOnlyClients()//count of  MHservices COUNT
+        public int GetServiceEntriesForMHServicesOnlyClients()//count of  MhServices COUNT
         {
             try
             {
@@ -3786,7 +3761,7 @@ namespace RWDE
             }
         }
 
-        public int GetServiceEntriesPostTimeboxPeriod()//count of  MHservices COUNT POST timebox period
+        public int GetServiceEntriesPostTimeBoxPeriod()//count of  MhServices COUNT POST TimeBox period
         {
             try
             {
@@ -3801,7 +3776,7 @@ namespace RWDE
 
         }
 
-        public int GetServiceEntriesForExpiredMissingHccConsent()//count of missing hccconsentcount
+        public int GetServiceEntriesForExpiredMissingHccConsent()//count of missing hccConsentCount
         {
             try
             {
@@ -3815,7 +3790,7 @@ namespace RWDE
             }
         }
 
-        public int GetServiceEntriesForHccidMissing()//count of missing hccconsentcount
+        public int GetServiceEntriesForHccidMissing()//count of missing hccConsentCount
         {
             try
             {
@@ -3829,7 +3804,7 @@ namespace RWDE
             }
         }
 
-        public int GetServiceEntriesNotEnrolledInProgram()//count of missing hccconsentcount which are not enrolled
+        public int GetServiceEntriesNotEnrolledInProgram()//count of missing hccConsentCount which are not enrolled
         {
             try
             {
@@ -3843,7 +3818,7 @@ namespace RWDE
             }
         }
 
-        public int GetServiceEntriesForPreRegClients()//count of missing hccconsentcount
+        public int GetServiceEntriesForPreRegClients()//count of missing hccConsentCount
         {
             try
             {
@@ -3857,7 +3832,7 @@ namespace RWDE
             }
         }
 
-        public int GetServiceEntriesForRwEligibilityExpired()//retrive count from services provided
+        public int GetServiceEntriesForRwEligibilityExpired()//retrieve count from services provided
         {
             try
             {
@@ -3871,7 +3846,7 @@ namespace RWDE
             }
         }
 
-        public int GetServiceEntriesForMissingHccStaffLogin()//retrive count from services provided
+        public int GetServiceEntriesForMissingHccStaffLogin()//retrieve count from services provided
         {
             try
             {
@@ -3885,7 +3860,7 @@ namespace RWDE
             }
         }
 
-        public int GetServiceEntriesWithZeroUnitOfService()//retrive count from services provided accordingly
+        public int GetServiceEntriesWithZeroUnitOfService()//retrieve count from services provided accordingly
         {
             try
             {
@@ -3899,7 +3874,7 @@ namespace RWDE
             }
         }
 
-        public int GetServiceEntriesForWaiver()//retrive count from services provided accordingly
+        public int GetServiceEntriesForWaiver()//retrieve count from services provided accordingly
         {
             try
             {
@@ -3913,7 +3888,7 @@ namespace RWDE
             }
         }
 
-        public List<DateTime> GetServiceEntriesFor3DayDelayInHccUpload()//retrive count from services provided accordingly
+        public List<DateTime> GetServiceEntriesFor3DayDelayInHccUpload()//retrieve count from services provided accordingly
         {
             try
             {
@@ -3946,7 +3921,7 @@ namespace RWDE
             }
         }
 
-        private List<DateTime> ExecuteDateTimeQuery(string query)//retrive count from services provided accordingly
+        private List<DateTime> ExecuteDateTimeQuery(string query)//retrieve count from services provided accordingly
         {
             try
             {
@@ -3976,7 +3951,7 @@ namespace RWDE
                 return null;
             }
         }
-        public int GetServiceEntriesForItDrops()//retrive count from services provided accordingly
+        public int GetServiceEntriesForItDrops()//retrieve count from services provided accordingly
         {
             try
             {
@@ -4013,12 +3988,12 @@ namespace RWDE
             }
         }
 
-        public int GetNextBatchIdabort(SqlConnection connection)
+        public int GetNextBatchIdAbort(SqlConnection connection)//to get the Aborted Batchid
         {
             int currentBatchId = 0;
 
             // SQL query to get the latest batch ID from the database
-            string query = Constants.GetAbortBatchIdQuery; // Replace BatchTable with your actual table name
+            string query = Constants.GetAbortBatchIdQuery; 
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
@@ -4031,15 +4006,9 @@ namespace RWDE
                     object result = command.ExecuteScalar();
 
                     // If the result is not null, convert it to an integer (batch ID)
-                    if (result != DBNull.Value)
-                    {
-                        currentBatchId = Convert.ToInt32(result);
-                    }
-                    else
-                    {
+                    currentBatchId = result != DBNull.Value ? Convert.ToInt32(result) :
                         // If there are no records, initialize the batch ID to a default value, e.g., 1
-                        currentBatchId = 1;
-                    }
+                        1;
                 }
                 catch (Exception ex)
                 {
@@ -4054,7 +4023,7 @@ namespace RWDE
             }
             return currentBatchId;
         }
-        public int Getxmlbatchid()//retrive count from services provided accordingly
+        public int GetXmlBatchId()//retrieve count from services provided accordingly
         {
             try
             {
@@ -4067,7 +4036,7 @@ namespace RWDE
                 return 0;
             }
         }
-        public static string GetFileName(bool includeClient)
+        public static string GetFileName(bool includeClient)//to get the filename of the generated XML
         {
             string fileName = DateTime.Now.ToString(Constants.YyyyMMdd);
 
@@ -4075,7 +4044,6 @@ namespace RWDE
             {
                 fileName = Constants.Clients + fileName;
             }
-
             return fileName + Constants.XmlExtention;
         }
     }

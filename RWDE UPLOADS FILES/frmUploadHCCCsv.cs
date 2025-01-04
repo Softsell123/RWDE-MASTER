@@ -19,14 +19,14 @@ namespace RWDE
             InitializeComponent();           
             dbHelper = new DbHelper();
             connectionString = dbHelper.GetConnectionString();//get connection string
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
             DateTime currenttime = DateTime.Now;
             string date = currenttime.ToString(Constants.MMddyyyybkslash);
             string time = currenttime.ToString(Constants.HHmmss);
             txtDesc.Text = $@"{Constants.HccCsvUploadonAt.Replace("{date}", date).Replace("{time}", time)}";
             string pathFile = Constants.LastFolderPathOchin;
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
             // Check if the file exists
             if (File.Exists(pathFile))
             {
@@ -53,19 +53,19 @@ namespace RWDE
                 return pnlCsvXml;
             }
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                if (control is Button || control is CheckBox || control is DateTimePicker)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -73,11 +73,12 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to child Controls
                     RegisterEvents(control);
                 }
             }
         }
-        private void btnUpload_Click(object sender, EventArgs e)//Uploding CSV files
+        private void btnUpload_Click(object sender, EventArgs e)//Uploading CSV files
         {
             try {
                 if (string.IsNullOrEmpty(txtpath.Text))
@@ -156,10 +157,10 @@ namespace RWDE
                                     string baseFilename = Path.GetFileNameWithoutExtension(csvFilePath).Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries)[0];
                                     fileName = Path.GetFileName(csvFilePath);
                                     txtFileName.Text = fileName;
-                                    bool batchId = false; 
-                                    int Batchid;
-                                    Batchid = dbHelper.GetNextBatchId(false);//to get next batch id
-                                    txtBatchid.Text = Batchid.ToString();
+                                    //bool batchId = false; 
+                                    int batchid;
+                                    batchid = dbHelper.GetNextBatchId(false);//to get next batch id
+                                    txtBatchid.Text = batchid.ToString();
                                     string date = startTime.ToString(Constants.MMddyyyybkslash);
                                     string time = startTime.ToString(Constants.HHmmss);
                                     txtDesc.Text = $@"{Constants.HccCsvUploadonAt.Replace("{date}", date).Replace("{time}", time)}";
@@ -168,7 +169,7 @@ namespace RWDE
 
                                     if (isUploading)
                                     {
-                                        var result = InsertCsvDataIntoTable(csvFilePath, Batchid, connection, isUploading); // Pass connection and transaction objects
+                                        var result = InsertCsvDataIntoTable(csvFilePath, batchid, connection, isUploading); // Pass connection and transaction objects
                                         totalRowsInserted += result.Item1;
 
                                         // Increment current file index
@@ -186,7 +187,8 @@ namespace RWDE
 
                                         if (isUploading)
                                         {
-                                            dbHelper.InsertBatch(Batchid, fileName, baseFilename, Constants.Hcc, description, DateTime.Now, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
+                                            dbHelper.InsertBatch(batchid, fileName, baseFilename, Constants.Hcc, description, DateTime.Now, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
+                                            //progress of total files insertion 
                                             UpdateFileProgress(currentCsvFileIndex, totalCsvFiles,isUploading);
                                         }
                                     }
@@ -214,8 +216,8 @@ namespace RWDE
                     catch (Exception ex)
                     {
                         var st = new StackTrace(ex, true);
-                        var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                        int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
+                        var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                        int lineNumber = frame?.GetFileLineNumber() ?? 0;
                         dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(btnUpload_Click), fileName, lineNumber);
                         MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -297,12 +299,10 @@ namespace RWDE
                                 dbHelper.InsertDlServices(connection, data, batchid, fileNameWithExtension, row);
                                 rowsInserted++;//insertion of AriesServices
                             }
-                            // rowsInserted++;
-                            //rowsInserted++;
                         }
-                        if (baseFilename == Constants.AriesFinanacial)//insertion of AriesFinanacial
+                        if (baseFilename == Constants.AriesFinanacial)//insertion of AriesFinancial
                         {
-                            dbHelper.InsertDlFinancials(connection, data, batchid, fileNameWithExtension);//insertion of AriesFinanacial
+                            dbHelper.InsertDlFinancials(connection, data, batchid, fileNameWithExtension);//insertion of AriesFinancial
                             rowsInserted++;//
                             //rowsInserted++;
                         }
@@ -322,7 +322,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 var st = new StackTrace(ex, true);
-                var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 //int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
                 dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertCsvDataIntoTable), filename, lineNumber);
@@ -349,16 +349,16 @@ namespace RWDE
             }
         }
 
-        private void UpdateFileProgress(int currentFileIndex, int totalFiles,Boolean isUploading)//progress of total files insertion 
+        private void UpdateFileProgress(int currentFilesIndex, int totalFiles,Boolean isUploading)//progress of total files insertion 
         {
             try
             {
                 // Update the progress bar value directly with the current file index
-                progressBarfile.Value = isUploading ? currentFileIndex : 0;
+                progressBarfile.Value = isUploading ? currentFilesIndex : 0;
 
-                int progressPercentage = (int)((double)currentFileIndex / totalFiles * 100);
+                int progressPercentage = (int)((double)currentFilesIndex / totalFiles * 100);
                 // Update the progress text with current file progress
-                txtProgressfile.Text = $@"{currentFileIndex}/{totalFiles} ({progressPercentage}%)";
+                txtProgressfile.Text = $@"{currentFilesIndex}/{totalFiles} ({progressPercentage}%)";
 
                 // Refresh the UI
                 Application.DoEvents();
@@ -377,7 +377,7 @@ namespace RWDE
                 {
                     if (btnClose.Text == Constants.Close)
                     {
-                        this.Close();
+                        Close();
                         Application.Restart();
                         return;
                     }
@@ -394,7 +394,7 @@ namespace RWDE
                             MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadHccCsv);
                             String path = txtpath.Text;
                             UpdateBatch(batchId, fileName,path);
-                            this.Close();
+                            Close();
                             dbHelper.DeleteBatchochin(batchId.ToString());
                             Application.Restart();
                         }
@@ -463,7 +463,7 @@ namespace RWDE
                 FrmMain mainForm = Application.OpenForms.OfType<FrmMain>().FirstOrDefault();
                 if (mainForm != null)
                 {
-                    mainForm.ShowOchinToHccScreen();
+                    mainForm.ShowOchinToHccScreen();//to show upload OCHIN CSV Screen
                 }
             }
             catch (Exception ex)

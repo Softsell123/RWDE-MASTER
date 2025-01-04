@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    partial class ServiceReconciliationReport
+    sealed partial class ServiceReconciliationReport
     {
         /// <summary>
         /// Required designer variable.

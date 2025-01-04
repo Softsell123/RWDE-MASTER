@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    partial class ServiceCodeSetup
+    sealed partial class ServiceCodeSetup
     {
         /// <summary>
         /// Required designer variable.

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    public partial class ServiceCodeSetup : Form
+    public sealed partial class ServiceCodeSetup : Form
     {
         private readonly DbHelper dbHelper;
         private DataTable dataTable;
@@ -16,13 +16,14 @@ namespace RWDE
         {
             DataGridView gridView = new DataGridView();
             gridView.EditMode = DataGridViewEditMode.EditOnEnter;
-            this.ControlBox = false;
-            this.DoubleBuffered = true;
-            this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
-            this.WindowState = FormWindowState.Maximized;
+            ControlBox = false;
+            DoubleBuffered = true;
+            MaximizedBounds = Screen.FromHandle(Handle).WorkingArea;
+            WindowState = FormWindowState.Maximized;
             InitializeComponent();
             dbHelper = new DbHelper();
-            
+
+            //to initialize the gridview
             InitializeDataGridView();
             gridView.CellEndEdit += dataGridView_CellEndEdit;
             gridView.CellValidating += dataGridView_CellValidating;
@@ -30,21 +31,21 @@ namespace RWDE
             PopulateGrid();
            // Setup the DataTable and DataGridView when the form loads
             SetupDataGridView();
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                if (control is Button || control is CheckBox || control is DateTimePicker)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -142,7 +143,7 @@ namespace RWDE
                MessageBox.Show(ex.Message);
            }
         }
-        private void InitializeDataGridView()
+        private void InitializeDataGridView()//to initialize the gridview
         {
             try { 
                 // Your DataGridView initialization code
@@ -158,23 +159,24 @@ namespace RWDE
         {
             try
             {
-                this.dataGridView.AutoGenerateColumns = false;
+                dataGridView.AutoGenerateColumns = false;
+
+                //to retrieve the service list data
                 dataTable = dbHelper.GetAllServiceLists();
 
                 if (dataTable != null)
                 {
-                    this.dataGridView.DataSource = dataTable;
+                    dataGridView.DataSource = dataTable;
                 }
 
-                this.dataGridView.Columns.Clear();
+                dataGridView.Columns.Clear();
+                dataGridView.Columns.Add(Constants.ServiceCodeId, Constants.ServiceCodeId);
+                dataGridView.Columns[Constants.ServiceCodeId].DataPropertyName = Constants.ServiceCodeId;
+                dataGridView.Columns[Constants.ServiceCodeId].Width = 220;
 
-                this.dataGridView.Columns.Add(Constants.ServiceCodeId, Constants.ServiceCodeId);
-                this.dataGridView.Columns[Constants.ServiceCodeId].DataPropertyName = Constants.ServiceCodeId;
-                this.dataGridView.Columns[Constants.ServiceCodeId].Width = 220;
-
-                this.dataGridView.Columns.Add(Constants.Service, Constants.Service);
-                this.dataGridView.Columns[Constants.Service].DataPropertyName = Constants.Service;
-                this.dataGridView.Columns[Constants.Service].Width = 220;
+                dataGridView.Columns.Add(Constants.Service, Constants.Service);
+                dataGridView.Columns[Constants.Service].DataPropertyName = Constants.Service;
+                dataGridView.Columns[Constants.Service].Width = 220;
                 DataGridViewComboBoxColumn maptohcc = new DataGridViewComboBoxColumn
                 {
                     Name = Constants.HccExportToAries,
@@ -187,7 +189,7 @@ namespace RWDE
                 // Add items to the drop-down list
                 maptohcc.Items.Add(XmlConstants.True);
                 maptohcc.Items.Add(XmlConstants.False);
-                this.dataGridView.Columns.Add(maptohcc);
+                dataGridView.Columns.Add(maptohcc);
                 // Make sure 'dataGridView' is properly instantiated and initialized
                 try
                 {
@@ -231,35 +233,35 @@ namespace RWDE
                         row.Cells[Constants.HccExportToAries].Value = "";
                     }
                 }
-                this.Load += new EventHandler(Form1_Load);//to load form
+                Load += new EventHandler(Form1_Load);//to load form
 
                 // Handle the DataError event to catch and manage errors gracefully
-                this.dataGridView.DataError += new DataGridViewDataErrorEventHandler(DataGridViewDataError);
+                dataGridView.DataError += new DataGridViewDataErrorEventHandler(DataGridViewDataError);
 
                 void DataGridViewDataError(object sender, DataGridViewDataErrorEventArgs e)
                 {
-                    // Handle the error here
                    // MessageBox.Show("Invalid value for ComboBox column.");
                     e.ThrowException = false; // Prevent the exception from being thrown
                 }
-                this.dataGridView.RowTemplate.Height = 40;
-                this.dataGridView.Columns.Add(Constants.HccPrimaryService, Constants.PrimaryService);
-                this.dataGridView.Columns[Constants.HccPrimaryService].DataPropertyName = Constants.HccPrimaryService;
-                this.dataGridView.Columns[Constants.HccPrimaryService].Width = 220;
-                this.dataGridView.Columns.Add(Constants.HccSecondaryService, Constants.SecondaryService);
-                this.dataGridView.Columns[Constants.HccSecondaryService].DataPropertyName = Constants.HccSecondaryService;
-                this.dataGridView.Columns[Constants.HccSecondaryService].Width = 220;
-                this.dataGridView.Columns.Add(Constants.HccSubService, Constants.SubService);
-                this.dataGridView.Columns[Constants.HccSubService].DataPropertyName = Constants.HccSubService;
-                this.dataGridView.Columns[Constants.HccSubService].Width = 220;
-                this.dataGridView.Columns.Add(Constants.UnitsOfMeasure, Constants.UnitsOfMeasuresp);
-                this.dataGridView.Columns[Constants.UnitsOfMeasure].DataPropertyName = Constants.UnitsOfMeasure;
-                this.dataGridView.Columns[Constants.UnitsOfMeasure].Width = 220;
-                this.dataGridView.Columns.Add(Constants.UnitValue, Constants.Unit);
-                this.dataGridView.Columns[Constants.UnitValue].DataPropertyName = Constants.UnitValue;
-                this.dataGridView.Columns[Constants.UnitValue].Width = 220;
-                //calling Service Lsit function
-                DataTable result = this.dbHelper.GetAllServiceLists();
+                dataGridView.RowTemplate.Height = 40;
+                dataGridView.Columns.Add(Constants.HccPrimaryService, Constants.PrimaryService);
+                dataGridView.Columns[Constants.HccPrimaryService].DataPropertyName = Constants.HccPrimaryService;
+                dataGridView.Columns[Constants.HccPrimaryService].Width = 220;
+                dataGridView.Columns.Add(Constants.HccSecondaryService, Constants.SecondaryService);
+                dataGridView.Columns[Constants.HccSecondaryService].DataPropertyName = Constants.HccSecondaryService;
+                dataGridView.Columns[Constants.HccSecondaryService].Width = 220;
+                dataGridView.Columns.Add(Constants.HccSubService, Constants.SubService);
+                dataGridView.Columns[Constants.HccSubService].DataPropertyName = Constants.HccSubService;
+                dataGridView.Columns[Constants.HccSubService].Width = 220;
+                dataGridView.Columns.Add(Constants.UnitsOfMeasure, Constants.UnitsOfMeasuresp);
+                dataGridView.Columns[Constants.UnitsOfMeasure].DataPropertyName = Constants.UnitsOfMeasure;
+                dataGridView.Columns[Constants.UnitsOfMeasure].Width = 220;
+                dataGridView.Columns.Add(Constants.UnitValue, Constants.Unit);
+                dataGridView.Columns[Constants.UnitValue].DataPropertyName = Constants.UnitValue;
+                dataGridView.Columns[Constants.UnitValue].Width = 220;
+                
+                //to retrieve the service list data
+                DataTable result = dbHelper.GetAllServiceLists();
 
                 DataGridViewComboBoxColumn statusColumn = new DataGridViewComboBoxColumn
                 {
@@ -279,7 +281,7 @@ namespace RWDE
                 statusColumn.DefaultCellStyle.Font = smallerFont;
 
                 // Add the column to the DataGridView
-                this.dataGridView.Columns.Add(statusColumn);
+                dataGridView.Columns.Add(statusColumn);
 
                 dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;//to edit particular row
                 DataGridViewButtonColumn editButtonColumn = new DataGridViewButtonColumn
@@ -326,14 +328,13 @@ namespace RWDE
                             case Constants.InactiveContractstatus:
                                 row[Constants.Status] = Constants.Inactive;
                                 break;
-
                             default:
                                 row[Constants.Status] = Constants.Delete;
                                 break;
                         }
                     }
                     // Set the DataTable as the DataSource of the DataGridView
-                    this.dataGridView.DataSource = dataTable;
+                    dataGridView.DataSource = dataTable;
                     dataGridView.Columns[Constants.Status].ReadOnly = true;
                 }
             }
@@ -343,14 +344,16 @@ namespace RWDE
             }        }
         private void Form1_Load(object sender, EventArgs e)//call function to load form
         {
+            //to populate data in ComboBox
             PopulateContractComboBoxColumn();
+            //populate grid 
             PopulateGrid();
         }
-        private void PopulateContractComboBoxColumn()//to populate data 
+        private void PopulateContractComboBoxColumn()//to populate data in contracts ComboBox
         {
             try { 
                 DataTable contracts = dbHelper.GetActiveContracts();//to get contracts list in service code
-                DataGridViewComboBoxColumn comboBoxColumn = (DataGridViewComboBoxColumn)this.dataGridView.Columns[Constants.ContractId];
+                DataGridViewComboBoxColumn comboBoxColumn = (DataGridViewComboBoxColumn)dataGridView.Columns[Constants.ContractId];
                 comboBoxColumn.DataSource = contracts;
             }
             catch (Exception ex)
@@ -376,6 +379,7 @@ namespace RWDE
                         buttonColor = Color.Silver;
                         buttonText = string.Empty;
                     }
+                    //design format of button
                     using (GraphicsPath path = CreateRoundedRectanglePath(buttonRectangle, 5))
                     {
                         using (Brush brush = new SolidBrush(buttonColor))
@@ -419,6 +423,7 @@ namespace RWDE
                         buttonColor = Color.Silver;
                         buttonText = string.Empty;
                     }
+                    //design format of button
                     using (GraphicsPath path = CreateRoundedRectanglePath(buttonRectangle, 5))
                     {
                         using (Brush brush = new SolidBrush(buttonColor))
@@ -471,7 +476,7 @@ namespace RWDE
         private void SetupDataGridView()//setup grid
         {
             // Assuming 'dataGridView' is your DataGridView and 'dataTable' is your DataTable
-            this.dataGridView.DataSource = dataTable;
+            dataGridView.DataSource = dataTable;
 
             // Set the height for individual rows
             foreach (DataGridViewRow row in dataGridView.Rows)
@@ -483,7 +488,7 @@ namespace RWDE
         {
             try
             {
-                this.Close();
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)
@@ -493,11 +498,8 @@ namespace RWDE
         }
         private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)//to display the drop down
         {
-            if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox)
+            if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox comboBox)
             {
-
-                ComboBox comboBox = e.Control as ComboBox;
-
                 if (comboBox != null)
                 {
                     comboBox.Items.Clear();
@@ -619,7 +621,6 @@ namespace RWDE
                             }
                         }
                     }
-
                     if (isDuplicate)
                     {
                         MessageBox.Show(Constants.ServiceCodeIdiDalreadyexists, Constants.ServiceCodeSetupError, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -673,10 +674,8 @@ namespace RWDE
                     // Get the ContractID from the current row
                     string serviceCodeId = dataGridView.Rows[e.RowIndex].Cells[Constants.ServiceCodeId].Value.ToString();
 
-                    var result = MessageBox.Show($@"{Constants.AreyousureyouwanttoeditServiceCodeId} {serviceCodeId}", Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    // alreadyDeletedMessageShown = true; // Set the flag to true after showing the message
-
                     // Prompt user for confirmation before editing, showing the ContractID
+                    var result = MessageBox.Show($@"{Constants.AreyousureyouwanttoeditServiceCodeId} {serviceCodeId}", Constants.ServiceCodeSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
                     if (result == DialogResult.No)
                     {
@@ -695,9 +694,6 @@ namespace RWDE
                                 row.ReadOnly = true;
                             }
                         }
-                        
-                        // Make the specific row editable
-                       // dataGridView.Rows[e.RowIndex].ReadOnly = false;
                     }
 
                     // Make all cells editable for the selected row except for the Constants.Status column
@@ -790,7 +786,7 @@ namespace RWDE
                 {
                     // Update the status to Constants.Delete
                     dataGridView.Rows[rowIndex].Cells[Constants.Status].Value = Constants.Delete;
-                    dbHelper.ServiceCodeIdUpdateStatus(serviceCodeId, Constants.DeleteContractstatus); // Assume this function updates the status in the database
+                    dbHelper.ServiceCodeIdUpdateStatus(serviceCodeId, Constants.DeleteContractstatus); // this function updates the status in the database
                     MessageBox.Show($@"{Constants.DeletedContractId} {serviceCodeId} {Constants.Successfully}", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -830,7 +826,7 @@ namespace RWDE
 
                     }
                 }
-                catch (InvalidCastException ex)
+                catch (InvalidCastException)
                 {
                     return; // Skip this row
                 }
@@ -856,8 +852,6 @@ namespace RWDE
                     statusString = Constants.DeleteContractstatus;
                 }
 
-                int serviceCodeId;
-                int hccContractId;
                 decimal unitValue;
 
                 // Check for empty or null HCC_ContractID before parsing
@@ -867,7 +861,7 @@ namespace RWDE
                     return;
                 }
 
-                if (!int.TryParse(row[Constants.ServiceCodeId].ToString(), out serviceCodeId))
+                if (!int.TryParse(row[Constants.ServiceCodeId].ToString(), out int serviceCodeId))
                 {
                     MessageBox.Show(Constants.InvalidServiceCodeId, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -876,7 +870,7 @@ namespace RWDE
                 {
                     unitValue = 0; // or any default value you want to use
                 }
-                if (!int.TryParse(row[Constants.HccContractId].ToString(), out hccContractId))
+                if (!int.TryParse(row[Constants.HccContractId].ToString(), out int hccContractId))
                 {
                     MessageBox.Show(Constants.InvalidHccContractId,Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -932,7 +926,7 @@ namespace RWDE
         {
             try
             {
-                if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is System.Windows.Forms.ComboBox comboBox)
+                if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox comboBox)
                 {
                     // Remove existing event handlers to prevent multiple subscriptions
                     comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;//to create dropdown
@@ -945,7 +939,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)//to create dropdown
+        private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)//to handle the dropdown of Status
         {
             if (sender is ComboBox comboBox)
             {

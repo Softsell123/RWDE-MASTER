@@ -14,29 +14,29 @@ namespace RWDE
         public DeceasedClients() //initialize data
         {
             dbHelper = new DbHelper(); // Initialize the dbHelper object
-            // Now this will work because dbHelper is initialized
             InitializeComponent();
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this);
+            //Assigning events to all Controls
+            RegisterEvents(this); //Assigning events to all Controls
         }
 
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
 
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
 
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
@@ -50,6 +50,7 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to child Controls
                     RegisterEvents(control);
                 }
             }
@@ -61,59 +62,59 @@ namespace RWDE
             {
                 // Clear existing columns
                 dataGridView.AutoGenerateColumns = false;
-                this.dataGridView.Columns.Clear();
+                dataGridView.Columns.Clear();
 
                 // Add columns to the DataGridView
-                this.dataGridView.Columns.Add(Constants.HccId, Constants.HccIdsp);
-                this.dataGridView.Columns.Add(Constants.ClientName, Constants.ClientNamesp);
-                this.dataGridView.Columns.Add(Constants.Status, Constants.Status);
-                this.dataGridView.Columns.Add(Constants.DateOfDeath, Constants.DateOfDeathsp);
-                this.dataGridView.Columns.Add(Constants.LastServiceDate, Constants.LastServiceDatesp);
-                this.dataGridView.Columns.Add(Constants.DownloadDate, Constants.DownloadDatesp);
-                this.dataGridView.Columns.Add(Constants.Extracted, Constants.Extractedsp);
-                this.dataGridView.Columns.Add(Constants.ExtractionDate, Constants.ExtractionDatesp);
-                this.dataGridView.Columns.Add(Constants.CmsMatch, Constants.CmsMatchsp);
-                this.dataGridView.Columns.Add(Constants.CmsMatchDate, Constants.CmsMatchDatesp);
-                this.dataGridView.Columns.Add(Constants.ServiceCountAfterDeath, Constants.ServiceCountAfterDeath);
+                dataGridView.Columns.Add(Constants.HccId, Constants.HccIdsp);
+                dataGridView.Columns.Add(Constants.ClientName, Constants.ClientNamesp);
+                dataGridView.Columns.Add(Constants.Status, Constants.Status);
+                dataGridView.Columns.Add(Constants.DateOfDeath, Constants.DateOfDeathsp);
+                dataGridView.Columns.Add(Constants.LastServiceDate, Constants.LastServiceDatesp);
+                dataGridView.Columns.Add(Constants.DownloadDate, Constants.DownloadDatesp);
+                dataGridView.Columns.Add(Constants.Extracted, Constants.Extractedsp);
+                dataGridView.Columns.Add(Constants.ExtractionDate, Constants.ExtractionDatesp);
+                dataGridView.Columns.Add(Constants.CmsMatch, Constants.CmsMatchsp);
+                dataGridView.Columns.Add(Constants.CmsMatchDate, Constants.CmsMatchDatesp);
+                dataGridView.Columns.Add(Constants.ServiceCountAfterDeath, Constants.ServiceCountAfterDeath);
 
-                this.dataGridView.Columns.Add(Constants.CreatedOn, Constants.CreatedOnsp);
+                dataGridView.Columns.Add(Constants.CreatedOn, Constants.CreatedOnsp);
 
                 // Set column widths (adjust as needed)
-                this.dataGridView.Columns[Constants.HccId].Width = 100;
-                this.dataGridView.Columns[Constants.ClientName].Width = 200;
-                this.dataGridView.Columns[Constants.Status].Width = 120;
-                this.dataGridView.Columns[Constants.DateOfDeath].Width = 120;
-                this.dataGridView.Columns[Constants.LastServiceDate].Width = 120;
-                this.dataGridView.Columns[Constants.DownloadDate].Width = 120;
-                this.dataGridView.Columns[Constants.Extracted].Width = 100;
-                this.dataGridView.Columns[Constants.ExtractionDate].Width = 120;
-                this.dataGridView.Columns[Constants.CmsMatch].Width = 100;
-                this.dataGridView.Columns[Constants.CmsMatchDate].Width = 120;
-                this.dataGridView.Columns[Constants.ServiceCountAfterDeath].Width = 120;
-                this.dataGridView.Columns[Constants.CreatedOn].Width = 120;
+                dataGridView.Columns[Constants.HccId].Width = 100;
+                dataGridView.Columns[Constants.ClientName].Width = 200;
+                dataGridView.Columns[Constants.Status].Width = 120;
+                dataGridView.Columns[Constants.DateOfDeath].Width = 120;
+                dataGridView.Columns[Constants.LastServiceDate].Width = 120;
+                dataGridView.Columns[Constants.DownloadDate].Width = 120;
+                dataGridView.Columns[Constants.Extracted].Width = 100;
+                dataGridView.Columns[Constants.ExtractionDate].Width = 120;
+                dataGridView.Columns[Constants.CmsMatch].Width = 100;
+                dataGridView.Columns[Constants.CmsMatchDate].Width = 120;
+                dataGridView.Columns[Constants.ServiceCountAfterDeath].Width = 120;
+                dataGridView.Columns[Constants.CreatedOn].Width = 120;
 
                 // Set row height
-                this.dataGridView.RowTemplate.Height = 40;
+                dataGridView.RowTemplate.Height = 40;
 
                 // Set default cell style
-                this.dataGridView.ForeColor = Color.Black;
-                this.dataGridView.DefaultCellStyle.ForeColor = Color.Black; // Text color
-                this.dataGridView.DefaultCellStyle.Font =
+                dataGridView.ForeColor = Color.Black;
+                dataGridView.DefaultCellStyle.ForeColor = Color.Black; // Text color
+                dataGridView.DefaultCellStyle.Font =
                     new Font(Constants.FntfmlyCalibre, 14, FontStyle.Regular); // Font size 14 and regular
 
                 // Set header style
-                foreach (DataGridViewColumn column in this.dataGridView.Columns)
+                foreach (DataGridViewColumn column in dataGridView.Columns)
                 {
                     column.HeaderCell.Style.ForeColor = Color.Black; // Set header text color to black
                 }
 
                 // Clear existing rows
-                this.dataGridView.Rows.Clear();
+                dataGridView.Rows.Clear();
 
                 // Populate DataGridView with data
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    this.dataGridView.Rows.Add(
+                    dataGridView.Rows.Add(
                         row[Constants.HccIdsp],
                         row[Constants.ClientNamesp],
                         row[Constants.Status],
@@ -140,7 +141,7 @@ namespace RWDE
             try
             {
                 // Close the current form (dispose it)
-                this.Close();
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)

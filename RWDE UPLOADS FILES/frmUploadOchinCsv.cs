@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -20,11 +19,13 @@ namespace RWDE//
         {
             InitializeComponent();
             dbHelper = new DbHelper();
-            connectionString = dbHelper.GetConnectionString();
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
+            connectionString = dbHelper.GetConnectionString();//to get the connection String
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
+
+            //load description data
             Descriptionformat();
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
             if (File.Exists(Constants.LastFolderPathhcc))
             {
                 string lastFolderPathhcc = File.ReadAllText(Constants.LastFolderPathhcc).Trim();  // Trim to remove any extra spaces or newlines
@@ -40,19 +41,19 @@ namespace RWDE//
             }
         }
        
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
+                if (control is Button || control is CheckBox || control is DateTimePicker)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -61,12 +62,13 @@ namespace RWDE//
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)//To Close the form and Restart the Application
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -74,7 +76,7 @@ namespace RWDE//
                 {
                     if (btnClose.Text == Constants.Close)
                     {
-                        this.Close();
+                        Close();
                         Application.Restart();
                         return;
                     }
@@ -83,27 +85,21 @@ namespace RWDE//
                         DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, Constants.UploadOchinCsv, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (result == DialogResult.Yes)
                         {
-                            int batchId = Convert.ToInt32(txtBatchid.Text);
-                            //int currentBatchId = dbHelper.GetNextBatchIdabort(connection); // Get the current batch ID from the database
-
+                            int batchId = Convert.ToInt32(txtBatchid.Text);// Get the current batch ID
                             string fileName = txtFileName.Text;
-                        
-                            // Increment the batch ID
-                            //int nextBatchId = currentBatchId + 1;
 
                             // Show confirmation message
                             MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadOchinCsv);
 
-                                UpdateBatch(batchId, fileName, Path);
-                                this.Close();
-                                dbHelper.DeleteBatchochin(batchId.ToString());
-                                Application.Restart();
+                            //to Update the Aborted data information 
+                            UpdateBatch(batchId, fileName, Path);
+                            Close();
+                            //Delete All Values form all Ochin tables 
+                            dbHelper.DeleteBatchochin(batchId.ToString());
+                            Application.Restart();
                         }
-
-                        
                     }
                     // Restart the application
-                   
                 }
                 catch (Exception ex)
                 {
@@ -112,7 +108,7 @@ namespace RWDE//
                 }
             }
         }
-        private void UpdateBatch(int batchid, string filename, string path)//to Update the data information 
+        private void UpdateBatch(int batchid, string filename, string path)//to Update the Aborted data information 
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -120,10 +116,9 @@ namespace RWDE//
                 {
                     string description = Constants.Abortedfile;
                     DateTime startTime = DateTime.Now;
-                   
+
+                    // update batch status in database
                     dbHelper.InsertBatch(batchid, filename, path, Constants.OchinCode, description, startTime, 0, 0, Constants.Fileaborted);
-                    
-                //ClearTables(batchid);//to clear data in tables
                 }
                 catch (Exception ex)
                 {
@@ -133,125 +128,158 @@ namespace RWDE//
         }
         private async void btnUpload_Click(object sender, EventArgs e)//to upload data into table in database
         {
-            string[] files = Directory.GetFiles(txtPath.Text);
-            bool allFilesAreCsv = files.All(file => System.IO.Path.GetExtension(file).Equals(Constants.CsvExtention, StringComparison.OrdinalIgnoreCase));
-           
-            if (!allFilesAreCsv)
+            try
             {
-                MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            btnClose.Text = Constants.Abort;
-            btnUpload.Enabled = false;
-            isUploading = true;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
+                if (string.IsNullOrEmpty(txtPath.Text))
                 {
-                    connection.Open();
+                    MessageBox.Show(Constants.TheFolderPathCannotBeEmpty, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                } // Get all files in the selected folder
+                string[] filesempty = Directory.GetFiles(txtPath.Text);
 
-                    string folderPath = txtPath.Text;
+                // Check if the folder is empty
 
-                    if (!string.IsNullOrEmpty(folderPath))
+                if (txtPath.Text == "" || txtPath == null || filesempty.Length == 0)
+                {
+                    MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (filesempty.Length > 2)
+                {
+                    MessageBox.Show(Constants.Thefolderhasmorethantwofileorduplicatefiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(txtPath.Text))
+                {
+                    MessageBox.Show(Constants.Selectafilebeforeuploading);
+                    return; // Exit the method if the path is empty
+                }
+                string[] files = Directory.GetFiles(txtPath.Text);
+                bool allFilesAreCsv = files.All(file => System.IO.Path.GetExtension(file).Equals(Constants.CsvExtention, StringComparison.OrdinalIgnoreCase));
+           
+                if (!allFilesAreCsv)
+                {
+                    MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                btnClose.Text = Constants.Abort;
+                btnUpload.Enabled = false;
+                isUploading = true;
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    try
                     {
-                        string existingBatchId = txtBatchid.Text;
+                        connection.Open();
 
-                        // Check if the batch ID already exists
-                        if (!string.IsNullOrEmpty(existingBatchId))
+                        string folderPath = txtPath.Text;
+
+                        if (!string.IsNullOrEmpty(folderPath))
                         {
-                            MessageBox.Show($@"{Constants.BatchIdAlreadyExistsCloseAndReopen.Replace("{existingBatchId}", existingBatchId)}", Constants.BatchIdExists, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            ResetUi();
-                            return;
-                        }
+                            string existingBatchId = txtBatchid.Text;
 
-                        string[] csvFiles = Directory.GetFiles(folderPath, Constants.AllCsvExtention);
-                        int totalCsvFiles = csvFiles.Length;
-                        int currentCsvFileIndex = 0;
-                        int totalRowsInserted = 0;
-                        progressBarLines.Value = 0;
-                        progressBarfile.Value = 0;
-                        progressBarfile.Maximum = totalCsvFiles;
-
-                        DateTime startTime = DateTime.Now;
-
-                        int batchid = dbHelper.GetNextBatchId(); // Initialize the first batch ID to 1
-
-                        foreach (string csvFilePath in csvFiles)
-                        {
-                            string baseFilename = System.IO.Path.GetFileNameWithoutExtension(csvFilePath).Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                            string fileName = System.IO.Path.GetFileName(csvFilePath);
-                            txtFileName.Text = fileName;
-                            if (!isUploading)
-                                break;
-                            UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//NO OF ROWS INSERTED
-                            currentCsvFileIndex++;
-
-                            int totalRowsInCurrentFile = 0; // Initialize within the loop
-
-                            txtBatchid.Text = batchid.ToString();
-                            string date = startTime.ToString(Constants.MMddyyyybkslash);
-                            string time = startTime.ToString(Constants.HHmmss);
-                            txtDesc.Text = $@"{Constants.OchinCsvUploadonAt.Replace("{date}", date).Replace("{time}", time)}";
-                            string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
-                            txtUploadStarted.Text = formattime;
-                            Path = csvFilePath;
-                            if (isUploading)
+                            // Check if the batch ID already exists
+                            if (!string.IsNullOrEmpty(existingBatchId))
                             {
-                                // Await the async method call
-                                var result = await InsertCsvDataIntoTable(csvFilePath, batchid, connection);
+                                MessageBox.Show($@"{Constants.BatchIdAlreadyExistsCloseAndReopen.Replace("{existingBatchId}", existingBatchId)}", Constants.BatchIdExists, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                ResetUi();
+                                return;
+                            }
 
-                                totalRowsInserted += result.Item1;
-                                totalRowsInCurrentFile += result.Item1;
-                                progressBarfile.Value = currentCsvFileIndex;
+                            string[] csvFiles = Directory.GetFiles(folderPath, Constants.AllCsvExtention);
+                            int totalCsvFiles = csvFiles.Length;
+                            int currentCsvFileIndex = 0;
+                            int totalRowsInserted = 0;
+                            progressBarLines.Value = 0;
+                            progressBarfile.Value = 0;
+                            progressBarfile.Maximum = totalCsvFiles;
 
-                                // Log successful insertion
-                                fileName = System.IO.Path.GetFileName(csvFilePath);
-                                string description = txtDesc.Text;
-                                int successfulRows = result.Item1;
-                                DateTime endtime = DateTime.Now;
+                            DateTime startTime = DateTime.Now;
+
+                            int batchid = dbHelper.GetNextBatchId(); // to get the Next Batch ID
+
+                            foreach (string csvFilePath in csvFiles)
+                            {
+                                string baseFilename = System.IO.Path.GetFileNameWithoutExtension(csvFilePath).Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                                string fileName = System.IO.Path.GetFileName(csvFilePath);
+                                txtFileName.Text = fileName;
+                                if (!isUploading)
+                                    break;
+                                UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//to update the file Progress
+                                currentCsvFileIndex++;
+
+                                int totalRowsInCurrentFile = 0; // Initialize within the loop
+
+                                txtBatchid.Text = batchid.ToString();
+                                string date = startTime.ToString(Constants.MMddyyyybkslash);
+                                string time = startTime.ToString(Constants.HHmmss);
+                                txtDesc.Text = $@"{Constants.OchinCsvUploadonAt.Replace("{date}", date).Replace("{time}", time)}";
+                                string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+                                txtUploadStarted.Text = formattime;
+                                Path = csvFilePath;
                                 if (isUploading)
                                 {
-                                    dbHelper.InsertBatch(batchid, fileName, csvFilePath, Constants.OchinCode, description, startTime, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
-                                    UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//no of files insertion
+                                    // Await the async method call
+                                    var result = await InsertCsvDataIntoTable(csvFilePath, batchid, connection);
+
+                                    totalRowsInserted += result.Item1;
+                                    totalRowsInCurrentFile += result.Item1;
+                                    progressBarfile.Value = currentCsvFileIndex;
+
+                                    // Log successful insertion
+                                    fileName = System.IO.Path.GetFileName(csvFilePath);
+                                    string description = txtDesc.Text;
+                                    int successfulRows = result.Item1;
+                                    DateTime endtime = DateTime.Now;
+                                    if (isUploading)
+                                    {
+                                        //update batch status in database
+                                        dbHelper.InsertBatch(batchid, fileName, csvFilePath, Constants.OchinCode, description, startTime, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
+                                        UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//no of files insertion progress
+                                    }
+                                }
+
+                                if (baseFilename.Contains(Constants.Clients))
+                                {
+                                    //btnClose.Text = Constants.close;
+                                    TimeSpan elapsedTime = DateTime.Now - startTime;
+                                    string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
+                                }
+
+                                if (baseFilename.Contains(Constants.Services))
+                                {
+                                    //btnClose.Text = Constants.close;
+                                    TimeSpan elapsedTime = DateTime.Now - startTime;
+                                    string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
+                                    double totalSeconds = elapsedTime.TotalSeconds;
+                                    txtUploadEnded.Text = eTime;
+                                    txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
+                                    btnUpload.Enabled = true;
+                                    btnClose.Text = Constants.Close;
+                                }
+                                else
+                                {
+                                    btnUpload.Enabled = true;
                                 }
                             }
-
-                            if (baseFilename.Contains(Constants.Clients))
-                            {
-                                //btnClose.Text = Constants.close;
-                                TimeSpan elapsedTime = DateTime.Now - startTime;
-                                string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
-                            }
-
-                            if (baseFilename.Contains(Constants.Services))
-                            {
-                                //btnClose.Text = Constants.close;
-                                TimeSpan elapsedTime = DateTime.Now - startTime;
-                                string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
-                                double totalSeconds = elapsedTime.TotalSeconds;
-                                txtUploadEnded.Text = eTime;
-                                txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
-                                btnUpload.Enabled = true;
-                                btnClose.Text = Constants.Close;
-                            }
-                            else
-                            {
-                                btnUpload.Enabled = true;
-                            }
+                        }
+                        else
+                        {
+                            btnUpload.Enabled = true;
+                            btnClose.Text = Constants.Close;
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        btnUpload.Enabled = true;
-                        btnClose.Text = Constants.Close;
+                        MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ResetUi();
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    ResetUi();
-                }
+            }
+            catch (Exception)
+            {
+                throw; // TODO handle exception
             }
         }
         private void ResetUi()//to reset button
@@ -267,7 +295,6 @@ namespace RWDE//
                 progressBarLines.Minimum = 0;
                 progressBarLines.Maximum = totalCsvFiles;
                 int progressPercentage = (int)((double)currentCsvFileIndex / totalCsvFiles * 100);
-                // txtProgressbar.Text = $"{currentCsvFileIndex}/{totalCsvFiles} ({progressPercentage}%)";
                 progressBarLines.Value = currentCsvFileIndex;
                 txtProgressfile.Text = $@"{currentCsvFileIndex}/{totalCsvFiles} ({progressPercentage}%)";
 
@@ -407,7 +434,7 @@ namespace RWDE//
                     lastProgress = currentRowIndex;
 
                     // Slow down the progress update
-                    await Task.Delay(50); // Adding asynchronous delay of 100 milliseconds
+                    await Task.Delay(50); // Adding asynchronous delay of 0.5 milliseconds
                 }
             }
             catch (Exception ex)
@@ -416,7 +443,7 @@ namespace RWDE//
                 dbHelper.Log($"{Constants.ErrorUpdatingFileProgress}{ex.Message}", Constants.Error, Constants.ProgressUpdate, Constants.Uploadochin);
             }
         }
-        private void btnBrowse_Click(object sender, EventArgs e)
+        private void btnBrowse_Click(object sender, EventArgs e)//to select the folder containing Ochin Csv file
         {
             try
             {
@@ -483,7 +510,7 @@ namespace RWDE//
                 FrmMain mainForm = Application.OpenForms.OfType<FrmMain>().FirstOrDefault();
 
                 if (mainForm != null)
-                    mainForm.ShowOchinToHccScreenHcc();//to navigate to required page
+                    mainForm.ShowOchinToHccScreenHcc();//to navigate to Ochin to Rwde Conversion Page
             }
             catch (Exception ex)
             {

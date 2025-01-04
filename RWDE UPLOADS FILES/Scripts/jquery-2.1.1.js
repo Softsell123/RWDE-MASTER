@@ -1533,7 +1533,7 @@ Expr = Sizzle.selectors = {
 			match[3] = ( match[3] || match[4] || match[5] || "" ).replace( runescape, funescape );
 
 			if ( match[2] === "~=" ) {
-				match[3] = " " + match[3] + " ";
+				match[3] = " " + match[3] + Constants.Space;
 			}
 
 			return match.slice( 0, 4 );
@@ -4446,7 +4446,7 @@ jQuery.event = {
 						handleObj = handlers[ i ];
 
 						// Don't conflict with Object.prototype properties (#13203)
-						sel = handleObj.selector + " ";
+						sel = handleObj.selector + Constants.Space;
 
 						if ( matches[ sel ] === undefined ) {
 							matches[ sel ] = handleObj.needsContext ?
@@ -7166,7 +7166,7 @@ jQuery.fn.extend({
 					j = 0;
 					while ( (clazz = classes[j++]) ) {
 						if ( cur.indexOf( " " + clazz + " " ) < 0 ) {
-							cur += clazz + " ";
+							cur += clazz + Constants.Space;
 						}
 					}
 

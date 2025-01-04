@@ -15,22 +15,29 @@ namespace RWDE
         public FrmDownloadHccErrors()
         {
             InitializeComponent();
-            this.BackColor = Color.White;
-            this.WindowState = FormWindowState.Maximized;
+            BackColor = Color.White;
+            WindowState = FormWindowState.Maximized;
             DbHelper dbHelper = new DbHelper();
             connectionString = dbHelper.GetConnectionString();
             InitializeDataGridView();
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+
+        public sealed override Color BackColor
+        {
+            get { return base.BackColor; }
+            set { base.BackColor = value; }
+        }
+
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
@@ -42,15 +49,16 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to child Controls
                     RegisterEvents(control);
                 }
             }
         }
-        private void InitializeDataGridView()
+        private void InitializeDataGridView()//to load the default gridView
         {
             dataGridView.AutoGenerateColumns = false;
         }
-        private void btnBrowse_Click(object sender, EventArgs e)
+        private void btnBrowse_Click(object sender, EventArgs e)//to select the Error file
         {
             try
             {
@@ -72,15 +80,15 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool IsAllowedFileType(string filePath)
+        private bool IsAllowedFileType(string filePath)//to check whether the selected filetype  is Excel or not
         {
             string extension = Path.GetExtension(filePath).ToLowerInvariant();
             return extension == Constants.XlsxExtention;
         }
-        private void ProcessExcelData(string SourceFileName)
+        private void ProcessExcelData(string sourceFileName)//to read  and store excel data in Database
         {
-            DataTable excelData = ReadExcelFile(SourceFileName);
-            
+            DataTable excelData = ReadExcelFile(sourceFileName);//to read the excel
+
             // Ensure the required columns exist
             if (!excelData.Columns.Contains(Constants.HccTable) || !excelData.Columns.Contains(Constants.ErrorMessage))
             {
@@ -98,7 +106,7 @@ namespace RWDE
                     {
                         foreach (DataRow row in excelData.Rows)
                         {
-                            string sourceFileName = row[Constants.SourceFileName].ToString();
+                            string sourceFileNameStr = row[Constants.SourceFileName].ToString();
                             string hccTable = row[Constants.HccTable].ToString();
                             string errorMessage = row[Constants.ErrorMessage].ToString();
                             string clientId = row[Constants.SourceId].ToString();
@@ -106,34 +114,34 @@ namespace RWDE
                             // Replace values in HccTable based on specific cases
                             switch (hccTable)
                             {
-                                case  Constants. T_CLNT_DEMO:
-                                case Constants.T_CLNT_ETHN_DTL:
-                                    hccTable = Constants.HCCCLIENTS;
+                                case  Constants.ClntDemo:
+                                case Constants.ClntEthnDtl:
+                                    hccTable = Constants.Hccclients;
                                     break;
-                                case Constants.T_CLNT_HIV_INFO:
-                                    hccTable = Constants.HCCClientMedCD4;
+                                case Constants.ClntHivInfo:
+                                    hccTable = Constants.HccClientMedCd4;
                                     break;
-                                case Constants.T_CLNT_HIV_TEST:
-                                    hccTable = Constants.HCCClientHIVTest;
+                                case Constants.ClntHivTest:
+                                    hccTable = Constants.HccClientHivTest;
                                     break;
-                                case Constants.T_CLNT_LVNG_STTN:
-                                    hccTable =Constants.HCCLvngSttn;
+                                case Constants.ClntLvngSttn:
+                                    hccTable =Constants.HccLvngSttn;
                                     break;
-                                case Constants.T_CLNT_RACE_DTL:
-                                    hccTable = Constants.HCCClientRace;
+                                case Constants.ClntRaceDtl:
+                                    hccTable = Constants.HccClientRace;
                                     break;
-                                case Constants.T_CLNT_SITE:
-                                    hccTable = Constants.HCCClientAddr;
+                                case Constants.ClntSite:
+                                    hccTable = Constants.HccClientAddr;
                                     break;
-                                case Constants.T_CLNT_HSNG_ASSTNC:
-                                    hccTable = Constants.HCCLvngSttn;
+                                case Constants.ClntHsngAsstnc:
+                                    hccTable = Constants.HccLvngSttn;
                                     break;
-                                case Constants.T_CLNT_HSHLD_INCOME:
+                                case Constants.ClntHshldIncome:
                                     hccTable = Constants.HccClients;
                                     break;
 
                                 default:
-                                    if (hccTable.Contains(Constants.T_SITE))
+                                    if (hccTable.Contains(Constants.Site))
                                     {
                                         hccTable = Constants.HccServices;
                                     }
@@ -145,8 +153,8 @@ namespace RWDE
                                     break;
                             }
                             // Insert into database
-                            InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileName);
-                            AddRowToGrid(errorMessage, hccTable, clientId, sourceFileName);
+                            InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
+                            AddRowToGrid(errorMessage, hccTable, clientId, sourceFileNameStr);
                         }
                         transaction.Commit();
                         MessageBox.Show(Constants.Dataprocessedandinsertedintothedatabasesuccessfully, Constants.DownloadHccErrors);
@@ -159,7 +167,7 @@ namespace RWDE
                 }
             }
         }
-        private void AddRowToGrid(string errorMessage, string hccTable, string clientId, string sourceFileName)
+        private void AddRowToGrid(string errorMessage, string hccTable, string clientId, string sourceFileName)//to add every row in excel to grid
         {
             // Ensure DataGridView is already created and columns are defined
             if (dataGridView.Columns.Count == 0)
@@ -173,7 +181,7 @@ namespace RWDE
             // Add a new row to the DataGridView
             dataGridView.Rows.Add(hccTable, errorMessage, clientId, sourceFileName);
         }
-        private void InsertIntoDatabase(SqlConnection conn, SqlTransaction transaction, string hccTable, string errorMessage, string clientId, string sourceFileName)
+        private void InsertIntoDatabase(SqlConnection conn, SqlTransaction transaction, string hccTable, string errorMessage, string clientId, string sourceFileName)//to insert the data into the database
         {
             try
             {
@@ -204,7 +212,7 @@ namespace RWDE
             }
         }
 
-        private DataTable ReadExcelFile(string filePath)
+        private DataTable ReadExcelFile(string filePath)//to read the excel file with header
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
@@ -223,12 +231,12 @@ namespace RWDE
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
             try
             {
                 // Close the current form (dispose it)
-                this.Close();
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)
@@ -236,7 +244,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnUpload_Click(object sender, EventArgs e)
+        private void btnUpload_Click(object sender, EventArgs e)//to read  and store excel data in Database
         {
             if (txtPath.Text == "")
             {
@@ -251,7 +259,7 @@ namespace RWDE
                 ProcessExcelData(selectedFilePath);
             }
         }
-        private void btnSubmit_Click(object sender, EventArgs e)
+        private void btnSubmit_Click(object sender, EventArgs e)//to fetch the data of the given Source file 
         {
             if (txtFileName.Text == "")
             {
@@ -303,7 +311,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClr_Click(object sender, EventArgs e)
+        private void btnClr_Click(object sender, EventArgs e)//to set all default values
         {
             InitializeDataGridView();
             dataGridView.Rows.Clear();

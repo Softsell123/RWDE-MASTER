@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    public partial class ServiceReconciliationReport : Form
+    public sealed partial class ServiceReconciliationReport : Form
     {
         private readonly DbHelper dbHelper = new DbHelper();
         public ServiceReconciliationReport()//initialization of data
@@ -25,26 +25,26 @@ namespace RWDE
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
-            this.ControlBox = false;
-            this.DoubleBuffered = true;
-            this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
-            this.WindowState = FormWindowState.Maximized;
+            ControlBox = false;
+            DoubleBuffered = true;
+            MaximizedBounds = Screen.FromHandle(Handle).WorkingArea;
+            WindowState = FormWindowState.Maximized;
             txtBatchID.Text = "";
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -53,11 +53,12 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
         }
-        private void DisplayHeadersOnly()
+        private void DisplayHeadersOnly()//to display the empty GridView
         {
             dataGridView.DataSource = null;
             dataGridView.Columns.Clear();
@@ -81,7 +82,7 @@ namespace RWDE
             dataGridView.Columns.Add(Constants.HccExportFailureReason, Constants.HccExportFailureReasonSp);
             dataGridView.AutoGenerateColumns = false;
         }
-        private void btnReport_Click(object sender, EventArgs e)
+        private void btnReport_Click(object sender, EventArgs e)//to display the data as per the given inputs
         {
             try
             {
@@ -97,9 +98,9 @@ namespace RWDE
                 }
 
                 // Create instance of DBHelper
-                DbHelper dbHelper = new DbHelper();
+                //DbHelper dbHelper = new DbHelper();
                 dataGridView.Columns.Clear();
-                dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(this.dataGridView_CellFormatting);
+                dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(dataGridView_CellFormatting);
 
                 // Determine filter type
                 string filterType = string.Empty;
@@ -109,12 +110,12 @@ namespace RWDE
                 }
                 else if (dtpDateFilter.SelectedItem != null)
                 {
-                    switch (dtpDateFilter.SelectedItem.ToString().Replace(" ", string.Empty))
+                    switch (dtpDateFilter.SelectedItem.ToString())
                     {
                         case Constants.Servicedate:
                             filterType = Constants.ServiceDate;
                             break;
-                        case Constants.CreatedDate:
+                        case Constants.CreatedDatesp:
                             filterType = Constants.CreatedDate;
                             break;
                         default:
@@ -125,6 +126,7 @@ namespace RWDE
                 else
                 {
                     MessageBox.Show(Constants.PleaseEnterAValidBatchIdOrSelectAFilterType, Constants.InputError);
+                    //to display the empty GridView
                     DisplayHeadersOnly();
                     return;
                 }
@@ -139,10 +141,12 @@ namespace RWDE
                     batchids = txtBatchID.Text.Split(',').Select(int.Parse).Distinct().ToArray();
                     if (batchids.Length > 0)
                     {
+                        //to display the data based on BatchId
                         result = dbHelper.LoadDatafilterServiceReconbatchid(batchids); //
 
                         if (result.Rows.Count == 0)
                         {
+                            //to display the empty GridView
                             DisplayHeadersOnly();
                             return;
                         }
@@ -150,12 +154,14 @@ namespace RWDE
                     else
                     {
                         MessageBox.Show(Constants.PleaseEnterValidBatchIds, Constants.InvalidInput);
+                        //to display the empty GridView
                         DisplayHeadersOnly();
                         return;
                     }
                 }
                 else
                 {
+                    //to load the service-recon for created and service date filter
                     result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
                 }
 
@@ -178,24 +184,18 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                //to display the empty GridView
                 DisplayHeadersOnly();
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
             }
         }
-        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)//to set all Cell's text Color as Black
         {
             // Check if the cell value is not null
             if (e.Value != null)
             {
                 // Example condition to change color
-                if (e.Value.ToString() == Constants.YourCondition) // Replace with your actual condition
-                {
-                    e.CellStyle.ForeColor = Color.Red; // Set desired color for the condition
-                }
-                else
-                {
-                    e.CellStyle.ForeColor = Color.Black; // Default color for other cases
-                }
+                e.CellStyle.ForeColor = e.CellStyle.ForeColor == Color.Black ? Color.Blue : Color.Black; // Default color for other cases
             }
         }
         private void btnDownload_Click(object sender, EventArgs e) // to export data to selected folder
@@ -279,7 +279,7 @@ namespace RWDE
             try
             {
                 // Close the current form (dispose it)
-                this.Close();
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)

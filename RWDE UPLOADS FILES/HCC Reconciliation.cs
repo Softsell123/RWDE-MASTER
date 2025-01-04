@@ -18,19 +18,19 @@ namespace RWDE
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
-            RegisterEvents(this);
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
+            RegisterEvents(this); //Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
@@ -43,6 +43,7 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
@@ -78,7 +79,6 @@ namespace RWDE
                         dataTable.Rows.Add(dataRow);
                     }
                 }
-                   
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
@@ -109,7 +109,6 @@ namespace RWDE
                                 fileSuffix++;
                                 filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
                             }
-
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
                             MessageBox.Show($@"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}",Constants.HccReconciliation, MessageBoxButtons.OK, MessageBoxIcon.Information);                   
@@ -126,9 +125,8 @@ namespace RWDE
             try
             {
                 // Close the current form (dispose it)
-                this.Close();
+                Close();
                 Application.Restart();
-
             }
             catch (Exception ex)
             {
@@ -155,7 +153,6 @@ namespace RWDE
                 dataGridView.ForeColor = Color.Black;
                 string filterType = string.Empty;
                 int[] batchids = null;
-
 
                 if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))||(!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(","))||(!string.IsNullOrWhiteSpace(txtbatchs.Text)))
                 {
@@ -188,11 +185,14 @@ namespace RWDE
                     if (filterType == Constants.BatchId)
                     {
                         List<DataTable> allidtables;
+                        //to load the HCCRecon for Batch ID filter
                         allidtables = dbHelper.LoadDatafilterhccreconBatchid(startDate, endDate, batchids, filterType);
+                        //to combine all the data for different BatchID
                         result = dbHelper.CombineAllResults(allidtables);
                     }
                     else
                     {
+                        //to load the HCCRecon for created and service date filter
                         result = dbHelper.LoadDatafilterhccrecon(startDate, endDate, filterType);
                     }
 
@@ -209,7 +209,7 @@ namespace RWDE
                 {
                     return;
                 }
-                else if (result.Rows.Count < 1) 
+                else if (result != null && result.Rows.Count < 1) 
                 {
                     MessageBox.Show(Constants.Nodatafoundbetweenselecteddates);
                     return;

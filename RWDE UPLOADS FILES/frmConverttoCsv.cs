@@ -16,10 +16,11 @@ namespace RWDE
         {
             InitializeComponent();
             dbHelper = new DbHelper();
+            //get connection string
             connectionString = dbHelper.GetConnectionString();
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
-            RegisterEvents(this);
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
+            RegisterEvents(this); //Assigning events to all Controls
 
             if (File.Exists(Constants.LastFolderPathhcc))
             {
@@ -35,15 +36,15 @@ namespace RWDE
                 }
             }
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
@@ -55,11 +56,12 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to child Controls
                     RegisterEvents(control);
                 }
             }
         }
-        private void btnReport_Click(object sender, EventArgs e)
+        private void btnReport_Click(object sender, EventArgs e)//to generate and save the Csv files
         {
             string filePath = Path.Combine(txtPath.Text, $"{Constants.Clients}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
 
@@ -75,11 +77,11 @@ namespace RWDE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
+                    //Getting BatchId for particular file to generate CSV
                     int batchid = dbHelper.GetMaxXmlBatchId();
                     // Call the stored procedure
                     using (SqlCommand cmd = new SqlCommand(Constants.Ctclientsmapping, conn))
                     {
-
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -104,6 +106,7 @@ namespace RWDE
                                     }
                                     writer.WriteLine(string.Join("|", rowValues));  // Use pipe (|) as the separator
                                 }
+                                //to get the services of the last uploaded Xml file
                                 GetServicedataCsv(batchid);
                             }
                         }
@@ -120,7 +123,7 @@ namespace RWDE
                 MessageBox.Show(Constants.Errorsp + ex.Message);
             }
         }
-        public void GetServicedataCsv(int batchid)
+        public void GetServicedataCsv(int batchid)//to get the services of the last uploaded Xml file
         {
             string filePath = Path.Combine(txtPath.Text, $"{Constants.ServiceSample}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
             try
@@ -175,7 +178,7 @@ namespace RWDE
                 MessageBox.Show(Constants.Errorsp + ex.Message);
             }
         }
-        private void btnBrowse_Click(object sender, EventArgs e)
+        private void btnBrowse_Click(object sender, EventArgs e)//to select the folder to save the csv files
         {
             using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
             {
@@ -199,7 +202,7 @@ namespace RWDE
                     }
                     catch (UnauthorizedAccessException ex)
                     {
-                        MessageBox.Show(Constants.Accessdeniedtothefolder, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(Constants.Accessdeniedtothefolder + ex.Message, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     // Save the folder path (you only need to save it once)
                     File.WriteAllText(Constants.LastFolderPathhcc, selectedPath);

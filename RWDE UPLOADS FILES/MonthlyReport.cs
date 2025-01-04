@@ -12,8 +12,8 @@ namespace RWDE
         public MonthlyReport()//initialize data
         {
             InitializeComponent();
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
             
             cbDateFilter.Items.AddRange(new object[]
                {
@@ -52,18 +52,18 @@ namespace RWDE
                 // Handle exceptions, such as logging the error
                 MessageBox.Show(ex.Message);
             }
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
 
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
@@ -75,6 +75,7 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
@@ -170,7 +171,7 @@ namespace RWDE
             try
             {
                 // Close the current form (dispose it)
-                this.Close();
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)
@@ -309,11 +310,9 @@ namespace RWDE
                 default:
                     return; // Handle invalid or other cases
             }
-
             // Set DateTimePicker values
             dtpStartDate.Value = startDate;
             dtpEndDate.Value = endDate;
-
         }
         private void SetCurrentWeekDates(out DateTime startDate, out DateTime endDate)//filter data on weekly basis
         {

@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-
+                                                                                                                                                                                       // ReSharper disable PossibleNullReferenceException
 namespace RWDE
 {
     public partial class ContractIdLists : Form
@@ -16,9 +16,11 @@ namespace RWDE
             InitializeComponent();
             dbHelper = new DbHelper();
             connectionString = dbHelper.GetConnectionString();
-            this.WindowState = FormWindowState.Maximized;
-            this.ControlBox = false;
+            WindowState = FormWindowState.Maximized;
+            ControlBox = false;
+            // Populate the DataGridView with data and configure its columns
             PopulateDataGridView();
+            //Initialize the form or object
             InitializeDataGridView();
             dataGridView.CellClick += dataGridView_Celledit;
             dataGridView.KeyDown += dataGridView_KeyDown;
@@ -27,17 +29,17 @@ namespace RWDE
             // Set the event handler for the value change of the editing control
             dataGridView.EditingControlShowing += DataGridView_EditingControlShowing;
             dataGridView.EditingControlShowing += DataGridView_EditingControlShowingStatus;
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
@@ -50,6 +52,7 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to child Controls
                     RegisterEvents(control);
                 }
             }
@@ -117,21 +120,21 @@ namespace RWDE
 
             public DataGridViewCalendarEditingControl()
             {
-                this.Format = DateTimePickerFormat.Custom;
-                this.CustomFormat = Constants.DdMMyyyyHHmmss; // Custom format with seconds
+                Format = DateTimePickerFormat.Custom;
+                CustomFormat = Constants.DdMMyyyyHHmmss; // Custom format with seconds
             }
 
             public object EditingControlFormattedValue
             {
                 get
                 {
-                    return this.Value.ToString(Constants.DdMMyyyyHHmmss);
+                    return Value.ToString(Constants.DdMMyyyyHHmmss);
                 }
                 set
                 {
                     if (value is string s)
                     {
-                        this.Value = DateTime.Parse(s);
+                        Value = DateTime.Parse(s);
                     }
                 }
             }
@@ -151,9 +154,9 @@ namespace RWDE
             {
                 try
                 {
-                    this.Font = dataGridViewCellStyle.Font;
-                    this.CalendarForeColor = dataGridViewCellStyle.ForeColor;
-                    this.CalendarMonthBackground = dataGridViewCellStyle.BackColor;
+                    Font = dataGridViewCellStyle.Font;
+                    CalendarForeColor = dataGridViewCellStyle.ForeColor;
+                    CalendarMonthBackground = dataGridViewCellStyle.BackColor;
                 }
                 catch (Exception ex)
                 {
@@ -207,7 +210,7 @@ namespace RWDE
             protected override void OnValueChanged(EventArgs eventargs)
             {
                 valueChanged = true;
-                this.EditingControlDataGridView.NotifyCurrentCellDirty(true);
+                EditingControlDataGridView.NotifyCurrentCellDirty(true);
                 base.OnValueChanged(eventargs);
             }
         }
@@ -216,16 +219,15 @@ namespace RWDE
             public override void InitializeEditingControl(int rowIndex, object initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
             {
                 base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);
-                DataGridViewCalendarEditingControl ctl = DataGridView.EditingControl as DataGridViewCalendarEditingControl;
-                if (this.Value == null || this.Value == DBNull.Value)
+                if (Value == null || Value == DBNull.Value)
                 {
                     //  ctl.Value = (DateTime)this.Value;
                 }
                 else
                 {
-                    if (ctl != null)
+                    if (DataGridView.EditingControl is DataGridViewCalendarEditingControl ctl)
                     {
-                        ctl.Value = (DateTime)this.Value;
+                        ctl.Value = (DateTime)Value;
                     }
                 }
             }
@@ -241,27 +243,24 @@ namespace RWDE
 
         }
         public void PopulateDataGridView()  // Populate the DataGridView with data and configure its columns
-
         {
             try
             {
-                this.dataGridView.AutoGenerateColumns = false;
+                dataGridView.AutoGenerateColumns = false;
                 DataTable dataTable = dbHelper.GetAllContractLists();//to get the contractid which are stored in db table
 
                 if (dataTable != null)
                 {
-                    this.dataGridView.DataSource = dataTable;
+                    dataGridView.DataSource = dataTable;
                 }
-
-                this.dataGridView.Columns.Clear();
-
-                this.dataGridView.Columns.Add(Constants.ContractId, Constants.ContractIDs);
-                this.dataGridView.Columns[Constants.ContractId].DataPropertyName = Constants.ContractId;
-                this.dataGridView.Columns[Constants.ContractId].Width = 220;
-                this.dataGridView.RowTemplate.Height = 40;
-                this.dataGridView.Columns.Add(Constants.ContractName, Constants.Name);
-                this.dataGridView.Columns[Constants.ContractName].DataPropertyName = Constants.ContractName;
-                this.dataGridView.Columns[Constants.ContractName].Width = 220;
+                dataGridView.Columns.Clear();
+                dataGridView.Columns.Add(Constants.ContractId, Constants.ContractIDs);
+                dataGridView.Columns[Constants.ContractId].DataPropertyName = Constants.ContractId;
+                dataGridView.Columns[Constants.ContractId].Width = 220;
+                dataGridView.RowTemplate.Height = 40;
+                dataGridView.Columns.Add(Constants.ContractName, Constants.Name);
+                dataGridView.Columns[Constants.ContractName].DataPropertyName = Constants.ContractName;
+                dataGridView.Columns[Constants.ContractName].Width = 220;
 
                 // Add the StartedDateTime column with a custom format that includes seconds
                 DataGridViewCalendarColumn startedDateTimeColumn = new DataGridViewCalendarColumn
@@ -273,7 +272,7 @@ namespace RWDE
                     DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.DdMMyyyyHHmmss }
                     // Custom format with seconds
                 };
-                this.dataGridView.Columns.Add(startedDateTimeColumn);
+                dataGridView.Columns.Add(startedDateTimeColumn);
 
                 DataGridViewCalendarColumn endedDateTimeColumn = new DataGridViewCalendarColumn
                 {
@@ -284,7 +283,7 @@ namespace RWDE
                     DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.DdMMyyyyHHmmss }
                 };
 
-                this.dataGridView.Columns.Add(endedDateTimeColumn);
+                dataGridView.Columns.Add(endedDateTimeColumn);
                 
                 DataGridViewComboBoxColumn statusColumn = new DataGridViewComboBoxColumn
                 {
@@ -299,7 +298,7 @@ namespace RWDE
                 statusColumn.Items.Add(Constants.Inactive);
                 statusColumn.Items.Add(Constants.Delete);
 
-                this.dataGridView.Columns.Add(statusColumn);
+                dataGridView.Columns.Add(statusColumn);
 
                 dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;//to edit the particular row
                 // Adding the edit button column
@@ -310,7 +309,7 @@ namespace RWDE
                     Width = 130,
                     UseColumnTextForButtonValue = true
                 };
-                this.dataGridView.Columns.Add(editButtonColumn);
+                dataGridView.Columns.Add(editButtonColumn);
                 // Ensure the DataTable has the 'Status' column with valid values
                 if (dataTable != null)
                 {
@@ -333,7 +332,7 @@ namespace RWDE
                     }
 
                     // Set the DataTable as the DataSource of the DataGridView
-                    this.dataGridView.DataSource = dataTable;
+                    dataGridView.DataSource = dataTable;
                     dataGridView.Columns[Constants.Status].ReadOnly = true;
                 }
 
@@ -491,7 +490,6 @@ namespace RWDE
                         return;
                     }
 
-
                     string message = selectedStatus == Constants.Active
                         ? string.Format(Constants.AreYouSureMakeActive, contractName)
                         : string.Format(Constants.AreYouSureMakeInactive, contractName);
@@ -518,7 +516,6 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-         
             }
         }
         private void DataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)//to update startdate time
@@ -575,7 +572,7 @@ namespace RWDE
 
                     if (result == DialogResult.Yes)
                     {
-                        // Allow the deletion
+                        // delete the selected row
                         DeleteSelectedRow();
                     }
                     else
@@ -721,11 +718,10 @@ namespace RWDE
                         return;
                     }
 
-                    // Calc
                     // Calculate EndedDateTime
                     DateTime endedDateTime = startedDateTime.AddYears(1).AddDays(-1).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
 
-                    // Execute the stored procedure
+                    //insert and update into database table
                     string operation = dbHelper.InsertOrUpdateContract(
                         int.Parse(currentContractId),
                         contractName,
@@ -806,7 +802,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void dataGridView_Celledit(object sender, DataGridViewCellEventArgs e)//Ensure the clicked cell is in the correct column and row
+        private void dataGridView_Celledit(object sender, DataGridViewCellEventArgs e)//Ensure the clicked cell is in the correct column and row to edit
         {
             try { 
                 // Check if the clicked cell is in a valid row and is the "Edit" column
@@ -861,13 +857,14 @@ namespace RWDE
                         // Make all cells editable for the selected row except for the Constants.Status column
                         foreach (DataGridViewColumn column in dataGridView.Columns)
                         {
-                            if (column.Name == Constants.Status)
+                            switch (column.Name)
                             {
-                                dataGridView.Rows[e.RowIndex].Cells[column.Index].ReadOnly = true;
-                            }
-                            else
-                            {
-                                dataGridView.Rows[e.RowIndex].Cells[column.Index].ReadOnly = false;
+                                case Constants.Status:
+                                    dataGridView.Rows[e.RowIndex].Cells[column.Index].ReadOnly = true;
+                                    break;
+                                default:
+                                    dataGridView.Rows[e.RowIndex].Cells[column.Index].ReadOnly = false;
+                                    break;
                             }
                         }
 
@@ -927,7 +924,7 @@ namespace RWDE
 
                     if (contractId > 0)
                     {
-                        // Call the edit function
+                        //to edit particular contract id from contract list
                         dbHelper.ContractIdEdit(contractId, contractName, startedDateTime, endedDateTime, status);
                         dataGridView.Columns[Constants.Status].ReadOnly = true;
                         // Refresh the DataGridView after editing
@@ -964,6 +961,7 @@ namespace RWDE
                         buttonColor = Color.Silver;
                         buttonText = string.Empty;
                     }
+                    // Create a new GraphicsPath object to define the rounded rectangle
                     using (GraphicsPath path = CreateRoundedRectanglePath(buttonRectangle, 5))
                     {
 
@@ -1007,6 +1005,7 @@ namespace RWDE
                         buttonColor = Color.Silver;
                         buttonText = string.Empty;
                     }
+                    // Create a new GraphicsPath object to define the rounded rectangle
                     using (GraphicsPath path = CreateRoundedRectanglePath(buttonRectangle, 5))
                     {
                         using (Brush brush = new SolidBrush(buttonColor))
@@ -1066,7 +1065,7 @@ namespace RWDE
                     {
                         // Update the status to Constants.Delete
                         dataGridView.Rows[rowIndex].Cells[Constants.Status].Value = Constants.Delete;
-                        dbHelper.ContractIdUpdateStatus(contractId, Constants.DeleteContractstatus); // Assume this function updates the status in the database
+                        dbHelper.ContractIdUpdateStatus(contractId, Constants.DeleteContractstatus); //this function updates the status in the database
 
                         // Refresh the DataGridView to reflect the status change
                         // PopulateDataGridView();
@@ -1086,7 +1085,7 @@ namespace RWDE
         private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
             try { 
-                this.Close();
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)

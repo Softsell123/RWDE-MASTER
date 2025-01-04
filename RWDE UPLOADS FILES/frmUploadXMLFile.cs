@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +8,7 @@ using System.Data.SqlClient;
 using System.Xml;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+
 
 namespace RWDE
 {
@@ -39,7 +39,7 @@ namespace RWDE
                 InitializeComponent();
                 LoadDefaultPath();
                 dbHelper = new DbHelper();
-                connectionString = dbHelper.GetConnectionString();
+                connectionString = dbHelper.GetConnectionString();//to get the Connection String
                 this.ControlBox = false;
                 this.WindowState = FormWindowState.Maximized;
                 DateTime currenttime = DateTime.Now;
@@ -49,7 +49,7 @@ namespace RWDE
                 txtProgressLines.Text = Constants.ZeroPercent;
                 txtProgressfile.Text = Constants.InitialProgress;
                 string pathFile = Constants.LastFolderPathTxt;
-                RegisterEvents(this);
+                RegisterEvents(this); //Assigning events to all Controls
 
                 // Check if the file exists
                 if (File.Exists(pathFile))
@@ -77,23 +77,23 @@ namespace RWDE
             }
         }
 
-        private void cbMask_MouseHover(object sender, EventArgs e)
+        private void cbMask_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void cbMask_MouseLeave(object sender, EventArgs e)
+        private void cbMask_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
@@ -106,11 +106,12 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
         }
-        private async void btnUploadXML_Click(object sender, EventArgs e)
+        private async void btnUploadXML_Click(object sender, EventArgs e)//to read and Store the Xml File
         {
             if (txtPath.Text == "" || txtPath == null)
             {
@@ -180,7 +181,7 @@ namespace RWDE
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.Load(xmlFilePath);
 
-                        int batchId = dbHelper.GetNextBatchId();
+                        int batchId = dbHelper.GetNextBatchId();//to get next BatchId for Insertion
                         Path = xmlFilePath;
                         FileName = System.IO.Path.GetFileName(xmlFilePath);
                         txtFileName.Text = FileName;
@@ -195,23 +196,28 @@ namespace RWDE
                         {
                             conn.Open();
 
+                            // to get the total number of rows in the given XmlDocument.
                             TotalRows = await GetTotalRowsInXml(xmlDoc);
                             DateTime uploadStartedAt = DateTime.Now;
+
+                            // to insert data from an XmlDocument into a database table asynchronously.
                             await InsertXmlDataIntoTable(xmlDoc, batchId, xmlFilePath, TotalRows, conn, values);
 
                             int successfulRows = TotalRows;
                             string description = $"{Constants.Batch} {batchId} - {FileName}";
+
+                            //update batch status in database
                             dbHelper.InsertBatch(batchId, FileName, xmlFilePath, Constants.ClientTrackCode, description, uploadStartedAt, TotalRows, successfulRows, Constants.StatusCode);
 
                             processedXmlFiles++;
-                            UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);
+                            UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);//to update the file progress
                         }
                         DateTime endTime = DateTime.Now;
                         TimeSpan totalTime = endTime - startTime;
                         double totalSeconds = totalTime.TotalSeconds;
                         string eTime = endTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                         txtUploadEnded.Text = eTime;
-                        txtTotaltime.Text = $"{totalSeconds:F2} {Constants.Seconds}";
+                        txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
                         btnClose.Text = Constants.Close;
                     }
                     btnUploadXML.Enabled = true;
@@ -233,6 +239,7 @@ namespace RWDE
 
         private async Task<int> GetTotalRowsInXml(XmlDocument xmlDoc)// This method asynchronously returns the total number of rows in the given XmlDocument.
         {
+            // to count the number of nodes in the XmlDocument that match the specified XPath expression.
             int totalClients = CountNodes(xmlDoc, Constants.BkslhClient);
             int totalEligibilityDocs = CountNodes(xmlDoc, Constants.BkslhEligibilityDocument);
             int totalServiceLineItems = CountNodes(xmlDoc, Constants.BkslhServiceLineItem);
@@ -245,14 +252,18 @@ namespace RWDE
             string baseFilename = System.IO.Path.GetFileNameWithoutExtension(xmlFilePath);
             try
             {
+                //insertion into log table
                 dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrackCode, baseFilename, Constants.Uploadct);// Log the start of the upload process for the given base filename
 
+                //insert clients into database from Xml
                 int insertedClients = dbHelper.InsertClients(xmlDoc, batchId, conn, FileName, value);
                 totalInsertedRows += insertedClients;
 
+                //insertion of eligibility document from xml file
                 int insertedEligibilityDocs = dbHelper.InsertEligibilityDocuments(xmlDoc, batchId, conn, FileName);
                 totalInsertedRows += insertedEligibilityDocs;
 
+                //insertion of service table from xml file
                 int insertedServiceLineItems = dbHelper.InsertServiceLineItems(xmlDoc, batchId, conn, FileName);
                 totalInsertedRows += insertedServiceLineItems;
 
@@ -262,12 +273,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 var st = new StackTrace(ex, true);
-                var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
                 dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertXmlDataIntoTable), FileName, lineNumber);
                 throw;
             }
-
         }
         private async Task UpdateProgressBar(int totalCount)
         {
@@ -294,22 +304,22 @@ namespace RWDE
                 await Task.Delay(1);
             }
         }
-        private void UpdateFileProgressTotal(int currentFileIndex, int totalFiles)// This method updates the file progress to reflect the current file index out of the total number of files.
+        private void UpdateFileProgressTotal(int currentFilesIndex, int totalFiles)// This method updates the file progress to reflect the current file index out of the total number of files.
         {
             if (progressBarfile.InvokeRequired)
             {
                 progressBarfile.Invoke((MethodInvoker)delegate
                 {
-                    int fileProgressPercentage = (int)((double)currentFileIndex / totalFiles * 100);
-                    progressBarfile.Value = currentFileIndex;
-                    txtProgressfile.Text = $@"{currentFileIndex}/{totalFiles} ({fileProgressPercentage}%)";
+                    int fileProgressPercentage = (int)((double)currentFilesIndex / totalFiles * 100);
+                    progressBarfile.Value = currentFilesIndex;
+                    txtProgressfile.Text = $@"{currentFilesIndex}/{totalFiles} ({fileProgressPercentage}%)";
                 });
             }
             else
             {
-                int fileProgressPercentage = (int)((double)currentFileIndex / totalFiles * 100);
-                progressBarfile.Value = currentFileIndex;
-                txtProgressfile.Text = $@"{currentFileIndex}/{totalFiles} ({fileProgressPercentage}%)";
+                int fileProgressPercentage = (int)((double)currentFilesIndex / totalFiles * 100);
+                progressBarfile.Value = currentFilesIndex;
+                txtProgressfile.Text = $@"{currentFilesIndex}/{totalFiles} ({fileProgressPercentage}%)";
             }
         }
         private int CountNodes(XmlDocument xmlDoc, string xpath)// This method counts the number of nodes in the XmlDocument that match the specified XPath expression.
@@ -358,14 +368,14 @@ namespace RWDE
             txtPath.Text = defaultPath;
         }
 
-        // Call LoadDefaultPath in your form's constructor or Load event handler.
+        
         private void btnClose_Click(object sender, EventArgs e)
         {
             try
             {
                 if (btnClose.Text == Constants.Close)
                 {
-                    this.Close();
+                    Close();
                     Application.Restart();
                     return;
                 }
@@ -374,11 +384,18 @@ namespace RWDE
                 {
                     DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort,Constants.XmlFileUpload, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                    // Check if the user clicked "Yes"
-                    UpdateBatch(batchId, FileName, Path);
-                    DialogResult result2 = MessageBox.Show(Constants.AbortedSuccessfully,Constants.XmlFileUpload);
+                    if (result == DialogResult.Yes) // Check if the user clicked "Yes"
+                    {
+                        // to update the batch record in the database
+                        UpdateBatch(batchId, FileName, Path);
+                         MessageBox.Show(Constants.AbortedSuccessfully, Constants.XmlFileUpload);
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                this.WindowState = FormWindowState.Maximized;
+                WindowState = FormWindowState.Maximized;
                 Application.Restart();
             }
             catch (Exception ex)
@@ -390,12 +407,13 @@ namespace RWDE
         {
             try
             {
-
                 DateTime currentTime = DateTime.Now;
                 int successfulRows = 0;
                 // Insert batch details into the database, including batch ID, file name, path, timestamps, row counts, and status.
-                dbHelper.InsertBatch(batchId+1, fileName, path, Constants.ClientTrackCode, null, currentTime, TotalRows, successfulRows, Constants.Fileaborted);
-                ClearTables(batchId+1);
+                dbHelper.InsertBatch(batchId, fileName, path, Constants.ClientTrackCode, null, currentTime, TotalRows, successfulRows, Constants.Fileaborted);
+
+               //to clear the tables associated with the specified batch ID.
+                ClearTables(batchId);
             }
             catch (Exception ex)
             {

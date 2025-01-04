@@ -108,7 +108,7 @@ namespace RWDE
         public const string Upload = "ARIES_Clients";
         public const string UploadStartedMessage = "Upload started for {0} CSV files.";
         public const string UploadedFileMessage = "Uploaded file: {0}";
-        public const string ErrorMessagedynamic = "Error: {0}";
+        public const string ErrorMessagedynamic = "{Constants.Errorsp}{0}";
         public const string HccReconciliation = "HCC_Reconciliation";
         public const string NodatafoundfortheseBatchids = "No Data Found For these Batchid(s)";
         public const string UploadSuccessMessage = "CSV data inserted into the database successfully.\n\n" +
@@ -182,8 +182,6 @@ namespace RWDE
         public const int Error = 5;
 
         //database Query
-        public const string ServiceXmlGenerationQuery = "Servicegenerator";
-        public const string ClientsXmlGeneration = "clientgeneratorXMLDEMO";
         public const string XmlStructureServiceValues = "SELECT TOP (1000) [xmlGeneratorID]\r\n      ,[FileID]\r\n      ,[TagNumber]\r\n      ,[Tag]\r\n      ,[Table]\r\n      ,[Field]\r\n      ,[PresetValue]\r\n      ,[Default]\r\n      ,[Empty]\r\n      ,[HasChild]\r\n      ,[DelimiterxmlGeneratorID]\r\n      ,[DataTransformerType]\r\n      ,[CreatedBy]\r\n      ,[CreatedOn]\r\n  FROM [RWDE].[dbo].[xmlGeneratorRules] where FileID = 1";
         public const string XmlStructureClientValues = "SELECT TOP (1000) [xmlGeneratorID]\r\n      ,[FileID]\r\n      ,[TagNumber]\r\n      ,[Tag]\r\n      ,[Table]\r\n      ,[Field]\r\n      ,[PresetValue]\r\n      ,[Default]\r\n      ,[Empty]\r\n      ,[HasChild]\r\n      ,[DelimiterxmlGeneratorID]\r\n      ,[DataTransformerType]\r\n      ,[CreatedBy]\r\n      ,[CreatedOn]\r\n  FROM [RWDE].[dbo].[xmlGeneratorRules] where FileID = 2";
 
@@ -228,7 +226,7 @@ namespace RWDE
         public const string GenerationEndedAtHeader = "Generation Ended At";
         public const string TotalRowsHeader = "Total Rows";
         public const string SuccessfulRowsHeader = "Successful Rows";
-        public const string StatusHeader = Constants.Status;
+        public const string StatusHeader = Status;
         public const string CreatedDatesp = "Created Date";
 
 
@@ -309,7 +307,7 @@ namespace RWDE
         //frmConvertToHCC
         //
         public const string FntfmlyArial = "Arial";
-
+        public const string Space = " ";
 
 
 
@@ -334,8 +332,8 @@ namespace RWDE
         public const string MMddyyyybkslash = "MM/dd/yyyy";
         public const string HHmmss = "HH:mm:ss";
         public const string MdYyyySlash = "M/d/yyyy";
-        public const string DMYyyy = "d-M-yyyy";
-        public const string DMYyyySlash = "d/M/yyyy";
+        public const string DmYyyy = "d-M-yyyy";
+        public const string DmYyyySlash = "d/M/yyyy";
         public const string MdYyyy = "M-d-yyyy";
         public const string DMmmYyyy = "d-MMM-yyyy";
         public const string MmmDYyyy = "MMM-d-yyyy";
@@ -485,6 +483,9 @@ namespace RWDE
         public const string UpdateBatch = "Updatebatch";
         public const string AbortConversionDelete = "abortconversiondelete";
         //DbHelper
+
+        public const string ServiceXmlGeneration = "Servicegenerator";
+        public const string ClientsXmlGeneration = "clientgeneratorXMLDEMO";
         public const string ConversionCompletion = "Conversioncompletion";
         public const string ClientConversionCompletion = "ClientCONVERSIONCOMPLETION";
         public const string ClientGenerationCompletion = "ClientgenerationCOMPLETION";
@@ -522,12 +523,12 @@ namespace RWDE
         public const string GetParticularConversionDatas = "GetParticularConversionDatas";
         public const string GetAllBatchType = "GETALLBATCHTYPE";
         public const string GetAllBatchTypeHcc = "GETALLBATCHTYPEHCC";
-        public const string GETALLBATCHTYPEview = "GETALLBATCHTYPEview";
+        public const string GetallbatchtypEview = "GETALLBATCHTYPEview";
         public const string GetParticularnGenerationDatasConversionXml = "GetParticularnGenerationDatasCONVERSIONxml";
         public const string GetParticularnGenerationDatasConversion = "GetParticularnGenerationDatasCONVERSION";
         public const string GetParticularnGenerationDatasConversionHcc = "GetParticularnGenerationDatasCONVERSIONHCC";
         public const string GetAllContractLists = "GetAllContractLists";
-        public const string Sp_GetTopServiceCodeSetup = "sp_GetTopServiceCodeSetup";
+        public const string SpGetTopServiceCodeSetup = "sp_GetTopServiceCodeSetup";
         public const string InsertXmlgeneratorTimeServices = "insertXMLgeneratortimeServices";
         public const string SpCreateDeceasedClientViewCount = "spCreateDeceasedClientViewcount";
         public const string ClientGeneratorXmlDemo = "clientgeneratorXMLDEMO";
@@ -580,7 +581,7 @@ namespace RWDE
         public const string GetMaxXmlBatchIdQuery = "SELECT ISNULL(MAX(BatchID), 0) FROM CTClients";
         public const string GetMXmlBatchIdQuery = "SELECT Max(batchid) FROM Batch WHERE FileName LIKE '%XML%'";
 
-        public const string CTClientsEligibilityDocQuery = "INSERT INTO [RWDE].[dbo].[CTClientsEligibilityDoc] (DocumentType, DocumentDate, ObtainDate, ExpireDate, Source, Notes, BatchID, AgencyClientID1, AriesID, CreatedBy, CreatedOn, EligibilityDocID) VALUES (@DocumentType, @DocumentDate, @ObtainDate, @ExpireDate, @Source, @Notes, @BatchID, @AgencyClientID1, @AriesID, @CreatedBy, @CreatedOn, @EligibilityDocID)";
+        public const string CtClientsEligibilityDocQuery = "INSERT INTO [RWDE].[dbo].[CTClientsEligibilityDoc] (DocumentType, DocumentDate, ObtainDate, ExpireDate, Source, Notes, BatchID, AgencyClientID1, AriesID, CreatedBy, CreatedOn, EligibilityDocID) VALUES (@DocumentType, @DocumentDate, @ObtainDate, @ExpireDate, @Source, @Notes, @BatchID, @AgencyClientID1, @AriesID, @CreatedBy, @CreatedOn, @EligibilityDocID)";
         public const string LoggingErrorQuery = "INSERT INTO Logger (Type, Module, Stack, Message, FileName, LineNumber, FunctionName, Comments, CreatedBy, CreatedOn) VALUES (@Type, @Module, @Stack, @Message, @FileName, @LineNumber, @FunctionName, @Comments, @CreatedBy, @CreatedOn)";
         public const string GetClientIdsQuery = "SELECT Clnt_id,Agency_client_2 FROM HCCClients WHERE CreatedOn >= @StartDate AND CreatedOn <= @EndDate";
         public const string GetServiceIdsQuery = "SELECT ServiceID, Service_date FROM HCCServices WHERE CreatedOn >= @StartDate AND CreatedOn <= @EndDate";
@@ -671,7 +672,7 @@ namespace RWDE
         public const string AtComments = "@Comments";
         public const string AtClntId = "@clnt_id";
         public const string AtServiceDate = "@Service_date";
-        public const string AtContractId = "@Contract_id";
+        public const string AtContractIdsp = "@Contract_id";
         public const string AtStaffId = "@Staff_id";
         public const string AtPrimServDesc = "@Prim_serv_desc";
         public const string AtIdEqualTto = "Id=";
@@ -880,10 +881,10 @@ namespace RWDE
 
         public const string XmlData = "@XmlData";
         public const string AtNotesCaps = "@Notes";
-        public const string AtAriesID = "@AriesID";
-        public const string AtEligibilityDocID = "@EligibilityDocID";
+        public const string AtAriesId = "@AriesID";
+        public const string AtEligibilityDocId = "@EligibilityDocID";
 
-        public const string AtClientAriesID = "@ClientAriesID";
+        public const string AtClientAriesId = "@ClientAriesID";
         public const string AtClientUrnExt = "@ClientURNExt";
         public const string AtSiteName = "@SiteName";
         public const string AtStaffLogin = "@StaffLogin";
@@ -906,16 +907,16 @@ namespace RWDE
         public const string AtClientid = "@Clientid";
         public const string AtDatetime = "@Datetime";
 
-        public const string AtContractID = "@ContractID";
+        public const string AtContractId = "@ContractID";
         public const string AtStartedDateTime = "@StartedDateTime";
         public const string AtEndedDateTime = "@EndedDateTime";
         public const string AtOperation = "@Operation";
-        public const string AtServiceCodeID = "@ServiceCodeID";
+        public const string AtServiceCodeId = "@ServiceCodeID";
 
         public const string AtService = "@Service";
-        public const string AtHCCExportToAries = "@HCC_ExportToAries";
-        public const string AtHCCContractID = "@HCC_ContractID";
-        public const string AtHCCPrimaryService = "@HCC_PrimaryService";
+        public const string AtHccExportToAries = "@HCC_ExportToAries";
+        public const string AtHccContractId = "@HCC_ContractID";
+        public const string AtHccPrimaryService = "@HCC_PrimaryService";
         public const string AtHccSecondaryService = "@HCC_SecondaryService";
         public const string AtHccSubservice = "@HCC_Subservice";
         public const string AtUnitsOfMeasure = "@UnitsOfMeasure";
@@ -953,7 +954,7 @@ namespace RWDE
         public const string InvalidIntegerValue = "Invalid integer value: ";
         public const string BkslashClient = "//Client";
         public const string BkslashServiceLineItem = "//ServiceLineItem";
-        public const string ClientAriesID = "_clientAriesID";
+        public const string ClientAriesId = "_clientAriesID";
 
         public const string AriesId = "ariesID";
         public const string EligibilityDocument = "EligibilityDocument";
@@ -966,7 +967,7 @@ namespace RWDE
         public const string Source = "source";
         public const string Notes = "notes";
         public const string ErrorInsertingEligibilityDocuments = "Error inserting eligibility documents: ";
-        public const string ClientariesIDEligibilityDocument = "//Client[@ariesID='{0}']/EligibilityDocument";
+        public const string ClientariesIdEligibilityDocument = "//Client[@ariesID='{0}']/EligibilityDocument";
 
         public const string ClientUrnExt = "_clientURNExt";
         public const string SiteName = "_siteName";
@@ -999,8 +1000,7 @@ namespace RWDE
 
 
 
-
-
+        #region Group 2: FrmConvertToCsv
         //
         //FrmConvertToCsv
         //
@@ -1009,9 +1009,7 @@ namespace RWDE
         public const string Testfiletxt = "testfile.txt";
         public const string Testingpermissions ="Testing permissions.";
         public const string Selectedfolder  = "Selected folder: ";
-
-
-
+        #endregion
 
         //
         //FrmConvertToHCC
@@ -1086,9 +1084,9 @@ namespace RWDE
         //
         //frmUploadXMLFile
         //
-        public const string ServiceDate = Constants.ServiceDatesmall;
+        public const string ServiceDate = "ServiceDate";
         public const string CreatedDate = "CreatedDate";
-
+        //public const string CreatedDatesp = "Created Date";
 
 
 
@@ -1174,23 +1172,23 @@ namespace RWDE
         //
         //DatabaseTables
         //
-        public const string T_CLNT_DEMO = "T_CLNT_DEMO";
-        public const string T_CLNT_ETHN_DTL = "T_CLNT_ETHN_DTL";
-        public const string HCCCLIENTS = "HCCCLIENTS";
-        public const string T_CLNT_HIV_INFO = "T_CLNT_HIV_INFO";
-        public const string HCCClientMedCD4 = "HCCClientMedCD4";
-        public const string T_CLNT_HIV_TEST = "T_CLNT_HIV_TEST";
-        public const string HCCClientHIVTest = "HCCClientHIVTest";
-        public const string T_CLNT_LVNG_STTN = "T_CLNT_LVNG_STTN";
-        public const string HCCLvngSttn = "HCCLvngSttn";
-        public const string T_CLNT_RACE_DTL = "T_CLNT_RACE_DTL";
-        public const string HCCClientRace = "HCCClientRace";
-        public const string T_CLNT_SITE = "T_CLNT_SITE";
-        public const string HCCClientAddr = "HCCClientAddr";
-        public const string T_CLNT_HSNG_ASSTNC = "T_CLNT_HSNG_ASSTNC";
-        public const string T_CLNT_HSHLD_INCOME = "T_CLNT_HSHLD_INCOME";
+        public const string ClntDemo = "T_CLNT_DEMO";
+        public const string ClntEthnDtl = "T_CLNT_ETHN_DTL";
+        public const string Hccclients = "HCCCLIENTS";
+        public const string ClntHivInfo = "T_CLNT_HIV_INFO";
+        public const string HccClientMedCd4 = "HCCClientMedCD4";
+        public const string ClntHivTest = "T_CLNT_HIV_TEST";
+        public const string HccClientHivTest = "HCCClientHIVTest";
+        public const string ClntLvngSttn = "T_CLNT_LVNG_STTN";
+        public const string HccLvngSttn = "HCCLvngSttn";
+        public const string ClntRaceDtl = "T_CLNT_RACE_DTL";
+        public const string HccClientRace = "HCCClientRace";
+        public const string ClntSite = "T_CLNT_SITE";
+        public const string HccClientAddr = "HCCClientAddr";
+        public const string ClntHsngAsstnc = "T_CLNT_HSNG_ASSTNC";
+        public const string ClntHshldIncome = "T_CLNT_HSHLD_INCOME";
         public const string HccClients = "HCCClients";
-        public const string T_SITE = "T_SITE";
+        public const string Site = "T_SITE";
         public const string HccServices = "HCCServices";
 
 
@@ -1299,13 +1297,6 @@ namespace RWDE
     {
         public const string NoManualUploadsbetweenselecteddates = "No Manual Uploads between selected dates";
         public const string ManualUploadClientsReport = "Manual Upload Clients Report";
-
-
-
-
-
-
-
 
     }
 

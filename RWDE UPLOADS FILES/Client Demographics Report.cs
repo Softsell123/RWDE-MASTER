@@ -12,28 +12,28 @@ namespace RWDE
         public ClientDemographicsReport()//initialize data
         {
             InitializeComponent();
-            this.WindowState = FormWindowState.Maximized;
+            WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -41,6 +41,7 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to Child Controls
                     RegisterEvents(control);
                 }
             }
@@ -50,7 +51,7 @@ namespace RWDE
             try { 
 
                 // Close the current form (dispose it)
-                this.Close();
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)
@@ -70,11 +71,11 @@ namespace RWDE
                 DateTime endDate = dtpEndDate.Value;
                 if (startDate >=endDate){
                     MessageBox.Show($@"{ Constants.StartdatemustbeearlierthanEnddate}");
-
                 }
                 // Call the LoadData method to fetch the data
                 dataGridView.ForeColor = Color.Black;
 
+                //to get details of clients applied for services
                 DataTable result = dbHelper.LoadConfigurationfilter(startDate, endDate);//to get data in the grid
 
                 // Now you can use the result, e.g., bind it to a DataGridView or process it

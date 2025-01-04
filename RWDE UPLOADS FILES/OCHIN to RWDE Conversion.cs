@@ -15,22 +15,21 @@ namespace RWDE
     {
         private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        public Panel PanelToReplace
-        {
-            get
-            {
-                return pnlOCHINConversion;
-            }
-        }
-        public OchinToRwdeConversion()
+        
+        public OchinToRwdeConversion()//to initialize the data
         {
             InitializeComponent();
             dbHelper = new DbHelper();
-            connectionString = dbHelper.GetConnectionString();
-            this.ControlBox = false;
+            connectionString = dbHelper.GetConnectionString();//to get the Connection String
+            ControlBox = false;
+
+            //load data in the grid
             PopulateDataGridView();
             PopulateDataGridViewHcc();
-            this.WindowState = FormWindowState.Maximized;
+
+            WindowState = FormWindowState.Maximized;
+
+            //get all batches type except Client Track
             List<string> batchTypes = dbHelper.GetAllBatchTypesHcc();
             cbBatchType.Items.Clear();  // Clear existing items
             foreach (string batchType in batchTypes)
@@ -45,25 +44,25 @@ namespace RWDE
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this);
+            RegisterEvents(this); //Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void dataGridView_Scroll(object sender, ScrollEventArgs e)
+        private void dataGridView_Scroll(object sender, ScrollEventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void dataGridViewHCC_Scroll(object sender, ScrollEventArgs e)
+        private void dataGridViewHCC_Scroll(object sender, ScrollEventArgs e)//Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void RegisterEvents(Control parent)
+        private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
             foreach (Control control in parent.Controls)
             {
@@ -75,6 +74,7 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    //Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
@@ -189,7 +189,6 @@ namespace RWDE
                 {
                     dataGridViewHCC.Columns[Constants.ConversionEndedAt].Width = 250; // Set the width to 200 pixels
                 }
-
                 if (dataGridViewHCC.Columns.Contains(Constants.Status))
                 {
                     dataGridViewHCC.Columns[Constants.Status].Width = 205; // Set the width to 200 pixels
@@ -201,7 +200,7 @@ namespace RWDE
                 Console.WriteLine(Constants.Errorsp + ex.Message);
             }
         }
-        private void AddDateTime(string name, string value, DataGridView dataGridView)//format datetime 
+        private void AddDateTime(string name, string value, DataGridView dataGridViews)//format datetime 
         {
             try { 
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn
@@ -211,7 +210,7 @@ namespace RWDE
                 HeaderText = value,
                 DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.MMddyyyyHHmmss }
             };
-            dataGridView.Columns.Add(column);
+            dataGridViews.Columns.Add(column);
             }
             catch (Exception ex)
             {
@@ -398,11 +397,9 @@ namespace RWDE
                         dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
                         btnClose.Text = Constants.Close;
                         btnConversion.Enabled = true;
-
                     }
                 }
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine(Constants.Errorsp + ex.Message);
@@ -412,33 +409,46 @@ namespace RWDE
         public OchinToRwdeConversion(string message, int displayDuration)//Automation process 
         {
             // Set up form properties
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.ShowInTaskbar = false;
-            this.Size = new Size(500, 200);
-            this.Text = "";
-            this.BackColor = Color.White;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            ShowInTaskbar = false;
+            Size = new Size(500, 200);
+            Text = "";
+            BackColor = Color.White;
 
             // Create and configure message label
             Label label = new Label();
             label.Text = message;
             label.AutoSize = false;
-            label.Size = new Size(this.ClientSize.Width - 10, this.ClientSize.Height - 10); // Adjust size for padding
+            label.Size = new Size(ClientSize.Width - 10, ClientSize.Height - 10); // Adjust size for padding
             label.Location = new Point(5, 5); // Adjust location for padding
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.Font = new Font(Constants.FntfmlyArial, 12, FontStyle.Regular); // Set font and size
             
             // Add label to form
-            this.Controls.Add(label);
+            Controls.Add(label);
 
             // Set up timer to close the form after displayDuration milliseconds
             Timer timer = new Timer();
             timer.Interval = displayDuration;
-            timer.Tick += (sender, e) => this.Close();
+            timer.Tick += (sender, e) => Close();
             timer.Start();
         }
+
+        public sealed override Color BackColor
+        {
+            get { return base.BackColor; }
+            set { base.BackColor = value; }
+        }
+
+        public sealed override string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
+        }
+
         private async Task GetservicesAsync(int selectedBatchId)//Mapping from CTServices to HCCServices
         {
             //btncloseHCC.Text = Constants.Abort;
@@ -447,7 +457,7 @@ namespace RWDE
                 //progressbarHcc.Visible = false;
                 progressbarClients.Value = 0;
 
-                // Call the stored procedure to get the ConversionStartedAt and ConversionEndedAt values
+                // to get the ConversionStartedAt and ConversionEndedAt values
                 var batchDetails = await dbHelper.GetBatchDetailsFromSpAsync(selectedBatchId);//to check whether the conversion completed or not
 
                 if (batchDetails == null)
@@ -483,7 +493,6 @@ namespace RWDE
                         using (SqlConnection connection = new SqlConnection(connectionString))
                         {
                             connection.Open();
-
                             using (SqlCommand command = new SqlCommand(Constants.MapCmsServicesToHccServices, connection))
                             {
                                 command.CommandType = CommandType.StoredProcedure;
@@ -505,7 +514,7 @@ namespace RWDE
                                 // Update progress textbox with initial progress information
                                 if (totalRows != 0)
                                 {
-                                    await UpdateProgressAsyncservices(insertedRows, totalRows);
+                                    await UpdateProgressAsyncservices(insertedRows, totalRows);//to update the progress Bar for Services
                                 }
                                 else
                                 {
@@ -524,22 +533,24 @@ namespace RWDE
                                             // Process each row
                                             insertedRows++;
 
-                                            // Update progress bar and text box
+                                            // Update progress bar and text box for Services
                                             await UpdateProgressAsyncservices(insertedRows, totalRows);
-
-                                            // You may want to do additional processing here if needed
                                         }
                                     }
                                 }
                                 DateTime endTime = DateTime.Now;
                                 UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update the Status label in batch table
 
+                                //insertion into log table
                                 dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
                                 //Record the end time
                                 
                                 Console.WriteLine(Constants.MappingcompletedsuccessfullyforBatchId + selectedBatchId);
+
+                                // to remove a selected row and store the removed batch ID in the database table
                                 RemoveSelectedRow(selectedBatchId, "");
-                                // int batchId = dbHelper.GetNextBatchID();//Getting next batchid from Batch table
+
+                                //update batch Services data
                                 dbHelper.UpdateBatchServices(selectedBatchId, startTime, endTime, totalRows);
                                 dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = 18;
                                 dataGridView.Rows[selectedRowIndex].Cells[Constants.ConversionEndedAt].Value = endTime;
@@ -550,6 +561,8 @@ namespace RWDE
                                 txtUploadEnded.Text = eTime;
                                 txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
                                 btnClose.Text = Constants.Close;
+
+                                //load data in the grid
                                 PopulateDataGridView();
                                 dataGridView.Refresh();
                                 btnConversion.Enabled = true;
@@ -693,7 +706,6 @@ namespace RWDE
             {
                 Console.WriteLine(ex.Message);
             }
-
             return totalRows;
         }
         private void RemoveSelectedRow(int batchId, string status) // Method to remove a selected row and store the removed batch ID in the database table
@@ -820,21 +832,29 @@ namespace RWDE
                 if (btnClose.Text == Constants.Abort)
                 {
                     DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort,Constants.Ochin, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                   
                     // Check if the user clicked "Yes"
-
-                    // Show a message box indicating successful abort
-                    MessageBox.Show(Constants.AbortedSuccessfully);
-                    foreach (DataGridViewRow row in dataGridView.Rows)
+                    if (result == DialogResult.Yes)
                     {
-                        row.Cells[Constants.Status].Value = Constants.Hccabort;
-                        break;
+                        foreach (DataGridViewRow row in dataGridView.Rows)
+                        {
+                            row.Cells[Constants.Status].Value = Constants.Hccabort;
+                            break;
+                        }
+                        // Update the status of the selected batch to Status "19" (Abort)
+                        UpdateBatchStatus(batchId, Constants.Hccabort);
+                        // Show a message box indicating successful abort
+                        MessageBox.Show(Constants.AbortedSuccessfully);
+                        Close();
+                        Application.Restart();
                     }
-                    // Update the status of the selected batch to Status "19" (Abort)
-                    UpdateBatchStatus(batchId, Constants.Hccabort);
-                    // Application.Exit();
                 }
-                this.Close();
-                Application.Restart();
+                else
+                {
+                    Close();
+                    Application.Restart();
+                }
+                
             }
             catch (Exception ex)
             {
@@ -923,11 +943,13 @@ namespace RWDE
                     MessageBox.Show(Constants.DateShouldBeGreaterThen, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                
-                // Retrieve and bind data
+
+                //get generation data according to start and end time
                 DataTable result = dbHelper.GetParticularnGenerationDatasconversion(batchType, fromDate, endDate);
                 dataGridView.DataSource = result;
-                DataTable resultHcc = dbHelper.GetParticularnGenerationDatasHcc(batchType, fromDate, endDate);
+
+                //get generation data of HCC according to start and end time
+                DataTable resultHcc = dbHelper.GetParticularGenerationDatasHcc(batchType, fromDate, endDate);
                 dataGridViewHCC.DataSource = resultHcc;
 
                 if (result == null || result.Rows.Count == 0)
@@ -946,12 +968,12 @@ namespace RWDE
             try
             {
                 cbBatchType.Items.Clear();
+                //load data in the grid
                 PopulateDataGridView();
-                //PopulateDataGridViewHCC();
-                dtpEndDate.CustomFormat = " ";
+                dtpEndDate.CustomFormat = Constants.Space;
                 dtpEndDate.Format = DateTimePickerFormat.Custom;
                 // Do the same for dtpStartDate or any other DateTimePicker if needed
-                dtpStartDate.CustomFormat = " ";
+                dtpStartDate.CustomFormat = Constants.Space;
                 dtpStartDate.Format = DateTimePickerFormat.Custom;
                 List<string> batchTypes = dbHelper.GetAllBatchTypesHcc();
                 cbBatchType.Items.Clear();  // Clear existing items
@@ -965,7 +987,7 @@ namespace RWDE
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void dtpStartDate_ValueChanged_1(object sender, EventArgs e)//to format dateY
+        private void dtpStartDate_ValueChanged_1(object sender, EventArgs e)//to format date when the Start date is changed
         {
             try { 
                 dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
@@ -996,9 +1018,8 @@ namespace RWDE
 
                 if (mainForm != null)
                 {
-                    mainForm.ShowOchinToHccScreenGenerate();//to navigate to next page
+                    mainForm.ShowOchinToHccScreenGenerate();//to navigate to Xml Generation Page
                 }
-
             }
             catch (Exception ex)
             {
