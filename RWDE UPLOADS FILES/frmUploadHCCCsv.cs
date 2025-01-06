@@ -12,11 +12,11 @@ namespace RWDE
     {
         private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        
+
         private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;//to get file path
         public FrmUploadHccCsv()//initializing of data
         {
-            InitializeComponent();           
+            InitializeComponent();
             dbHelper = new DbHelper();
             connectionString = dbHelper.GetConnectionString();//get connection string
             ControlBox = false;
@@ -55,32 +55,54 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to child Controls
-                    RegisterEvents(control);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void btnUpload_Click(object sender, EventArgs e)//Uploading CSV files
         {
-            try {
+            try
+            {
                 if (string.IsNullOrEmpty(txtpath.Text))
                 {
                     MessageBox.Show(Constants.TheFolderPathCannotBeEmpty, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -90,7 +112,7 @@ namespace RWDE
                 string[] filesempty = Directory.GetFiles(txtpath.Text);
 
                 // Check if the folder is empty
-                
+
                 if (txtpath.Text == "" || txtpath == null || filesempty.Length == 0)
                 {
                     MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -106,7 +128,7 @@ namespace RWDE
 
                 if (!allFilesAreCsv)
                 {
-                    MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles,Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 btnClose.Text = Constants.Abort;
@@ -114,7 +136,7 @@ namespace RWDE
                 bool isUploading = true;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string fileName="";
+                    string fileName = "";
                     connection.Open();
                     //SqlTransaction transaction = connection.BeginTransaction();
                     try
@@ -148,7 +170,7 @@ namespace RWDE
 
                                 foreach (string csvFilePath in csvFiles)
                                 {
-                                    UpdateFileProgress(currentFileIndex, totalCsvFiles,isUploading);//to update lines of insertion
+                                    UpdateFileProgress(currentFileIndex, totalCsvFiles, isUploading);//to update lines of insertion
                                     if (!isUploading)
                                         break;
                                     currentFileIndex++;
@@ -189,7 +211,7 @@ namespace RWDE
                                         {
                                             dbHelper.InsertBatch(batchid, fileName, baseFilename, Constants.Hcc, description, DateTime.Now, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
                                             //progress of total files insertion 
-                                            UpdateFileProgress(currentCsvFileIndex, totalCsvFiles,isUploading);
+                                            UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, isUploading);
                                         }
                                     }
                                 }
@@ -204,7 +226,7 @@ namespace RWDE
                             }
                             else
                             {
-                                MessageBox.Show(Constants.ThesefileshavealreadybeenuploadedCloseandreopentouploadnewfiles,Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show(Constants.ThesefileshavealreadybeenuploadedCloseandreopentouploadnewfiles, Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 btnUpload.Enabled = true;
                             }
                         }
@@ -228,7 +250,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public Tuple<int, bool> InsertCsvDataIntoTable(string csvFilePath, int batchid, SqlConnection connection,Boolean isUploading)//Insertion of CSV DATA into tables
+        public Tuple<int, bool> InsertCsvDataIntoTable(string csvFilePath, int batchid, SqlConnection connection, Boolean isUploading)//Insertion of CSV DATA into tables
         {
             int rowsInserted = 0;
             int totalRows = 0;
@@ -238,7 +260,7 @@ namespace RWDE
             string baseFilename = filenameParts[0];
             try
             {
-                dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.Hcc, baseFilename+Constants.CsvExtention, Constants.Uploadhcc);
+                dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.Hcc, baseFilename + Constants.CsvExtention, Constants.Uploadhcc);
 
                 // No need to open the connection here as it's already open
 
@@ -315,7 +337,7 @@ namespace RWDE
                 // No need to close the connection here as it will be handled externally
                 if (isUploading)
                 {
-                    dbHelper.Log($"{Constants.UploadForBaseFileNameHasCompleted.Replace("{baseFilename}", baseFilename)}", Constants.OchinCode, baseFilename+Constants.CsvExtention, Constants.Uploadhcc);
+                    dbHelper.Log($"{Constants.UploadForBaseFileNameHasCompleted.Replace("{baseFilename}", baseFilename)}", Constants.OchinCode, baseFilename + Constants.CsvExtention, Constants.Uploadhcc);
                 }
                 return Tuple.Create(rowsInserted, true);
             }
@@ -349,7 +371,7 @@ namespace RWDE
             }
         }
 
-        private void UpdateFileProgress(int currentFilesIndex, int totalFiles,Boolean isUploading)//progress of total files insertion 
+        private void UpdateFileProgress(int currentFilesIndex, int totalFiles, Boolean isUploading)//progress of total files insertion 
         {
             try
             {
@@ -393,7 +415,7 @@ namespace RWDE
                             // Show confirmation message
                             MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadHccCsv);
                             String path = txtpath.Text;
-                            UpdateBatch(batchId, fileName,path);
+                            UpdateBatch(batchId, fileName, path);
                             Close();
                             dbHelper.DeleteBatchochin(batchId.ToString());
                             Application.Restart();
@@ -442,7 +464,7 @@ namespace RWDE
 
                         if (!allFilesAreXml)
                         {
-                            MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles,Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                         // Save the path to the file

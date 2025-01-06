@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-                                                                                                                                                                                       // ReSharper disable PossibleNullReferenceException
+// ReSharper disable PossibleNullReferenceException
 namespace RWDE
 {
     public partial class ContractIdLists : Form
@@ -15,7 +15,7 @@ namespace RWDE
         {
             InitializeComponent();
             dbHelper = new DbHelper();
-            connectionString = dbHelper.GetConnectionString();
+            connectionString = dbHelper.GetConnectionString();//to get the Connection String
             WindowState = FormWindowState.Maximized;
             ControlBox = false;
             // Populate the DataGridView with data and configure its columns
@@ -33,34 +33,62 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
-                }
+                    if (control is Button || control is CheckBox || control is DateTimePicker)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
 
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to child Controls
-                    RegisterEvents(control);
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void InitializeDataGridView()//Initialize the form or object
         {
-            // Your DataGridView initialization code
-            dataGridView.AllowUserToAddRows = false;
+            try
+            {
+                // Your DataGridView initialization code
+                dataGridView.AllowUserToAddRows = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         public class DataGridViewCalendarColumn : DataGridViewColumn// sets up the DateTimePicker with a custom format.
         {
@@ -276,7 +304,7 @@ namespace RWDE
 
                 DataGridViewCalendarColumn endedDateTimeColumn = new DataGridViewCalendarColumn
                 {
-                    Name =Constants.EndedDateTime,
+                    Name = Constants.EndedDateTime,
                     HeaderText = Constants.EndedAt,
                     DataPropertyName = Constants.EndedDateTime,
                     Width = 220,
@@ -284,7 +312,7 @@ namespace RWDE
                 };
 
                 dataGridView.Columns.Add(endedDateTimeColumn);
-                
+
                 DataGridViewComboBoxColumn statusColumn = new DataGridViewComboBoxColumn
                 {
                     Name = Constants.Status,
@@ -360,7 +388,8 @@ namespace RWDE
         }
         private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            try { 
+            try
+            {
                 if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox)
                 {
                     if (e.Control is ComboBox comboBox)
@@ -402,51 +431,52 @@ namespace RWDE
         }
         private void btnAdd_Click(object sender, EventArgs e)//to add new contract data
         {
-            try { 
-                 // Allow editing for the entire DataGridView initially
-            dataGridView.ReadOnly = false;
-            dataGridView.Columns[Constants.Status].ReadOnly = false;
-
-            // Display confirmation message
-            var result = MessageBox.Show($@"{Constants.Areyousureyouwanttoaddanewcontract}", Constants.ContractsSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
+            try
             {
-                 DataTable dataTable= (DataTable)dataGridView.DataSource;
+                // Allow editing for the entire DataGridView initially
+                dataGridView.ReadOnly = false;
+                dataGridView.Columns[Constants.Status].ReadOnly = false;
+
+                // Display confirmation message
+                var result = MessageBox.Show($@"{Constants.Areyousureyouwanttoaddanewcontract}", Constants.ContractsSetup, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    DataTable dataTable = (DataTable)dataGridView.DataSource;
                     // Create a new row in the DataTable
                     DataRow newRow = dataTable.NewRow();
 
-                // Insert the new row at index 1 in the DataTable
-                dataTable.Rows.InsertAt(newRow, 0);
+                    // Insert the new row at index 1 in the DataTable
+                    dataTable.Rows.InsertAt(newRow, 0);
 
-                // Refresh the DataGridView to ensure the new row is displayed
-                dataGridView.Refresh();
+                    // Refresh the DataGridView to ensure the new row is displayed
+                    dataGridView.Refresh();
 
-                // Select the entire row of the newly added row
-                dataGridView.Rows[0].Selected = true;
+                    // Select the entire row of the newly added row
+                    dataGridView.Rows[0].Selected = true;
 
-                // Set the current cell to the first cell of the new row and begin edit mode
-                dataGridView.CurrentCell = dataGridView.Rows[0].Cells[0];
-                dataGridView.BeginEdit(true);
-            }
+                    // Set the current cell to the first cell of the new row and begin edit mode
+                    dataGridView.CurrentCell = dataGridView.Rows[0].Cells[0];
+                    dataGridView.BeginEdit(true);
+                }
 
-            // Exit edit mode
-            dataGridView.BeginEdit(false);
+                // Exit edit mode
+                dataGridView.BeginEdit(false);
 
-            // Iterate through each row in the DataGridView to set read-only based on status
-            foreach (DataGridViewRow row in dataGridView.Rows)
-            {
-                if (row.Cells[Constants.Status].Value != null)
+                // Iterate through each row in the DataGridView to set read-only based on status
+                foreach (DataGridViewRow row in dataGridView.Rows)
                 {
-                    string statusValue = row.Cells[Constants.Status].Value.ToString();
-
-                    // Assuming you have specific conditions for read-only rows based on status
-                    if (statusValue == Constants.Active || statusValue == Constants.Inactive || statusValue == Constants.Delete)
+                    if (row.Cells[Constants.Status].Value != null)
                     {
-                        row.ReadOnly = true;
+                        string statusValue = row.Cells[Constants.Status].Value.ToString();
+
+                        // Assuming you have specific conditions for read-only rows based on status
+                        if (statusValue == Constants.Active || statusValue == Constants.Inactive || statusValue == Constants.Delete)
+                        {
+                            row.ReadOnly = true;
+                        }
                     }
                 }
-            }
             }
             catch (Exception ex)
             {
@@ -455,13 +485,14 @@ namespace RWDE
         }
         private void DataGridView_EditingControlShowingStatus(object sender, DataGridViewEditingControlShowingEventArgs e)//to update status
         {
-            try { 
-                 if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox comboBox)
-                 {
-                  // Remove existing event handlers to prevent multiple subscriptions
-                 comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;
-                 comboBox.SelectedIndexChanged += ComboBox_SelectedIndexChanged;
-                 }
+            try
+            {
+                if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox comboBox)
+                {
+                    // Remove existing event handlers to prevent multiple subscriptions
+                    comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;
+                    comboBox.SelectedIndexChanged += ComboBox_SelectedIndexChanged;
+                }
             }
             catch (Exception ex)
             {
@@ -470,47 +501,48 @@ namespace RWDE
         }
         private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)//to update status
         {
-            try { 
+            try
+            {
                 if (sender is ComboBox comboBox)
                 {
 
-                 string selectedStatus = comboBox.SelectedItem.ToString();
-                DataGridViewRow currentRow = dataGridView.CurrentRow;
-                if (currentRow == null || currentRow.Cells[Constants.ContractName].Value == null) return;
-                string contractid = currentRow.Cells[Constants.ContractId].Value?.ToString();
+                    string selectedStatus = comboBox.SelectedItem.ToString();
+                    DataGridViewRow currentRow = dataGridView.CurrentRow;
+                    if (currentRow == null || currentRow.Cells[Constants.ContractName].Value == null) return;
+                    string contractid = currentRow.Cells[Constants.ContractId].Value?.ToString();
 
-                string contractName = currentRow.Cells[Constants.ContractName].Value.ToString();
-                string currentStatus = currentRow.Cells[Constants.Status].Value?.ToString();
+                    string contractName = currentRow.Cells[Constants.ContractName].Value.ToString();
+                    string currentStatus = currentRow.Cells[Constants.Status].Value?.ToString();
 
-                if (currentStatus != selectedStatus)
-                { 
-                    if (contractid == "")
+                    if (currentStatus != selectedStatus)
                     {
-                        MessageBox.Show(Constants.ContractIdisrequired, Constants.ContractsSetupError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                        if (contractid == "")
+                        {
+                            MessageBox.Show(Constants.ContractIdisrequired, Constants.ContractsSetupError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
 
-                    string message = selectedStatus == Constants.Active
-                        ? string.Format(Constants.AreYouSureMakeActive, contractName)
-                        : string.Format(Constants.AreYouSureMakeInactive, contractName);
+                        string message = selectedStatus == Constants.Active
+                            ? string.Format(Constants.AreYouSureMakeActive, contractName)
+                            : string.Format(Constants.AreYouSureMakeInactive, contractName);
 
                         var result = MessageBox.Show(message, selectedStatus == Constants.Active ? ContractIdList.ConfirmMakeActive : ContractIdList.ConfirmMakeInactive, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == DialogResult.Yes)
-                    {
-                        // Update the status cell value
-                        currentRow.Cells[Constants.Status].Value = selectedStatus;
-                    }
-                    else
-                    {
-                        // Revert the ComboBox selection to the previous value
-                        comboBox.SelectedItem = currentStatus;
-                    }
+                        if (result == DialogResult.Yes)
+                        {
+                            // Update the status cell value
+                            currentRow.Cells[Constants.Status].Value = selectedStatus;
+                        }
+                        else
+                        {
+                            // Revert the ComboBox selection to the previous value
+                            comboBox.SelectedItem = currentStatus;
+                        }
 
-                    if (selectedStatus == Constants.Active || selectedStatus == Constants.Inactive || selectedStatus == Constants.Delete)
-                    {
-                        dataGridView.CurrentRow.Cells[Constants.Status].ReadOnly = false;
+                        if (selectedStatus == Constants.Active || selectedStatus == Constants.Inactive || selectedStatus == Constants.Delete)
+                        {
+                            dataGridView.CurrentRow.Cells[Constants.Status].ReadOnly = false;
+                        }
                     }
-                }
                 }
             }
             catch (Exception ex)
@@ -520,15 +552,16 @@ namespace RWDE
         }
         private void DataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)//to update startdate time
         {
-            try { 
-               if (dataGridView.CurrentCell != null && dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.StartedDateTime].Index)
-               {
-                   if (e.Control is DataGridViewCalendarEditingControl startedDateTimePicker)
-                   {
-                       startedDateTimePicker.ValueChanged -= StartedDateTimePicker_ValueChanged; // Unsubscribe to avoid multiple subscriptions
-                       startedDateTimePicker.ValueChanged += StartedDateTimePicker_ValueChanged;
-                   }
-               }
+            try
+            {
+                if (dataGridView.CurrentCell != null && dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.StartedDateTime].Index)
+                {
+                    if (e.Control is DataGridViewCalendarEditingControl startedDateTimePicker)
+                    {
+                        startedDateTimePicker.ValueChanged -= StartedDateTimePicker_ValueChanged; // Unsubscribe to avoid multiple subscriptions
+                        startedDateTimePicker.ValueChanged += StartedDateTimePicker_ValueChanged;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -537,7 +570,8 @@ namespace RWDE
         }
         private void StartedDateTimePicker_ValueChanged(object sender, EventArgs e)//modify ended date according to starttime 
         {
-            try { 
+            try
+            {
                 if (sender is DataGridViewCalendarEditingControl startedDateTimePicker)
                 {
                     DateTime startedDateTime = startedDateTimePicker.Value;
@@ -560,7 +594,8 @@ namespace RWDE
         }
         private void dataGridView_KeyDown(object sender, KeyEventArgs e)//to control the delete button functionality
         {
-            try{// Check if the Delete key is pressed
+            try
+            {// Check if the Delete key is pressed
                 if (e.KeyCode == Keys.Delete)
                 {
                     // Prevent the default action
@@ -590,7 +625,8 @@ namespace RWDE
 
         private void DeleteSelectedRow() // Method to delete the selected row
         {
-            try {
+            try
+            {
                 if (dataGridView.SelectedRows.Count > 0)
                 {
                     foreach (DataGridViewRow row in dataGridView.SelectedRows)
@@ -609,7 +645,8 @@ namespace RWDE
         }
         private void btnSave_Click(object sender, EventArgs e) // to save the particular row to the database table
         {
-            try { 
+            try
+            {
                 if (dataGridView.SelectedRows.Count == 0)
                 {
                     // No row selected
@@ -672,7 +709,8 @@ namespace RWDE
         }
         private void SaveContract(DataRow row)//insert and update into table 
         {
-            try { 
+            try
+            {
                 if (dataGridView.ReadOnly)
                 {
                     MessageBox.Show($@"{ContractId}{Constants.Alreadysaved}");
@@ -751,7 +789,8 @@ namespace RWDE
         }
         private void dataGridView_CellClickdelete(object sender, DataGridViewCellEventArgs e)//// Ensure the clicked cell is in the correct column and row
         {
-            try { 
+            try
+            {
                 if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.DeleteColumnName].Index)
                 {
                     DataGridViewRow row = dataGridView.Rows[e.RowIndex];
@@ -804,7 +843,8 @@ namespace RWDE
         }
         private void dataGridView_Celledit(object sender, DataGridViewCellEventArgs e)//Ensure the clicked cell is in the correct column and row to edit
         {
-            try { 
+            try
+            {
                 // Check if the clicked cell is in a valid row and is the "Edit" column
                 if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index)
                 {
@@ -875,7 +915,6 @@ namespace RWDE
                         // Call a method to handle the edit process (update UI, save changes, etc.)
                         HandleEdit(e.RowIndex);
                     }
-
                 }
             }
             catch (Exception ex)
@@ -885,7 +924,8 @@ namespace RWDE
         }
         private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)//to highlight the editing row
         {
-            try{// Reset the row's background color when editing is completed
+            try
+            {// Reset the row's background color when editing is completed
                 if (e.RowIndex >= 0)
                 {
                     dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White; // Set back to default color
@@ -898,7 +938,8 @@ namespace RWDE
         }
         private void dataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)// Reset the row's background color if editing is canceled
         {
-            try { 
+            try
+            {
                 if (e.RowIndex >= 0)
                 {
                     dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White; // Set back to default color
@@ -945,7 +986,8 @@ namespace RWDE
         // Example: Fetch row data from DataGridView
         private void dataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)//to dynamially display delete button in grid
         {
-            try { 
+            try
+            {
 
                 if (e.ColumnIndex == dataGridView.Columns[Constants.DeleteColumnName].Index && e.RowIndex >= 0)
                 {
@@ -990,7 +1032,8 @@ namespace RWDE
         }
         private void dataGridView_CelleditPainting(object sender, DataGridViewCellPaintingEventArgs e)//to dynamially display edit button in grid
         {
-            try { 
+            try
+            {
                 if (e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index && e.RowIndex >= 0)
                 {
                     e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
@@ -1031,31 +1074,48 @@ namespace RWDE
         }
         private GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int radius)  // Create a new GraphicsPath object to define the rounded rectangle
         {
-            GraphicsPath path = new GraphicsPath();
-            int diameter = radius * 2;
+            try
+            {
+                GraphicsPath path = new GraphicsPath();
+                int diameter = radius * 2;
 
-            path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
-            path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
-            path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
-            path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
+                path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
+                path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
+                path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
+                path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
 
-            path.CloseFigure();
-            return path;
+                path.CloseFigure();
+                return path;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private bool IsRowEmpty(int rowIndex) // Iterate through each cell in the specified row
         {
-            foreach (DataGridViewCell cell in dataGridView.Rows[rowIndex].Cells)
+            try
             {
-                if (cell.Value != null && !string.IsNullOrEmpty(cell.Value.ToString()))
+                foreach (DataGridViewCell cell in dataGridView.Rows[rowIndex].Cells)
                 {
-                    return false;
+                    if (cell.Value != null && !string.IsNullOrEmpty(cell.Value.ToString()))
+                    {
+                        return false;
+                    }
                 }
+                return true;
             }
-            return true;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return true;
+            }
         }
         public void HandleDelete(int rowIndex)//to update status when deleted
         {
-            try { 
+            try
+            {
                 var cell = dataGridView.Rows[rowIndex].Cells[Constants.DeleteColumnName];
                 if (cell.Value != null && cell.Value.ToString() == Constants.DeleteButtonText)
                 {
@@ -1084,7 +1144,8 @@ namespace RWDE
         }
         private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
-            try { 
+            try
+            {
                 Close();
                 Application.Restart();
             }
@@ -1095,33 +1156,37 @@ namespace RWDE
         }
         private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)// Check if the clicked cell is in a valid row and is the "Edit" column
         {
-           try{
-
-            if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index)
+            try
             {
-                // Set all rows to read-only
-                foreach (DataGridViewRow row in dataGridView.Rows)
+
+                if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index)
                 {
-                    row.ReadOnly = true;
-                }
-                // Make all cells in the specific row editable, except for the Constants.Status column
-                foreach (DataGridViewCell cell in dataGridView.Rows[e.RowIndex].Cells)
-                {
-                    if (cell.OwningColumn.Name !=Constants.Status)
+                    // Set all rows to read-only
+                    foreach (DataGridViewRow row in dataGridView.Rows)
                     {
-                        cell.ReadOnly = false;
+                        row.ReadOnly = true;
                     }
+                    // Make all cells in the specific row editable, except for the Constants.Status column
+                    foreach (DataGridViewCell cell in dataGridView.Rows[e.RowIndex].Cells)
+                    {
+                        if (cell.OwningColumn.Name != Constants.Status)
+                        {
+                            cell.ReadOnly = false;
+                        }
+                    }
+                    // Set the specific row to read-only = false
+                    dataGridView.Rows[e.RowIndex].ReadOnly = false;
                 }
-                // Set the specific row to read-only = false
-                dataGridView.Rows[e.RowIndex].ReadOnly = false;
             }
-           }
-           catch (Exception ex)
-           {
-               MessageBox.Show(ex.Message);
-           }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
+       
+    
+
      
 

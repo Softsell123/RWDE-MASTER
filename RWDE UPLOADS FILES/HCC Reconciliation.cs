@@ -24,15 +24,31 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
+            {
+                foreach (Control control in parent.Controls)
             {
                 if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
                 {
@@ -46,6 +62,11 @@ namespace RWDE
                     //Assigning events to all child Controls
                     RegisterEvents(control);
                 }
+            }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 

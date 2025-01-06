@@ -34,53 +34,81 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
-                }
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
 
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to all child Controls
-                    RegisterEvents(control);
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to all child Controls
+                        RegisterEvents(control);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void DisplayHeadersOnly()//to display the empty GridView
         {
-            dataGridView.DataSource = null;
-            dataGridView.Columns.Clear();
-            dataGridView.Columns.Add(Constants.SlNo, Constants.SlNo);
-            dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
-            dataGridView.Columns.Add(Constants.Staff, Constants.Staff);
-            dataGridView.Columns.Add(Constants.HccId, Constants.HccIdsp);
-            dataGridView.Columns.Add(Constants.HccConsentExpiryDate, Constants.HccConsentExpiryDatesp);
-            dataGridView.Columns.Add(Constants.RwEligibilityExpiryDate, Constants.RwEligibilityExpiryDatesp);
-            dataGridView.Columns.Add(Constants.Service, Constants.Service);
-            dataGridView.Columns.Add(Constants.ServiceCodeId, Constants.ServiceCodeIdsp);
-            dataGridView.Columns.Add(Constants.HccContractId, Constants.HccContractIdSp);
-            dataGridView.Columns.Add(Constants.UnitsOfServices, Constants.UnitsOfServicesSp);
-            dataGridView.Columns.Add(Constants.ActualMinutesSpent, Constants.ActualMinutesSpentSp);
-            dataGridView.Columns.Add(Constants.ServiceId, Constants.ServiceIdSp);
-            dataGridView.Columns.Add(Constants.ServiceExportedToHcc, Constants.ServiceExportedToHccSp);
-            dataGridView.Columns.Add(Constants.ServiceDate, Constants.ServiceDateSp);
-            dataGridView.Columns.Add(Constants.EntryDate, Constants.EntryDateSp);
-            dataGridView.Columns.Add(Constants.Lag, Constants.Lag);
-            dataGridView.Columns.Add(Constants.LagStatus, Constants.LagStatusSp);
-            dataGridView.Columns.Add(Constants.HccExportFailureReason, Constants.HccExportFailureReasonSp);
-            dataGridView.AutoGenerateColumns = false;
+            try
+            {
+                dataGridView.DataSource = null;
+                dataGridView.Columns.Clear();
+                dataGridView.Columns.Add(Constants.SlNo, Constants.SlNo);
+                dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
+                dataGridView.Columns.Add(Constants.Staff, Constants.Staff);
+                dataGridView.Columns.Add(Constants.HccId, Constants.HccIdsp);
+                dataGridView.Columns.Add(Constants.HccConsentExpiryDate, Constants.HccConsentExpiryDatesp);
+                dataGridView.Columns.Add(Constants.RwEligibilityExpiryDate, Constants.RwEligibilityExpiryDatesp);
+                dataGridView.Columns.Add(Constants.Service, Constants.Service);
+                dataGridView.Columns.Add(Constants.ServiceCodeId, Constants.ServiceCodeIdsp);
+                dataGridView.Columns.Add(Constants.HccContractId, Constants.HccContractIdSp);
+                dataGridView.Columns.Add(Constants.UnitsOfServices, Constants.UnitsOfServicesSp);
+                dataGridView.Columns.Add(Constants.ActualMinutesSpent, Constants.ActualMinutesSpentSp);
+                dataGridView.Columns.Add(Constants.ServiceId, Constants.ServiceIdSp);
+                dataGridView.Columns.Add(Constants.ServiceExportedToHcc, Constants.ServiceExportedToHccSp);
+                dataGridView.Columns.Add(Constants.ServiceDate, Constants.ServiceDateSp);
+                dataGridView.Columns.Add(Constants.EntryDate, Constants.EntryDateSp);
+                dataGridView.Columns.Add(Constants.Lag, Constants.Lag);
+                dataGridView.Columns.Add(Constants.LagStatus, Constants.LagStatusSp);
+                dataGridView.Columns.Add(Constants.HccExportFailureReason, Constants.HccExportFailureReasonSp);
+                dataGridView.AutoGenerateColumns = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void btnReport_Click(object sender, EventArgs e)//to display the data as per the given inputs
         {
@@ -191,11 +219,18 @@ namespace RWDE
         }
         private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)//to set all Cell's text Color as Black
         {
-            // Check if the cell value is not null
-            if (e.Value != null)
+            try
             {
-                // Example condition to change color
-                e.CellStyle.ForeColor = e.CellStyle.ForeColor == Color.Black ? Color.Blue : Color.Black; // Default color for other cases
+                // Check if the cell value is not null
+                if (e.Value != null)
+                {
+                    // Example condition to change color
+                    e.CellStyle.ForeColor = e.CellStyle.ForeColor == Color.Black ? Color.Blue : Color.Black; // Default color for other cases
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void btnDownload_Click(object sender, EventArgs e) // to export data to selected folder

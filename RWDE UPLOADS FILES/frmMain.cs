@@ -36,12 +36,21 @@ namespace RWDE
 
         private void MainForm_Load(object sender, EventArgs e)//to load main form
         {
-            BackColor = Color.White;
+            try
+            {
+                BackColor = Color.White;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void ShowNewForm(object sender, EventArgs e)//to show new form
         {
-            // Check if any other dropdown or specific control is focused/active
-            if (IsAnotherControlActive())
+            try
+            {
+                // Check if any other dropdown or specific control is focused/active
+                if (IsAnotherControlActive())
             {
                 // Prevent the new form from showing
                 return;
@@ -49,18 +58,39 @@ namespace RWDE
             ServiceReconciliationReport service = new ServiceReconciliationReport();
             service.MdiParent = this;
             service.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
+            {
+                foreach (Control control in parent.Controls)
             {
                 if (control is Button || control is CheckBox || control is DateTimePicker)
                 {
@@ -75,11 +105,18 @@ namespace RWDE
                     RegisterEvents(control);
                 }
             }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private bool IsAnotherControlActive()//to control the files
         {
-            // Check if there are any open dropdowns or specific active controls
-            foreach (Control control in Controls)
+            try
+            {
+                // Check if there are any open dropdowns or specific active controls
+                foreach (Control control in Controls)
             {
                 if (control is ComboBox comboBox && comboBox.DroppedDown)
                 {
@@ -88,40 +125,76 @@ namespace RWDE
             }
             // Add more conditions if necessary to cover all cases
             return false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
         }
         private void OpenFile(object sender, EventArgs e)//to extract the files
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             openFileDialog.Filter = Constants.AllExtention;
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = openFileDialog.FileName;
             }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
          private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)//to extract from folder
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             saveFileDialog.Filter = Constants.AllExtention;
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = saveFileDialog.FileName;
             }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)//to close
         {
-            Close();
+            try
+            {
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void ToolBarToolStripMenuItem_Click(object sender, EventArgs e)//to open the prescribed form
         {
-            ContractIdLists contractIdLists = new ContractIdLists();
+            try
+            {
+                ContractIdLists contractIdLists = new ContractIdLists();
             contractIdLists.MdiParent = this;
             contractIdLists.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void btnGenerator_Click(object sender, EventArgs e)//xml generation process 
         {
-            if (ActiveMdiChild != null)
+            try
+            {
+                if (ActiveMdiChild != null)
             {
                 ActiveMdiChild.Close();
             }
@@ -129,12 +202,24 @@ namespace RWDE
             FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml();
             frmGeneratorXml.MdiParent = this;
             frmGeneratorXml.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void btnOCHINHCCConversion_Click(object sender, EventArgs e)//OCHIN to RWDE insertion
         {
-            OchinToRwdeConversion ochinToRwdeConversion=new OchinToRwdeConversion();
+            try
+            {
+                OchinToRwdeConversion ochinToRwdeConversion=new OchinToRwdeConversion();
             ochinToRwdeConversion.MdiParent=this;
             ochinToRwdeConversion.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void btnHccConversion_Click(object sender, EventArgs e)//CT to HCC Conversion
         {
@@ -273,7 +358,14 @@ namespace RWDE
         }
         public void ShowOchinToHccScreenMain()//function to navigate to next page
         {
-            Application.Restart(); // Make the OCHIN to HCC control visible
+            try
+            {
+                Application.Restart(); // Make the OCHIN to HCC control visible
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void uploadCSVToOCHINToolStripMenuItem_Click(object sender, EventArgs e)//csv uploads 
         {
@@ -298,17 +390,26 @@ namespace RWDE
         }
         private void oCHINToHCCConversionToolStripMenuItem_Click(object sender, EventArgs e)//ochin to hcc conversion
         {
-            if (ActiveMdiChild != null)
+            try
+            {
+                if (ActiveMdiChild != null)
             {
                 ActiveMdiChild.Close();
             }
             FrmConvertToHcc frmConvertToHcc = new FrmConvertToHcc();
             frmConvertToHcc.MdiParent = this;
             frmConvertToHcc.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void generateHCCXmlFilesToolStripMenuItem_Click(object sender, EventArgs e)//Xml Generator
         {
-            if (ActiveMdiChild != null)
+            try
+            {
+                if (ActiveMdiChild != null)
             {
                 ActiveMdiChild.Close();
             }
@@ -316,6 +417,11 @@ namespace RWDE
             FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml();
             frmGeneratorXml.MdiParent = this;
             frmGeneratorXml.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void allBatchesToolStripMenuItem_Click(object sender, EventArgs e)//all batches updates
         {
@@ -343,13 +449,20 @@ namespace RWDE
         }
         private void uploadOchinCSVToolStripMenuItem_Click(object sender, EventArgs e)//hcc csv uploads
         {
-            if (ActiveMdiChild != null)
+            try
+            {
+                if (ActiveMdiChild != null)
             {
                 ActiveMdiChild.Close();
             }
             FrmUploadOchinCsv uploadOchinCsv = new FrmUploadOchinCsv();
             uploadOchinCsv.MdiParent = this;
             uploadOchinCsv.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void xMLFileUploadsToolStripMenuItem_Click(object sender, EventArgs e)//xml file insertion
         {
@@ -365,7 +478,9 @@ namespace RWDE
         }
         private void oCHINToolStripMenuItem_Click(object sender, EventArgs e)//Ochin to RWDE
         {
-            if (ActiveMdiChild != null)
+            try
+            {
+                if (ActiveMdiChild != null)
             {
                 ActiveMdiChild.Close();
             }
@@ -373,6 +488,11 @@ namespace RWDE
             OchinToRwdeConversion ochinToRwdeConversion = new OchinToRwdeConversion();
             ochinToRwdeConversion.MdiParent = this;
             ochinToRwdeConversion.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void serviceReconciliationReportDotNotUseToolStripMenuItem1_Click(object sender, EventArgs e)//to display ServiceRecon Report
         {
@@ -466,9 +586,16 @@ namespace RWDE
         }
         private void cSVFILESToolStripMenuItem_Click(object sender, EventArgs e)//to display Csv Generation Screen
         {
-            CsvFileConversion csvFileConversion = new CsvFileConversion();
+            try
+            {
+                CsvFileConversion csvFileConversion = new CsvFileConversion();
             csvFileConversion.MdiParent = this;
             csvFileConversion.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void manualUploadReportToolStripMenuItem_Click(object sender, EventArgs e)//to display ManualUpload Report
         {

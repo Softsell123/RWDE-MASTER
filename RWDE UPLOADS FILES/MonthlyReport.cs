@@ -57,40 +57,71 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to all child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to all child Controls
-                    RegisterEvents(control);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void SetPreviousWeekDates(out DateTime startDate, out DateTime endDate)//date filter
         {
-            // Get the current date
-            DateTime today = DateTime.Today;
+            try
+            {
+                // Get the current date
+                DateTime today = DateTime.Today;
 
             // Calculate the number of days to subtract to get the previous week's start date (last Monday)
+
             int daysToSubtract = (int)today.DayOfWeek + 7; // If today is Monday, we go back to last Monday
             startDate = today.AddDays(-daysToSubtract).Date; // Previous week's Monday
 
             // End date is the last day of the previous week (Sunday)
             endDate = startDate.AddDays(6); // Previous week's Sunday
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
         }
         private void btnDownload_Click(object sender, EventArgs e)//to export report to selected folder
         {
@@ -243,7 +274,9 @@ namespace RWDE
         }     
         private void cbDateFilter_SelectedIndexChanged(object sender, EventArgs e)//to filter date accordingly
         {
-            if (cbDateFilter.SelectedItem == null)
+            try
+            {
+                if (cbDateFilter.SelectedItem == null)
                 return;
 
             string selectedFilter = cbDateFilter.SelectedItem.ToString();
@@ -313,35 +346,78 @@ namespace RWDE
             // Set DateTimePicker values
             dtpStartDate.Value = startDate;
             dtpEndDate.Value = endDate;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void SetCurrentWeekDates(out DateTime startDate, out DateTime endDate)//filter data on weekly basis
         {
-            DateTime today = DateTime.Today;
+            try
+            {
+                DateTime today = DateTime.Today;
             int daysToSubtract = (int)today.DayOfWeek;
             startDate = today.AddDays(-daysToSubtract).Date;
             endDate = startDate.AddDays(6);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
         }
         private void SetPreviousMonthDates(out DateTime startDate, out DateTime endDate)//filter data on monthly basis
         {
-            DateTime today = DateTime.Today;
+            try
+            {
+                DateTime today = DateTime.Today;
             DateTime firstDayOfCurrentMonth = new DateTime(today.Year, today.Month, 1);
             startDate = firstDayOfCurrentMonth.AddMonths(-1);
             endDate = firstDayOfCurrentMonth.AddDays(-1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
         }
         private void SetCurrentMonthDates(out DateTime startDate, out DateTime endDate)//filter data on current month 
         {
-            DateTime today = DateTime.Today;
+            try
+            {
+                DateTime today = DateTime.Today;
             startDate = new DateTime(today.Year, today.Month, 1);
             endDate = startDate.AddMonths(1).AddDays(-1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
         }
         private void SetSinceOneMonthAgoDates(out DateTime startDate, out DateTime endDate)//filter data on one month ago
         {
-            endDate = DateTime.Today;
+            try
+            {
+                endDate = DateTime.Today;
             startDate = endDate.AddMonths(-1).AddDays(1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
         }
         private void SetQuarterDates(int quarter, out DateTime startDate, out DateTime endDate)//to modify start and end date on particular selection
         {
-            int currentYear = DateTime.Today.Year;
+            try
+            {
+                int currentYear = DateTime.Today.Year;
             switch (quarter)
             {
                 case 1:
@@ -364,46 +440,91 @@ namespace RWDE
                     startDate = endDate = DateTime.MinValue;
                     break;
             }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
         }
         private void SetPreviousQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quarterly basis
         {
-            DateTime today = DateTime.Today;
+            try
+            {
+                DateTime today = DateTime.Today;
             int currentQuarter = (today.Month - 1) / 3 + 1;
             int previousQuarter = currentQuarter == 1 ? 4 : currentQuarter - 1;
             int year = currentQuarter == 1 ? today.Year - 1 : today.Year;
             SetQuarterDates(previousQuarter, out startDate, out endDate);
             startDate = new DateTime(year, startDate.Month, 1);
             endDate = new DateTime(year, endDate.Month, DateTime.DaysInMonth(year, endDate.Month));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
         }
         private void SetCurrentQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quarterly basis
         {
+            try
             {
                 DateTime today = DateTime.Today;
                 int currentQuarter = (today.Month - 1) / 3 + 1;
                 SetQuarterDates(currentQuarter, out startDate, out endDate);
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
         }
         private void SetThisYearDates(out DateTime startDate, out DateTime endDate)//filter data on yearly basis
         {
+            try
             {
                 int currentYear = DateTime.Today.Year;
                 startDate = new DateTime(currentYear, 1, 1);
                 endDate = new DateTime(currentYear, 12, 31);
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
         }
         private void SetLastYearDates(out DateTime startDate, out DateTime endDate)//filter data on yearly basis
         {
+            try
             {
                 int lastYear = DateTime.Today.Year - 1;
                 startDate = new DateTime(lastYear, 1, 1);
                 endDate = new DateTime(lastYear, 12, 31);
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
+            }
+
         }
         private void SetSinceThisDateLastYear(out DateTime startDate, out DateTime endDate)//filter data on yearly basis
         {
+            try
             {
                 endDate = DateTime.Today;
                 startDate = endDate.AddYears(-1).AddDays(1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MinValue;
             }
 
         }

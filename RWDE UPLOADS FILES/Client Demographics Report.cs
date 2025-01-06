@@ -31,7 +31,9 @@ namespace RWDE
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
+            {
+                foreach (Control control in parent.Controls)
             {
                 if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
                 {
@@ -44,6 +46,11 @@ namespace RWDE
                     //Assigning events to Child Controls
                     RegisterEvents(control);
                 }
+            }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void btnClose_Click(object sender, EventArgs e)//to close the form

@@ -41,31 +41,59 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void dataGridView_Scroll(object sender, ScrollEventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to child Controls
-                    RegisterEvents(control);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)// Formats the cell value for the Constants.Status column based on the corresponding value in the database.
@@ -152,30 +180,44 @@ namespace RWDE
         }
         private void AddDateTime(string name, string value, DataGridView dataGridView)//to add the DateTime Column
         {
-            DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn
+            try
             {
-                Name = name,
-                DataPropertyName = name,
-                HeaderText = value,
-                DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.MMddyyyyHHmmss }
-            };
-            dataGridView.Columns.Add(column);
+                DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn
+                {
+                    Name = name,
+                    DataPropertyName = name,
+                    HeaderText = value,
+                    DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.MMddyyyyHHmmss }
+                };
+                dataGridView.Columns.Add(column);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void UpdateBatchStatus(int batchId, int status, DateTime timestamp)//to upadte the status of the Batch
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(Constants.UpdateBatchStatusQuery, connection))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.Parameters.AddWithValue(Constants.AtStatus, status);
-                    command.Parameters.AddWithValue(Constants.AtTimestamp, timestamp);
-                    command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                    command.ExecuteNonQuery();
-                    //to delete the Aborted Batch data
-                    ClearTables(batchId);
+
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(Constants.UpdateBatchStatusQuery, connection))
+                    {
+                        command.Parameters.AddWithValue(Constants.AtStatus, status);
+                        command.Parameters.AddWithValue(Constants.AtTimestamp, timestamp);
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
+                        command.ExecuteNonQuery();
+                        //to delete the Aborted Batch data
+                        ClearTables(batchId);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         public Panel GetPanelToReplace()
@@ -403,7 +445,7 @@ namespace RWDE
 
                             dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
 
-                            Console.WriteLine( Constants.MappingcompletedsuccessfullyforBatchId + selectedBatchId);
+                            Console.WriteLine(Constants.MappingcompletedsuccessfullyforBatchId + selectedBatchId);
 
                             // Method to remove a selected row and store the removed batch ID in the database table
                             RemoveSelectedRow(selectedBatchId, "");
@@ -501,7 +543,7 @@ namespace RWDE
             }
         }
         private void UpdateBatch(int batchId, DateTime startTime, DateTime endTime, int allTotalRows)//Updating status and Time on Batch Table  
-        {   
+        {
             try
             {
                 allTotalRows++;
@@ -509,7 +551,7 @@ namespace RWDE
                 {
                     connection.Open();
                     // Define the SQL query to update the ConversionStartedAt and ConversionEndedAt columns
-                    string updateQuery = $"@{ Constants.UpdateBatchConversionTimeQuery}";
+                    string updateQuery = $"@{Constants.UpdateBatchConversionTimeQuery}";
 
                     using (SqlCommand command = new SqlCommand(updateQuery, connection))
                     {
@@ -517,7 +559,7 @@ namespace RWDE
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         command.Parameters.AddWithValue(Constants.AtConversionStartedAt, startTime);
                         command.Parameters.AddWithValue(Constants.AtConversionEndedAt, endTime);
-                        command.Parameters.AddWithValue(Constants.AtAllTotalRows, allTotalRows-1);
+                        command.Parameters.AddWithValue(Constants.AtAllTotalRows, allTotalRows - 1);
 
                         // Execute the SQL update command
                         command.ExecuteNonQuery();
@@ -693,7 +735,7 @@ namespace RWDE
             int batchId = dbHelper.GetNextBatchId();
             try
             {
-                if (btncloseHCC.Text==Constants.Close)
+                if (btncloseHCC.Text == Constants.Close)
                 {
                     Close();
                     Application.Restart();
@@ -735,7 +777,7 @@ namespace RWDE
                     //to delete the Aborted Batch data
                     ClearTables(selectedBatchId);
                     // Construct the SQL UPDATE statement
-                    string query =Constants.UpdateBatchStatus;
+                    string query = Constants.UpdateBatchStatus;
                     // Create and execute the SqlCommand
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
@@ -779,14 +821,21 @@ namespace RWDE
 
         private void RefreshValues()//to set all values as default
         {
-            txtBatchid.Clear();
-            txtTotaltime.Clear();
-            txtUploadStarted.Clear();
-            txtUploadEnded.Clear();
-            txtProgresshcc.Text = Constants.ZeroPercent;
-            progressBarClients.Value = 0;
-            txtProgressServices.Text = Constants.ZeroPercent;
-            progressBarServices.Value = 0;
+            try
+            {
+                txtBatchid.Clear();
+                txtTotaltime.Clear();
+                txtUploadStarted.Clear();
+                txtUploadEnded.Clear();
+                txtProgresshcc.Text = Constants.ZeroPercent;
+                progressBarClients.Value = 0;
+                txtProgressServices.Text = Constants.ZeroPercent;
+                progressBarServices.Value = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)//to convert the data to HCC
@@ -831,7 +880,7 @@ namespace RWDE
                 //txtBatchtype.Items.Clear();
                 PopulateDataGridView();
                 List<string> batchTypes = dbHelper.GetAllBatchTypes();
-               // txtBatchtype.Items.Clear();  // Clear existing items
+                // txtBatchtype.Items.Clear();  // Clear existing items
                 foreach (string batchType in batchTypes)
                 {
                     //txtBatchtype.Items.Add(batchType);
@@ -844,14 +893,30 @@ namespace RWDE
         }
         private void dtpStartDate_ValueChanged(object sender, EventArgs e)//to get the startdate
         {
-            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
-            dtpStartDate.Format = DateTimePickerFormat.Custom;
+            try
+            {
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+                dtpStartDate.Format = DateTimePickerFormat.Custom;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void dtpEndDate_ValueChanged(object sender, EventArgs e)//to get the Enddate
         {
-            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
-            dtpEndDate.Format = DateTimePickerFormat.Custom;
+            try
+            {
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
+                dtpEndDate.Format = DateTimePickerFormat.Custom;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
+        
+    

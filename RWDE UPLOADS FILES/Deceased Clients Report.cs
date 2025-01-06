@@ -28,31 +28,53 @@ namespace RWDE
 
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
 
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker ||
-                    control is ScrollBar)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
-                }
+                    if (control is Button || control is CheckBox || control is DateTimePicker ||
+                        control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
 
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to child Controls
-                    RegisterEvents(control);
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -158,7 +180,7 @@ namespace RWDE
                 {
                     MessageBox.Show(Constants.NoDataAvailableToDownload, Constants.Warning, MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
-                    
+
                     return; // Exit the method if there is no data
                 }
 
@@ -218,7 +240,7 @@ namespace RWDE
 
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($@"{Constants.Datasuccessfullysaved}{Path.GetFileName(filePath)}", Constants.Success,MessageBoxButtons.OK, MessageBoxIcon.Information); 
+                            MessageBox.Show($@"{Constants.Datasuccessfullysaved}{Path.GetFileName(filePath)}", Constants.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }

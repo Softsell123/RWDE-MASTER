@@ -31,33 +31,62 @@ namespace RWDE
 
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to child Controls
-                    RegisterEvents(control);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void InitializeDataGridView()//to load the default gridView
         {
-            dataGridView.AutoGenerateColumns = false;
+            try
+            {
+                dataGridView.AutoGenerateColumns = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
+
         private void btnBrowse_Click(object sender, EventArgs e)//to select the Error file
         {
             try
@@ -82,104 +111,126 @@ namespace RWDE
         }
         private bool IsAllowedFileType(string filePath)//to check whether the selected filetype  is Excel or not
         {
-            string extension = Path.GetExtension(filePath).ToLowerInvariant();
-            return extension == Constants.XlsxExtention;
+            try
+            {
+                string extension = Path.GetExtension(filePath).ToLowerInvariant();
+                return extension == Constants.XlsxExtention;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
         }
         private void ProcessExcelData(string sourceFileName)//to read  and store excel data in Database
         {
-            DataTable excelData = ReadExcelFile(sourceFileName);//to read the excel
-
-            // Ensure the required columns exist
-            if (!excelData.Columns.Contains(Constants.HccTable) || !excelData.Columns.Contains(Constants.ErrorMessage))
+            try
             {
-                MessageBox.Show(Constants.TheRequiredColumnsAreMissing,Constants.DownloadHccErrors);
-                return;
-            }
+                DataTable excelData = ReadExcelFile(sourceFileName);//to read the excel
 
-            // Prepare to insert into database
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                using (SqlTransaction transaction = conn.BeginTransaction())
+                // Ensure the required columns exist
+                if (!excelData.Columns.Contains(Constants.HccTable) || !excelData.Columns.Contains(Constants.ErrorMessage))
                 {
-                    try
-                    {
-                        foreach (DataRow row in excelData.Rows)
-                        {
-                            string sourceFileNameStr = row[Constants.SourceFileName].ToString();
-                            string hccTable = row[Constants.HccTable].ToString();
-                            string errorMessage = row[Constants.ErrorMessage].ToString();
-                            string clientId = row[Constants.SourceId].ToString();
-                            
-                            // Replace values in HccTable based on specific cases
-                            switch (hccTable)
-                            {
-                                case  Constants.ClntDemo:
-                                case Constants.ClntEthnDtl:
-                                    hccTable = Constants.Hccclients;
-                                    break;
-                                case Constants.ClntHivInfo:
-                                    hccTable = Constants.HccClientMedCd4;
-                                    break;
-                                case Constants.ClntHivTest:
-                                    hccTable = Constants.HccClientHivTest;
-                                    break;
-                                case Constants.ClntLvngSttn:
-                                    hccTable =Constants.HccLvngSttn;
-                                    break;
-                                case Constants.ClntRaceDtl:
-                                    hccTable = Constants.HccClientRace;
-                                    break;
-                                case Constants.ClntSite:
-                                    hccTable = Constants.HccClientAddr;
-                                    break;
-                                case Constants.ClntHsngAsstnc:
-                                    hccTable = Constants.HccLvngSttn;
-                                    break;
-                                case Constants.ClntHshldIncome:
-                                    hccTable = Constants.HccClients;
-                                    break;
+                    MessageBox.Show(Constants.TheRequiredColumnsAreMissing, Constants.DownloadHccErrors);
+                    return;
+                }
 
-                                default:
-                                    if (hccTable.Contains(Constants.Site))
-                                    {
-                                        hccTable = Constants.HccServices;
-                                    }
-                                    else
-                                    {
-                                        // Handle unexpected cases or set a default value
-                                        hccTable = "";
-                                    }
-                                    break;
-                            }
-                            // Insert into database
-                            InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
-                            AddRowToGrid(errorMessage, hccTable, clientId, sourceFileNameStr);
-                        }
-                        transaction.Commit();
-                        MessageBox.Show(Constants.Dataprocessedandinsertedintothedatabasesuccessfully, Constants.DownloadHccErrors);
-                    }
-                    catch (Exception ex)
+                // Prepare to insert into database
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (SqlTransaction transaction = conn.BeginTransaction())
                     {
-                        transaction.Rollback();
-                        MessageBox.Show(Constants.Errorinsertingdataintothedatabase + ex.Message, Constants.DownloadHccErrors);
+                        try
+                        {
+                            foreach (DataRow row in excelData.Rows)
+                            {
+                                string sourceFileNameStr = row[Constants.SourceFileName].ToString();
+                                string hccTable = row[Constants.HccTable].ToString();
+                                string errorMessage = row[Constants.ErrorMessage].ToString();
+                                string clientId = row[Constants.SourceId].ToString();
+
+                                // Replace values in HccTable based on specific cases
+                                switch (hccTable)
+                                {
+                                    case Constants.ClntDemo:
+                                    case Constants.ClntEthnDtl:
+                                        hccTable = Constants.Hccclients;
+                                        break;
+                                    case Constants.ClntHivInfo:
+                                        hccTable = Constants.HccClientMedCd4;
+                                        break;
+                                    case Constants.ClntHivTest:
+                                        hccTable = Constants.HccClientHivTest;
+                                        break;
+                                    case Constants.ClntLvngSttn:
+                                        hccTable = Constants.HccLvngSttn;
+                                        break;
+                                    case Constants.ClntRaceDtl:
+                                        hccTable = Constants.HccClientRace;
+                                        break;
+                                    case Constants.ClntSite:
+                                        hccTable = Constants.HccClientAddr;
+                                        break;
+                                    case Constants.ClntHsngAsstnc:
+                                        hccTable = Constants.HccLvngSttn;
+                                        break;
+                                    case Constants.ClntHshldIncome:
+                                        hccTable = Constants.HccClients;
+                                        break;
+
+                                    default:
+                                        if (hccTable.Contains(Constants.Site))
+                                        {
+                                            hccTable = Constants.HccServices;
+                                        }
+                                        else
+                                        {
+                                            // Handle unexpected cases or set a default value
+                                            hccTable = "";
+                                        }
+                                        break;
+                                }
+                                // Insert into database
+                                InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
+                                AddRowToGrid(errorMessage, hccTable, clientId, sourceFileNameStr);
+                            }
+                            transaction.Commit();
+                            MessageBox.Show(Constants.Dataprocessedandinsertedintothedatabasesuccessfully, Constants.DownloadHccErrors);
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            MessageBox.Show(Constants.Errorinsertingdataintothedatabase + ex.Message, Constants.DownloadHccErrors);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void AddRowToGrid(string errorMessage, string hccTable, string clientId, string sourceFileName)//to add every row in excel to grid
         {
-            // Ensure DataGridView is already created and columns are defined
-            if (dataGridView.Columns.Count == 0)
+            try
             {
-                // Create columns if they don't exist
-                dataGridView.Columns.Add(Constants.HccTable, Constants.HccTableSp);
-                dataGridView.Columns.Add(Constants.ErrorMessage, Constants.ErrorMessageSp);
-                dataGridView.Columns.Add(Constants.SourceId, Constants.ClientIdSp);
-                dataGridView.Columns.Add(Constants.SourceFileName, Constants.SourceFileName);
+                // Ensure DataGridView is already created and columns are defined
+                if (dataGridView.Columns.Count == 0)
+                {
+                    // Create columns if they don't exist
+                    dataGridView.Columns.Add(Constants.HccTable, Constants.HccTableSp);
+                    dataGridView.Columns.Add(Constants.ErrorMessage, Constants.ErrorMessageSp);
+                    dataGridView.Columns.Add(Constants.SourceId, Constants.ClientIdSp);
+                    dataGridView.Columns.Add(Constants.SourceFileName, Constants.SourceFileName);
+                }
+                // Add a new row to the DataGridView
+                dataGridView.Rows.Add(hccTable, errorMessage, clientId, sourceFileName);
             }
-            // Add a new row to the DataGridView
-            dataGridView.Rows.Add(hccTable, errorMessage, clientId, sourceFileName);
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void InsertIntoDatabase(SqlConnection conn, SqlTransaction transaction, string hccTable, string errorMessage, string clientId, string sourceFileName)//to insert the data into the database
         {
@@ -214,20 +265,28 @@ namespace RWDE
 
         private DataTable ReadExcelFile(string filePath)//to read the excel file with header
         {
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
-            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            try
             {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
-                {
-                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
-                    {
-                        ConfigureDataTable = (_) => new ExcelDataTableConfiguration() { UseHeaderRow = true }
-                    });
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-                    // Returning the first sheet as a DataTable
-                    return result.Tables[0];
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                        {
+                            ConfigureDataTable = (_) => new ExcelDataTableConfiguration() { UseHeaderRow = true }
+                        });
+
+                        // Returning the first sheet as a DataTable
+                        return result.Tables[0];
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
             }
         }
 
@@ -246,64 +305,78 @@ namespace RWDE
         }
         private void btnUpload_Click(object sender, EventArgs e)//to read  and store excel data in Database
         {
-            if (txtPath.Text == "")
+            try
             {
-                MessageBox.Show(Constants.Nodatatoinsertintotable, Constants.DownloadHccErrors);
-                return;
+                if (txtPath.Text == "")
+                {
+                    MessageBox.Show(Constants.Nodatatoinsertintotable, Constants.DownloadHccErrors);
+                    return;
+                }
+                string selectedFilePath = txtPath.Text;
+                // Validate the selected file is an Excel file
+                if (IsAllowedFileType(selectedFilePath))
+                {
+                    // Process the selected Excel file
+                    ProcessExcelData(selectedFilePath);
+                }
             }
-            string selectedFilePath = txtPath.Text;
-            // Validate the selected file is an Excel file
-            if (IsAllowedFileType(selectedFilePath))
+            catch (Exception ex)
             {
-                // Process the selected Excel file
-                ProcessExcelData(selectedFilePath);
+                MessageBox.Show(ex.Message);
             }
         }
         private void btnSubmit_Click(object sender, EventArgs e)//to fetch the data of the given Source file 
         {
-            if (txtFileName.Text == "")
-            {
-                MessageBox.Show(Constants.Theservicefilenamecannotbenull, Constants.DownloadHccErrors);
-                return;
-            }
-            if (!txtFileName.Text.ToUpper().Contains(Constants.UpperService) && !txtFileName.Text.ToUpper().Contains(Constants.UpperClient))
-            {
-                MessageBox.Show(Constants.Nodataavailableforthissourcefilename, Constants.DownloadHccErrors);
-                return;
-            }
-            dataGridView.AutoGenerateColumns = false;
-            dataGridView.Columns.Clear();
-            string sourceFileName = txtFileName.Text; // Text box for SourceFileName
-            DataTable dt = new DataTable();
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                if (txtFileName.Text == "")
                 {
-                    using (SqlCommand command = new SqlCommand(Constants.Filtersourcefilename, conn))
+                    MessageBox.Show(Constants.Theservicefilenamecannotbenull, Constants.DownloadHccErrors);
+                    return;
+                }
+                if (!txtFileName.Text.ToUpper().Contains(Constants.UpperService) && !txtFileName.Text.ToUpper().Contains(Constants.UpperClient))
+                {
+                    MessageBox.Show(Constants.Nodataavailableforthissourcefilename, Constants.DownloadHccErrors);
+                    return;
+                }
+                dataGridView.AutoGenerateColumns = false;
+                dataGridView.Columns.Clear();
+                string sourceFileName = txtFileName.Text; // Text box for SourceFileName
+                DataTable dt = new DataTable();
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue(Constants.AtSourceFileName, sourceFileName);
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        using (SqlCommand command = new SqlCommand(Constants.Filtersourcefilename, conn))
                         {
-                            try
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue(Constants.AtSourceFileName, sourceFileName);
+                            using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                             {
-                                // Open the connection
-                                conn.Open();
-                                // Fill the DataTable with the result of the stored procedure
-                                adapter.Fill(dt);
-                                dataGridView.DataSource = dt;
-                                dataGridView.AutoGenerateColumns = true;
-                                dataGridView.AllowUserToAddRows = false;
+                                try
+                                {
+                                    // Open the connection
+                                    conn.Open();
+                                    // Fill the DataTable with the result of the stored procedure
+                                    adapter.Fill(dt);
+                                    dataGridView.DataSource = dt;
+                                    dataGridView.AutoGenerateColumns = true;
+                                    dataGridView.AllowUserToAddRows = false;
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Handle exceptions (e.g., logging)
+                                    Console.WriteLine(Constants.Errorsp + ex.Message);
+                                }
+                                command.ExecuteNonQuery();
+                                // Execute the SQL command to insert client data
                             }
-                            catch (Exception ex)
-                            {
-                                // Handle exceptions (e.g., logging)
-                                Console.WriteLine(Constants.Errorsp + ex.Message);
-                            }
-                            command.ExecuteNonQuery();
-                            // Execute the SQL command to insert client data
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
             catch (Exception ex)
@@ -313,12 +386,19 @@ namespace RWDE
         }
         private void btnClr_Click(object sender, EventArgs e)//to set all default values
         {
-            InitializeDataGridView();
-            dataGridView.Rows.Clear();
-            dataGridView.Rows.Clear();
+            try
+            {
+                InitializeDataGridView();
+                dataGridView.Rows.Clear();
+                dataGridView.Rows.Clear();
 
-            txtPath.Text = "";
-            txtFileName.Text = "";
+                txtPath.Text = "";
+                txtFileName.Text = "";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

@@ -743,52 +743,92 @@ namespace RWDE
         }
         private DateTime? ConvertToDateTimeOrNull(string input)//convert to date or null
         {
-            if (DateTime.TryParse(input, out DateTime result))
+            try
             {
-                return result;
+                if (DateTime.TryParse(input, out DateTime result))
+                {
+                    return result;
+                }
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private decimal? ConvertToDecimalOrNull(string input)//convert to decimal
         {
-            if (decimal.TryParse(input, out decimal result))
+            try
             {
-                return result;
+                if (decimal.TryParse(input, out decimal result))
+                {
+                    return result;
+                }
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private bool ConvertToBoolean(string value)//convert to boolean
         {
-            if (string.IsNullOrEmpty(value))
+            try
             {
+                if (string.IsNullOrEmpty(value))
+                {
+                    return false;
+                }
+                return bool.TryParse(value, out bool parsedBool) && parsedBool;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
                 return false;
             }
-
-            return bool.TryParse(value, out bool parsedBool) && parsedBool;
         }
         private DateTime? ConvertToDateTime(string value)//convert to date and time
         {
-            if (string.IsNullOrEmpty(value))
+            try
             {
-                return null;
+                if (string.IsNullOrEmpty(value))
+                {
+                    return null;
+                }
+                if (DateTime.TryParse(value, out DateTime parsedDate))
+                { 
+                    return parsedDate;
+                }
+                else
+                {
+                     return null;
+                }
             }
-
-            if (DateTime.TryParse(value, out DateTime parsedDate))
+            catch (Exception ex)
             {
-                return parsedDate;
-            }
-            else
-            {
+                MessageBox.Show(ex.Message);
                 return null;
             }
         }
         private bool? ConvertToBoolOrNull(string value)//to convert to bool
         {
-            return bool.TryParse(value, out bool result) ? (bool?)result : null;
+            try
+            {
+                return bool.TryParse(value, out bool result) ? (bool?)result : null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private decimal? ConvertToDecimal(string value)//convert to decimal
         {
-            if (string.IsNullOrEmpty(value))
+            try
+            {
+                if (string.IsNullOrEmpty(value))
             {
                 return null;
             }
@@ -801,19 +841,41 @@ namespace RWDE
             {
                 return null;
             }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         
         private string ConvertToString(object value)//convert to string
         {
-            return value == null || value == DBNull.Value ? (string)null : value.ToString();
+            try
+            {
+                return value == null || value == DBNull.Value ? (string)null : value.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private string ConvertToDateTime(object value)//covert to correct date format
         {
-            if (DateTime.TryParse(value?.ToString(), out DateTime result))
+            try
+            {
+                if (DateTime.TryParse(value?.ToString(), out DateTime result))
             {
                 return result.ToString(Constants.YyyyMMddHHmmss);
             }
             return null; // or handle the error as needed
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         public void InsertClientInformationPhi(SqlConnection connection, string[] data, int batchid)//cms client insertion
         {
@@ -938,39 +1000,70 @@ namespace RWDE
         }
         private int? ConvertToNullableInt(string value)//parse data to int
         {
-            if (int.TryParse(value, out int result))
+            try
+            {
+                if (int.TryParse(value, out int result))
             {
                 return result;
             }
             return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private bool? ConvertToNullableBool(string value)//parse data to bool
         {
-            if (bool.TryParse(value, out bool result))
+            try
+            {
+                if (bool.TryParse(value, out bool result))
             {
                 return result;
             }
             return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private decimal? ConvertToNullableDecimal(string value)//parse data to decimal
         {
-            if (decimal.TryParse(value, out decimal result))
+            try
+            {
+                if (decimal.TryParse(value, out decimal result))
             {
                 return result;
             }
             return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
 
         private DateTime? ConvertToNullableDateTime(string value)//parse data to DateTime
         {
-            if (DateTime.TryParse(value, out DateTime result))
+            try
+            {
+                if (DateTime.TryParse(value, out DateTime result))
             {
                 return result;
             }
             return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         public bool InsertClientData(SqlConnection connection, string[] data, int batchid, string fileName)//Client table insertion
-
         {
             try
             {
@@ -1218,7 +1311,9 @@ namespace RWDE
         }
         private DateTime? ParseDateTime(string value)//parsing the datetime in required format
         {
-            DateTime? result = null;
+            try
+            {
+                DateTime? result = null;
             if (!string.IsNullOrEmpty(value))
             {
                 // Trim any extra quotation marks
@@ -1238,11 +1333,25 @@ namespace RWDE
                 }
             }
             return result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
 
         private string GetStringValuedata(string[] data, int index)//to get the eaxct string values
         {
-            return data.Length > index ? data[index].Trim('"') : string.Empty;
+            try
+            {
+                return data.Length > index ? data[index].Trim('"') : string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
 
         public void InsertDlServices(SqlConnection connection, string[] data, int batchid, string fileName, int rowNumber) // DlServices table insertion
@@ -1364,7 +1473,9 @@ namespace RWDE
         }
         private string GetStringData(string[] data, int index) //convert to string
         {
-            if (index >= 0 && index < data.Length)
+            try
+            {
+                if (index >= 0 && index < data.Length)
             {
                 return data[index];
             }
@@ -1372,12 +1483,18 @@ namespace RWDE
             {
                 return string.Empty;
             }
-
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         public void LogError(string message, string xmlFilePath, string stackTrace, string functionName, string fileName, int? lineNumber) // Logger table insertion for errors and completion
         {
-
-            int maxStackLength = 1000; // Adjust this to match your database schema
+            try
+            {
+                int maxStackLength = 1000; // Adjust this to match your database schema
 
             // Truncate the stack trace if it exceeds the maximum length
             if (stackTrace.Length > maxStackLength)
@@ -1413,7 +1530,13 @@ namespace RWDE
                 Console.WriteLine(ex.Message);
             }
 
-            errorLogged = true; // Set errorLogged flag to true after logging the first error
+            errorLogged = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+               
+            }// Set errorLogged flag to true after logging the first error
         }
         public void UpdateBatchServices(int batchId, DateTime startTime, DateTime endTime, int allTotalRows)//update batch data
         {//Updating status and Time on Batch Table     
@@ -1613,15 +1736,25 @@ namespace RWDE
         // Utility method to safely retrieve string values from the data array
         private string GetStringValue(string[] data, int index)//convert to string
         {
-            if (index >= 0 && index < data.Length)
+            try
+            {
+                if (index >= 0 && index < data.Length)
             {
                 return data[index];
             }
             return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private DateTime? GetDateTimeValue(string[] data, int index)//convert to date 
         {
-            if (index >= 0 && index < data.Length)
+            try
+            {
+                if (index >= 0 && index < data.Length)
             {
                 if (DateTime.TryParse(data[index], out DateTime result))
                 {
@@ -1629,10 +1762,18 @@ namespace RWDE
                 }
             }
             return null; // Return null if the conversion fails or the index is out of range
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private int? GetIntValue(string[] data, int index)//convert to int
         {
-            if (index >= 0 && index < data.Length)
+            try
+            {
+                if (index >= 0 && index < data.Length)
             {
                 if (int.TryParse(data[index], out int result))
                 {
@@ -1640,22 +1781,44 @@ namespace RWDE
                 }
             }
             return null; // Return null if the conversion fails or the index is out of range
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private decimal? GetDecimalValue(string[] data, int index)//parse to decimal value
         {
-            if (decimal.TryParse(data[index], out decimal result))
+            try
+            {
+                if (decimal.TryParse(data[index], out decimal result))
             {
                 return result;
             }
             return null; // Return null if parsing fails
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         private bool? GetBooleanValue(string[] data, int index)//convert to boolean
         {
-            if (bool.TryParse(data[index], out bool result))
+            try
+            {
+                if (bool.TryParse(data[index], out bool result))
             {
                 return result;
             }
             return null; // Return null if parsing fails
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         public int InsertClients(XmlDocument xmlDoc, int batchId, SqlConnection conn, string xmlFilePath, bool value)//insert clients into database from Xml
         {
@@ -1770,32 +1933,57 @@ namespace RWDE
         // Helper method to determine if AgencyClientID and AriesID pair should be inserted
         private bool ShouldInsertAgencyClient(int agencyClientId, int ariesId, XmlDocument xmlDoc)
         {
-            // Check if the AgencyClientID and AriesID pair has associated EligibilityDocument nodes in the XML
-            XmlNodeList eligibilityNodes = xmlDoc.SelectNodes(string.Format(Constants.ClientariesIdEligibilityDocument, ariesId)); 
+            try
+            {
+                // Check if the AgencyClientID and AriesID pair has associated EligibilityDocument nodes in the XML
+                XmlNodeList eligibilityNodes = xmlDoc.SelectNodes(string.Format(Constants.ClientariesIdEligibilityDocument, ariesId)); 
 
             return eligibilityNodes != null && eligibilityNodes.Count > 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
         }
         private string GetAttributeValue(XmlNode node, string attributeName)//getting value
         {
-            if (node != null && node.Attributes != null && node.Attributes[attributeName] != null)
+            try
+            {
+                if (node != null && node.Attributes != null && node.Attributes[attributeName] != null)
             {
                 return node.Attributes[attributeName].Value;
             }
             return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         // Helper method to parse nullable DateTime attribute value from XML node
         private DateTime? GetNullableDateTimeAttributeValue(XmlNode node, string attributeName)//to get correct time format
         {
-            string attributeValue = GetAttributeValue(node, attributeName);
+            try
+            {
+                string attributeValue = GetAttributeValue(node, attributeName);
             if (!string.IsNullOrEmpty(attributeValue) && DateTime.TryParse(attributeValue, out DateTime result))
             {
                 return result;
             }
             return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
        
         public int InsertServiceLineItems(XmlDocument xmlDoc, int batchId, SqlConnection conn, string xmlFilePath)//insertion of service table from xml file
         {
+
             int insertedCount = 0;
             string fileName = Path.GetFileName(xmlFilePath);
             try
@@ -1864,21 +2052,31 @@ namespace RWDE
 
         private T GetAttributeValue<T>(XmlNode node, string attributeName)//getting value to the XMl nodes
         {
-            if (node == null || string.IsNullOrEmpty(attributeName))//
+            try
             {
+                if (node == null || string.IsNullOrEmpty(attributeName))//
+                {
+                    return default(T);
+                }
+
+                XmlNode attributeNode = node.Attributes.GetNamedItem(attributeName);
+                if (attributeNode != null && !string.IsNullOrEmpty(attributeNode.Value))
+                {
+                    return (T)Convert.ChangeType(attributeNode.Value, typeof(T));
+                }
                 return default(T);
             }
-
-            XmlNode attributeNode = node.Attributes.GetNamedItem(attributeName);
-            if (attributeNode != null && !string.IsNullOrEmpty(attributeNode.Value))
+            catch (Exception ex)
             {
-                return (T)Convert.ChangeType(attributeNode.Value, typeof(T));
+                MessageBox.Show(ex.Message);
+                return default(T);
             }
-            return default(T);
         }
         private T GetAttributeValueOrDefault<T>(XmlNode node, string attributeName, T defaultValue)//Getting or setting values to the XMl nodes
         {
-            if (node == null || string.IsNullOrEmpty(attributeName))
+            try
+            {
+                if (node == null || string.IsNullOrEmpty(attributeName))
             {
                 return defaultValue;
             }
@@ -1889,10 +2087,18 @@ namespace RWDE
                 return (T)Convert.ChangeType(attributeNode.Value, typeof(T));
             }
             return defaultValue;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return defaultValue;
+            }
         }
         private DateTime GetDateTimeValue(XmlNode node, string attributeName)//getting date value
         {
-            string dateString = GetAttributeValue<string>(node, attributeName);
+            try
+            {
+                string dateString = GetAttributeValue<string>(node, attributeName);
             if (!string.IsNullOrEmpty(dateString))
             {
                 if (DateTime.TryParse(dateString, out DateTime result))
@@ -1901,20 +2107,36 @@ namespace RWDE
                 }
             }
             return DateTime.MinValue; // or throw an exception if parsing fails
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return DateTime.MinValue;
+            }
         }
         private decimal GetDecimalValue(XmlNode node, string attributeName)//getting decimal value
         {
-            string decimalString = GetAttributeValue<string>(node, attributeName);
+            try
+            {
+                string decimalString = GetAttributeValue<string>(node, attributeName);
             if (!string.IsNullOrEmpty(decimalString) && decimal.TryParse(decimalString, out decimal result))
             {
                 return result;
             }
             return 0; // or throw an exception if parsing fails
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return 0;
+            }
         }
 
         public void LogError(string message, string xmlFilePath)//Looger table insertion for errors and completion
         {
-            if (errorLogged)
+            try
+            {
+                if (errorLogged)
                 return; // Abort further logging if an error has already been logged
 
             string fileName = Path.GetFileName(xmlFilePath);
@@ -1949,10 +2171,18 @@ namespace RWDE
             }
 
             errorLogged = true; // Set errorLogged flag to true after logging the first error
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return ;
+            }
         }
         private string ExtractServiceId(XmlNode serviceNode)//extracting variables according to the format
         {
-            string notes = GetAttributeValue(serviceNode, Constants.Notes);
+            try
+            {
+                string notes = GetAttributeValue(serviceNode, Constants.Notes);
 
             // Check if notes attribute starts with "{Constants.AtIdEqualTto}", "{Constants.AtIdEqualTtoCaps}", Constants.IdHyphen, or Constants.IdColon
             if (notes.StartsWith($"{Constants.AtIdEqualTto}") || notes.StartsWith($"{Constants.AtIdEqualTtoCaps}") || notes.StartsWith(Constants.IdHyphen) || notes.StartsWith(Constants.IdColon))
@@ -1970,6 +2200,12 @@ namespace RWDE
             }
 
             throw new ArgumentException(Constants.Invalidserviceid);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         // Method to log messages with log type provided by RWDEFileUploads
         public void Log(string message, int type, string baseFilename, int module)//insertion into log table
@@ -2049,8 +2285,10 @@ namespace RWDE
         }
         private string GetStoredProcedureByType(string type)//to select the storeProcedure to call 
         {
-            // Adjust the stored procedure name based on the batch type
-            if (type == Constants.ClientTrack)
+            try
+            {
+                // Adjust the stored procedure name based on the batch type
+                if (type == Constants.ClientTrack)
             {
                 return Constants.DeleteBatchData;
             }
@@ -2065,6 +2303,12 @@ namespace RWDE
             else
             {
                 return Constants.OchinDataDelete;
+            }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
             }
         }
         public DataTable GetAllBatches()//Get all Values from Batch Table
@@ -2837,23 +3081,63 @@ namespace RWDE
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromMedC4(string clientid, int batchid)//fetch particular client Medical values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedCd4);//fetch particular client data values
+            try
+            {
+                return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedCd4);//fetch particular client data values
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromMedVl(string clientid, int batchid)//fetch particular client Medical values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedVl);//fetch particular client data values
+            try
+            {
+                return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedVl);//fetch particular client data values
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromHivTest(string clientid, int batchid)//fetch particular client HIV test values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromHivTest);//fetch particular client data values
+            try
+            {
+                return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromHivTest);//fetch particular client data values
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromInsur(string clientid, int batchid)//fetch particular client Insurance values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromInsur);//fetch particular client data values
+            try
+            {
+                return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromInsur);//fetch particular client data values
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
         public List<Dictionary<string, string>> FetchSubClientValuesFromRace(string clientid, int batchid)//fetch particular client Race values
         {
-            return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromRace);//fetch particular client data values
+            try
+            {
+                return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromRace);//fetch particular client data values
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
 
         //to get the current file Path
@@ -3991,12 +4275,13 @@ namespace RWDE
         public int GetNextBatchIdAbort(SqlConnection connection)//to get the Aborted Batchid
         {
             int currentBatchId = 0;
-
-            // SQL query to get the latest batch ID from the database
-            string query = Constants.GetAbortBatchIdQuery; 
-
-            using (SqlCommand command = new SqlCommand(query, connection))
+            try
             {
+                // SQL query to get the latest batch ID from the database
+                string query = Constants.GetAbortBatchIdQuery; 
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
                 try
                 {
                     // Open the connection
@@ -4020,6 +4305,12 @@ namespace RWDE
                     // Close the connection
                     connection.Close();
                 }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return currentBatchId;
             }
             return currentBatchId;
         }
@@ -4038,13 +4329,21 @@ namespace RWDE
         }
         public static string GetFileName(bool includeClient)//to get the filename of the generated XML
         {
-            string fileName = DateTime.Now.ToString(Constants.YyyyMMdd);
+            try
+            {
+                string fileName = DateTime.Now.ToString(Constants.YyyyMMdd);
 
             if (includeClient)
             {
                 fileName = Constants.Clients + fileName;
             }
             return fileName + Constants.XmlExtention;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
     }
 }

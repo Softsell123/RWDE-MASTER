@@ -38,27 +38,48 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to child Controls
-                    RegisterEvents(control);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void btnReport_Click(object sender, EventArgs e)//to generate and save the Csv files
@@ -180,33 +201,41 @@ namespace RWDE
         }
         private void btnBrowse_Click(object sender, EventArgs e)//to select the folder to save the csv files
         {
-            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
+            try
             {
-                folderDialog.Description = Constants.Selectafoldertosavethefile;
-                folderDialog.ShowNewFolderButton = true;
-
-                if (folderDialog.ShowDialog() == DialogResult.OK)
+                using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
                 {
-                    string selectedPath="";
-                    try
-                    {
-                        selectedPath = folderDialog.SelectedPath;
-                        txtPath.Text = selectedPath;
+                    folderDialog.Description = Constants.Selectafoldertosavethefile;
+                    folderDialog.ShowNewFolderButton = true;
 
-                        // Test writing permission by creating a temporary file
-                        string testFilePath = Path.Combine(selectedPath, Constants.Testfiletxt);
-                        File.WriteAllText(testFilePath, Constants.Testingpermissions);
-                        File.Delete(testFilePath); // Clean up after test
-
-                        MessageBox.Show(Constants.Selectedfolder + selectedPath);
-                    }
-                    catch (UnauthorizedAccessException ex)
+                    if (folderDialog.ShowDialog() == DialogResult.OK)
                     {
-                        MessageBox.Show(Constants.Accessdeniedtothefolder + ex.Message, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        string selectedPath = "";
+                        try
+                        {
+                            selectedPath = folderDialog.SelectedPath;
+                            txtPath.Text = selectedPath;
+
+                            // Test writing permission by creating a temporary file
+                            string testFilePath = Path.Combine(selectedPath, Constants.Testfiletxt);
+                            File.WriteAllText(testFilePath, Constants.Testingpermissions);
+                            File.Delete(testFilePath); // Clean up after test
+
+                            MessageBox.Show(Constants.Selectedfolder + selectedPath);
+                        }
+                        catch (UnauthorizedAccessException ex)
+                        {
+                            MessageBox.Show(Constants.Accessdeniedtothefolder + ex.Message, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        // Save the folder path (you only need to save it once)
+                        File.WriteAllText(Constants.LastFolderPathhcc, selectedPath);
                     }
-                    // Save the folder path (you only need to save it once)
-                    File.WriteAllText(Constants.LastFolderPathhcc, selectedPath);
                 }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

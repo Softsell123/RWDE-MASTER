@@ -29,7 +29,7 @@ namespace RWDE
                 PopulateDataGridViewLoad();
                 dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;//to adjust the column width
                 dataGridView.CellClick += DataGridView_CellClick;
-                //Handle BatchType Values
+                //Handle the Batch Type Names
                 GetAllBatchTypeNames();
                 dtpStartDate.Value = DateTime.Today.AddDays(-1);
                 dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
@@ -43,27 +43,48 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to all child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to all child Controls
-                    RegisterEvents(control);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         // Populates the DataGridView with data from the Batch table while deleting
@@ -123,7 +144,7 @@ namespace RWDE
             {
                 // Calling Batch table Values
                 DataTable dataTable = dbHelper.GetAllBatchesLoad();
-                
+
                 dataGridView.AutoGenerateColumns = false;
                 dataGridView.DataSource = dataTable;
                 dataGridView.Columns.Clear();
@@ -219,72 +240,95 @@ namespace RWDE
         }
         private void dataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)//to create the Delete buttons
         {
-            // Check if the column is the Delete button column and the row is valid
-            if (e.ColumnIndex == dataGridView.Columns[Constants.DeleteColumnName].Index && e.RowIndex >= 0)
+            try
             {
-                bool isEmptyRow = IsRowEmpty(e.RowIndex);
-
-                // Always paint the cell's border
-                e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
-
-                if (!isEmptyRow)
+                // Check if the column is the Delete button column and the row is valid
+                if (e.ColumnIndex == dataGridView.Columns[Constants.DeleteColumnName].Index && e.RowIndex >= 0)
                 {
-                    // Create the button's rectangle and draw the button
-                    var buttonRectangle = new Rectangle(e.CellBounds.X + 2, e.CellBounds.Y + 2, e.CellBounds.Width - 4, e.CellBounds.Height - 4);
-                    var buttonText = Constants.DeleteButtonText;
-                    Color buttonColor = Color.FromArgb(128, 128, 255); // Default blue color
+                    bool isEmptyRow = IsRowEmpty(e.RowIndex);
 
-                    // Fill the button area with the color and rounded corners
-                    using (GraphicsPath path = CreateRoundedRectanglePath(buttonRectangle, 5))
+                    // Always paint the cell's border
+                    e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
+
+                    if (!isEmptyRow)
                     {
-                        using (Brush brush = new SolidBrush(buttonColor))
-                        {
-                            e.Graphics.FillPath(brush, path);
-                        }
-                        // Draw black border with rounded corners
-                        using (Pen pen = new Pen(Color.Black, 1))
-                        {
-                            e.Graphics.DrawPath(pen, path);
-                        }
+                        // Create the button's rectangle and draw the button
+                        var buttonRectangle = new Rectangle(e.CellBounds.X + 2, e.CellBounds.Y + 2, e.CellBounds.Width - 4, e.CellBounds.Height - 4);
+                        var buttonText = Constants.DeleteButtonText;
+                        Color buttonColor = Color.FromArgb(128, 128, 255); // Default blue color
 
-                        // Draw the button text if present
-                        if (!string.IsNullOrEmpty(buttonText))
+                        // Fill the button area with the color and rounded corners
+                        using (GraphicsPath path = CreateRoundedRectanglePath(buttonRectangle, 5))
                         {
-                            TextRenderer.DrawText(e.Graphics, buttonText, dataGridView.Font, buttonRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                            using (Brush brush = new SolidBrush(buttonColor))
+                            {
+                                e.Graphics.FillPath(brush, path);
+                            }
+                            // Draw black border with rounded corners
+                            using (Pen pen = new Pen(Color.Black, 1))
+                            {
+                                e.Graphics.DrawPath(pen, path);
+                            }
+
+                            // Draw the button text if present
+                            if (!string.IsNullOrEmpty(buttonText))
+                            {
+                                TextRenderer.DrawText(e.Graphics, buttonText, dataGridView.Font, buttonRectangle, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                            }
                         }
                     }
+                    e.Handled = true; // Prevent default painting
                 }
-                e.Handled = true; // Prevent default painting
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         // Method to create a rounded rectangle for button styling
         private GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int radius)
         {
-            GraphicsPath path = new GraphicsPath();
-            int diameter = radius * 2;
+            try
+            {
+                GraphicsPath path = new GraphicsPath();
+                int diameter = radius * 2;
 
-            // Create rounded corners for the rectangle
-            path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90); // Top-left corner
-            path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90); // Top-right corner
-            path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90); // Bottom-right corner
-            path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90); // Bottom-left corner
+                // Create rounded corners for the rectangle
+                path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90); // Top-left corner
+                path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90); // Top-right corner
+                path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90); // Bottom-right corner
+                path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90); // Bottom-left corner
 
-            path.CloseFigure();
-            return path;
+                path.CloseFigure();
+                return path;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
         }
 
         //Checking the Rows Values 
-        private bool IsRowEmpty(int rowIndex) 
+        private bool IsRowEmpty(int rowIndex)
         {
-            foreach (DataGridViewCell cell in dataGridView.Rows[rowIndex].Cells)
+            try
             {
-                if (cell.Value != null && !string.IsNullOrEmpty(cell.Value.ToString()))
+                foreach (DataGridViewCell cell in dataGridView.Rows[rowIndex].Cells)
                 {
-                    return false;
+                    if (cell.Value != null && !string.IsNullOrEmpty(cell.Value.ToString()))
+                    {
+                        return false;
+                    }
                 }
+                return true;
             }
-            return true;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return true;
+            }
         }
 
         // Adds a new column to the DataGridView
@@ -345,30 +389,44 @@ namespace RWDE
         // Adjusts the width of specific columns
         private void AdjustAllColumnWidths()//to give styles for created button
         {
-            AdjustColumnWidth(Constants.BatchId, 120, dataGridView);
-            AdjustColumnWidth(Constants.Description, 150, dataGridView);
-            AdjustColumnWidth(Constants.Type, 160, dataGridView);
-            AdjustColumnWidth(Constants.UploadStartedAt, 180, dataGridView);
-            AdjustColumnWidth(Constants.UploadEndedAt, 180, dataGridView);
-            AdjustColumnWidth(Constants.ConversionStartedAt, 180, dataGridView);
-            AdjustColumnWidth(Constants.ConversionEndedAt, 180, dataGridView);
-            AdjustColumnWidth(Constants.GenerationStartedAt, 180, dataGridView);
-            AdjustColumnWidth(Constants.GenerationEndedAt, 180, dataGridView);
-            AdjustColumnWidth(Constants.TotalRows, 140, dataGridView);
-            AdjustColumnWidth(Constants.SuccessfulRows, 185, dataGridView);
-            AdjustColumnWidth(Constants.Status, 260, dataGridView);
-            AdjustColumnWidth(Constants.DeleteColumnName, 120, dataGridView);
-        }     
+            try
+            {
+                AdjustColumnWidth(Constants.BatchId, 120, dataGridView);
+                AdjustColumnWidth(Constants.Description, 150, dataGridView);
+                AdjustColumnWidth(Constants.Type, 160, dataGridView);
+                AdjustColumnWidth(Constants.UploadStartedAt, 180, dataGridView);
+                AdjustColumnWidth(Constants.UploadEndedAt, 180, dataGridView);
+                AdjustColumnWidth(Constants.ConversionStartedAt, 180, dataGridView);
+                AdjustColumnWidth(Constants.ConversionEndedAt, 180, dataGridView);
+                AdjustColumnWidth(Constants.GenerationStartedAt, 180, dataGridView);
+                AdjustColumnWidth(Constants.GenerationEndedAt, 180, dataGridView);
+                AdjustColumnWidth(Constants.TotalRows, 140, dataGridView);
+                AdjustColumnWidth(Constants.SuccessfulRows, 185, dataGridView);
+                AdjustColumnWidth(Constants.Status, 260, dataGridView);
+                AdjustColumnWidth(Constants.DeleteColumnName, 120, dataGridView);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
         private void SetDeleteButtonReadOnly() // Sets the Delete button to read-only for rows with null BatchID
         {
-            foreach (DataGridViewRow row in dataGridView.Rows)
+            try
             {
-                var batchIdCell = row.Cells[Constants.BatchId];
-                if (batchIdCell.Value == null || batchIdCell.Value == DBNull.Value)
+                foreach (DataGridViewRow row in dataGridView.Rows)
                 {
-                    row.Cells[Constants.DeleteColumnName].Value = null;
-                    row.Cells[Constants.DeleteColumnName].ReadOnly = true;
+                    var batchIdCell = row.Cells[Constants.BatchId];
+                    if (batchIdCell.Value == null || batchIdCell.Value == DBNull.Value)
+                    {
+                        row.Cells[Constants.DeleteColumnName].Value = null;
+                        row.Cells[Constants.DeleteColumnName].ReadOnly = true;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -512,16 +570,23 @@ namespace RWDE
             {
                 MessageBox.Show(ex.Message);
             }
-        }      
+        }
         private void GetAllBatchTypeNames() //Handle the Batch Type Names
         {
-            //get all batches type
-            List<string> batchTypes = dbHelper.GetAllBatchTypesview();
-            cbBatchType.Items.Clear();  // Clear existing items
-            foreach (string batchType in batchTypes)
+            try
             {
-                cbBatchType.Items.Add(batchType);
+                //get all batches type
+                List<string> batchTypes = dbHelper.GetAllBatchTypesview();
+                cbBatchType.Items.Clear();  // Clear existing items
+                foreach (string batchType in batchTypes)
+                {
+                    cbBatchType.Items.Add(batchType);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
-    }  
+    }
 }

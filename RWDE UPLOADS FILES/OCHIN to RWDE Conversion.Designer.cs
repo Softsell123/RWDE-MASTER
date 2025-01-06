@@ -191,7 +191,7 @@ namespace RWDE
             // 
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Column1.HeaderText = Constants.BatchIdHeader;
+            this.Column1.HeaderText = "Batch ID";
             this.Column1.MaxInputLength = 8;
             this.Column1.MinimumWidth = 6;
             this.Column1.Name = "Column1";
@@ -208,7 +208,7 @@ namespace RWDE
             // 
             // Column2
             // 
-            this.Column2.HeaderText = Constants.Description;
+            this.Column2.HeaderText = "Description";
             this.Column2.MinimumWidth = 6;
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
@@ -232,7 +232,7 @@ namespace RWDE
             // 
             // Column5
             // 
-            this.Column5.HeaderText = Constants.Status;
+            this.Column5.HeaderText = "Status";
             this.Column5.MinimumWidth = 6;
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
@@ -240,7 +240,7 @@ namespace RWDE
             // 
             // Column6
             // 
-            this.Column6.DataPropertyName = Constants.BatchIdHeader;
+            this.Column6.DataPropertyName = "Batch ID";
             this.Column6.HeaderText = "Select";
             this.Column6.MinimumWidth = 6;
             this.Column6.Name = "Column6";
@@ -249,9 +249,9 @@ namespace RWDE
             // 
             // ConversionStartedAt
             // 
-            this.ConversionStartedAt.HeaderText = Constants.ConversionStartedAtHeader;
+            this.ConversionStartedAt.HeaderText = "Conversion Started At";
             this.ConversionStartedAt.MinimumWidth = 6;
-            this.ConversionStartedAt.Name = Constants.ConversionStartedAt;
+            this.ConversionStartedAt.Name = "ConversionStartedAt";
             this.ConversionStartedAt.ReadOnly = true;
             this.ConversionStartedAt.Width = 300;
             // 
@@ -397,8 +397,8 @@ namespace RWDE
             // Column7
             // 
             this.Column7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Column7.DataPropertyName = Constants.BatchId;
-            this.Column7.HeaderText = Constants.BatchIdHeader;
+            this.Column7.DataPropertyName = "BatchID";
+            this.Column7.HeaderText = "Batch ID";
             this.Column7.MinimumWidth = 6;
             this.Column7.Name = "Column7";
             this.Column7.ReadOnly = true;
@@ -407,8 +407,8 @@ namespace RWDE
             // Column8
             // 
             this.Column8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Column8.DataPropertyName = Constants.BatchId;
-            this.Column8.HeaderText = Constants.FileNamesp;
+            this.Column8.DataPropertyName = "BatchID";
+            this.Column8.HeaderText = "File Name";
             this.Column8.MinimumWidth = 6;
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
@@ -416,8 +416,8 @@ namespace RWDE
             // 
             // dataGridViewTextBoxColumn9
             // 
-            this.dataGridViewTextBoxColumn9.DataPropertyName = Constants.Description;
-            this.dataGridViewTextBoxColumn9.HeaderText = Constants.Description;
+            this.dataGridViewTextBoxColumn9.DataPropertyName = "Description";
+            this.dataGridViewTextBoxColumn9.HeaderText = "Description";
             this.dataGridViewTextBoxColumn9.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
             this.dataGridViewTextBoxColumn9.ReadOnly = true;
@@ -429,7 +429,7 @@ namespace RWDE
             dataGridViewCellStyle6.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.dataGridViewTextBoxColumn10.DefaultCellStyle = dataGridViewCellStyle6;
-            this.dataGridViewTextBoxColumn10.HeaderText = Constants.ConversionStartedAtHeader;
+            this.dataGridViewTextBoxColumn10.HeaderText = "Conversion Started At";
             this.dataGridViewTextBoxColumn10.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
             this.dataGridViewTextBoxColumn10.ReadOnly = true;
@@ -438,7 +438,7 @@ namespace RWDE
             // dataGridViewTextBoxColumn11
             // 
             this.dataGridViewTextBoxColumn11.DataPropertyName = "EndedAt";
-            this.dataGridViewTextBoxColumn11.HeaderText = Constants.ConversionEndedAtHeader;
+            this.dataGridViewTextBoxColumn11.HeaderText = "Conversion Ended At";
             this.dataGridViewTextBoxColumn11.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
             this.dataGridViewTextBoxColumn11.ReadOnly = true;
@@ -446,8 +446,8 @@ namespace RWDE
             // 
             // dataGridViewTextBoxColumn12
             // 
-            this.dataGridViewTextBoxColumn12.DataPropertyName = Constants.Status;
-            this.dataGridViewTextBoxColumn12.HeaderText = Constants.Status;
+            this.dataGridViewTextBoxColumn12.DataPropertyName = "Status";
+            this.dataGridViewTextBoxColumn12.HeaderText = "Status";
             this.dataGridViewTextBoxColumn12.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
             this.dataGridViewTextBoxColumn12.ReadOnly = true;
@@ -536,7 +536,7 @@ namespace RWDE
             this.pnlDATA.Controls.Add(this.lblClient);
             this.pnlDATA.Controls.Add(this.progressbarClients);
             this.pnlDATA.Controls.Add(this.txtProgressClients);
-            this.pnlDATA.Location = new System.Drawing.Point(134, 576);
+            this.pnlDATA.Location = new System.Drawing.Point(134, 572);
             this.pnlDATA.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlDATA.Name = "pnlDATA";
             this.pnlDATA.Size = new System.Drawing.Size(1785, 240);
@@ -680,7 +680,7 @@ namespace RWDE
             this.txtProgressServices.Size = new System.Drawing.Size(240, 40);
             this.txtProgressServices.TabIndex = 23;
             this.txtProgressServices.TabStop = false;
-            this.txtProgressServices.Text = Constants.ZeroPercent;
+            this.txtProgressServices.Text = "0%";
             // 
             // prgHeading
             // 
@@ -724,7 +724,7 @@ namespace RWDE
             this.txtProgressClients.Size = new System.Drawing.Size(240, 40);
             this.txtProgressClients.TabIndex = 14;
             this.txtProgressClients.TabStop = false;
-            this.txtProgressClients.Text = Constants.ZeroPercent;
+            this.txtProgressClients.Text = "0%";
             // 
             // btnClose
             // 
@@ -737,7 +737,7 @@ namespace RWDE
             this.btnClose.Size = new System.Drawing.Size(239, 45);
             this.btnClose.TabIndex = 38;
             this.btnClose.TabStop = false;
-            this.btnClose.Text = Constants.Close;
+            this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btncloseHCC_Click);
             // 

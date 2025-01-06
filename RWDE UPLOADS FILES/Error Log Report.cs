@@ -24,27 +24,48 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to child Controls
-                    RegisterEvents(control);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void btnReport_Click(object sender, EventArgs e)//to get the filtered data
@@ -83,10 +104,11 @@ namespace RWDE
                 // Handle exceptions
                 MessageBox.Show(ex.Message);
             }
-        }    
+        }
         private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
-            try { 
+            try
+            {
                 // Close the current form (dispose it)
                 Close();
                 Application.Restart();
@@ -98,12 +120,13 @@ namespace RWDE
         }
         private void btnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
         {
-            try {
+            try
+            {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
                     MessageBox.Show(Constants.NoDataAvailableToDownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
-                    
+
                 }
                 DataTable dataTable = new DataTable();
 
@@ -171,7 +194,8 @@ namespace RWDE
         }
         private void btnClr_Click(object sender, EventArgs e)//to clear data in the grid
         {
-            try{// Reset DateTimePickers to one year back from the current date
+            try
+            {// Reset DateTimePickers to one year back from the current date
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
                 dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
@@ -181,7 +205,7 @@ namespace RWDE
                 if (dataGridView.DataSource is DataTable dt)
                 {
                     dt.Clear();  // Clears all rows from the DataTable
-                }   
+                }
             }
             catch (Exception ex)
             {

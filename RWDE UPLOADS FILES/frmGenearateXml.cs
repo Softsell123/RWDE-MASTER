@@ -69,36 +69,71 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void dataGridView_Scroll(object sender, ScrollEventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                foreach (Control control in parent.Controls)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to child Controls
-                    RegisterEvents(control);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void LoadBatchStatus()//load data
         {
-            PopulateDataGridViewstartedstatus();//populate data in Grid
+            try
+            {
+                PopulateDataGridViewstartedstatus();//populate data in Grid
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void PopulateDataGridViewstartedstatus()//populate data
         {
@@ -275,7 +310,7 @@ namespace RWDE
                 btnClose.Text = Constants.Abort;
                 btnGeneration.Enabled = false;
                 //Calling Client Xml Method
-             
+
                 string fileName = dataGridView.Rows[selectedRowIndex].Cells[Constants.SmallFileName].Value.ToString();
 
                 if (fileName.Contains(Constants.Client))
@@ -288,7 +323,7 @@ namespace RWDE
                     await GenerateXmlForServicesAsync(selectedBatchId);//generate xml services
 
                 }
-                btnClose.Text =Constants.Close;
+                btnClose.Text = Constants.Close;
                 btnGeneration.Enabled = true;
             }
             catch (Exception ex)
@@ -401,51 +436,51 @@ namespace RWDE
                 List<Dictionary<string, string>> data;
 
                 // Update status of service and fetch error data
-                data = chkError.Checked ? dbHelper.GetServiceserror(selectedBatchId) : 
+                data = chkError.Checked ? dbHelper.GetServiceserror(selectedBatchId) :
                     // Update status of service and fetch standard service data
                     dbHelper.GetServices(selectedBatchId);
 
-                     //calling XmlStructure Function
-                    List<Dictionary<string, string>> xmlStructure = dbHelper.GetXmlStructure();//get xml Structure
+                //calling XmlStructure Function
+                List<Dictionary<string, string>> xmlStructure = dbHelper.GetXmlStructure();//get xml Structure
 
-                    string baseFilename = Constants.ServiceCttohcc;
-                    dbHelper.Log(Constants.GeneratetoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
+                string baseFilename = Constants.ServiceCttohcc;
+                dbHelper.Log(Constants.GeneratetoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
 
-                    //calling Service xml file generation Method
-                    XElement xml = await GenerateXmlService(data, xmlStructure);//generate services Xml
-                    string folderPath = txtPath.Text;
-                    Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
-                    string baseFileName = $"{Constants.ServiceXmlHeader}{DateTime.Now.ToString(Constants.DdMMyyyy)}{Constants.XmlFooter}";
-                    string servicesFilePath = Path.Combine(folderPath, baseFileName);
+                //calling Service xml file generation Method
+                XElement xml = await GenerateXmlService(data, xmlStructure);//generate services Xml
+                string folderPath = txtPath.Text;
+                Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
+                string baseFileName = $"{Constants.ServiceXmlHeader}{DateTime.Now.ToString(Constants.DdMMyyyy)}{Constants.XmlFooter}";
+                string servicesFilePath = Path.Combine(folderPath, baseFileName);
 
-                    // Check if file exists and rename accordingly
-                    int fileCount = 1;
-                    string fileExtension = Path.GetExtension(baseFileName);
-                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(baseFileName);
+                // Check if file exists and rename accordingly
+                int fileCount = 1;
+                string fileExtension = Path.GetExtension(baseFileName);
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(baseFileName);
 
-                    // Save the XML to a file with automatic numbering if the file exists
-                    // Loop to increment the filename if the file already exists
-                    while (File.Exists(servicesFilePath))
-                    {
-                        servicesFilePath = Path.Combine(folderPath, $"{fileNameWithoutExtension}_{fileCount}{fileExtension}");
-                        fileCount++;
-                    }
+                // Save the XML to a file with automatic numbering if the file exists
+                // Loop to increment the filename if the file already exists
+                while (File.Exists(servicesFilePath))
+                {
+                    servicesFilePath = Path.Combine(folderPath, $"{fileNameWithoutExtension}_{fileCount}{fileExtension}");
+                    fileCount++;
+                }
 
-                    // Now save the file
-                    xml.Save(servicesFilePath);
+                // Now save the file
+                xml.Save(servicesFilePath);
 
-                    DateTime endTime = DateTime.Now;
-                    TimeSpan totalTime = endTime - startTime;
-                    string eTime = endTime.ToString(Constants.MMddyyyyHHmmssbkslash);
-                    double totalSeconds = totalTime.TotalSeconds;
-                    txtUploadEnded.Text = eTime;
-                    txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
-                    btnClose.Text = Constants.Close;
-                    //update services status
-                    UpdateStatusColumnServices(selectedBatchId, Constants.Hccxmlstatusf, startTime, endTime);
-                    //Populating GRID from table
-                    PopulateDataGridView(new DataTable());//populate data
-                    dbHelper.Log(Constants.GeneratetoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
+                DateTime endTime = DateTime.Now;
+                TimeSpan totalTime = endTime - startTime;
+                string eTime = endTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+                double totalSeconds = totalTime.TotalSeconds;
+                txtUploadEnded.Text = eTime;
+                txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
+                btnClose.Text = Constants.Close;
+                //update services status
+                UpdateStatusColumnServices(selectedBatchId, Constants.Hccxmlstatusf, startTime, endTime);
+                //Populating GRID from table
+                PopulateDataGridView(new DataTable());//populate data
+                dbHelper.Log(Constants.GeneratetoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
             }
             catch (Exception ex)
             {
@@ -662,7 +697,7 @@ namespace RWDE
                     // Add the client profile element to the source system element
                     sourceSystemElement.Add(clientProfileElement);
 
-                //Making values as Array totalRows to synchronous the execution
+                    //Making values as Array totalRows to synchronous the execution
                 }).ToArray();
                 await Task.WhenAll(tasks);
 
@@ -678,7 +713,7 @@ namespace RWDE
                 throw;
             }
         }
-       
+
         private void HandleRaceValues(Dictionary<string, string> dataRow, int batchId, List<Dictionary<string, string>> xmlStructure, XElement currentDemoElement, XElement childElement)// method to handle race values
         {
             try
@@ -937,7 +972,8 @@ namespace RWDE
         // to handle the Adding Element
         private void AddXmlElement(Dictionary<string, string> dataRow, string fieldName, string presetValue, string defaultValue, string tagName, XElement parentElement)
         {
-            try { 
+            try
+            {
                 XElement element = new XElement(tagName);
                 string value = dataRow.ContainsKey(fieldName) && !string.IsNullOrEmpty(dataRow[fieldName]) ? dataRow[fieldName] : !string.IsNullOrEmpty(presetValue) ? presetValue : defaultValue;
 
@@ -945,7 +981,7 @@ namespace RWDE
                 parentElement?.Add(element);
             }
             catch (Exception ex)
-            { 
+            {
                 MessageBox.Show(ex.Message);
             }
         }
@@ -985,13 +1021,13 @@ namespace RWDE
             }
         }
         //create the rootElemt of client and serives xml file
-        public XElement CreateRootElement(List<Dictionary<string, string>> xmlStructure, string rootTag) 
+        public XElement CreateRootElement(List<Dictionary<string, string>> xmlStructure, string rootTag)
         {
             try
             {
                 string tag = xmlStructure.FirstOrDefault(x => x[XmlConstants.TagNumber] == rootTag)?[XmlConstants.Tag];
-                
-                    return new XElement(tag);
+
+                return new XElement(tag);
             }
             catch (Exception ex)
             {
@@ -1003,7 +1039,7 @@ namespace RWDE
             }
         }
         //Create a Source system for client and services xml file
-        public XElement CreateSourceSystemElement(List<Dictionary<string, string>> xmlStructure, string tagNumber) 
+        public XElement CreateSourceSystemElement(List<Dictionary<string, string>> xmlStructure, string tagNumber)
         {
             try
             {
@@ -1020,7 +1056,7 @@ namespace RWDE
             }
         }
         //Adding the Source System Element for Client and Service Xml File
-        public void AddDynamicElements(XElement parentElement, List<Dictionary<string, string>> xmlStructure, string rootTag) 
+        public void AddDynamicElements(XElement parentElement, List<Dictionary<string, string>> xmlStructure, string rootTag)
         {
             try
             {
@@ -1069,13 +1105,21 @@ namespace RWDE
         }
         public static (string tagNumber, string tagName, string fieldName, string presetValue, string defaultValue) GetXmlStructureValues(Dictionary<string, string> structureRow)// Return the Structure Values
         {
-            string tagNumber = structureRow[XmlConstants.TagNumber];
-            string tagName = structureRow[XmlConstants.Tag];
-            string fieldName = structureRow[XmlConstants.Field];
-            string presetValue = structureRow[XmlConstants.PresetValue];
-            string defaultValue = structureRow[XmlConstants.Default];
+            try
+            {
+                string tagNumber = structureRow[XmlConstants.TagNumber];
+                string tagName = structureRow[XmlConstants.Tag];
+                string fieldName = structureRow[XmlConstants.Field];
+                string presetValue = structureRow[XmlConstants.PresetValue];
+                string defaultValue = structureRow[XmlConstants.Default];
 
-            return (tagNumber, tagName, fieldName, presetValue, defaultValue);
+                return (tagNumber, tagName, fieldName, presetValue, defaultValue);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return (XmlConstants.TagNumber, XmlConstants.TagNumber, XmlConstants.TagNumber, XmlConstants.TagNumber, XmlConstants.TagNumber);
+            }
         }
         private async Task Updateprogress(int insertedRows, int totalRows)// Handle the Progress Values
         {
@@ -1134,7 +1178,8 @@ namespace RWDE
         }
         private void AddDateTime(string name, string value, DataGridView dataGridViews)//Adding the Date Format to the Column
         {
-            try { 
+            try
+            {
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn
                 {
                     Name = name,
@@ -1149,7 +1194,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        
+
         private void UpdateStatusColumn(int batchId, int listId, DateTime startTime, DateTime endTime)//update status
         {
             try
@@ -1232,7 +1277,7 @@ namespace RWDE
                                 connection.Open();
 
                                 // Define the SQL query to update the GenerationStartedAt column"
-                                string updateQuery =Constants.UpdateXml;
+                                string updateQuery = Constants.UpdateXml;
 
                                 using (SqlCommand command = new SqlCommand(updateQuery, connection))
                                 {
@@ -1281,7 +1326,7 @@ namespace RWDE
             label.Location = new Point(5, 5); // Adjust location for padding
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.Font = new Font(Constants.FntfmlyArial, 12, FontStyle.Regular); // Set font and size
-            
+
             // Add label to form
             Controls.Add(label);
 
@@ -1308,8 +1353,8 @@ namespace RWDE
         {
             try
             {
-               // progressServices.Value = 0;
-                 var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationlients(batchId);//to check whether the generation completed or not
+                // progressServices.Value = 0;
+                var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationlients(batchId);//to check whether the generation completed or not
 
                 if (batchDetails == null)
                 {
@@ -1320,9 +1365,9 @@ namespace RWDE
                 // Check if ConversionStartedAt and ConversionEndedAt are not null
                 if (batchDetails.GenerationStartedAt != null && batchDetails.GenerationEndedAt != null)
                 {
-                    MessageBox.Show(Constants.Generationhasalreadybeencompletedforthisbatch,Constants.GenerateXml,MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    MessageBox.Show(Constants.Generationhasalreadybeencompletedforthisbatch, Constants.GenerateXml, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     txtProgressBar.Text = Constants.ZeroPercent;
-                    txtClient.Text= Constants.ZeroPercent;
+                    txtClient.Text = Constants.ZeroPercent;
                     txtBatchid.Text = null;
                     txtUploadStarted.Text = null;
                     txtUploadEnded.Text = null;
@@ -1420,7 +1465,8 @@ namespace RWDE
         }
         private async Task Updateprogressclient(int insertedRows, int totalRows)//Progress of rows Insertion
         {
-            try { 
+            try
+            {
                 int progressPercentage = (int)((double)insertedRows / totalRows * 100);
                 string progressInfo = $"{insertedRows}/{totalRows} ({progressPercentage}%)";
 
@@ -1469,7 +1515,7 @@ namespace RWDE
 
                     using (SqlCommand command = new SqlCommand(Constants.CountXmlServices, connection))
                     {
-                        command.CommandType= CommandType.StoredProcedure;
+                        command.CommandType = CommandType.StoredProcedure;
 
                         command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
                         totalRows = (int)command.ExecuteScalar();
@@ -1480,7 +1526,6 @@ namespace RWDE
             {
                 Console.WriteLine($@"{Constants.ErrorGettingTotalRows}  {ex.Message}");
             }
-
             return totalRows;
         }
         private void btnClose_Click(object sender, EventArgs e)//close main form
@@ -1532,7 +1577,7 @@ namespace RWDE
                 MessageBox.Show(Constants.Errorsp + ex.Message, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void UpdateBatchStatusabort(int batchId, int status, string xmlDirectoryPath,String filename)//for abort status 
+        private void UpdateBatchStatusabort(int batchId, int status, string xmlDirectoryPath, String filename)//for abort status 
         {
             try
             {
@@ -1621,7 +1666,7 @@ namespace RWDE
             {
                 MessageBox.Show(ex.Message);
             }
-        }       
+        }
         private void btnSubmit_Click(object sender, EventArgs e)//Handle the filtered data
         {
             try
@@ -1642,7 +1687,7 @@ namespace RWDE
                     MessageBox.Show(Constants.DateShouldBeGreaterThen, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-               
+
                 // Retrieve and bind data
                 DataTable result = dbHelper.GetParticularnGenerationDatas(batchType, fromDate, endDate);
                 dataGridView.DataSource = result;
@@ -1692,13 +1737,21 @@ namespace RWDE
         }
         private void dtpStartDate_ValueChanged(object sender, EventArgs e)//format date
         {
-            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
-            dtpStartDate.Format = DateTimePickerFormat.Custom;
+            try
+            {
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+                dtpStartDate.Format = DateTimePickerFormat.Custom;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void dtpEndDate_ValueChanged(object sender, EventArgs e)//format date
         {
-            try { 
+            try
+            {
                 dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Format = DateTimePickerFormat.Custom;
             }

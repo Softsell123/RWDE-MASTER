@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Application = System.Windows.Forms.Application;
-// ReSharper disable PossibleNullReferenceException
 
 namespace RWDE
 {
@@ -48,23 +47,53 @@ namespace RWDE
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
         {
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void dataGridView_Scroll(object sender, ScrollEventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void dataGridViewHCC_Scroll(object sender, ScrollEventArgs e)//Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void RegisterEvents(Control parent)//Assigning events to all Controls
         {
-            foreach (Control control in parent.Controls)
+            try
+            {
+                foreach (Control control in parent.Controls)
             {
                 if (control is Button || control is CheckBox || control is DateTimePicker ||control is ComboBox || control is ScrollBar || control is ScrollBar)
                 {
@@ -77,6 +106,11 @@ namespace RWDE
                     //Assigning events to all child Controls
                     RegisterEvents(control);
                 }
+            }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)// Formats the cell value for the Constants.Status column based on the corresponding value in the database.
@@ -258,7 +292,9 @@ namespace RWDE
         }
         public async Task GetclientssAsync(int selectedBatchId)//Insertion of Client and Eligibility into HCC tables
         {
-            progressBarServices.Value = 0; 
+            try
+            {
+                progressBarServices.Value = 0; 
             var batchDetails = await dbHelper.GetBatchDetailsFromSpAsyncclients(selectedBatchId);//to check whether the conversion completed or not
 
             if (batchDetails == null)
@@ -403,7 +439,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 Console.WriteLine(Constants.Errorsp + ex.Message);
-
+                MessageBox.Show(ex.Message);
+            }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         public OchinToRwdeConversion(string message, int displayDuration)//Automation process 
@@ -617,7 +658,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Constants.ErrorCode, ex.Message);
+                MessageBox.Show(Constants.ErrorCode, ex.Message);
             }
         }
         private void PopulateDataGridViewHcc()//load data in the grid
@@ -914,7 +955,9 @@ namespace RWDE
         }
         private void RefreshValues()//constant values
         {
-            txtBatchid.Clear();
+            try
+            {
+                txtBatchid.Clear();
             txtTotaltime.Clear();
             txtUploadStarted.Clear();
             txtUploadEnded.Clear();
@@ -922,6 +965,11 @@ namespace RWDE
             progressbarClients.Value = 0;
             txtProgressServices.Text = Constants.ZeroPercent;
             progressBarServices.Value = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }    
         private void btnSubmit_Click(object sender, EventArgs e)//to insert data
         {
