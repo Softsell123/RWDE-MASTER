@@ -17,7 +17,6 @@ namespace RWDE
             WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
-            ;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
             RegisterEvents(this); //Assigning events to all Controls

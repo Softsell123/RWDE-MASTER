@@ -78,7 +78,7 @@ namespace RWDE
             this.btnDownload.TabIndex = 10;
             this.btnDownload.Text = "Export";
             this.btnDownload.UseVisualStyleBackColor = false;
-            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
+            this.btnDownload.Click += new System.EventHandler(this.BtnDownload_Click);
             // 
             // lblTitle
             // 
@@ -101,9 +101,9 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 8;
-            this.btnClose.Text = Constants.Close;
+            this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // pnl
             // 
@@ -146,7 +146,7 @@ namespace RWDE
             this.btnReport.TabIndex = 6;
             this.btnReport.Text = "Submit";
             this.btnReport.UseVisualStyleBackColor = false;
-            this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
+            this.btnReport.Click += new System.EventHandler(this.BtnReport_Click);
             // 
             // lblHeader
             // 
@@ -335,7 +335,7 @@ namespace RWDE
             this.Status.FillWeight = 114.0359F;
             this.Status.HeaderText = "Record Is Shared";
             this.Status.MinimumWidth = 6;
-            this.Status.Name = Constants.Status;
+            this.Status.Name = "Status";
             this.Status.Width = 237;
             // 
             // AriesConsentExprireDate
@@ -350,7 +350,7 @@ namespace RWDE
             // 
             this.CaseManager.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.CaseManager.FillWeight = 88.62742F;
-            this.CaseManager.HeaderText = Constants.HccIdsp;
+            this.CaseManager.HeaderText = "HCC ID";
             this.CaseManager.MinimumWidth = 6;
             this.CaseManager.Name = "CaseManager";
             this.CaseManager.Width = 123;
@@ -408,7 +408,7 @@ namespace RWDE
             this.CreatedOn.Name = "CreatedOn";
             this.CreatedOn.Width = 190;
             // 
-            // Client_Demographics_Report
+            // ClientDemographicsReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

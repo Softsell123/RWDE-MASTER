@@ -84,7 +84,8 @@ namespace RWDE
         }
         private void btnReport_Click(object sender, EventArgs e)//to generate and save the Csv files
         {
-            string filePath = Path.Combine(txtPath.Text, $"{Constants.Clients}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
+            string ClientfilePath = Path.Combine(txtPath.Text, $"{Constants.Clients}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
+            string ServicesfilePath = Path.Combine(txtPath.Text, $"{Constants.ServiceSample}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
 
             try
             {
@@ -94,101 +95,11 @@ namespace RWDE
                     return;
                 }
 
-                // SQL query to execute the stored procedure
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    //Getting BatchId for particular file to generate CSV
-                    int batchid = dbHelper.GetMaxXmlBatchId();
-                    // Call the stored procedure
-                    using (SqlCommand cmd = new SqlCommand(Constants.Ctclientsmapping, conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue(Constants.AtBatchid, batchid);
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            // Create a StreamWriter to write to the CSV file
-                            using (StreamWriter writer = new StreamWriter(filePath))
+                //to Write the CSV data of Clients
+                dbHelper.WriteClientCsvData(ClientfilePath);
 
-                            {
-                                // Write the header (column names)
-                                var columnNames = Enumerable.Range(0, reader.FieldCount)
-                                                            .Select(reader.GetName)
-                                                            .ToArray();
-                                writer.WriteLine(string.Join("|", columnNames));  // Use pipe (|) as the separator
-
-                                // Write each row
-                                while (reader.Read())
-                                {
-                                    var rowValues = new string[reader.FieldCount];
-                                    for (int i = 0; i < reader.FieldCount; i++)
-                                    {
-                                        rowValues[i] = reader[i]?.ToString();
-                                    }
-                                    writer.WriteLine(string.Join("|", rowValues));  // Use pipe (|) as the separator
-                                }
-                                //to get the services of the last uploaded Xml file
-                                GetServicedataCsv(batchid);
-                            }
-                        }
-                    }
-                    MessageBox.Show(Constants.CsVfilehasbeencreatedsuccessfullyat + filePath);//
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show(Constants.Accessdeniedtothefolder, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(Constants.Errorsp + ex.Message);
-            }
-        }
-        public void GetServicedataCsv(int batchid)//to get the services of the last uploaded Xml file
-        {
-            string filePath = Path.Combine(txtPath.Text, $"{Constants.ServiceSample}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
-            try
-            {
-                if (!Directory.Exists(txtPath.Text))
-                {
-                    MessageBox.Show(Constants.Theselectedfolderdoesnotexist, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                // SQL query to execute the stored procedure
-                using (SqlConnection conn = new SqlConnection(connectionString))//
-                {
-                    conn.Open();
-                    // Call the stored procedure
-                    using (SqlCommand cmd = new SqlCommand(Constants.GetCtServicesForCsv, conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue(Constants.AtBatchid, batchid);
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            // Create a StreamWriter to write to the CSV file
-                            using (StreamWriter writer = new StreamWriter(filePath))
-                            {
-                                // Write the header (column names)
-                                var columnNames = Enumerable.Range(0, reader.FieldCount)
-                                                            .Select(reader.GetName)
-                                                            .ToArray();
-                                writer.WriteLine(string.Join("|", columnNames));  // Use pipe (|) as the separator
-
-                                // Write each row
-                                while (reader.Read())
-                                {
-                                    var rowValues = new string[reader.FieldCount];
-                                    for (int i = 0; i < reader.FieldCount; i++)
-                                    {
-                                        rowValues[i] = reader[i]?.ToString();
-                                    }
-                                    writer.WriteLine(string.Join("|", rowValues));  // Use pipe (|) as the separator
-                                }
-                            }
-                        }
-                    }
-                    MessageBox.Show(Constants.CsVfilehasbeencreatedsuccessfullyat + filePath);
-                }
+                //to Write the CSV data of Services
+                dbHelper.WriteServicesCsvData(ServicesfilePath);
             }
             catch (UnauthorizedAccessException)
             {
@@ -231,7 +142,6 @@ namespace RWDE
                         File.WriteAllText(Constants.LastFolderPathhcc, selectedPath);
                     }
                 }
-
             }
             catch (Exception ex)
             {

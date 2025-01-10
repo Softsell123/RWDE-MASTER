@@ -291,17 +291,19 @@ namespace RWDE
         {
             try
             {
-                GraphicsPath path = new GraphicsPath();
-                int diameter = radius * 2;
+                using (GraphicsPath path = new GraphicsPath())
+                {
+                    int diameter = radius * 2;
 
-                // Create rounded corners for the rectangle
-                path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90); // Top-left corner
-                path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90); // Top-right corner
-                path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90); // Bottom-right corner
-                path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90); // Bottom-left corner
+                    // Create rounded corners for the rectangle
+                    path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90); // Top-left corner
+                    path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90); // Top-right corner
+                    path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90); // Bottom-right corner
+                    path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90); // Bottom-left corner
 
-                path.CloseFigure();
-                return path;
+                    path.CloseFigure();
+                    return path;
+                }
             }
             catch (Exception ex)
             {

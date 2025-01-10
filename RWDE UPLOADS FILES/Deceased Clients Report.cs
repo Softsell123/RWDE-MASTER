@@ -202,7 +202,6 @@ namespace RWDE
                         {
                             dataRow[cell.ColumnIndex] = cell.Value ?? DBNull.Value;
                         }
-
                         dataTable.Rows.Add(dataRow);
                     }
                 }
@@ -288,7 +287,7 @@ namespace RWDE
                 dtpEndDate.Value = DateTime.Now;
                 // Clear only the rows in the DataGridView
                 dataGridView.Rows.Clear();
-                // Optionally, reset the DataGridView's current selection or focus
+                //reset the DataGridView's current selection or focus
                 dataGridView.ClearSelection();
             }
             catch (Exception ex)

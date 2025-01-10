@@ -12,21 +12,40 @@ using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Configuration;
+using ClosedXML.Excel;
 // ReSharper disable PossibleNullReferenceException
 namespace RWDE
 {
-    public class DbHelper
+    public class DbHelper : IDisposable
     {
         private readonly string connectionString; // Stores the connection string for the database
         private string error;  // Stores any error messages encountered during database operations
-        private bool batchIdIncremented; 
+        private bool batchIdIncremented;
         private bool errorLogged;
+        private bool _disposed = false;
 
         // Constructor to initialize the DBHelper class with a connection string
         public DbHelper()
         {
             // Define the connection string within the DBHelper class
             connectionString = ConfigurationManager.ConnectionStrings[Constants.MyConnection].ConnectionString;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this); // Optional: Prevents finalization as resources are already cleaned up
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+            }
+        }
+        // Finalizer
+        ~DbHelper()
+        {
+            Dispose(false); // Only unmanaged resources
         }
 
         public string GetConnectionString() //get connection string
@@ -110,7 +129,7 @@ namespace RWDE
             }
         }
 
-        public async Task<BatchDetailsgeneration>GetBatchDetailsFromSpAgenearationlients(int batchId) //to check whether the generation completed or not
+        public async Task<BatchDetailsgeneration> GetBatchDetailsFromSpAgenearationlients(int batchId) //to check whether the generation completed or not
         {
             try
             {
@@ -205,9 +224,10 @@ namespace RWDE
                     {
                         using (SqlConnection con = new SqlConnection(connectionString))
                         {
-                            SqlCommand cmd = new SqlCommand(Constants.SpServiceReconBatchId, con);
-
-                            cmd.CommandType = CommandType.StoredProcedure;
+                            SqlCommand cmd = new SqlCommand(Constants.SpServiceReconBatchId, con)
+                            {
+                                CommandType = CommandType.StoredProcedure
+                            };
                             cmd.Parameters.AddWithValue(Constants.AtBatchid, onebatch);
                             con.Open();
                             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -246,7 +266,7 @@ namespace RWDE
                     {
                         MessageBox.Show(ex.Message);
                     }
-                    if (dy.Rows.Count == 0 && batchids.Length!=1 && batchids.Length== noDataIds.Count)
+                    if (dy.Rows.Count == 0 && batchids.Length != 1 && batchids.Length == noDataIds.Count)
                     {
                         MessageBox.Show(Constants.Nodataexistsforthisbatchid, Constants.ServiceReconciliationReport);
                     }
@@ -269,7 +289,7 @@ namespace RWDE
             public DateTime? ConversionStartedAt { get; set; }
             public DateTime? ConversionEndedAt { get; set; }
         }
-     
+
         public int GetNextBatchId()//Getting BatchId for particular file insertion
         {
             try
@@ -350,8 +370,10 @@ namespace RWDE
                     connection.Open();
 
                     // Proceed with inserting the new batch record
-                    SqlCommand command = new SqlCommand(Constants.InsertBatchTable, connection);
-                    command.CommandType = CommandType.StoredProcedure;
+                    SqlCommand command = new SqlCommand(Constants.InsertBatchTable, connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
 
                     string date = startedAt.ToString(Constants.DdMMyyyyHyphen);
                     string time = startedAt.ToString(Constants.HHmmss);
@@ -396,7 +418,7 @@ namespace RWDE
                     cmd.Parameters.AddWithValue(Constants.AtClntId, int.Parse(data[0]));
                     cmd.Parameters.AddWithValue(Constants.AtServiceDate, DateTime.Parse(data[1]));
                     cmd.Parameters.AddWithValue(Constants.AtContractIdsp, int.Parse(data[2]));
-                    cmd.Parameters.AddWithValue(Constants.AtStaffId,data[3]);
+                    cmd.Parameters.AddWithValue(Constants.AtStaffId, data[3]);
                     cmd.Parameters.AddWithValue(Constants.AtPrimServDesc, data[4]);
                     cmd.Parameters.AddWithValue(Constants.AtQuantityServed, decimal.Parse(data[6]));
                     cmd.Parameters.AddWithValue(Constants.AtUnitCd, data[5]);
@@ -436,7 +458,7 @@ namespace RWDE
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     // Add parameters with appropriate conversion and null handling
-                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId-1);
+                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId - 1);
                     cmd.Parameters.AddWithValue(Constants.AtClntId, int.Parse(data[0]));
                     cmd.Parameters.AddWithValue(Constants.AtServiceDate, DateTime.Parse(data[1]));
                     cmd.Parameters.AddWithValue(Constants.AtContractIdsp, int.Parse(data[2]));
@@ -798,12 +820,12 @@ namespace RWDE
                     return null;
                 }
                 if (DateTime.TryParse(value, out DateTime parsedDate))
-                { 
+                {
                     return parsedDate;
                 }
                 else
                 {
-                     return null;
+                    return null;
                 }
             }
             catch (Exception ex)
@@ -829,18 +851,18 @@ namespace RWDE
             try
             {
                 if (string.IsNullOrEmpty(value))
-            {
-                return null;
-            }
+                {
+                    return null;
+                }
 
-            if (decimal.TryParse(value, out decimal parsedDecimal))
-            {
-                return parsedDecimal;
-            }
-            else
-            {
-                return null;
-            }
+                if (decimal.TryParse(value, out decimal parsedDecimal))
+                {
+                    return parsedDecimal;
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception ex)
             {
@@ -848,7 +870,7 @@ namespace RWDE
                 return null;
             }
         }
-        
+
         private string ConvertToString(object value)//convert to string
         {
             try
@@ -866,10 +888,10 @@ namespace RWDE
             try
             {
                 if (DateTime.TryParse(value?.ToString(), out DateTime result))
-            {
-                return result.ToString(Constants.YyyyMMddHHmmss);
-            }
-            return null; // or handle the error as needed
+                {
+                    return result.ToString(Constants.YyyyMMddHHmmss);
+                }
+                return null; // or handle the error as needed
             }
             catch (Exception ex)
             {
@@ -1003,10 +1025,10 @@ namespace RWDE
             try
             {
                 if (int.TryParse(value, out int result))
-            {
-                return result;
-            }
-            return null;
+                {
+                    return result;
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -1019,10 +1041,10 @@ namespace RWDE
             try
             {
                 if (bool.TryParse(value, out bool result))
-            {
-                return result;
-            }
-            return null;
+                {
+                    return result;
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -1035,10 +1057,10 @@ namespace RWDE
             try
             {
                 if (decimal.TryParse(value, out decimal result))
-            {
-                return result;
-            }
-            return null;
+                {
+                    return result;
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -1052,10 +1074,10 @@ namespace RWDE
             try
             {
                 if (DateTime.TryParse(value, out DateTime result))
-            {
-                return result;
-            }
-            return null;
+                {
+                    return result;
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -1069,9 +1091,10 @@ namespace RWDE
             {
                 string ariesId = GetStringValue(data, 9); // Extract Aries ID from data array
 
-                SqlCommand command = new SqlCommand(Constants.InsertIntoDlClients, connection);
-
-                command.CommandType = CommandType.StoredProcedure;
+                SqlCommand command = new SqlCommand(Constants.InsertIntoDlClients, connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 // Add parameters to the stored procedure
                 command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
@@ -1128,9 +1151,10 @@ namespace RWDE
             {
                 string ariesId = GetStringValue(data, 9); // Extract Aries ID from data array
 
-                SqlCommand command = new SqlCommand("InsertIntoDlClientsPHI", connection);
-
-                command.CommandType = CommandType.StoredProcedure;
+                SqlCommand command = new SqlCommand("InsertIntoDlClientsPHI", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 // Add parameters to the stored procedure
                 command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
@@ -1314,25 +1338,25 @@ namespace RWDE
             try
             {
                 DateTime? result = null;
-            if (!string.IsNullOrEmpty(value))
-            {
-                // Trim any extra quotation marks
-                value = value.Trim('"');
-
-                // Define potential date formats
-                string[] dateFormats = { Constants.MMddyyyyhhmmsstt, Constants.MMddyyyyHHmm, Constants.YyyyMMddHHmmss, Constants.YyyyMmDd };
-
-                // Try parsing with specified formats
-                if (DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                if (!string.IsNullOrEmpty(value))
                 {
-                    result = parsedDate;
+                    // Trim any extra quotation marks
+                    value = value.Trim('"');
+
+                    // Define potential date formats
+                    string[] dateFormats = { Constants.MMddyyyyhhmmsstt, Constants.MMddyyyyHHmm, Constants.YyyyMMddHHmmss, Constants.YyyyMmDd };
+
+                    // Try parsing with specified formats
+                    if (DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+                    {
+                        result = parsedDate;
+                    }
+                    else
+                    {
+                        Console.WriteLine(string.Format(Constants.FailedToParseDate, value));
+                    }
                 }
-                else
-                {
-                    Console.WriteLine(string.Format(Constants.FailedToParseDate, value));
-                }
-            }
-            return result;
+                return result;
             }
             catch (Exception ex)
             {
@@ -1476,13 +1500,13 @@ namespace RWDE
             try
             {
                 if (index >= 0 && index < data.Length)
-            {
-                return data[index];
-            }
-            else
-            {
-                return string.Empty;
-            }
+                {
+                    return data[index];
+                }
+                else
+                {
+                    return string.Empty;
+                }
             }
             catch (Exception ex)
             {
@@ -1496,46 +1520,48 @@ namespace RWDE
             {
                 int maxStackLength = 1000; // Adjust this to match your database schema
 
-            // Truncate the stack trace if it exceeds the maximum length
-            if (stackTrace.Length > maxStackLength)
-            {
-                stackTrace = stackTrace.Substring(0, maxStackLength);
-            }
-
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                // Truncate the stack trace if it exceeds the maximum length
+                if (stackTrace.Length > maxStackLength)
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(Constants.LoggerError, conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue(Constants.AtType, Constants.Error); // Error type
-                    cmd.Parameters.AddWithValue(Constants.AtModule, Constants.Hcc); // Module name
-                    cmd.Parameters.AddWithValue(Constants.AtStack, stackTrace);
-                    cmd.Parameters.AddWithValue(Constants.AtMessage, message);
-                    cmd.Parameters.AddWithValue(Constants.AtFilename, fileName);
-                    cmd.Parameters.AddWithValue(Constants.AtLineNumber, lineNumber.HasValue ? (object)lineNumber.Value : DBNull.Value);
-                    cmd.Parameters.AddWithValue(Constants.AtFunctionName, functionName);
-                    cmd.Parameters.AddWithValue(Constants.AtComments, DBNull.Value); // Assuming no comments
-                    cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a specific user ID
-                    cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
-
-                    cmd.ExecuteNonQuery();
+                    stackTrace = stackTrace.Substring(0, maxStackLength);
                 }
-            }
-            catch (Exception ex)
-            {
-                // Log an additional error if logging itself fails
-                Console.WriteLine(ex.Message);
-            }
 
-            errorLogged = true;
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand(Constants.LoggerError, conn)
+                        {
+                            CommandType = CommandType.StoredProcedure
+                        };
+
+                        cmd.Parameters.AddWithValue(Constants.AtType, Constants.Error); // Error type
+                        cmd.Parameters.AddWithValue(Constants.AtModule, Constants.Hcc); // Module name
+                        cmd.Parameters.AddWithValue(Constants.AtStack, stackTrace);
+                        cmd.Parameters.AddWithValue(Constants.AtMessage, message);
+                        cmd.Parameters.AddWithValue(Constants.AtFilename, fileName);
+                        cmd.Parameters.AddWithValue(Constants.AtLineNumber, lineNumber.HasValue ? (object)lineNumber.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue(Constants.AtFunctionName, functionName);
+                        cmd.Parameters.AddWithValue(Constants.AtComments, DBNull.Value); // Assuming no comments
+                        cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a specific user ID
+                        cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log an additional error if logging itself fails
+                    Console.WriteLine(ex.Message);
+                }
+
+                errorLogged = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-               
+
             }// Set errorLogged flag to true after logging the first error
         }
         public void UpdateBatchServices(int batchId, DateTime startTime, DateTime endTime, int allTotalRows)//update batch data
@@ -1739,10 +1765,10 @@ namespace RWDE
             try
             {
                 if (index >= 0 && index < data.Length)
-            {
-                return data[index];
-            }
-            return null;
+                {
+                    return data[index];
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -1755,13 +1781,13 @@ namespace RWDE
             try
             {
                 if (index >= 0 && index < data.Length)
-            {
-                if (DateTime.TryParse(data[index], out DateTime result))
                 {
-                    return result;
+                    if (DateTime.TryParse(data[index], out DateTime result))
+                    {
+                        return result;
+                    }
                 }
-            }
-            return null; // Return null if the conversion fails or the index is out of range
+                return null; // Return null if the conversion fails or the index is out of range
             }
             catch (Exception ex)
             {
@@ -1774,13 +1800,13 @@ namespace RWDE
             try
             {
                 if (index >= 0 && index < data.Length)
-            {
-                if (int.TryParse(data[index], out int result))
                 {
-                    return result;
+                    if (int.TryParse(data[index], out int result))
+                    {
+                        return result;
+                    }
                 }
-            }
-            return null; // Return null if the conversion fails or the index is out of range
+                return null; // Return null if the conversion fails or the index is out of range
             }
             catch (Exception ex)
             {
@@ -1793,10 +1819,10 @@ namespace RWDE
             try
             {
                 if (decimal.TryParse(data[index], out decimal result))
-            {
-                return result;
-            }
-            return null; // Return null if parsing fails
+                {
+                    return result;
+                }
+                return null; // Return null if parsing fails
             }
             catch (Exception ex)
             {
@@ -1809,10 +1835,10 @@ namespace RWDE
             try
             {
                 if (bool.TryParse(data[index], out bool result))
-            {
-                return result;
-            }
-            return null; // Return null if parsing fails
+                {
+                    return result;
+                }
+                return null; // Return null if parsing fails
             }
             catch (Exception ex)
             {
@@ -1824,40 +1850,42 @@ namespace RWDE
         {
             string fileName = Path.GetFileName(xmlFilePath);
             int insertedCount = 0;
-                try
-                {
-                    // Create a command for the stored procedure within the transaction
-                    SqlCommand cmd = conn.CreateCommand();
-                    //cmd.Transaction = trans; // Assign the transaction to the command
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    var procedure = value ? Constants.InsertCtClientsFromXmlPhiMaskingTest : Constants.InsertCtClientsFromXml;
-                    cmd.CommandText = procedure;
-                    cmd.CommandTimeout = 120;
+            try
+            {
+                // Create a command for the stored procedure within the transaction
+                SqlCommand cmd = conn.CreateCommand();
+                //cmd.Transaction = trans; // Assign the transaction to the command
+                cmd.CommandType = CommandType.StoredProcedure;
+                var procedure = value ? Constants.InsertCtClientsFromXmlPhiMaskingTest : Constants.InsertCtClientsFromXml;
+                cmd.CommandText = procedure;
+                cmd.CommandTimeout = 120;
 
                 // Set the parameters for the stored procedure
-                SqlParameter xmlDataParam = new SqlParameter(Constants.XmlData, SqlDbType.Xml);
-                    xmlDataParam.Value = new SqlXml(new XmlTextReader(new StringReader(xmlDoc.OuterXml)));
-                    cmd.Parameters.Add(xmlDataParam);
-
-                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-
-                    // Execute the command to insert clients
-                    cmd.ExecuteNonQuery(); 
-                    
-                    // Return the number of inserted clients
-                    return insertedCount++;
-                }
-                catch (Exception ex)
+                SqlParameter xmlDataParam = new SqlParameter(Constants.XmlData, SqlDbType.Xml)
                 {
-                    var st = new StackTrace(ex, true);
-                    var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                    int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                    LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClients), fileName, lineNumber);
-                    LogError($"{ex.Message}", fileName); // Handle the exception within the transaction (e.g., log it)
-                    throw;
-                }
+                    Value = new SqlXml(new XmlTextReader(new StringReader(xmlDoc.OuterXml)))
+                };
+                cmd.Parameters.Add(xmlDataParam);
+
+                cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
+
+                // Execute the command to insert clients
+                cmd.ExecuteNonQuery();
+
+                // Return the number of inserted clients
+                return insertedCount++;
+            }
+            catch (Exception ex)
+            {
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClients), fileName, lineNumber);
+                LogError($"{ex.Message}", fileName); // Handle the exception within the transaction (e.g., log it)
+                throw;
+            }
         }
-        
+
         public int InsertEligibilityDocuments(XmlDocument xmlDoc, int batchId, SqlConnection conn, string xmlFilePath)//insertion of eligibility document from xml file
         {
             int insertedCount = 0;
@@ -1892,7 +1920,7 @@ namespace RWDE
                                         string notes = GetAttributeValue(eligibilityNode, Constants.Notes);
 
                                         // Prepare and execute SQL command to insert into EligibilityDocuments table within the transaction
-                                        using (SqlCommand insertCmd = new SqlCommand(Constants.CtClientsEligibilityDocQuery,conn))
+                                        using (SqlCommand insertCmd = new SqlCommand(Constants.CtClientsEligibilityDocQuery, conn))
                                         {
                                             // Set SQL parameters based on the values extracted from the XML document
                                             insertCmd.Parameters.AddWithValue(Constants.AtDocumentType, string.IsNullOrEmpty(documentType) ? (object)DBNull.Value : documentType);
@@ -1936,9 +1964,9 @@ namespace RWDE
             try
             {
                 // Check if the AgencyClientID and AriesID pair has associated EligibilityDocument nodes in the XML
-                XmlNodeList eligibilityNodes = xmlDoc.SelectNodes(string.Format(Constants.ClientariesIdEligibilityDocument, ariesId)); 
+                XmlNodeList eligibilityNodes = xmlDoc.SelectNodes(string.Format(Constants.ClientariesIdEligibilityDocument, ariesId));
 
-            return eligibilityNodes != null && eligibilityNodes.Count > 0;
+                return eligibilityNodes != null && eligibilityNodes.Count > 0;
             }
             catch (Exception ex)
             {
@@ -1951,10 +1979,10 @@ namespace RWDE
             try
             {
                 if (node != null && node.Attributes != null && node.Attributes[attributeName] != null)
-            {
-                return node.Attributes[attributeName].Value;
-            }
-            return null;
+                {
+                    return node.Attributes[attributeName].Value;
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -1968,11 +1996,11 @@ namespace RWDE
             try
             {
                 string attributeValue = GetAttributeValue(node, attributeName);
-            if (!string.IsNullOrEmpty(attributeValue) && DateTime.TryParse(attributeValue, out DateTime result))
-            {
-                return result;
-            }
-            return null;
+                if (!string.IsNullOrEmpty(attributeValue) && DateTime.TryParse(attributeValue, out DateTime result))
+                {
+                    return result;
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -1980,7 +2008,7 @@ namespace RWDE
                 return null;
             }
         }
-       
+
         public int InsertServiceLineItems(XmlDocument xmlDoc, int batchId, SqlConnection conn, string xmlFilePath)//insertion of service table from xml file
         {
 
@@ -2077,16 +2105,16 @@ namespace RWDE
             try
             {
                 if (node == null || string.IsNullOrEmpty(attributeName))
-            {
-                return defaultValue;
-            }
+                {
+                    return defaultValue;
+                }
 
-            XmlNode attributeNode = node.Attributes.GetNamedItem(attributeName);
-            if (attributeNode != null && !string.IsNullOrEmpty(attributeNode.Value))
-            {
-                return (T)Convert.ChangeType(attributeNode.Value, typeof(T));
-            }
-            return defaultValue;
+                XmlNode attributeNode = node.Attributes.GetNamedItem(attributeName);
+                if (attributeNode != null && !string.IsNullOrEmpty(attributeNode.Value))
+                {
+                    return (T)Convert.ChangeType(attributeNode.Value, typeof(T));
+                }
+                return defaultValue;
             }
             catch (Exception ex)
             {
@@ -2099,14 +2127,14 @@ namespace RWDE
             try
             {
                 string dateString = GetAttributeValue<string>(node, attributeName);
-            if (!string.IsNullOrEmpty(dateString))
-            {
-                if (DateTime.TryParse(dateString, out DateTime result))
+                if (!string.IsNullOrEmpty(dateString))
                 {
-                    return result;
+                    if (DateTime.TryParse(dateString, out DateTime result))
+                    {
+                        return result;
+                    }
                 }
-            }
-            return DateTime.MinValue; // or throw an exception if parsing fails
+                return DateTime.MinValue; // or throw an exception if parsing fails
             }
             catch (Exception ex)
             {
@@ -2119,11 +2147,11 @@ namespace RWDE
             try
             {
                 string decimalString = GetAttributeValue<string>(node, attributeName);
-            if (!string.IsNullOrEmpty(decimalString) && decimal.TryParse(decimalString, out decimal result))
-            {
-                return result;
-            }
-            return 0; // or throw an exception if parsing fails
+                if (!string.IsNullOrEmpty(decimalString) && decimal.TryParse(decimalString, out decimal result))
+                {
+                    return result;
+                }
+                return 0; // or throw an exception if parsing fails
             }
             catch (Exception ex)
             {
@@ -2137,45 +2165,45 @@ namespace RWDE
             try
             {
                 if (errorLogged)
-                return; // Abort further logging if an error has already been logged
+                    return; // Abort further logging if an error has already been logged
 
-            string fileName = Path.GetFileName(xmlFilePath);
-            string stackTrace = Environment.StackTrace;
-            string functionName = new StackTrace(true).GetFrame(1).GetMethod().Name;
-            int lineNumber = new StackTrace(true).GetFrame(1).GetFileLineNumber();
+                string fileName = Path.GetFileName(xmlFilePath);
+                string stackTrace = Environment.StackTrace;
+                string functionName = new StackTrace(true).GetFrame(1).GetMethod().Name;
+                int lineNumber = new StackTrace(true).GetFrame(1).GetFileLineNumber();
 
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                try
                 {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(Constants.LoggingErrorQuery, conn);
-                    cmd.Parameters.AddWithValue(Constants.AtType, Constants.ErrorCode); // Error type
-                    cmd.Parameters.AddWithValue(Constants.AtModule, Constants.Module); // Module name
-                    cmd.Parameters.AddWithValue(Constants.AtStack, stackTrace);
-                    cmd.Parameters.AddWithValue(Constants.AtMessage, message);
-                    cmd.Parameters.AddWithValue(Constants.AtFilename, fileName);
-                    cmd.Parameters.AddWithValue(Constants.AtLineNumber, lineNumber);
-                    cmd.Parameters.AddWithValue(Constants.AtFunctionName, functionName);
-                    cmd.Parameters.AddWithValue(Constants.AtComments, null);
-                    cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a specific user ID
-                    cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand(Constants.LoggingErrorQuery, conn);
+                        cmd.Parameters.AddWithValue(Constants.AtType, Constants.ErrorCode); // Error type
+                        cmd.Parameters.AddWithValue(Constants.AtModule, Constants.Module); // Module name
+                        cmd.Parameters.AddWithValue(Constants.AtStack, stackTrace);
+                        cmd.Parameters.AddWithValue(Constants.AtMessage, message);
+                        cmd.Parameters.AddWithValue(Constants.AtFilename, fileName);
+                        cmd.Parameters.AddWithValue(Constants.AtLineNumber, lineNumber);
+                        cmd.Parameters.AddWithValue(Constants.AtFunctionName, functionName);
+                        cmd.Parameters.AddWithValue(Constants.AtComments, null);
+                        cmd.Parameters.AddWithValue(Constants.AtCreatedBy, Constants.CreatedBy); // Assuming a specific user ID
+                        cmd.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
 
-                    cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                // Log an additional error if logging itself fails
-                Console.WriteLine(ex.Message);
-            }
+                catch (Exception ex)
+                {
+                    // Log an additional error if logging itself fails
+                    Console.WriteLine(ex.Message);
+                }
 
-            errorLogged = true; // Set errorLogged flag to true after logging the first error
+                errorLogged = true; // Set errorLogged flag to true after logging the first error
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                return ;
+                return;
             }
         }
         private string ExtractServiceId(XmlNode serviceNode)//extracting variables according to the format
@@ -2184,22 +2212,22 @@ namespace RWDE
             {
                 string notes = GetAttributeValue(serviceNode, Constants.Notes);
 
-            // Check if notes attribute starts with "{Constants.AtIdEqualTto}", "{Constants.AtIdEqualTtoCaps}", Constants.IdHyphen, or Constants.IdColon
-            if (notes.StartsWith($"{Constants.AtIdEqualTto}") || notes.StartsWith($"{Constants.AtIdEqualTtoCaps}") || notes.StartsWith(Constants.IdHyphen) || notes.StartsWith(Constants.IdColon))
-            {
-                // Find the index of the first occurrence of "=", "-", or ":"
-                int separatorIndex = notes.IndexOfAny(new char[] { Constants.EqualTo, Constants.Hyphen, Constants.Colon });
-
-                // If separatorIndex is found
-                if (separatorIndex != -1)
+                // Check if notes attribute starts with "{Constants.AtIdEqualTto}", "{Constants.AtIdEqualTtoCaps}", Constants.IdHyphen, or Constants.IdColon
+                if (notes.StartsWith($"{Constants.AtIdEqualTto}") || notes.StartsWith($"{Constants.AtIdEqualTtoCaps}") || notes.StartsWith(Constants.IdHyphen) || notes.StartsWith(Constants.IdColon))
                 {
-                    // Extract the service ID after the separator
-                    string serviceId = notes.Substring(separatorIndex + 1).Trim(';');
-                    return serviceId; // Return extracted service ID as string
-                }
-            }
+                    // Find the index of the first occurrence of "=", "-", or ":"
+                    int separatorIndex = notes.IndexOfAny(new char[] { Constants.EqualTo, Constants.Hyphen, Constants.Colon });
 
-            throw new ArgumentException(Constants.Invalidserviceid);
+                    // If separatorIndex is found
+                    if (separatorIndex != -1)
+                    {
+                        // Extract the service ID after the separator
+                        string serviceId = notes.Substring(separatorIndex + 1).Trim(';');
+                        return serviceId; // Return extracted service ID as string
+                    }
+                }
+
+                throw new ArgumentException(Constants.Invalidserviceid);
             }
             catch (Exception ex)
             {
@@ -2214,8 +2242,10 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand(Constants.InsertLog, connection);
-                    command.CommandType = CommandType.StoredProcedure;
+                    SqlCommand command = new SqlCommand(Constants.InsertLog, connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
                     command.Parameters.AddWithValue(Constants.AtType, type);
                     command.Parameters.AddWithValue(Constants.AtMessage, message);
                     command.Parameters.AddWithValue(Constants.AtModule, module);
@@ -2289,21 +2319,21 @@ namespace RWDE
             {
                 // Adjust the stored procedure name based on the batch type
                 if (type == Constants.ClientTrack)
-            {
-                return Constants.DeleteBatchData;
-            }
-            else if (type ==Constants.Hccdata)
-            {
-                return Constants.DeleteHccBatchData;
-            }
-            else if (type ==Constants.Ochin)
-            {
-                return Constants.OchinDataDelete;
-            }
-            else
-            {
-                return Constants.OchinDataDelete;
-            }
+                {
+                    return Constants.DeleteBatchData;
+                }
+                else if (type == Constants.Hccdata)
+                {
+                    return Constants.DeleteHccBatchData;
+                }
+                else if (type == Constants.Ochin)
+                {
+                    return Constants.OchinDataDelete;
+                }
+                else
+                {
+                    return Constants.OchinDataDelete;
+                }
             }
             catch (Exception ex)
             {
@@ -3486,8 +3516,8 @@ namespace RWDE
             try
             {
                 DataTable dataTable = new DataTable();
-                string query = Constants.GetFilteredDataQuery; 
-                
+                string query = Constants.GetFilteredDataQuery;
+
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -3640,7 +3670,7 @@ namespace RWDE
                         }
                         else if (filterType == Constants.BatchId)
                         {
-                           
+
                         }
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
@@ -3663,9 +3693,10 @@ namespace RWDE
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        SqlCommand cmd = new SqlCommand(Constants.SpHccRecon, conn);
-                        
-                        cmd.CommandType = CommandType.StoredProcedure;
+                        SqlCommand cmd = new SqlCommand(Constants.SpHccRecon, conn)
+                        {
+                            CommandType = CommandType.StoredProcedure
+                        };
                         cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
                         cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
                         cmd.Parameters.AddWithValue(Constants.AtBatchid, onebatch);
@@ -3729,7 +3760,7 @@ namespace RWDE
                     conn.Open();
 
                     // Choose stored procedure based on filterType
-                    string query = Constants.SpHccRecon; 
+                    string query = Constants.SpHccRecon;
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -3836,7 +3867,7 @@ namespace RWDE
             }
             return dt;
         }
-        
+
         public DataTable GetHccServices()//get created Services 
         {
             try
@@ -4278,33 +4309,33 @@ namespace RWDE
             try
             {
                 // SQL query to get the latest batch ID from the database
-                string query = Constants.GetAbortBatchIdQuery; 
+                string query = Constants.GetAbortBatchIdQuery;
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                try
-                {
-                    // Open the connection
-                    connection.Open();
+                    try
+                    {
+                        // Open the connection
+                        connection.Open();
 
-                    // Execute the query and get the result
-                    object result = command.ExecuteScalar();
+                        // Execute the query and get the result
+                        object result = command.ExecuteScalar();
 
-                    // If the result is not null, convert it to an integer (batch ID)
-                    currentBatchId = result != DBNull.Value ? Convert.ToInt32(result) :
-                        // If there are no records, initialize the batch ID to a default value, e.g., 1
-                        1;
-                }
-                catch (Exception ex)
-                {
-                    // Handle any exceptions, like logging or showing a message
-                    MessageBox.Show(Constants.ErrorFetchingTheBatchId + ex.Message);
-                }
-                finally
-                {
-                    // Close the connection
-                    connection.Close();
-                }
+                        // If the result is not null, convert it to an integer (batch ID)
+                        currentBatchId = result != DBNull.Value ? Convert.ToInt32(result) :
+                            // If there are no records, initialize the batch ID to a default value, e.g., 1
+                            1;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle any exceptions, like logging or showing a message
+                        MessageBox.Show(Constants.ErrorFetchingTheBatchId + ex.Message);
+                    }
+                    finally
+                    {
+                        // Close the connection
+                        connection.Close();
+                    }
                 }
             }
             catch (Exception ex)
@@ -4333,11 +4364,221 @@ namespace RWDE
             {
                 string fileName = DateTime.Now.ToString(Constants.YyyyMMdd);
 
-            if (includeClient)
-            {
-                fileName = Constants.Clients + fileName;
+                if (includeClient)
+                {
+                    fileName = Constants.Clients + fileName;
+                }
+                return fileName + Constants.XmlExtention;
             }
-            return fileName + Constants.XmlExtention;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+        }
+        public DataTable GetPieChartData(DateTime StartDate, DateTime EndDate)//to get the data of the PieChart 
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = Constants.PieChartData;
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure; // Specify that it is a stored procedure
+
+                        // Add start and end date parameters directly as DateTime
+                        cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, StartDate);
+                        cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, EndDate);
+
+                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                        adapter.Fill(dt);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            return dt;
+        }
+        public void ClearTables(int batchId)// This method clears or resets tables associated with the specified batch ID.
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(Constants.AbortDelete, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($@"{Constants.ErrorClearingtables}{ex.Message}");
+                throw; // Re-throw if you want to handle it in the calling method
+            }
+        }
+        public void WriteClientCsvData(string Filepath)//to Write the CSV data of Clients
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                //Getting BatchId for particular file to generate CSV
+                int batchid =GetMaxXmlBatchId();
+                // to execute the stored procedure
+                using (SqlCommand cmd = new SqlCommand(Constants.Ctclientsmapping, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchid);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Create a StreamWriter to write to the CSV file
+                        using (StreamWriter writer = new StreamWriter(Filepath))
+                        {
+                            // Write the header (column names)
+                            var columnNames = Enumerable.Range(0, reader.FieldCount)
+                                                        .Select(reader.GetName)
+                                                        .ToArray();
+                            writer.WriteLine(string.Join("|", columnNames));  // Use pipe (|) as the separator
+
+                            // Write each row
+                            while (reader.Read())
+                            {
+                                var rowValues = new string[reader.FieldCount];
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    rowValues[i] = reader[i]?.ToString();
+                                }
+                                writer.WriteLine(string.Join("|", rowValues));  // Use pipe (|) as the separator
+                            }
+                        }
+                    }
+                }
+                MessageBox.Show(Constants.CsVfilehasbeencreatedsuccessfullyat + Filepath);//
+            }
+        }
+        public void WriteServicesCsvData(string filePath)//to Write the CSV data of Services
+        {
+            try
+            {
+                //Getting BatchId for particular file to generate CSV
+                int batchid = GetMaxXmlBatchId();
+                // SQL query to execute the stored procedure
+                using (SqlConnection conn = new SqlConnection(connectionString))//
+                {
+                    conn.Open();
+                    // Call the stored procedure
+                    using (SqlCommand cmd = new SqlCommand(Constants.GetCtServicesForCsv, conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue(Constants.AtBatchid, batchid);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            // Create a StreamWriter to write to the CSV file
+                            using (StreamWriter writer = new StreamWriter(filePath))
+                            {
+                                // Write the header (column names)
+                                var columnNames = Enumerable.Range(0, reader.FieldCount)
+                                                            .Select(reader.GetName)
+                                                            .ToArray();
+                                writer.WriteLine(string.Join("|", columnNames));  // Use pipe (|) as the separator
+
+                                // Write each row
+                                while (reader.Read())
+                                {
+                                    var rowValues = new string[reader.FieldCount];
+                                    for (int i = 0; i < reader.FieldCount; i++)
+                                    {
+                                        rowValues[i] = reader[i]?.ToString();
+                                    }
+                                    writer.WriteLine(string.Join("|", rowValues));  // Use pipe (|) as the separator
+                                }
+                            }
+                        }
+                    }
+                    MessageBox.Show(Constants.CsVfilehasbeencreatedsuccessfullyat + filePath);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show(Constants.Accessdeniedtothefolder, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(Constants.Errorsp + ex.Message);
+            }
+        }
+        public void InsertIntoDatabase(SqlConnection conn, SqlTransaction transaction, string hccTable, string errorMessage, string clientId, string sourceFileName)//to insert the data into the database
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(Constants.InsertIntoDatabaseQuery, conn, transaction))
+                {
+                    cmd.Parameters.AddWithValue(Constants.AtHccTable, hccTable);
+                    cmd.Parameters.AddWithValue(Constants.AtErrorMessage, errorMessage);
+
+                    // Check if clientId starts with "246_" and remove it if it does
+                    string modifiedClientId = clientId.StartsWith(Constants.AgencyCode) ? clientId.Substring(4) : clientId;
+
+                    cmd.Parameters.AddWithValue(Constants.AtClientId, modifiedClientId);
+                    cmd.Parameters.AddWithValue(Constants.AtSourceFileName, sourceFileName);
+                    cmd.CommandTimeout = 120;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+                // Handle SQL exceptions
+                Console.WriteLine($@"{Constants.SqlError}{ex.Message}");
+                transaction.Rollback(); // Rollback transaction if needed
+            }
+            catch (Exception ex)
+            {
+                // Handle any other exceptions
+                Console.WriteLine($@"{Constants.Errorsp}{ex.Message}");
+                transaction.Rollback(); // Rollback transaction if needed
+            }
+        }
+        public DataTable FilterHccErrors(string sourceFileName)//filter HCCErrors as per the filename
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(Constants.Filtersourcefilename, conn))
+                    {
+                        conn.Open();
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue(Constants.AtSourceFileName, sourceFileName);
+                        command.ExecuteNonQuery();// Execute the SQL command to insert client data
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            try
+                            {
+                                // Fill the DataTable with the result of the stored procedure
+                                adapter.Fill(dt);
+                                return dt;
+                            }
+                            catch (Exception ex)
+                            {
+                                // Handle exceptions (e.g., logging)
+                                Console.WriteLine(Constants.Errorsp + ex.Message);
+                                return null;
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {

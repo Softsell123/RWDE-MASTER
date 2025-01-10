@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ScrollBar = System.Windows.Forms.ScrollBar;
 
-
 namespace RWDE
 {
     public partial class FrmConvertToHcc : Form
@@ -25,12 +24,14 @@ namespace RWDE
         {
             InitializeComponent();
             dbHelper = new DbHelper();
+
             //get connection string
             connectionString = dbHelper.GetConnectionString();
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
+
             //Handle BatchType Values
-            //List<string> batchTypes = dbHelper.GetAllBatchTypes();
+            List<string> batchTypes = dbHelper.GetAllBatchTypes();
             dataGridView.CellFormatting += dataGridView_CellFormatting;
             dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;
             dtpEndDate.CustomFormat = Constants.Space;
@@ -133,7 +134,7 @@ namespace RWDE
         private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)// Sets the width of specific columns in the DataGridView after data binding is complete.
         {
             try
-            {            // Check if the Constants.BatchId column exists before setting its width
+            {   // Check if the Constants.BatchId column exists before setting its width
                 if (dataGridView.Columns.Contains(Constants.BatchId))
                 {
                     dataGridView.Columns[Constants.BatchId].Width = 205;
@@ -167,7 +168,6 @@ namespace RWDE
                 {
                     dataGridView.Columns[Constants.ConversionEndedAt].Width = 250; // Set the width to 200 pixels
                 }
-
                 if (dataGridView.Columns.Contains(Constants.Status))
                 {
                     dataGridView.Columns[Constants.Status].Width = 205; // Set the width to 200 pixels
@@ -202,7 +202,6 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-
                     connection.Open();
                     using (SqlCommand command = new SqlCommand(Constants.UpdateBatchStatusQuery, connection))
                     {
@@ -358,22 +357,26 @@ namespace RWDE
             BackColor = Color.White;
 
             // Create and configure message label
-            Label label = new Label();
-            label.Text = message;
-            label.AutoSize = false;
-            label.Size = new Size(ClientSize.Width - 10, ClientSize.Height - 10); // Adjust size for padding
-            label.Location = new Point(5, 5); // Adjust location for padding
-            label.TextAlign = ContentAlignment.MiddleCenter;
-            label.Font = new Font(Constants.FntfmlyArial, 12, FontStyle.Regular); // Set font and size
+            Label label = new Label
+            {
+                Text = message,
+                AutoSize = false,
+                Size = new Size(ClientSize.Width - 10, ClientSize.Height - 10), // Adjust size for padding
+                Location = new Point(5, 5), // Adjust location for padding
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font(Constants.FntfmlyArial, 12, FontStyle.Regular) // Set font and size
+            };
 
             // Add label to form
             Controls.Add(label);
 
             // Set up timer to close the form after displayDuration milliseconds
-            Timer timer = new Timer();
-            timer.Interval = displayDuration;
-            timer.Tick += (sender, e) => Close();
-            timer.Start();
+            using (Timer timer = new Timer())
+            {
+                timer.Interval = displayDuration;
+                timer.Tick += (sender, e) => Close();
+                timer.Start();
+            }
         }
 
         public sealed override Color BackColor
@@ -398,7 +401,7 @@ namespace RWDE
                 {
                     int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                     selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
-                    int allTotalRows = GetTotalForBatch(selectedBatchId);
+                    int allTotalRows = GetTotalForBatch(selectedBatchId);//getting total rows from particular tables
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
@@ -436,8 +439,6 @@ namespace RWDE
 
                                     // Update progress bar and text box
                                     await UpdateProgressAsyncservices(insertedRows, totalRows);
-
-                                    // You may want to do additional processing here if needed
                                 }
                             }
                             DateTime endTime = DateTime.Now;
@@ -507,15 +508,17 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand(Constants.Conversion, connection);
-                    command.CommandType = CommandType.StoredProcedure;
+                    SqlCommand command = new SqlCommand(Constants.Conversion, connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     DataTable dataTable = new DataTable();
 
                     adapter.Fill(dataTable);
 
                     //Bind the DataTable to the DataGridView
-                    dataGridView.AutoGenerateColumns = false; // Prevent auto-generation of columns
+                    dataGridView.AutoGenerateColumns = false; 
                     dataGridView.Columns.Clear(); // Clear existing columns
 
                     // Define DataGridView columns and map them to DataTable columns

@@ -460,22 +460,27 @@ namespace RWDE
             BackColor = Color.White;
 
             // Create and configure message label
-            Label label = new Label();
-            label.Text = message;
-            label.AutoSize = false;
-            label.Size = new Size(ClientSize.Width - 10, ClientSize.Height - 10); // Adjust size for padding
-            label.Location = new Point(5, 5); // Adjust location for padding
-            label.TextAlign = ContentAlignment.MiddleCenter;
-            label.Font = new Font(Constants.FntfmlyArial, 12, FontStyle.Regular); // Set font and size
-            
+            Label label = new Label
+            {
+                Text = message,
+                AutoSize = false,
+                Size = new Size(ClientSize.Width - 10, ClientSize.Height - 10), // Adjust size for padding
+                Location = new Point(5, 5), // Adjust location for padding
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font(Constants.FntfmlyArial, 12, FontStyle.Regular) // Set font and size
+            };
+
             // Add label to form
             Controls.Add(label);
 
             // Set up timer to close the form after displayDuration milliseconds
-            Timer timer = new Timer();
-            timer.Interval = displayDuration;
-            timer.Tick += (sender, e) => Close();
-            timer.Start();
+            using (Timer timer = new Timer())
+            {
+                timer.Interval = displayDuration;
+
+                timer.Tick += (sender, e) => Close();
+                timer.Start();
+            }
         }
 
         public sealed override Color BackColor
@@ -626,8 +631,10 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand(Constants.ConversionOchin, connection);
-                    command.CommandType = CommandType.StoredProcedure;
+                    SqlCommand command = new SqlCommand(Constants.ConversionOchin, connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     DataTable dataTable = new DataTable();
 
@@ -667,8 +674,10 @@ namespace RWDE
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    SqlCommand command = new SqlCommand(Constants.ConversionHcc, connection);
-                    command.CommandType = CommandType.StoredProcedure;
+                    SqlCommand command = new SqlCommand(Constants.ConversionHcc, connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     DataTable dataTable = new DataTable();
 

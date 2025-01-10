@@ -29,6 +29,7 @@ namespace RWDE
             // Set the event handler for the value change of the editing control
             dataGridView.EditingControlShowing += DataGridView_EditingControlShowing;
             dataGridView.EditingControlShowing += DataGridView_EditingControlShowingStatus;
+
             RegisterEvents(this); //Assigning events to all Controls
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
@@ -249,13 +250,13 @@ namespace RWDE
                 base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);
                 if (Value == null || Value == DBNull.Value)
                 {
-                    //  ctl.Value = (DateTime)this.Value;
+                    //ctl.Value = (DateTime)this.Value;
                 }
                 else
                 {
                     if (DataGridView.EditingControl is DataGridViewCalendarEditingControl ctl)
                     {
-                        ctl.Value = (DateTime)Value;
+                       // ctl.Value = (DateTime)Value;
                     }
                 }
             }
@@ -505,7 +506,6 @@ namespace RWDE
             {
                 if (sender is ComboBox comboBox)
                 {
-
                     string selectedStatus = comboBox.SelectedItem.ToString();
                     DataGridViewRow currentRow = dataGridView.CurrentRow;
                     if (currentRow == null || currentRow.Cells[Constants.ContractName].Value == null) return;
@@ -991,6 +991,12 @@ namespace RWDE
 
                 if (e.ColumnIndex == dataGridView.Columns[Constants.DeleteColumnName].Index && e.RowIndex >= 0)
                 {
+                    Color backColor = Color.White;
+                    // Paint the cell background
+                    using (Brush backgroundBrush = new SolidBrush(backColor))
+                    {
+                        e.Graphics.FillRectangle(backgroundBrush, e.CellBounds);
+                    }
                     e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
 
                     var buttonRectangle = new Rectangle(e.CellBounds.X + 2, e.CellBounds.Y + 2, e.CellBounds.Width - 4, e.CellBounds.Height - 4);
@@ -1036,6 +1042,12 @@ namespace RWDE
             {
                 if (e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index && e.RowIndex >= 0)
                 {
+                    Color backColor = Color.White;
+                    // Paint the cell background
+                    using (Brush backgroundBrush = new SolidBrush(backColor))
+                    {
+                        e.Graphics.FillRectangle(backgroundBrush, e.CellBounds);
+                    }
                     e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
 
                     var buttonRectangle = new Rectangle(e.CellBounds.X + 2, e.CellBounds.Y + 2, e.CellBounds.Width - 4, e.CellBounds.Height - 4);

@@ -14,8 +14,10 @@ namespace RWDE
         private bool isHandlingClick = false;
         public ServiceCodeSetup()// Your custom initialization code goes here
         {
-            DataGridView gridView = new DataGridView();
-            gridView.EditMode = DataGridViewEditMode.EditOnEnter;
+            DataGridView gridView = new DataGridView
+            {
+                EditMode = DataGridViewEditMode.EditOnEnter
+            };
             ControlBox = false;
             DoubleBuffered = true;
             MaximizedBounds = Screen.FromHandle(Handle).WorkingArea;
@@ -237,11 +239,10 @@ namespace RWDE
                         ValueType = typeof(string),
                         FlatStyle = FlatStyle.Flat,
                         DisplayMember = Constants.ContractId, // Display member can still be Constants.ContractID if that's what you want to display
-                        ValueMember = Constants.ContractId
+                        ValueMember = Constants.ContractId,
+                        // Assign DataSource to the ComboBox column
+                        DataSource = contracts
                     };
-
-                    // Assign DataSource to the ComboBox column
-                    contractColumn.DataSource = contracts;
 
                     // Add the ComboBox column to the DataGridView
                     dataGridView.Columns.Add(contractColumn);
@@ -493,16 +494,18 @@ namespace RWDE
         {
             try
             {
-                GraphicsPath path = new GraphicsPath();
-                int diameter = radius * 2;
+                using (GraphicsPath path = new GraphicsPath())
+                {
+                    int diameter = radius * 2;
 
-                path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
-                path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
-                path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
-                path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
+                    path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
+                    path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
+                    path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
+                    path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
 
-                path.CloseFigure();
-                return path;
+                    path.CloseFigure();
+                    return path;
+                }
             }
             catch (Exception ex)
             {

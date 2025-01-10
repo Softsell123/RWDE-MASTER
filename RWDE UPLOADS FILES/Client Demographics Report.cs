@@ -34,29 +34,29 @@ namespace RWDE
             try
             {
                 foreach (Control control in parent.Controls)
-            {
-                if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to Child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to Child Controls
-                    RegisterEvents(control);
-                }
-            }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void BtnClose_Click(object sender, EventArgs e)//to close the form
         {
-            try { 
-
+            try
+            {
                 // Close the current form (dispose it)
                 Close();
                 Application.Restart();
@@ -66,27 +66,30 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnReport_Click(object sender, EventArgs e)//to get filtered data in the grid
+        private void BtnReport_Click(object sender, EventArgs e)//to get filtered data in the grid
         {
             try
             {
-                DbHelper dbHelper = new DbHelper();
-                dataGridView.AutoGenerateColumns = true;
-                dataGridView.Columns.Clear();
-                // Ensure the date pickers are properly set
-                DateTime startDate = dtpStartDate.Value;
-                DateTime endDate = dtpEndDate.Value;
-                if (startDate >=endDate){
-                    MessageBox.Show($@"{ Constants.StartdatemustbeearlierthanEnddate}");
+                using (DbHelper dbHelper = new DbHelper()) // Ensures proper disposal
+                {
+                    dataGridView.AutoGenerateColumns = true;
+                    dataGridView.Columns.Clear();
+                    // Ensure the date pickers are properly set
+                    DateTime startDate = dtpStartDate.Value;
+                    DateTime endDate = dtpEndDate.Value;
+                    if (startDate >= endDate)
+                    {
+                        MessageBox.Show($@"{Constants.StartdatemustbeearlierthanEnddate}");
+                    }
+                    // Call the LoadData method to fetch the data
+                    dataGridView.ForeColor = Color.Black;
+
+                    //to get details of clients applied for services
+                    DataTable result = dbHelper.LoadConfigurationfilter(startDate, endDate);//to get data in the grid
+
+                    //to bind the data in DataGridView
+                    dataGridView.DataSource = result;
                 }
-                // Call the LoadData method to fetch the data
-                dataGridView.ForeColor = Color.Black;
-
-                //to get details of clients applied for services
-                DataTable result = dbHelper.LoadConfigurationfilter(startDate, endDate);//to get data in the grid
-
-                // Now you can use the result, e.g., bind it to a DataGridView or process it
-                dataGridView.DataSource = result;
             }
             catch (Exception ex)
             {
@@ -97,7 +100,8 @@ namespace RWDE
 
         private void Clear_Click(object sender, EventArgs e)//to clear data in the grid
         {
-            try { 
+            try
+            {
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
                 dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
@@ -114,7 +118,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
+        private void BtnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
         {
             try
             {
@@ -170,7 +174,7 @@ namespace RWDE
 
                             // Check if the file already exists, and if so, append a suffix
                             int fileSuffix = 1;
-                            while (File.Exists(filePath))
+                            while ( File.Exists(filePath))
                             {
                                 fileSuffix++;
                                 filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");

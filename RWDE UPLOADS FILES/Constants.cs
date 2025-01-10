@@ -1,8 +1,4 @@
 ﻿
-using DocumentFormat.OpenXml.ExtendedProperties;
-using DocumentFormat.OpenXml.Vml;
-using System.Windows.Forms;
-
 namespace RWDE
 {
     /// <summary>
@@ -10,7 +6,7 @@ namespace RWDE
     /// </summary>
     public static class Constants
     {
-        public const string Sakku = "sakku ";
+        public const string Sakku = "Sakku ";
         public const string Sakkusmall = "sakku";
 
         public const string AgencyCode = "246_";
@@ -57,7 +53,6 @@ namespace RWDE
 
         public const string AriesClients = "ARIES_Clients";
         public const string Edit = "Edit";
-        public const string StartdatemustbeearlierthanEnddate = "Start date must be earlier than End date";
         public const string AriesConsent = "ARIES_Consent";
         public const string AriesDeceased = "ARIES_Decased";
         public const string AriesEligibility = "ARIES_Eligibility";
@@ -441,6 +436,10 @@ namespace RWDE
         public const string TheFolderContainsNonXmlFiles = "The folder contains non-XML files or folder is empty. Upload is allowed only for XML files.";
 
         public const string ErrorFetchingTheBatchId = "Error fetching the batch ID: ";
+        public const string StartdatemustbeearlierthanEnddate = "Start date must be earlier than End date.";
+        public const string FromDateMustBeEarlierThanToDate = "From date must be earlier than To date.";
+        public const string SelectedFutureDate = "You have selected the future date.Please select today's date (or) earlier date.";
+
 
 
 
@@ -548,7 +547,7 @@ namespace RWDE
         public const string UpdateHccServicesWithErrors = "UpdateHCCServicesWithErrors";
         public const string SpHccRecon = "sp_HCCRecon";
         public const string ManualUploadReport = "ManualUploadReport";
-
+        public const string PieChartData = "PieChartData";
 
 
 
@@ -1262,13 +1261,13 @@ namespace RWDE
         // TagNumber 
         public const string TagNumberFive = "5";
         public const string TagNumberTen = "10";
-        public const string TagNumberThirty = Constants.DeleteContractstatus;
+        public const string TagNumberThirty = "30";
 
         // Example error message
         public const string ErrorMessage = "Your constant error message here.";
 
         // Example constant values
-        public const string ContractServicesTagNumber = Constants.DeleteContractstatus;
+        public const string ContractServicesTagNumber = "30";
         public const string ContractServicesTitleIdentifier = "TITLE";
         public const string ContractServicestitleIdentifier = "title";
         public const string TagNumber = "TagNumber";

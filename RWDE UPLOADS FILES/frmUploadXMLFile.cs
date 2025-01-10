@@ -492,33 +492,11 @@ namespace RWDE
                 dbHelper.InsertBatch(batchId, fileName, path, Constants.ClientTrackCode, null, currentTime, TotalRows, successfulRows, Constants.Fileaborted);
 
                 //to clear the tables associated with the specified batch ID.
-                ClearTables(batchId);
+                dbHelper.ClearTables(batchId);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($@"{Constants.Errorupdatingbatch}{ex.Message}");
-            }
-        }
-        private void ClearTables(int batchId)// This method clears or resets tables associated with the specified batch ID.
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(Constants.AbortDelete, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($@"{Constants.ErrorClearingtables}{ex.Message}");
-                throw; // Re-throw if you want to handle it in the calling method
             }
         }
     }

@@ -2,7 +2,9 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RWDE
 {
@@ -15,17 +17,22 @@ namespace RWDE
         {
             this.pnlForm = null;
             InitializeComponent();
-           
+
             DbHelper dbHelper1 = new DbHelper();
-            connectionString = dbHelper1.GetConnectionString();
+            connectionString = dbHelper1.GetConnectionString();//to get the Connection String
             btnHccCsv.Visible = false;
             uploadCSVToOCHINToolStripMenuItem = new ToolStripMenuItem();
             BackColor = Color.White;
-            Load += MainForm_Load;
+            //Load += MainForm_Load;
             WindowState = FormWindowState.Maximized;
             btnConversion.Visible = false;
             IsMdiContainer = true;
+            //to set StartDate as First date of the Current Month
+            loadStratDate();
+            //to fill the data in Pie Chart
+            //fillChartServices();
             RegisterEvents(this); //Assigning events to all Controls
+
         }
 
         public sealed override Color BackColor
@@ -34,30 +41,34 @@ namespace RWDE
             set { base.BackColor = value; }
         }
 
-        private void MainForm_Load(object sender, EventArgs e)//to load main form
-        {
-            try
-            {
-                BackColor = Color.White;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
+        //private void MainForm_Load(object sender, EventArgs e)//to load main form
+        //{
+        //    try
+        //    {
+        //        BackColor = Color.White;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //}
         private void ShowNewForm(object sender, EventArgs e)//to show new form
         {
             try
             {
                 // Check if any other dropdown or specific control is focused/active
                 if (IsAnotherControlActive())
-            {
-                // Prevent the new form from showing
-                return;
-            }
-            ServiceReconciliationReport service = new ServiceReconciliationReport();
-            service.MdiParent = this;
-            service.Show();
+                {
+                    // Prevent the new form from showing
+                    return;
+                }
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+                ServiceReconciliationReport service = new ServiceReconciliationReport
+                {
+                    MdiParent = this
+                };
+                service.Show();
             }
             catch (Exception ex)
             {
@@ -91,20 +102,20 @@ namespace RWDE
             try
             {
                 foreach (Control control in parent.Controls)
-            {
-                if (control is Button || control is CheckBox || control is DateTimePicker)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
-                }
+                    if (control is Button || control is CheckBox || control is DateTimePicker)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
 
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to all child Controls
-                    RegisterEvents(control);
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to all child Controls
+                        RegisterEvents(control);
+                    }
                 }
-            }
             }
             catch (Exception ex)
             {
@@ -117,14 +128,14 @@ namespace RWDE
             {
                 // Check if there are any open dropdowns or specific active controls
                 foreach (Control control in Controls)
-            {
-                if (control is ComboBox comboBox && comboBox.DroppedDown)
                 {
-                    return true; // Another dropdown is open
+                    if (control is ComboBox comboBox && comboBox.DroppedDown)
+                    {
+                        return true; // Another dropdown is open
+                    }
                 }
-            }
-            // Add more conditions if necessary to cover all cases
-            return false;
+                // Add more conditions if necessary to cover all cases
+                return false;
             }
             catch (Exception ex)
             {
@@ -136,30 +147,36 @@ namespace RWDE
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            openFileDialog.Filter = Constants.AllExtention;
-            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                string fileName = openFileDialog.FileName;
-            }
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    openFileDialog.Filter = Constants.AllExtention;
+                    
+                    if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        string fileName = openFileDialog.FileName;
+                    }
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)//to extract from folder
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)//to extract from folder
         {
             try
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            saveFileDialog.Filter = Constants.AllExtention;
-            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                string fileName = saveFileDialog.FileName;
-            }
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    saveFileDialog.Filter = Constants.AllExtention;
+
+                    if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        string fileName = saveFileDialog.FileName;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -181,9 +198,14 @@ namespace RWDE
         {
             try
             {
-                ContractIdLists contractIdLists = new ContractIdLists();
-            contractIdLists.MdiParent = this;
-            contractIdLists.Show();
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                ContractIdLists contractIdLists = new ContractIdLists
+                {
+                    MdiParent = this
+                };
+                contractIdLists.Show();
             }
             catch (Exception ex)
             {
@@ -195,13 +217,17 @@ namespace RWDE
             try
             {
                 if (ActiveMdiChild != null)
-            {
-                ActiveMdiChild.Close();
-            }
+                {
+                    ActiveMdiChild.Close();
+                }
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
 
-            FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml();
-            frmGeneratorXml.MdiParent = this;
-            frmGeneratorXml.Show();
+                FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml
+                {
+                    MdiParent = this
+                };
+                frmGeneratorXml.Show();
             }
             catch (Exception ex)
             {
@@ -212,9 +238,13 @@ namespace RWDE
         {
             try
             {
-                OchinToRwdeConversion ochinToRwdeConversion=new OchinToRwdeConversion();
-            ochinToRwdeConversion.MdiParent=this;
-            ochinToRwdeConversion.Show();
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+                OchinToRwdeConversion ochinToRwdeConversion = new OchinToRwdeConversion
+                {
+                    MdiParent = this
+                };
+                ochinToRwdeConversion.Show();
             }
             catch (Exception ex)
             {
@@ -233,9 +263,12 @@ namespace RWDE
                 {
                     pnlForm.Visible = false;
                 }
-
-                FrmConvertToHcc frmConvertToHcc = new FrmConvertToHcc();
-                frmConvertToHcc.MdiParent = this;
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+                FrmConvertToHcc frmConvertToHcc = new FrmConvertToHcc
+                {
+                    MdiParent = this
+                };
                 frmConvertToHcc.Show();
 
                 // Add the panel from frmConvertToHCC to frmMain if it's not already added
@@ -277,10 +310,14 @@ namespace RWDE
                 {
                     pnlForm.Visible = false;
                 }
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
 
                 // Create an instance of btnCT and show it
-                FrmUploadOchinCsv frmUploadXmlFile = new FrmUploadOchinCsv();
-                frmUploadXmlFile.MdiParent = this;
+                FrmUploadOchinCsv frmUploadXmlFile = new FrmUploadOchinCsv
+                {
+                    MdiParent = this
+                };
                 frmUploadXmlFile.Show();
             }
             catch (Exception ex)
@@ -293,7 +330,7 @@ namespace RWDE
             // Show the stored form (if any)
             try
             {
-                 // Hide panelFrom if it's visible
+                // Hide panelFrom if it's visible
                 if (panelFrom != null)
                 {
                     panelFrom.Visible = false;
@@ -302,12 +339,18 @@ namespace RWDE
                 {
                     pnlForm.Visible = false;
                 }
-                FrmConvertToHcc frmConvertToHcc = new FrmConvertToHcc();
-                frmConvertToHcc.Visible = false;
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+                FrmConvertToHcc frmConvertToHcc = new FrmConvertToHcc
+                {
+                    Visible = false
+                };
 
                 // Create an instance of frmUploadCsv and show it
-                FrmUploadHccCsv frmUploadHccCsv = new FrmUploadHccCsv();
-                frmUploadHccCsv.MdiParent = this;
+                FrmUploadHccCsv frmUploadHccCsv = new FrmUploadHccCsv
+                {
+                    MdiParent = this
+                };
                 frmUploadHccCsv.Show();
             }
             catch (Exception ex)
@@ -317,11 +360,15 @@ namespace RWDE
         }
         public void ShowOchinToHccScreenHcc()//function to navigate to next page
         {
-            try { 
-          
-                OchinToRwdeConversion ochinToRwdeConversion = new OchinToRwdeConversion();
-                // Show the OCHIN to HCC screen (assuming 'ochinToHCCControl' is a user control or panel for the OCHIN to HCC screen)
-                ochinToRwdeConversion.MdiParent = this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+                OchinToRwdeConversion ochinToRwdeConversion = new OchinToRwdeConversion
+                {
+                    // Show the OCHIN to HCC screen (assuming 'ochinToHCCControl' is a user control or panel for the OCHIN to HCC screen)
+                    MdiParent = this
+                };
                 ochinToRwdeConversion.Show(); // Make the OCHIN to HCC control visible
             }
             catch (Exception ex)
@@ -331,10 +378,15 @@ namespace RWDE
         }
         public void ShowOchinToHccScreen()//function to navigate to next page       
         {
-            try 
+            try
             {
-                FrmUploadOchinCsv frmUploadOchinCsv = new FrmUploadOchinCsv();
-                frmUploadOchinCsv.MdiParent = this;
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                FrmUploadOchinCsv frmUploadOchinCsv = new FrmUploadOchinCsv
+                {
+                    MdiParent = this
+                };
                 frmUploadOchinCsv.Show(); // Make the OCHIN to HCC control visible
             }
             catch (Exception ex)
@@ -344,11 +396,17 @@ namespace RWDE
         }
         public void ShowOchinToHccScreenGenerate()////function to navigate to next page
         {
-            try {
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
                 // Hide the tool strip menu item or any other controls you want to hide
-                FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml();
-                // Show the OCHIN to HCC screen (assuming 'ochinToHCCControl' is a user control or panel for the OCHIN to HCC screen)
-                frmGeneratorXml.MdiParent = this;
+                FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml
+                {
+                    // Show the OCHIN to HCC screen (assuming 'ochinToHCCControl' is a user control or panel for the OCHIN to HCC screen)
+                    MdiParent = this
+                };
                 frmGeneratorXml.Show(); // Make the OCHIN to HCC control visible
             }
             catch (Exception ex)
@@ -369,7 +427,8 @@ namespace RWDE
         }
         private void uploadCSVToOCHINToolStripMenuItem_Click(object sender, EventArgs e)//csv uploads 
         {
-            try { 
+            try
+            {
                 if (panelFrom != null)
                 {
                     panelFrom.Visible = false;
@@ -378,9 +437,14 @@ namespace RWDE
                 {
                     pnlForm.Visible = false;
                 }
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
                 // Create an instance of frmUploadCsv and show it
-                FrmUploadHccCsv frmUploadHccCsv = new FrmUploadHccCsv();
-                frmUploadHccCsv.MdiParent = this;
+                FrmUploadHccCsv frmUploadHccCsv = new FrmUploadHccCsv
+                {
+                    MdiParent = this
+                };
                 frmUploadHccCsv.Show();
             }
             catch (Exception ex)
@@ -393,12 +457,17 @@ namespace RWDE
             try
             {
                 if (ActiveMdiChild != null)
-            {
-                ActiveMdiChild.Close();
-            }
-            FrmConvertToHcc frmConvertToHcc = new FrmConvertToHcc();
-            frmConvertToHcc.MdiParent = this;
-            frmConvertToHcc.Show();
+                {
+                    ActiveMdiChild.Close();
+                }
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                FrmConvertToHcc frmConvertToHcc = new FrmConvertToHcc
+                {
+                    MdiParent = this
+                };
+                frmConvertToHcc.Show();
             }
             catch (Exception ex)
             {
@@ -410,13 +479,17 @@ namespace RWDE
             try
             {
                 if (ActiveMdiChild != null)
-            {
-                ActiveMdiChild.Close();
-            }
+                {
+                    ActiveMdiChild.Close();
+                }
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
 
-            FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml();
-            frmGeneratorXml.MdiParent = this;
-            frmGeneratorXml.Show();
+                FrmGeneratorXml frmGeneratorXml = new FrmGeneratorXml
+                {
+                    MdiParent = this
+                };
+                frmGeneratorXml.Show();
             }
             catch (Exception ex)
             {
@@ -425,9 +498,15 @@ namespace RWDE
         }
         private void allBatchesToolStripMenuItem_Click(object sender, EventArgs e)//all batches updates
         {
-            try { 
-                ViewAllBatchesForm viewAllBatchesForm = new ViewAllBatchesForm();
-                viewAllBatchesForm.MdiParent = this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                ViewAllBatchesForm viewAllBatchesForm = new ViewAllBatchesForm
+                {
+                    MdiParent = this
+                };
                 viewAllBatchesForm.Show();
             }
             catch (Exception ex)
@@ -437,9 +516,15 @@ namespace RWDE
         }
         private void BtnochincCsv_Click(object sender, EventArgs e)//ochin csv uploads
         {
-            try {
-                FrmUploadOchinCsv uploadOchinCsv = new FrmUploadOchinCsv();
-                uploadOchinCsv.MdiParent=this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                FrmUploadOchinCsv uploadOchinCsv = new FrmUploadOchinCsv
+                {
+                    MdiParent = this
+                };
                 uploadOchinCsv.Show();
             }
             catch (Exception ex)
@@ -452,12 +537,16 @@ namespace RWDE
             try
             {
                 if (ActiveMdiChild != null)
-            {
-                ActiveMdiChild.Close();
-            }
-            FrmUploadOchinCsv uploadOchinCsv = new FrmUploadOchinCsv();
-            uploadOchinCsv.MdiParent = this;
-            uploadOchinCsv.Show();
+                {
+                    ActiveMdiChild.Close();
+                }
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+                FrmUploadOchinCsv uploadOchinCsv = new FrmUploadOchinCsv
+                {
+                    MdiParent = this
+                };
+                uploadOchinCsv.Show();
             }
             catch (Exception ex)
             {
@@ -466,9 +555,15 @@ namespace RWDE
         }
         private void xMLFileUploadsToolStripMenuItem_Click(object sender, EventArgs e)//xml file insertion
         {
-            try { 
-                FrmUploadXmlFile frmUploadXmlFile = new FrmUploadXmlFile();
-                frmUploadXmlFile.MdiParent=this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                FrmUploadXmlFile frmUploadXmlFile = new FrmUploadXmlFile
+                {
+                    MdiParent = this
+                };
                 frmUploadXmlFile.Show();
             }
             catch (Exception ex)
@@ -481,13 +576,17 @@ namespace RWDE
             try
             {
                 if (ActiveMdiChild != null)
-            {
-                ActiveMdiChild.Close();
-            }
+                {
+                    ActiveMdiChild.Close();
+                }
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
 
-            OchinToRwdeConversion ochinToRwdeConversion = new OchinToRwdeConversion();
-            ochinToRwdeConversion.MdiParent = this;
-            ochinToRwdeConversion.Show();
+                OchinToRwdeConversion ochinToRwdeConversion = new OchinToRwdeConversion
+                {
+                    MdiParent = this
+                };
+                ochinToRwdeConversion.Show();
             }
             catch (Exception ex)
             {
@@ -496,9 +595,15 @@ namespace RWDE
         }
         private void serviceReconciliationReportDotNotUseToolStripMenuItem1_Click(object sender, EventArgs e)//to display ServiceRecon Report
         {
-            try { 
-                ServiceReconciliationReport service = new ServiceReconciliationReport();
-                service.MdiParent = this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                ServiceReconciliationReport service = new ServiceReconciliationReport
+                {
+                    MdiParent = this
+                };
                 service.Show();
             }
             catch (Exception ex)
@@ -508,9 +613,15 @@ namespace RWDE
         }
         private void deceasedClientsReportToolStripMenuItem_Click(object sender, EventArgs e)//to display DeceasedClient Report
         {
-            try { 
-                DeceasedClients clients = new DeceasedClients();
-                clients.MdiParent = this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                DeceasedClients clients = new DeceasedClients
+                {
+                    MdiParent = this
+                };
                 clients.Show();
             }
             catch (Exception ex)
@@ -520,9 +631,15 @@ namespace RWDE
         }
         private void uploadDashboardToolStripMenuItem_Click(object sender, EventArgs e)//to display Monthly Report
         {
-            try {
-                MonthlyReport monthlyReport = new MonthlyReport();
-                monthlyReport.MdiParent = this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                MonthlyReport monthlyReport = new MonthlyReport
+                {
+                    MdiParent = this
+                };
                 monthlyReport.Show();
             }
             catch (Exception ex)
@@ -530,12 +647,18 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        
+
         private void hCCRECONToolStripMenuItem_Click(object sender, EventArgs e)//to display HCCRecon Report
         {
-            try { 
-                HccReconciliation hccReconciliation = new HccReconciliation();
-                hccReconciliation.MdiParent = this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                HccReconciliation hccReconciliation = new HccReconciliation
+                {
+                    MdiParent = this
+                };
                 hccReconciliation.Show();
             }
             catch (Exception ex)
@@ -545,9 +668,15 @@ namespace RWDE
         }
         private void clientDemographicsReportToolStripMenuItem_Click(object sender, EventArgs e)//to display ClientDemographics Report
         {
-            try { 
-                ClientDemographicsReport clientDemographicsReport = new ClientDemographicsReport();
-                clientDemographicsReport.MdiParent = this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                ClientDemographicsReport clientDemographicsReport = new ClientDemographicsReport
+                {
+                    MdiParent = this
+                };
                 clientDemographicsReport.Show();
             }
             catch (Exception ex)
@@ -557,9 +686,15 @@ namespace RWDE
         }
         private void errorLogReportToolStripMenuItem_Click(object sender, EventArgs e)//to display ErrorLog Report
         {
-            try { 
-                ErrorLogReport errorLogReport = new ErrorLogReport();
-                errorLogReport.MdiParent = this;
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                ErrorLogReport errorLogReport = new ErrorLogReport
+                {
+                    MdiParent = this
+                };
                 errorLogReport.Show();
             }
             catch (Exception ex)
@@ -575,8 +710,13 @@ namespace RWDE
                 {
                     ActiveMdiChild.Close();
                 }
-                FrmDownloadHccErrors errorReport = new FrmDownloadHccErrors();
-                errorReport.MdiParent = this;
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                FrmDownloadHccErrors errorReport = new FrmDownloadHccErrors
+                {
+                    MdiParent = this
+                };
                 errorReport.Show();
             }
             catch (Exception ex)
@@ -588,9 +728,14 @@ namespace RWDE
         {
             try
             {
-                CsvFileConversion csvFileConversion = new CsvFileConversion();
-            csvFileConversion.MdiParent = this;
-            csvFileConversion.Show();
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                CsvFileConversion csvFileConversion = new CsvFileConversion
+                {
+                    MdiParent = this
+                };
+                csvFileConversion.Show();
             }
             catch (Exception ex)
             {
@@ -601,14 +746,204 @@ namespace RWDE
         {
             try
             {
-                FrmManualUpload frmManualUpload = new FrmManualUpload();
-                frmManualUpload.MdiParent = this;
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                FrmManualUpload frmManualUpload = new FrmManualUpload
+                {
+                    MdiParent = this
+                };
                 frmManualUpload.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void loadStratDate()//to set StartDate as First date of the Current Month
+        {
+            try
+            {
+                DateTime Today = DateTime.Now;
+                DateTime firstDayOfMonth = new DateTime(Today.Year, Today.Month, 1);
+                dtpStartDate.Value = firstDayOfMonth;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private async void fillChartServices()//to fill the data in Pie Chart
+        {
+            try
+            {
+                if (!Validatedate())//to Validate the Selected Dates  
+                {
+                    return;
+                }
+                DbHelper dbHelper = new DbHelper();
+                DateTime StartDate = dtpStartDate.Value.Date;
+                DateTime EndDate = dtpEndDate.Value.Date.AddDays(1).AddTicks(-1);
+
+                //to get the data of the PieChart
+                DataTable dt = dbHelper.GetPieChartData(StartDate, EndDate);
+                if (dt.Rows.Count == 0)
+                {
+                    MessageBox.Show(Constants.Nodatafoundbetweenselecteddates);
+                    return;
+                }
+
+                chartServices.Series.Clear();
+
+                // Add a new series to the chart for Pie chart
+                var series = chartServices.Series.Add("Service Data");
+                series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    // Loop through the columns, starting from the third column (index 2)
+                    for (int colIndex = 2; colIndex < dt.Columns.Count; colIndex++)
+                    {
+                        string columnName = dt.Columns[colIndex].ColumnName;
+                        int targetValue = Convert.ToInt32(row[colIndex]);
+
+                        if (columnName.Length > 25)  // Check if the column name is too long
+                        {
+                            //columnName = InsertLineBreaks(columnName);//to split the header
+                        }
+                        //Add an initial point with value 0
+                        var pointIndex = series.Points.AddXY(columnName, 0); // Add the point and get its index
+                        var point = series.Points[pointIndex];             // Retrieve the actual DataPoint object
+
+                        //customizing the chart appearance (labels, colors,)
+                        series.IsValueShownAsLabel = true;
+                        series["PieLabelStyle"] = "Outside";
+                        series["LabelDistance"] = "4";
+
+                        await Task.Delay(500);
+                        for (int value = 0; value <= targetValue; value++) // Gradual increments
+                        {
+                            point.YValues[0] =value;
+                            chartServices.Refresh(); // Redraw the chart
+                            if(targetValue<25) await Task.Delay(50);    // Control the animation speed
+                            if (targetValue > 50) value += 50;
+                        }
+                        foreach (var points in series.Points)
+                        {
+                            points.ToolTip = $"{points.AxisLabel}: {points.YValues[0]}";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        //to insert line breaks into the header text
+        private string InsertLineBreaks(string header)
+        {
+            try
+            {
+                int maxLength = 23;  // Set the maximum number of characters per line
+                if (header.Length <= maxLength)
+                    return header;
+
+                // Split the header text into two lines at the space closest to the maxLength
+                int breakPoint = header.LastIndexOf(' ', maxLength);
+                if (breakPoint == -1) breakPoint = maxLength;  // No space found, split directly
+
+                string firstLine = header.Substring(0, breakPoint);
+                string secondLine = header.Substring(breakPoint).Trim();
+                string thirdLine = "";
+                if (secondLine.Length > maxLength)
+                {
+                    thirdLine = InsertLineBreaks(secondLine); //to insert line breaks into the header text
+                }
+                if (thirdLine.Length > 1)
+                {
+                    return firstLine + "\n" + thirdLine;
+                }
+                else
+                {
+                    return firstLine + "\n" + secondLine;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return header;
+            }
+        }
+        private bool Validatedate()//to Validate the Selected Dates  
+        {
+            try
+            {
+                DateTime StartDate = dtpStartDate.Value.Date;
+                DateTime EndDate = dtpEndDate.Value.Date;
+
+                if (StartDate > DateTime.Now.Date)
+                {
+                    MessageBox.Show(Constants.SelectedFutureDate);
+                    return false;
+                }
+                else if (EndDate > DateTime.Now.Date)
+                {
+                    MessageBox.Show(Constants.SelectedFutureDate);
+                    return false;
+                }
+                else if (EndDate <= StartDate)
+                {
+                    MessageBox.Show(Constants.FromDateMustBeEarlierThanToDate);
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+        }
+
+        private void dtpEndDate_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Validatedate())//to Validate the Selected Dates  
+                {
+                    fillChartServices();//to fill the data in Pie Chart
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dtpStartDate_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Validatedate())//to Validate the Selected Dates  
+                {
+                    fillChartServices();//to fill the data in Pie Chart
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void lblFrom_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

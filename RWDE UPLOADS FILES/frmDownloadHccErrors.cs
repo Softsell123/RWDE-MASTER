@@ -11,14 +11,17 @@ namespace RWDE
     public partial class FrmDownloadHccErrors : Form
     {
         private readonly string connectionString;
+        private readonly DbHelper dbHelper;
 
         public FrmDownloadHccErrors()
         {
             InitializeComponent();
             BackColor = Color.White;
             WindowState = FormWindowState.Maximized;
-            DbHelper dbHelper = new DbHelper();
-            connectionString = dbHelper.GetConnectionString();
+            dbHelper = new DbHelper();
+            connectionString = dbHelper.GetConnectionString();//to get the connection String
+
+            //to load the default gridView
             InitializeDataGridView();
             RegisterEvents(this); //Assigning events to all Controls
         }
@@ -192,7 +195,7 @@ namespace RWDE
                                         break;
                                 }
                                 // Insert into database
-                                InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
+                                dbHelper.InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
                                 AddRowToGrid(errorMessage, hccTable, clientId, sourceFileNameStr);
                             }
                             transaction.Commit();
@@ -230,36 +233,6 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
-        }
-        private void InsertIntoDatabase(SqlConnection conn, SqlTransaction transaction, string hccTable, string errorMessage, string clientId, string sourceFileName)//to insert the data into the database
-        {
-            try
-            {
-                using (SqlCommand cmd = new SqlCommand(Constants.InsertIntoDatabaseQuery, conn, transaction))
-                {
-                    cmd.Parameters.AddWithValue(Constants.AtHccTable, hccTable);
-                    cmd.Parameters.AddWithValue(Constants.AtErrorMessage, errorMessage);
-
-                    // Check if clientId starts with "246_" and remove it if it does
-                    string modifiedClientId = clientId.StartsWith(Constants.AgencyCode) ? clientId.Substring(4) : clientId;
-
-                    cmd.Parameters.AddWithValue(Constants.AtClientId, modifiedClientId);
-                    cmd.Parameters.AddWithValue(Constants.AtSourceFileName, sourceFileName);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (SqlException ex)
-            {
-                // Handle SQL exceptions
-                Console.WriteLine($@"{Constants.SqlError}{ex.Message}");
-                transaction.Rollback(); // Rollback transaction if needed
-            }
-            catch (Exception ex)
-            {
-                // Handle any other exceptions
-                Console.WriteLine($@"{Constants.Errorsp}{ex.Message}");
-                transaction.Rollback(); // Rollback transaction if needed
             }
         }
 
@@ -343,41 +316,12 @@ namespace RWDE
                 dataGridView.Columns.Clear();
                 string sourceFileName = txtFileName.Text; // Text box for SourceFileName
                 DataTable dt = new DataTable();
-                try
-                {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        using (SqlCommand command = new SqlCommand(Constants.Filtersourcefilename, conn))
-                        {
-                            command.CommandType = CommandType.StoredProcedure;
-                            command.Parameters.AddWithValue(Constants.AtSourceFileName, sourceFileName);
-                            using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                            {
-                                try
-                                {
-                                    // Open the connection
-                                    conn.Open();
-                                    // Fill the DataTable with the result of the stored procedure
-                                    adapter.Fill(dt);
-                                    dataGridView.DataSource = dt;
-                                    dataGridView.AutoGenerateColumns = true;
-                                    dataGridView.AllowUserToAddRows = false;
-                                }
-                                catch (Exception ex)
-                                {
-                                    // Handle exceptions (e.g., logging)
-                                    Console.WriteLine(Constants.Errorsp + ex.Message);
-                                }
-                                command.ExecuteNonQuery();
-                                // Execute the SQL command to insert client data
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+
+                //filter HCCErrors as per the filename
+                dt = dbHelper.FilterHccErrors(sourceFileName);
+                dataGridView.DataSource = dt;
+                dataGridView.AutoGenerateColumns = true;
+                dataGridView.AllowUserToAddRows = false;
             }
             catch (Exception ex)
             {
@@ -388,6 +332,7 @@ namespace RWDE
         {
             try
             {
+                //to load the default gridView
                 InitializeDataGridView();
                 dataGridView.Rows.Clear();
                 dataGridView.Rows.Clear();
