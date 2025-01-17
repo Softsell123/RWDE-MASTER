@@ -439,7 +439,7 @@ namespace RWDE
         public const string StartdatemustbeearlierthanEnddate = "Start date must be earlier than End date.";
         public const string FromDateMustBeEarlierThanToDate = "From date must be earlier than To date.";
         public const string SelectedFutureDate = "You have selected the future date.Please select today's date (or) earlier date.";
-
+        public const string ContractIdIsExpiringToday = "The Contract ID {0} is expiring today. It's time to renew the contract. Please refresh the form after renewing the contract.";
 
 
 
@@ -1205,14 +1205,8 @@ namespace RWDE
     public static class ContractIdList
     {
         //Property Text
-       
-        
-
+ 
         //Header Text
-
-
-
-        
         public const string ErrorLogReport = "Error_Log_Report";
         
         public const string MonthlyReports = "Monthly_Reports";

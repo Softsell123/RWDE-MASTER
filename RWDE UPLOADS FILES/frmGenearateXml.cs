@@ -341,27 +341,13 @@ namespace RWDE
                 if (dataGridView.Columns[e.ColumnIndex].Name == Constants.Status)
                 {
                     string statusValue = e.Value?.ToString();
-                    if (!string.IsNullOrEmpty(statusValue))
+
+                    //to get value of the ListId
+                    var result = dbHelper.FormatStatus(statusValue);
+                    if (result != null)
                     {
-                        string valueSelectQuery = Constants.ListValueXml;
-
-                        using (SqlConnection sql = new SqlConnection(connectionString))
-                        {
-                            using (SqlCommand com = new SqlCommand(valueSelectQuery, sql))
-                            {
-                                com.CommandType = CommandType.StoredProcedure;
-                                com.Parameters.AddWithValue(Constants.AtListsId, statusValue);
-                                sql.Open();
-                                var result = com.ExecuteScalar();
-                                sql.Close();
-
-                                if (result != null)
-                                {
-                                    e.Value = result.ToString();
-                                    e.FormattingApplied = true;
-                                }
-                            }
-                        }
+                        e.Value = result.ToString();
+                        e.FormattingApplied = true;
                     }
                 }
             }
@@ -407,32 +393,9 @@ namespace RWDE
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
 
-                bool batchExists = false;
-                DateTime? generationStartedAt = null;
-                DateTime? generationEndedAt = null;
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand(Constants.UpdateXmlBatch, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
-
-                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                        {
-                            if (reader.Read())
-                            {
-                                generationStartedAt = reader.IsDBNull(0) ? null : (DateTime?)reader.GetDateTime(0);
-                                generationEndedAt = reader.IsDBNull(1) ? null : (DateTime?)reader.GetDateTime(1);
-                                batchExists = true;
-                            }
-                        }
-                    }
-                }
-                // Update the DataGridView
-                int totalRows = GetTotalRowsForBatch(selectedBatchId);
+                
+                //Getting total rows from particular table
+                int totalRows = dbHelper.GetTotalRowsForBatch(selectedBatchId);
                 List<Dictionary<string, string>> data;
 
                 // Update status of service and fetch error data
@@ -1205,49 +1168,8 @@ namespace RWDE
                     {
                         row.Cells[Constants.Status].Value = listId; // Store the ListID as the status value
 
-                        if (listId == 20)
-                        {
-                            using (SqlConnection connection = new SqlConnection(connectionString))
-                            {
-                                connection.Open();
-
-                                // Define the SQL query to update the GenerationStartedAt column
-                                string updateQuery = Constants.UpdateXmlClient;
-
-                                using (SqlCommand command = new SqlCommand(updateQuery, connection))
-                                {
-                                    command.CommandType = CommandType.StoredProcedure;
-                                    // Set the parameters
-                                    command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                                    command.Parameters.AddWithValue(Constants.AtGenerationStartedAt, startTime);
-
-                                    command.Parameters.AddWithValue(Constants.AtGenerationEndedAt, endTime);
-
-                                    // Execute the SQL update command
-                                    command.ExecuteNonQuery();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            using (SqlConnection connection = new SqlConnection(connectionString))
-                            {
-                                connection.Open();
-
-                                // Define the SQL query to update the GenerationEndedAt column
-                                string updateQuery = $"@{Constants.UpdateStatusColumnQuery}";
-
-                                using (SqlCommand command = new SqlCommand(updateQuery, connection))
-                                {
-                                    // Set the parameters
-                                    command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                                    command.Parameters.AddWithValue(Constants.AtGenerationEndedAt, endTime);
-
-                                    // Execute the SQL update command
-                                    command.ExecuteNonQuery();
-                                }
-                            }
-                        }
+                        //to update status in batch table
+                        dbHelper.UpdateStatus(batchId,listId, startTime, endTime);
                         // Refresh the dataGridView outside the loop
                         PopulateDataGridView(new DataTable());
                         dataGridView.Refresh();
@@ -1270,30 +1192,8 @@ namespace RWDE
                     {
                         row.Cells[Constants.Status].Value = listId; // Store the ListID as the status value
 
-                        if (listId == 20)
-                        {
-                            using (SqlConnection connection = new SqlConnection(connectionString))
-                            {
-                                connection.Open();
-
-                                // Define the SQL query to update the GenerationStartedAt column"
-                                string updateQuery = Constants.UpdateXml;
-
-                                using (SqlCommand command = new SqlCommand(updateQuery, connection))
-                                {
-                                    command.CommandType = CommandType.StoredProcedure;
-
-                                    // Set the parameters
-                                    command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                                    command.Parameters.AddWithValue(Constants.AtGenerationStartedAt, startTime);
-
-                                    command.Parameters.AddWithValue(Constants.AtGenerationEndedAt, endTime);
-
-                                    // Execute the SQL update command
-                                    command.ExecuteNonQuery();
-                                }
-                            }
-                        }
+                        //to update the status of service file
+                        dbHelper.UpdateServiceStatus(batchId, listId, startTime, endTime);
                         // Refresh the dataGridView outside the loop
                         PopulateDataGridView(new DataTable());
                         dataGridView.Refresh();
@@ -1385,35 +1285,12 @@ namespace RWDE
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
 
-                int totalRows = GetTotalRowsForBatchclient(batchId);//Getting total rows from particular table
+                int totalRows = dbHelper.GetTotalRowsForBatchclient(batchId);//Getting total rows from particular table
                 DateTime startTime = DateTime.Now;
 
                 txtBatchid.Text = batchId.ToString();
                 string time = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                 txtUploadStarted.Text = time;
-
-                bool batchExists = false;
-                DateTime? generationStartedAt = null;
-                DateTime? generationEndedAt = null;
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(Constants.GetGenerationTime, connection))
-                    {
-                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
-
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                generationStartedAt = reader.IsDBNull(0) ? null : (DateTime?)reader.GetDateTime(0);
-                                generationEndedAt = reader.IsDBNull(1) ? null : (DateTime?)reader.GetDateTime(1);
-                                batchExists = true;
-                            }
-                        }
-                    }
-                }
 
                 //calling Store Procedure Function
                 List<Dictionary<string, string>> data = dbHelper.GetClients(selectedBatchId);
@@ -1485,54 +1362,6 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private int GetTotalRowsForBatch(int selectedBatchId)//Getting total rows from particular table
-        {
-            int totalRows = 0;
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand(Constants.CountXml, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
-                        totalRows = (int)command.ExecuteScalar();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($@"{Constants.ErrorGettingTotalRows}  {ex.Message}");
-            }
-
-            return totalRows;
-        }
-        private int GetTotalRowsForBatchclient(int selectedBatchId)//Getting total rows from particular table
-        {
-            int totalRows = 0;
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand(Constants.CountXmlServices, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-
-                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
-                        totalRows = (int)command.ExecuteScalar();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($@"{Constants.ErrorGettingTotalRows}  {ex.Message}");
-            }
-            return totalRows;
-        }
         private void btnClose_Click(object sender, EventArgs e)//close main form
         {
             try
@@ -1564,7 +1393,10 @@ namespace RWDE
                         string selectedFolderPath = txtPath.Text;
 
                         // Update the status of the selected batch to Status "19" (Abort)
-                        UpdateBatchStatusabort(batchId, Constants.Xmlabort, selectedFolderPath, filename);
+                        dbHelper.UpdateBatchStatusabort(batchId, Constants.Xmlabort, selectedFolderPath, filename);
+
+                        // Delete XML files in the specified directory
+                        DeleteXmlFiles(selectedFolderPath);
 
                         //Show a message box indicating successful abort
                         MessageBox.Show(Constants.AbortedSuccessfully, Constants.GenerateXml);
@@ -1580,44 +1412,6 @@ namespace RWDE
             {
                 // Display or log the exception message
                 MessageBox.Show(Constants.Errorsp + ex.Message, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        private void UpdateBatchStatusabort(int batchId, int status, string xmlDirectoryPath, String filename)//for abort status 
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    // Construct the SQL UPDATE statement
-                    string query = Constants.CountXmlRows;
-
-                    // Create and execute the SqlCommand
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        // Add parameters to the command
-                        command.Parameters.AddWithValue(Constants.AtStatus, status);
-                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                        command.Parameters.AddWithValue(Constants.AtFilename, filename);
-
-                        // Execute the update query
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        // Check if any rows were affected (optional)
-                        Console.WriteLine(rowsAffected > 0
-                            ? Constants.Batchstatusupdatedsuccessfully
-                            : Constants.NobatchwasfoundwiththegivenId);
-                    }
-                }
-                // Delete XML files in the specified directory
-                DeleteXmlFiles(xmlDirectoryPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(Constants.Errorupdatingbatchstatus, ex.Message);
-                // Log or handle the exception appropriately
             }
         }
 

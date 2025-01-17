@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 // ReSharper disable PossibleNullReferenceException
 namespace RWDE
 {
@@ -256,7 +257,7 @@ namespace RWDE
                 {
                     if (DataGridView.EditingControl is DataGridViewCalendarEditingControl ctl)
                     {
-                       // ctl.Value = (DateTime)Value;
+                        // ctl.Value = (DateTime)Value;
                     }
                 }
             }
@@ -374,12 +375,13 @@ namespace RWDE
                 };
 
                 dataGridView.Columns.Add(deleteButtonColumn);
+                dataGridView.CellPainting += dataGridView_UpdateExipredContract;
                 dataGridView.CellPainting += dataGridView_CelleditPainting;
                 /*dataGridView.CellClick += dataGridView_Celledit;*/
                 dataGridView.CellClick += dataGridView_CellContentClick;
                 dataGridView.CellClick += dataGridView_CellClickdelete;
                 dataGridView.CellPainting += dataGridView_CellPainting;
-
+               
                 dataGridView.ClearSelection();
             }
             catch (Exception ex)
@@ -690,7 +692,7 @@ namespace RWDE
 
                     if (row.RowState == DataRowState.Added || row.RowState == DataRowState.Modified)
                     {
-                        SaveContract(row);
+                        SaveContract(row,true);
                     }
                     else
                     {
@@ -707,78 +709,145 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void SaveContract(DataRow row)//insert and update into table 
+        private void SaveContract(DataRow row,bool save)//insert and update into table 
         {
             try
             {
-                if (dataGridView.ReadOnly)
+                if (!save)
                 {
-                    MessageBox.Show($@"{ContractId}{Constants.Alreadysaved}");
-                }
+                    var statusString = row[Constants.Status].ToString();
 
-                var statusString = row[Constants.Status].ToString();
-
-                if (statusString == Constants.Active)
-                {
-                    statusString = Constants.ActiveContractstatus;
-                }
-                else if (statusString == Constants.Inactive)
-                {
-                    statusString = Constants.InactiveContractstatus;
-                }
-                else if (statusString == Constants.Delete)
-                {
-                    statusString = Constants.DeleteContractstatus;
-                }
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
+                    if (statusString == Constants.Active)
+                    {
+                        statusString = Constants.ActiveContractstatus;
+                    }
+                    else if (statusString == Constants.Inactive)
+                    {
+                        statusString = Constants.InactiveContractstatus;
+                    }
+                    else if (statusString == Constants.Delete)
+                    {
+                        statusString = Constants.DeleteContractstatus;
+                    }
                     string currentContractId = row[Constants.ContractId].ToString();
-                    string contractName = row[Constants.ContractName].ToString();
-                    string startedDateTimeStr = row[Constants.StartedDateTime].ToString();
-
-                    // Validate Contract ID and Contract Name
-                    if (string.IsNullOrWhiteSpace(currentContractId))
+                    MessageBox.Show(string.Format(Constants.ContractIdIsExpiringToday, currentContractId), Constants.ContractsSetup,MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        MessageBox.Show($@"{Constants.PleaseaddContractIDbeforesaving}.", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
+                        string contractName = row[Constants.ContractName].ToString();
+                        string startedDateTimeStr = row[Constants.StartedDateTime].ToString();
+
+                        // Validate Contract ID and Contract Name
+                        if (string.IsNullOrWhiteSpace(currentContractId))
+                        {
+                            MessageBox.Show($@"{Constants.PleaseaddContractIDbeforesaving}.", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        if (string.IsNullOrWhiteSpace(contractName))
+                        {
+                            MessageBox.Show($@"{Constants.PleasefillinContractNamebeforesaving}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Validate and parse StartedDateTime
+                        if (string.IsNullOrWhiteSpace(startedDateTimeStr) || !DateTime.TryParse(startedDateTimeStr, out DateTime startedDateTime))
+                        {
+                            MessageBox.Show($@"{Constants.PleaseenteravalidStartedDateTimeandEndedDateTime}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Calculate EndedDateTime
+                        DateTime endedDateTime = startedDateTime.AddYears(1).AddDays(-1).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+
+                        //insert and update into database table
+                        string operation = dbHelper.InsertOrUpdateContract(
+                            int.Parse(currentContractId),
+                            contractName,
+                            startedDateTime, // Use DateTime value here
+                            endedDateTime,   // Use DateTime value here
+                            statusString,
+                            Constants.Sakku,
+                            DateTime.Now);
+
+                        dataGridView.ReadOnly = true;
+
+                        // Display appropriate message
+                        if (operation == Constants.Update)
+                        {
+                            MessageBox.Show($@"{ContractIdList.Contractupdatedsuccessfully}. {Constants.ContractId}: {currentContractId}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else if (operation == Constants.Insert)
+                        {
+                            MessageBox.Show(ContractIdList.Contractsavedsuccessfully, Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
-                    if (string.IsNullOrWhiteSpace(contractName))
+                }
+                else
+                {
+                    var statusString = row[Constants.Status].ToString();
+
+                    if (statusString == Constants.Active)
                     {
-                        MessageBox.Show($@"{Constants.PleasefillinContractNamebeforesaving}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
+                        statusString = Constants.ActiveContractstatus;
+                    }
+                    else if (statusString == Constants.Inactive)
+                    {
+                        statusString = Constants.InactiveContractstatus;
+                    }
+                    else if (statusString == Constants.Delete)
+                    {
+                        statusString = Constants.DeleteContractstatus;
                     }
 
-                    // Validate and parse StartedDateTime
-                    if (string.IsNullOrWhiteSpace(startedDateTimeStr) || !DateTime.TryParse(startedDateTimeStr, out DateTime startedDateTime))
+                    string currentContractId = row[Constants.ContractId].ToString();
+                    
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        MessageBox.Show($@"{Constants.PleaseenteravalidStartedDateTimeandEndedDateTime}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                        string contractName = row[Constants.ContractName].ToString();
+                        string startedDateTimeStr = row[Constants.StartedDateTime].ToString();
 
-                    // Calculate EndedDateTime
-                    DateTime endedDateTime = startedDateTime.AddYears(1).AddDays(-1).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+                        // Validate Contract ID and Contract Name
+                        if (string.IsNullOrWhiteSpace(currentContractId))
+                        {
+                            MessageBox.Show($@"{Constants.PleaseaddContractIDbeforesaving}.", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        if (string.IsNullOrWhiteSpace(contractName))
+                        {
+                            MessageBox.Show($@"{Constants.PleasefillinContractNamebeforesaving}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
 
-                    //insert and update into database table
-                    string operation = dbHelper.InsertOrUpdateContract(
-                        int.Parse(currentContractId),
-                        contractName,
-                        startedDateTime, // Use DateTime value here
-                        endedDateTime,   // Use DateTime value here
-                        statusString,
-                        Constants.Sakku,
-                        DateTime.Now);
+                        // Validate and parse StartedDateTime
+                        if (string.IsNullOrWhiteSpace(startedDateTimeStr) || !DateTime.TryParse(startedDateTimeStr, out DateTime startedDateTime))
+                        {
+                            MessageBox.Show($@"{Constants.PleaseenteravalidStartedDateTimeandEndedDateTime}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
 
-                    dataGridView.ReadOnly = true;
+                        // Calculate EndedDateTime
+                        DateTime endedDateTime = startedDateTime.AddYears(1).AddDays(-1).Date.AddHours(23).AddMinutes(59).AddSeconds(59);
 
-                    // Display appropriate message
-                    if (operation == Constants.Update)
-                    {
-                        MessageBox.Show($@"{ContractIdList.Contractupdatedsuccessfully}. {Constants.ContractId}: {currentContractId}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else if (operation == Constants.Insert)
-                    {
-                        MessageBox.Show(ContractIdList.Contractsavedsuccessfully, Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        //insert and update into database table
+                        string operation = dbHelper.InsertOrUpdateContract(
+                            int.Parse(currentContractId),
+                            contractName,
+                            startedDateTime, // Use DateTime value here
+                            endedDateTime,   // Use DateTime value here
+                            statusString,
+                            Constants.Sakku,
+                            DateTime.Now);
+
+                        dataGridView.ReadOnly = true;
+
+                        // Display appropriate message
+                        if (operation == Constants.Update)
+                        {
+                            MessageBox.Show($@"{ContractIdList.Contractupdatedsuccessfully}. {Constants.ContractId}: {currentContractId}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else if (operation == Constants.Insert)
+                        {
+                            MessageBox.Show(ContractIdList.Contractsavedsuccessfully, Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
                 }
             }
@@ -988,7 +1057,6 @@ namespace RWDE
         {
             try
             {
-
                 if (e.ColumnIndex == dataGridView.Columns[Constants.DeleteColumnName].Index && e.RowIndex >= 0)
                 {
                     Color backColor = Color.White;
@@ -1043,7 +1111,7 @@ namespace RWDE
                 if (e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index && e.RowIndex >= 0)
                 {
                     Color backColor = Color.White;
-                    // Paint the cell background
+                     //Paint the cell background
                     using (Brush backgroundBrush = new SolidBrush(backColor))
                     {
                         e.Graphics.FillRectangle(backgroundBrush, e.CellBounds);
@@ -1170,7 +1238,6 @@ namespace RWDE
         {
             try
             {
-
                 if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index)
                 {
                     // Set all rows to read-only
@@ -1189,6 +1256,44 @@ namespace RWDE
                     // Set the specific row to read-only = false
                     dataGridView.Rows[e.RowIndex].ReadOnly = false;
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void dataGridView_UpdateExipredContract(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            try
+            {
+                // Check if the"Ended At"column is being painted
+                if (e.ColumnIndex == dataGridView.Columns[Constants.EndedDateTime].Index && e.RowIndex >= 0)
+                {
+                    foreach (DataGridViewRow row in dataGridView.Rows)
+                    {
+                        // Skip the new row or invalid rows
+                        if (row.IsNewRow) continue;
+
+                        // Get the"Ended At"column value
+                        if (DateTime.TryParse(row.Cells[Constants.EndedDateTime].Value?.ToString(), out DateTime endedAt))
+                        {
+                            // If the"Ended At"date matches today's date
+                            if (endedAt.Date == DateTime.Today.Date)
+                            {
+                                // Update the "Started At" column to today's date
+                                row.Cells[Constants.StartedDateTime].Value = DateTime.Today;
+
+                                // Update the"Ended At"column to one year later
+                                row.Cells[Constants.EndedDateTime].Value = DateTime.Today.AddYears(1);
+                                if (row.DataBoundItem is DataRowView rowToSave)
+                                {
+                                    SaveContract(rowToSave.Row, false);
+                                }
+                            }
+                        }
+                    }
+                }
+                e.Handled = false;
             }
             catch (Exception ex)
             {

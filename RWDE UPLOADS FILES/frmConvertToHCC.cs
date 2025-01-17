@@ -104,25 +104,11 @@ namespace RWDE
                 if (dataGridView.Columns[e.ColumnIndex].Name == Constants.Status)
                 {
                     string statusValue = e.Value?.ToString();
-                    if (!string.IsNullOrEmpty(statusValue))
+                    var result = dbHelper.FormatStatus(statusValue);
+                    if (result != null)
                     {
-                        string valueSelectQuery = Constants.SelectValuefromListwhereListsId;
-                        using (SqlConnection sql = new SqlConnection(connectionString))
-                        {
-                            using (SqlCommand com = new SqlCommand(valueSelectQuery, sql))
-                            {
-                                com.Parameters.AddWithValue(Constants.AtListsId, statusValue);
-                                sql.Open();
-                                var result = com.ExecuteScalar();
-                                sql.Close();
-
-                                if (result != null)
-                                {
-                                    e.Value = result.ToString();
-                                    e.FormattingApplied = true;
-                                }
-                            }
-                        }
+                        e.Value = result.ToString();
+                        e.FormattingApplied = true;
                     }
                 }
             }
@@ -196,29 +182,6 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void UpdateBatchStatus(int batchId, int status, DateTime timestamp)//to upadte the status of the Batch
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(Constants.UpdateBatchStatusQuery, connection))
-                    {
-                        command.Parameters.AddWithValue(Constants.AtStatus, status);
-                        command.Parameters.AddWithValue(Constants.AtTimestamp, timestamp);
-                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                        command.ExecuteNonQuery();
-                        //to delete the Aborted Batch data
-                        ClearTables(batchId);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
         public Panel GetPanelToReplace()
         {
             // Return the panel you want to replace
@@ -252,24 +215,9 @@ namespace RWDE
                 DateTime? conversionStartedAt = null;
                 DateTime? conversionEndedAt = null;
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
+                //to get the conversion time of the Batch
+                (conversionStartedAt, conversionEndedAt) = dbHelper.GetCoversionTime(selectedBatchId);
 
-                    using (SqlCommand command = new SqlCommand(Constants.GetConversionTimeQuery, connection))
-                    {
-                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
-
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                conversionStartedAt = reader.IsDBNull(0) ? null : (DateTime?)reader.GetDateTime(0);
-                                conversionEndedAt = reader.IsDBNull(1) ? null : (DateTime?)reader.GetDateTime(1);
-                            }
-                        }
-                    }
-                }
                 if (conversionStartedAt != null && conversionEndedAt != null)
                 {
                     MessageBox.Show($@"{Constants.BatchIdHeader} {selectedBatchId} {Constants.Hasalreadycompletedtheconversion}", Constants.OchinToHccConversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -287,57 +235,26 @@ namespace RWDE
                 dataGridView.Rows[selectedRowIndex].Cells[Constants.ConversionStartedAt].Value = startTime;
 
                 //to upadte the status of the Batch
-                UpdateBatchStatus(selectedBatchId, 17, startTime);
+                dbHelper.UpdateBatchStatusTime(selectedBatchId, 17, startTime);
                 txtBatchid.Text = selectedBatchId.ToString();
                 txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);// Record the start time
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
 
-                    using (SqlCommand command = new SqlCommand(Constants.MapCmsClientstest, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
+                // Get the total number of rows to be inserted
+                int totalRows = dbHelper.GetTotalRows(selectedBatchId);
 
-                        // Pass the selected BatchID to the stored procedure
-                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
+                // Set up progress bar
+                progressBarClients.Maximum = totalRows;
+                //to map the Cms Clients to Hcc Tables
+                dbHelper.MapCmsClients(selectedBatchId);
 
-                        // Get the total number of rows to be inserted
-                        int totalRows = GetTotalRowsForBatch(selectedBatchId);
+                DateTime endTime = DateTime.Now;
+                UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update Status label in Status Column 
+                dataGridView.Refresh();
 
-                        // Initialize progress variables
-                        int insertedRows = 0;
-                        //string baseFilename = Path.GetFileNameWithout
-                        int batchId = dbHelper.GetNextBatchId();
-
-
-                        // Update progress textbox with initial progress information
-                        await UpdateProgressAsync(insertedRows, totalRows);
-
-                        // Set up progress bar
-                        progressBarClients.Maximum = totalRows;
-
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (insertedRows < totalRows)
-                            {
-                                // Process each row
-                                insertedRows++;
-
-                                // Update progress bar and text box
-                                await UpdateProgressAsync(insertedRows, totalRows);
-                            }
-                        }
-
-                        DateTime endTime = DateTime.Now;
-                        UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update Status label in Status Column 
-                        dataGridView.Refresh();
-
-                        dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
-                        //Mapping from CTServices to HCCServices
-                        _ = GetservicesAsync(selectedBatchId);
-                    }
-                }
+                dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
+                //Mapping from CTServices to HCCServices
+                _ = GetservicesAsync(selectedBatchId);
             }
             catch (Exception ex)
             {
@@ -401,75 +318,50 @@ namespace RWDE
                 {
                     int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                     selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
-                    int allTotalRows = GetTotalForBatch(selectedBatchId);//getting total rows from particular tables
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        connection.Open();
+                    int allTotalRows = dbHelper.GetTotalForBatch(selectedBatchId);//getting total rows from particular tables
 
-                        using (SqlCommand command = new SqlCommand(Constants.MapDlServicesToHccServices, connection))
-                        {
-                            command.CommandType = CommandType.StoredProcedure;
+                    // Get the total number of rows to be inserted
+                    int totalRows = dbHelper.GetTotalRowsForBatchservices(selectedBatchId);
 
-                            // Pass the selected BatchID to the stored procedure
-                            command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
+                    // Set up progress bar
+                    progressBarServices.Maximum = totalRows;
 
-                            // Get the total number of rows to be inserted
-                            int totalRows = GetTotalRowsForBatchservices(selectedBatchId);
+                    //to Map the DlServices to Hcc Tables
+                    dbHelper.MapDlServices(selectedBatchId);
 
-                            // Initialize progress variables
-                            int insertedRows = 0;
+                    string baseFilename = Constants.CtClients;
+                    dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.Hcc, baseFilename, Constants.Uploadhcc);
 
-                            string baseFilename = Constants.CtClients;
-                            dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.Hcc, baseFilename, Constants.Uploadhcc);
+                    DateTime startTime = DateTime.Now;
+                    txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
 
-                            DateTime startTime = DateTime.Now;
-                            txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
-                            // Update progress textbox with initial progress information
-                            await UpdateProgressAsyncservices(insertedRows, totalRows);
+                    DateTime endTime = DateTime.Now;
+                    UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update the Status label in batch table
 
-                            // Set up progress bar
-                            progressBarServices.Maximum = totalRows;
+                    dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
 
-                            using (SqlDataReader reader = command.ExecuteReader())
-                            {
-                                while (insertedRows < totalRows)
-                                {
-                                    // Process each row
-                                    insertedRows++;
+                    Console.WriteLine(Constants.MappingcompletedsuccessfullyforBatchId + selectedBatchId);
 
-                                    // Update progress bar and text box
-                                    await UpdateProgressAsyncservices(insertedRows, totalRows);
-                                }
-                            }
-                            DateTime endTime = DateTime.Now;
-                            UpdateGridStatus(selectedBatchId, Constants.Hccendcon);//Update the Status label in batch table
+                    // Method to remove a selected row and store the removed batch ID in the database table
+                    RemoveSelectedRow(selectedBatchId, "");
+                    int batchId = dbHelper.GetNextBatchId();//Getting next batchid from Batch table
 
-                            dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
+                    //Updating status and Time on Batch Table
+                    dbHelper.UpdateBatch(batchId, startTime, endTime, allTotalRows);
+                    dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = 18;
+                    dataGridView.Rows[selectedRowIndex].Cells[Constants.ConversionEndedAt].Value = endTime;
+                    DateTime endedTime = DateTime.Now;
+                    TimeSpan totalTime = endTime - startTime; // Calculate total time taken
+                    string eTime = endedTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+                    double totalSeconds = totalTime.TotalSeconds;
+                    txtUploadEnded.Text = eTime;
+                    txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
+                    btncloseHCC.Text = Constants.Close;
 
-                            Console.WriteLine(Constants.MappingcompletedsuccessfullyforBatchId + selectedBatchId);
-
-                            // Method to remove a selected row and store the removed batch ID in the database table
-                            RemoveSelectedRow(selectedBatchId, "");
-                            int batchId = dbHelper.GetNextBatchId();//Getting next batchid from Batch table
-
-                            //Updating status and Time on Batch Table
-                            UpdateBatch(batchId, startTime, endTime, allTotalRows);
-                            dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = 18;
-                            dataGridView.Rows[selectedRowIndex].Cells[Constants.ConversionEndedAt].Value = endTime;
-                            DateTime endedTime = DateTime.Now;
-                            TimeSpan totalTime = endTime - startTime; // Calculate total time taken
-                            string eTime = endedTime.ToString(Constants.MMddyyyyHHmmssbkslash);
-                            double totalSeconds = totalTime.TotalSeconds;
-                            txtUploadEnded.Text = eTime;
-                            txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
-                            btncloseHCC.Text = Constants.Close;
-
-                            //to display the default Grid
-                            PopulateDataGridView();
-                            dataGridView.Refresh();
-                            btncthcc.Enabled = true;
-                        }
-                    }
+                    //to display the default Grid
+                    PopulateDataGridView();
+                    dataGridView.Refresh();
+                    btncthcc.Enabled = true;
                 }
                 else
                 {
@@ -480,27 +372,6 @@ namespace RWDE
             {
                 Console.WriteLine(Constants.Errorsp + ex.Message);
             }
-        }
-        private int GetTotalForBatch(int batchId)//getting total rows from particular tables
-        {
-            int totalRows = 0;
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(Constants.GetTotalRowsQuery, connection))
-                    {
-                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                        totalRows = (int)command.ExecuteScalar();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return totalRows;
         }
         private void PopulateDataGridView()//to display the default Grid
         {
@@ -545,37 +416,7 @@ namespace RWDE
                 Console.WriteLine(Constants.ErrorCode, ex.Message);
             }
         }
-        private void UpdateBatch(int batchId, DateTime startTime, DateTime endTime, int allTotalRows)//Updating status and Time on Batch Table  
-        {
-            try
-            {
-                allTotalRows++;
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    // Define the SQL query to update the ConversionStartedAt and ConversionEndedAt columns
-                    string updateQuery = $"@{Constants.UpdateBatchConversionTimeQuery}";
-
-                    using (SqlCommand command = new SqlCommand(updateQuery, connection))
-                    {
-                        // Set the parameters
-                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                        command.Parameters.AddWithValue(Constants.AtConversionStartedAt, startTime);
-                        command.Parameters.AddWithValue(Constants.AtConversionEndedAt, endTime);
-                        command.Parameters.AddWithValue(Constants.AtAllTotalRows, allTotalRows - 1);
-
-                        // Execute the SQL update command
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($@"{Constants.Errorupdatingbatch}{ex.Message}");
-                // Log or handle the exception appropriately
-            }
-        }
-        private async Task UpdateProgressAsyncservices(int insertedRows, int totalRows)//Services Progress bar
+        public async Task UpdateProgressAsyncservices(int insertedRows, int totalRows)//Services Progress bar
         {
             try
             {
@@ -599,28 +440,6 @@ namespace RWDE
                 Console.WriteLine(Constants.Errorsp + ex.Message);
             }
         }
-        private int GetTotalRowsForBatchservices(int batchId)//Getting total rows from required table
-        {
-            int totalRows = 0;
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand(Constants.GetTotalRowsForBatchservicesQuery, connection))
-                    {
-                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                        totalRows = (int)command.ExecuteScalar();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return totalRows;
-        }
         private void RemoveSelectedRow(int batchId, string status)// // Method to remove a selected row and store the removed batch ID in the database table
         {
             try
@@ -636,50 +455,21 @@ namespace RWDE
                     }
                 }
                 // Add the removed batch ID to the database table
-                AddRemovedBatchIdToDatabase(batchId);
+                dbHelper.AddRemovedBatchIdToDatabase(batchId);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(Constants.Errorsp + ex.Message);
             }
         }
-        private void AddRemovedBatchIdToDatabase(int batchId)// // Method to add a removed batch ID to the database table
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(Constants.AddRemovedBatchIdToDatabaseQuery, conn);
-                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($@"{Constants.ErroraddingremovedbatchIDtodatabase} {ex.Message}");
-            }
-        }
         private void UpdateGridStatus(int batchId, int status)// Updates the status label on the form based on a given status code retrieved from the database.
         {
             try
             {
-                string valueSelectQuery = Constants.UpdateGridStatusQuery;
-                using (SqlConnection sql = new SqlConnection(connectionString))
+                var result = dbHelper.UpdateGridStatus(status);
+                if (result != null)
                 {
-                    using (SqlCommand com = new SqlCommand(valueSelectQuery, sql))
-                    {
-                        com.Parameters.AddWithValue(Constants.AtListsId, status);
-
-                        sql.Open();
-
-                        var result = com.ExecuteScalar();
-
-                        if (result != null)
-                        {
-                            lblStatus.Text = result.ToString();
-                        }
-                    }
+                    lblStatus.Text = result.ToString();
                 }
             }
             catch (Exception ex)
@@ -688,7 +478,7 @@ namespace RWDE
                 Console.WriteLine($@"{Constants.ErrorUpdatingGridStatus}{ex.Message}");
             }
         }
-        private async Task UpdateProgressAsync(int insertedRows, int totalRows)//progress of rows
+        public async Task UpdateProgressAsync(int insertedRows, int totalRows)//progress of rows
         {
             try
             {
@@ -711,27 +501,6 @@ namespace RWDE
             {
                 Console.WriteLine(Constants.Errorsp + ex.Message);
             }
-        }
-        private int GetTotalRowsForBatch(int batchId)//getting total rows from particular tables
-        {
-            int totalRows = 0;
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand($"@{Constants.GetTotalRowsForBatchQuery}", connection))
-                    {
-                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                        totalRows = (int)command.ExecuteScalar();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return totalRows;
         }
         private void btncloseHCC_Click(object sender, EventArgs e)//Closing form
         {
@@ -757,7 +526,10 @@ namespace RWDE
                         break;
                     }
                     // Update the status of the selected batch to Status "19" (Abort)
-                    UpdateBatchStatus(batchId, Constants.Hccabort);
+                    dbHelper.UpdateBatchStatus(batchId, Constants.Hccabort);
+
+                    //to delete the Aborted Batch data
+                    dbHelper.ClearAbortedTables(batchId);
                     // Application.Exit();
                 }
                 Close();
@@ -767,58 +539,6 @@ namespace RWDE
             {
                 // Display or log the exception message
                 MessageBox.Show(Constants.ErrorCode, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        private void UpdateBatchStatus(int selectedBatchId, int status)//Updating Batch Status
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    //to delete the Aborted Batch data
-                    ClearTables(selectedBatchId);
-                    // Construct the SQL UPDATE statement
-                    string query = Constants.UpdateBatchStatus;
-                    // Create and execute the SqlCommand
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        // Add parameters to the command
-                        command.Parameters.AddWithValue(Constants.AtStatus, status);
-                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
-
-                        // Execute the update query
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        // Check if any rows were affected
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(Constants.Errorupdatingbatchstatus, ex.Message);
-            }
-        }
-        private void ClearTables(int batchId)//to delete the Aborted Batch data
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(Constants.Abortconversiondelete, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($@"{Constants.ErrorClearingtables}{ex.Message}");
-                throw; // Re-throw if you want to handle it in the calling method
             }
         }
 

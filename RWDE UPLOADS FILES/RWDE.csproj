@@ -265,7 +265,6 @@
       <DependentUpon>frmConverttoCsv.cs</DependentUpon>
     </Compile>
     <Compile Include="DataGridViewCalendarColumn.cs" />
-    <Compile Include="DataGridViewCalendarDateTimePickerCell.cs" />
     <Compile Include="DataGridViewCalendarTextBoxColumn.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="Deceased Clients Report.cs">

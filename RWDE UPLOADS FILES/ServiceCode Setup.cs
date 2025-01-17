@@ -494,8 +494,8 @@ namespace RWDE
         {
             try
             {
-                using (GraphicsPath path = new GraphicsPath())
-                {
+                GraphicsPath path = new GraphicsPath();
+                
                     int diameter = radius * 2;
 
                     path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
@@ -505,7 +505,6 @@ namespace RWDE
 
                     path.CloseFigure();
                     return path;
-                }
             }
             catch (Exception ex)
             {
@@ -723,6 +722,7 @@ namespace RWDE
         {
             try
             {
+                
                 if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView.Columns[Constants.Edit].Index)
                 {
                     dataGridView.Rows[e.RowIndex].Cells[Constants.Status].ReadOnly = true;
@@ -767,6 +767,7 @@ namespace RWDE
                                 if (row != dataGridView.Rows[e.RowIndex])
                                 {
                                     row.ReadOnly = true;
+                                    row.DefaultCellStyle.BackColor = dataGridView.DefaultCellStyle.BackColor;
                                 }
                             }
                         }
