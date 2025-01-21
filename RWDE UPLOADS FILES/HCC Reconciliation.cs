@@ -208,13 +208,31 @@ namespace RWDE
                         List<DataTable> allidtables;
                         //to load the HCCRecon for Batch ID filter
                         allidtables = dbHelper.LoadDatafilterhccreconBatchid(startDate, endDate, batchids, filterType);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
                         //to combine all the data for different BatchID
                         result = dbHelper.CombineAllResults(allidtables);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
                     }
                     else
                     {
                         //to load the HCCRecon for created and service date filter
                         result = dbHelper.LoadDatafilterhccrecon(startDate, endDate, filterType);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
                     }
 
                     // Bind data to the DataGridView

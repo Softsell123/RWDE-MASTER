@@ -86,6 +86,11 @@ namespace RWDE
 
                     //to get details of clients applied for services
                     DataTable result = dbHelper.LoadConfigurationfilter(startDate, endDate);//to get data in the grid
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
 
                     //to bind the data in DataGridView
                     dataGridView.DataSource = result;

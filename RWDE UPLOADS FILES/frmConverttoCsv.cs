@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Data;
-using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace RWDE
 {
     public partial class CsvFileConversion : Form
     {
-        private readonly string connectionString;
         private readonly DbHelper dbHelper;
 
         public CsvFileConversion()//to initialize data
         {
             InitializeComponent();
             dbHelper = new DbHelper();
-            //get connection string
-            connectionString = dbHelper.GetConnectionString();
+
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
             RegisterEvents(this); //Assigning events to all Controls
@@ -97,9 +92,21 @@ namespace RWDE
 
                 //to Write the CSV data of Clients
                 dbHelper.WriteClientCsvData(ClientfilePath);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
 
                 //to Write the CSV data of Services
                 dbHelper.WriteServicesCsvData(ServicesfilePath);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
             }
             catch (UnauthorizedAccessException)
             {

@@ -234,6 +234,11 @@ namespace RWDE
 
 
                     DataTable result = dbHelper.LoadDatafilter(startDate, endDate);//to load filtered data for monthly reports
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
 
                     // Now you can use the result, e.g., bind it to a DataGridView or process it
                     dataGridView.DataSource = result;

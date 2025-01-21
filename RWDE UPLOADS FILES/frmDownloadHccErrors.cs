@@ -10,7 +10,6 @@ namespace RWDE
 {
     public partial class FrmDownloadHccErrors : Form
     {
-        private readonly string connectionString;
         private readonly DbHelper dbHelper;
 
         public FrmDownloadHccErrors()
@@ -19,7 +18,6 @@ namespace RWDE
             BackColor = Color.White;
             WindowState = FormWindowState.Maximized;
             dbHelper = new DbHelper();
-            connectionString = dbHelper.GetConnectionString();//to get the connection String
 
             //to load the default gridView
             InitializeDataGridView();
@@ -139,7 +137,7 @@ namespace RWDE
                 }
 
                 // Prepare to insert into database
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection(dbHelper.GetConnectionString()))
                 {
                     conn.Open();
                     using (SqlTransaction transaction = conn.BeginTransaction())
@@ -194,8 +192,14 @@ namespace RWDE
                                         }
                                         break;
                                 }
-                                // Insert into database
+                                // Insert the Errors into database
                                 dbHelper.InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
+                                if (dbHelper.ErrorOccurred)
+                                {
+                                    MessageBox.Show(Constants.ErrorOccurred);
+                                    return;
+                                }
+
                                 AddRowToGrid(errorMessage, hccTable, clientId, sourceFileNameStr);
                             }
                             transaction.Commit();
@@ -319,6 +323,12 @@ namespace RWDE
 
                 //filter HCCErrors as per the filename
                 dt = dbHelper.FilterHccErrors(sourceFileName);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 dataGridView.DataSource = dt;
                 dataGridView.AutoGenerateColumns = true;
                 dataGridView.AllowUserToAddRows = false;

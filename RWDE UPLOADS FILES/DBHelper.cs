@@ -12,9 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Configuration;
-using static Spire.Pdf.General.Render.Decode.Jpeg2000.j2k.codestream.HeaderInfo;
-using ClosedXML.Excel;
-// ReSharper disable PossibleNullReferenceException
+
 namespace RWDE
 {
     public class DbHelper : IDisposable
@@ -24,6 +22,7 @@ namespace RWDE
         private bool batchIdIncremented;
         private bool errorLogged;
         private bool _disposed = false;
+        private bool errorOccurred = false;
 
         // Constructor to initialize the DBHelper class with a connection string
         public DbHelper()
@@ -34,7 +33,7 @@ namespace RWDE
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this); // Optional: Prevents finalization as resources are already cleaned up
+            GC.SuppressFinalize(this); //Prevents finalization as resources are already cleaned up
         }
         protected virtual void Dispose(bool disposing)
         {
@@ -54,12 +53,18 @@ namespace RWDE
             return connectionString;
         }
 
+        public bool ErrorOccurred  //getter to get the errorOccurred
+        {
+            get { return errorOccurred; }
+        }
+
         // Method to check if a message is already logged
 
         public async Task<BatchDetails> GetBatchDetailsFromSpAsync(int batchId) //to check whether the conversion completed or not
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     using (SqlCommand cmd = new SqlCommand(Constants.ConversionCompletion, conn))
@@ -89,6 +94,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                errorOccurred = true;
                 return null;
             }
         }
@@ -97,6 +103,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     using (SqlCommand cmd = new SqlCommand(Constants.ClientConversionCompletion, conn))
@@ -126,6 +133,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                errorOccurred = true;
                 return null;
             }
         }
@@ -134,6 +142,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     using (SqlCommand cmd = new SqlCommand(Constants.ClientGenerationCompletion, conn))
@@ -163,6 +172,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                errorOccurred = true;
                 return null;
             }
         }
@@ -171,6 +181,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     using (SqlCommand cmd = new SqlCommand(Constants.ServiceGenerationCompletion, conn))
@@ -199,6 +210,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                errorOccurred = true;
                 return null;
             }
         }
@@ -210,6 +222,7 @@ namespace RWDE
             List<int> noDataIds = new List<int>();
             try
             {
+                errorOccurred = false;
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
@@ -276,6 +289,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
             }
         }
@@ -295,6 +309,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred=false;
                 int nextBatchId;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -336,6 +351,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                errorOccurred = true;
                 return 0;
             }
         }
@@ -343,6 +359,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -359,6 +376,7 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                errorOccurred = true;
                 return 0;
             }
         }
@@ -366,6 +384,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -380,7 +399,7 @@ namespace RWDE
                     string time = startedAt.ToString(Constants.HHmmss);
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     command.Parameters.AddWithValue(Constants.AtFilename, fileName);
-                    command.Parameters.AddWithValue(Constants.AtDescription, string.Format(Constants.OchinToRwdeOnAt, date, time));
+                    command.Parameters.AddWithValue(Constants.AtDescription, description);
                     command.Parameters.AddWithValue(Constants.AtPath, path);
                     command.Parameters.AddWithValue(Constants.AtType, type);
                     command.Parameters.AddWithValue(Constants.AtUploadStartedAt, startedAt);
@@ -402,7 +421,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(string.Format(Constants.ErrorInsertingBatch, ex.Message));
+                MessageBox.Show(string.Format(Constants.ErrorInsertingBatch, ex.Message));
+                errorOccurred = true;
                 // Log or handle the exception appropriately
             }
         }
@@ -410,6 +430,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlCommand cmd = new SqlCommand(Constants.InsertClientServices, connection))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -437,15 +458,16 @@ namespace RWDE
                         connection.Open();
                     }
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine(Constants.DataInsertedSuccessfully);
                 }
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($@"{Constants.SqlError}{sqlEx.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.SqlError}{sqlEx.Message}");
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 Console.WriteLine($@"{Constants.Errorsp}{ex.Message}");
             }
         }
@@ -453,6 +475,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlCommand cmd = new SqlCommand("InsertClientServicesPHI", connection))
                 {
 
@@ -480,22 +503,25 @@ namespace RWDE
                         connection.Open();
                     }
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine(Constants.DataInsertedSuccessfully);
+                    MessageBox.Show(Constants.DataInsertedSuccessfully);
                 }
             }
             catch (SqlException sqlEx)
             {
-                Console.WriteLine($@"{Constants.SqlError}{sqlEx.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.SqlError}{sqlEx.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(string.Format(Constants.ErrorMessagedynamic, ex.Message));
+                errorOccurred = true;
+                MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message));
             }
         }
         public void InsertClientInformation(SqlConnection connection, string[] data, int batchid)//cms client insertion
         {
             try
             {
+                errorOccurred = false;
                 using (SqlCommand command = new SqlCommand(Constants.InsertClientInfoTest, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -610,7 +636,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -618,6 +645,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlCommand command = new SqlCommand(Constants.InsertClientInfoPhiWithUrn, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -732,7 +760,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
             }
         }
         // Helper methods for conversions
@@ -740,6 +769,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (int.TryParse(input, out int result))
                 {
                     return result;
@@ -748,6 +778,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -760,6 +791,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -768,6 +800,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (DateTime.TryParse(input, out DateTime result))
                 {
                     return result;
@@ -776,6 +809,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -784,6 +818,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (decimal.TryParse(input, out decimal result))
                 {
                     return result;
@@ -792,6 +827,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -800,6 +836,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (string.IsNullOrEmpty(value))
                 {
                     return false;
@@ -808,6 +845,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return false;
             }
@@ -816,6 +854,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (string.IsNullOrEmpty(value))
                 {
                     return null;
@@ -831,6 +870,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -839,10 +879,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 return bool.TryParse(value, out bool result) ? (bool?)result : null;
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -851,6 +893,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (string.IsNullOrEmpty(value))
                 {
                     return null;
@@ -867,6 +910,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -876,10 +920,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 return value == null || value == DBNull.Value ? (string)null : value.ToString();
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -888,6 +934,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (DateTime.TryParse(value?.ToString(), out DateTime result))
                 {
                     return result.ToString(Constants.YyyyMMddHHmmss);
@@ -896,6 +943,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -904,6 +952,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlCommand command = new SqlCommand(Constants.InsertClientInfoPhi, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -1018,13 +1067,15 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
             }
         }
         private int? ConvertToNullableInt(string value)//parse data to int
         {
             try
             {
+                errorOccurred = false;
                 if (int.TryParse(value, out int result))
                 {
                     return result;
@@ -1033,6 +1084,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1041,6 +1093,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (bool.TryParse(value, out bool result))
                 {
                     return result;
@@ -1049,6 +1102,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1057,6 +1111,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (decimal.TryParse(value, out decimal result))
                 {
                     return result;
@@ -1065,6 +1120,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1074,6 +1130,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (DateTime.TryParse(value, out DateTime result))
                 {
                     return result;
@@ -1082,6 +1139,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1090,6 +1148,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string ariesId = GetStringValue(data, 9); // Extract Aries ID from data array
 
                 SqlCommand command = new SqlCommand(Constants.InsertIntoDlClients, connection)
@@ -1137,22 +1196,28 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClientData), fileName, lineNumber);
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClientData), fileName, lineNumber);
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return false;
+                }
                 throw;
             }
 
         }
         public bool InsertClientDataPhi(SqlConnection connection, string[] data, int batchid, string fileName)//Client table insertion
-
         {
             try
             {
+                errorOccurred = false;
                 string ariesId = GetStringValue(data, 9); // Extract Aries ID from data array
 
-                SqlCommand command = new SqlCommand("InsertIntoDlClientsPHI", connection)
+                SqlCommand command = new SqlCommand(Constants.InsertIntoDlClientsPhi, connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -1197,17 +1262,24 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClientData), fileName, lineNumber);
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClientData), fileName, lineNumber);
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return true;
+                }
                 throw;
             }
         }
-        public void InsertdeceasedData(SqlConnection connection, string[] data, int batchid, string fileName)//Deceased Table Insertion
+        public void InsertdeceasedData(SqlConnection connection, string[] data, int batchid)//Deceased Table Insertion
         {
             try
             {
+                errorOccurred = false;
                 string ariesId = GetStringValue(data, 0); // Extract Aries ID from data array
 
                 using (SqlCommand command = new SqlCommand(Constants.InsertIntoDlDeceasedClients, connection))
@@ -1232,15 +1304,22 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 error = ex.Message; // Log error message
                 Log($"{ex.Message}", Constants.Error, Constants.InsertClientData, Constants.Uploadct); // Assuming fileName is accessible herE
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 throw;
             }
         }
-        public void InsertConsentData(SqlConnection connection, string[] data, int batchid, string fileName)//Consent table insertion
+        public void InsertConsentData(SqlConnection connection, string[] data, int batchid)//Consent table insertion
         {
             try
             {
+                errorOccurred = false;
                 // Parse date values from the CSV data
                 DateTime? documentDate = ParseDateTime(GetStringValue(data, 5));
                 DateTime? obtainDate = ParseDateTime(GetStringValue(data, 6));
@@ -1281,16 +1360,22 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-
+                errorOccurred = true;
                 error = ex.Message;
                 Log($"{ex.Message}", Constants.Error, Constants.ConsentData, Constants.Uploadct); // Assuming fileName is accessible here
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 throw;
             }
         }
-        public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid, string fileName)//Eligibility Table insertion
+        public void InsertDlEligibility(SqlConnection connection, string[] data, int batchid)//Eligibility Table insertion
         {
             try
             {
+                errorOccurred = false;
                 // Parse date values from the CSV data
                 DateTime? documentDate = ParseDateTime(GetStringValue(data, 5));
                 DateTime? obtainDate = ParseDateTime(GetStringValue(data, 6));
@@ -1329,8 +1414,14 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
                 Log($"{ex.Message}", Constants.Error, Constants.AriesEligibility, Constants.Uploadct);
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 throw;
             }
         }
@@ -1338,6 +1429,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 DateTime? result = null;
                 if (!string.IsNullOrEmpty(value))
                 {
@@ -1354,13 +1446,14 @@ namespace RWDE
                     }
                     else
                     {
-                        Console.WriteLine(string.Format(Constants.FailedToParseDate, value));
+                        MessageBox.Show(string.Format(Constants.FailedToParseDate, value));
                     }
                 }
                 return result;
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1370,10 +1463,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 return data.Length > index ? data[index].Trim('"') : string.Empty;
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1383,6 +1478,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlCommand command = new SqlCommand(Constants.InsertDlServices, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -1390,6 +1486,11 @@ namespace RWDE
                     // Extract service ID from service notes
                     string serviceNotes = GetStringData(data, 2)?.Trim('"'); // Assuming service notes are at index 2
                     string serviceId = ExtractServiceId(serviceNotes);
+                    if (ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
 
                     // Add parameters to the stored procedure
                     command.Parameters.AddWithValue(Constants.AtServiceId, serviceId);
@@ -1410,18 +1511,25 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Get detailed error information from the stack trace
 
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertDlServices), fileName, rowNumber);
+                LogError(ex.Message, ex.StackTrace, nameof(InsertDlServices), fileName, rowNumber);
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         public void InsertDlServicesPhi(SqlConnection connection, string[] data, int batchid, string fileName, int rowNumber) // DlServices table insertion with PHI
         {
             try
             {
+                errorOccurred = false;
                 using (SqlCommand command = new SqlCommand(Constants.InsertDlServicesPhi, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -1429,7 +1537,11 @@ namespace RWDE
                     // Extract service ID from service notes
                     string serviceNotes = GetStringData(data, 2)?.Trim('"'); // Assuming service notes are at index 2
                     string serviceId = ExtractServiceId(serviceNotes);
-
+                    if (ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
                     // Add parameters to the stored procedure
                     command.Parameters.AddWithValue(Constants.AtServiceId, serviceId);
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
@@ -1449,18 +1561,25 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Get detailed error information from the stack trace
 
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertDlServices), fileName, rowNumber);
+                LogError(ex.Message, ex.StackTrace, nameof(InsertDlServices), fileName, rowNumber);
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         private string ExtractServiceId(string serviceNotes) // extraction of Service Id
         {
             try
             {
+                errorOccurred = false;
                 if (string.IsNullOrWhiteSpace(serviceNotes))
                 {
                     throw new ArgumentException(Constants.ServiceNotesCannotBeNullOrEmpty);
@@ -1492,6 +1611,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1500,6 +1620,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (index >= 0 && index < data.Length)
                 {
                     return data[index];
@@ -1511,14 +1632,16 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
         }
-        public void LogError(string message, string xmlFilePath, string stackTrace, string functionName, string fileName, int? lineNumber) // Logger table insertion for errors and completion
+        public void LogError(string message, string stackTrace, string functionName, string fileName, int? lineNumber) // Logger table insertion for errors and completion
         {
             try
             {
+                errorOccurred = false;
                 int maxStackLength = 1000; // Adjust this to match your database schema
 
                 // Truncate the stack trace if it exceeds the maximum length
@@ -1553,14 +1676,16 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     // Log an additional error if logging itself fails
-                    Console.WriteLine(ex.Message);
+                    MessageBox.Show(ex.Message);
                 }
 
                 errorLogged = true;
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
 
             }// Set errorLogged flag to true after logging the first error
@@ -1569,6 +1694,7 @@ namespace RWDE
         {//Updating status and Time on Batch Table     
             try
             {
+                errorOccurred = false;
                 allTotalRows++;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1593,7 +1719,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.Errorupdatingbatch}{ex.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.Errorupdatingbatch}{ex.Message}");
                 // Log or handle the exception appropriately
             }
         }
@@ -1601,6 +1728,7 @@ namespace RWDE
         {//Updating status and Time on Batch Table     
             try
             {
+                errorOccurred = false;
                 allTotalRows++;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -1625,14 +1753,16 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.Errorupdatingbatch}{ex.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.Errorupdatingbatch}{ex.Message}");
                 // Log or handle the exception appropriately
             }
         }
-        public void InsertDlFinancials(SqlConnection connection, string[] data, int batchid, string fileName)//Financial data insertion
+        public void InsertDlFinancials(SqlConnection connection, string[] data, int batchid)//Financial data insertion
         {
             try
             {
+                errorOccurred = false;
                 using (SqlCommand command = new SqlCommand(Constants.InsertDlFinancial, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -1698,9 +1828,15 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 error = $"{Constants.ErrorInsertingClientParametersIntoTheTable}{ex.Message}\n{ex.StackTrace}";
-                Console.WriteLine(error);
+                MessageBox.Show(error);
                 Log($"{ex.Message}", Constants.Error, Constants.DlFinancials, Constants.Uploadct); // Assuming fileName is accessible here
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 throw;// Log the error
             }
         }
@@ -1708,6 +1844,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (!string.IsNullOrEmpty(value))
                 {
                     if (decimal.TryParse(value, out decimal decimalValue))
@@ -1717,7 +1854,7 @@ namespace RWDE
                     else
                     {
                         // Log or handle the invalid value
-                        Console.WriteLine($@"{Constants.InvalidDecimalValue}{value}");
+                        MessageBox.Show($@"{Constants.InvalidDecimalValue}{value}");
                         command.Parameters.AddWithValue(parameterName, DBNull.Value);
                     }
                 }
@@ -1728,6 +1865,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
 
@@ -1736,6 +1874,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (!string.IsNullOrEmpty(value))
                 {
                     if (int.TryParse(value, out int intValue))
@@ -1745,7 +1884,7 @@ namespace RWDE
                     else
                     {
                         // Log or handle the invalid value
-                        Console.WriteLine($@"{Constants.InvalidIntegerValue}{value}");
+                        MessageBox.Show($@"{Constants.InvalidIntegerValue}{value}");
                         command.Parameters.AddWithValue(parameterName, DBNull.Value);
                     }
                 }
@@ -1756,6 +1895,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
 
@@ -1765,6 +1905,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (index >= 0 && index < data.Length)
                 {
                     return data[index];
@@ -1773,6 +1914,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1781,6 +1923,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (index >= 0 && index < data.Length)
                 {
                     if (DateTime.TryParse(data[index], out DateTime result))
@@ -1792,6 +1935,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1800,6 +1944,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (index >= 0 && index < data.Length)
                 {
                     if (int.TryParse(data[index], out int result))
@@ -1811,6 +1956,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1819,6 +1965,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (decimal.TryParse(data[index], out decimal result))
                 {
                     return result;
@@ -1827,6 +1974,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1835,6 +1983,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (bool.TryParse(data[index], out bool result))
                 {
                     return result;
@@ -1843,6 +1992,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1853,6 +2003,7 @@ namespace RWDE
             int insertedCount = 0;
             try
             {
+                errorOccurred = false;
                 // Create a command for the stored procedure within the transaction
                 SqlCommand cmd = conn.CreateCommand();
                 //cmd.Transaction = trans; // Assign the transaction to the command
@@ -1878,11 +2029,21 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertClients), fileName, lineNumber);
+                LogError(ex.Message,  ex.StackTrace, nameof(InsertClients), fileName, lineNumber);
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return 0;
+                }
                 LogError($"{ex.Message}", fileName); // Handle the exception within the transaction (e.g., log it)
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 throw;
             }
         }
@@ -1893,6 +2054,7 @@ namespace RWDE
             string fileName = Path.GetFileName(xmlFilePath);
             try
             {
+                errorOccurred = false;
                 // Process each Client node in the XML document
                 foreach (XmlNode clientNode in xmlDoc.SelectNodes(Constants.BkslashClient))
                 {
@@ -1908,15 +2070,35 @@ namespace RWDE
                                 int agencyClientId = int.Parse(agencySpecificsNode.Attributes[Constants.AgencyClientId1].Value);
 
                                 // Check if the AgencyClientID and AriesID pair should be inserted
-                                if (ShouldInsertAgencyClient(agencyClientId, ariesId, xmlDoc))
+                                if (ShouldInsertAgencyClient(ariesId, xmlDoc))
                                 {
+                                    if (ErrorOccurred)
+                                    {
+                                        MessageBox.Show(Constants.ErrorOccurred);
+                                        break;
+                                    }
                                     // Process each EligibilityDocument node within the Client node
                                     foreach (XmlNode eligibilityNode in clientNode.SelectNodes(Constants.EligibilityDocument))
                                     {
                                         string documentType = GetAttributeValue(eligibilityNode, Constants.DocumentType);
                                         DateTime? documentDate = GetNullableDateTimeAttributeValue(eligibilityNode, Constants.DocumentDate);
+                                        if (ErrorOccurred)
+                                        {
+                                            MessageBox.Show(Constants.ErrorOccurred);
+                                            break;
+                                        }
                                         DateTime? obtainDate = GetNullableDateTimeAttributeValue(eligibilityNode, Constants.ObtainDate);
+                                        if (ErrorOccurred)
+                                        {
+                                            MessageBox.Show(Constants.ErrorOccurred);
+                                            break;
+                                        }
                                         DateTime? expireDate = GetNullableDateTimeAttributeValue(eligibilityNode, Constants.ExpireDate);
+                                        if (ErrorOccurred)
+                                        {
+                                            MessageBox.Show(Constants.ErrorOccurred);
+                                            break;
+                                        }
                                         string source = GetAttributeValue(eligibilityNode, Constants.Source);
                                         string notes = GetAttributeValue(eligibilityNode, Constants.Notes);
 
@@ -1950,9 +2132,14 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Log error for the main insertion process
-                Console.WriteLine(Constants.ErrorInsertingEligibilityDocuments + ex.Message);
+                MessageBox.Show(Constants.ErrorInsertingEligibilityDocuments + ex.Message);
                 LogError($"{ex.Message}", fileName);
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 // Return zero inserted count to indicate failure
                 return 0;
             }
@@ -1960,10 +2147,11 @@ namespace RWDE
         }
 
         // Helper method to determine if AgencyClientID and AriesID pair should be inserted
-        private bool ShouldInsertAgencyClient(int agencyClientId, int ariesId, XmlDocument xmlDoc)
+        private bool ShouldInsertAgencyClient( int ariesId, XmlDocument xmlDoc)
         {
             try
             {
+                errorOccurred = false;
                 // Check if the AgencyClientID and AriesID pair has associated EligibilityDocument nodes in the XML
                 XmlNodeList eligibilityNodes = xmlDoc.SelectNodes(string.Format(Constants.ClientariesIdEligibilityDocument, ariesId));
 
@@ -1971,6 +2159,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return false;
             }
@@ -1979,6 +2168,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (node != null && node.Attributes != null && node.Attributes[attributeName] != null)
                 {
                     return node.Attributes[attributeName].Value;
@@ -1987,6 +2177,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -1996,6 +2187,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string attributeValue = GetAttributeValue(node, attributeName);
                 if (!string.IsNullOrEmpty(attributeValue) && DateTime.TryParse(attributeValue, out DateTime result))
                 {
@@ -2005,6 +2197,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -2017,6 +2210,7 @@ namespace RWDE
             string fileName = Path.GetFileName(xmlFilePath);
             try
             {
+                errorOccurred = false;
                 // Process each ServiceLineItem node in the XML document
                 foreach (XmlNode serviceNode in xmlDoc.SelectNodes(Constants.BkslashServiceLineItem))
                 {
@@ -2055,6 +2249,11 @@ namespace RWDE
 
                         // Extract and set ServiceID
                         string serviceId = ExtractServiceId(serviceNode);
+                        if (ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            break;
+                        }
                         if (!string.IsNullOrEmpty(serviceId))
                         {
                             insertCmd.Parameters.AddWithValue(Constants.AtServiceId, serviceId);
@@ -2067,9 +2266,13 @@ namespace RWDE
 
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Log error for the main insertion process
                 LogError($"{Constants.ErrorInsertingServiceLineItems}{ex.Message}", fileName);
-
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 // Return zero inserted count to indicate failure
             }
             finally
@@ -2083,9 +2286,10 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (node == null || string.IsNullOrEmpty(attributeName))//
                 {
-                    return default(T);
+                    return default;
                 }
 
                 XmlNode attributeNode = node.Attributes.GetNamedItem(attributeName);
@@ -2093,18 +2297,20 @@ namespace RWDE
                 {
                     return (T)Convert.ChangeType(attributeNode.Value, typeof(T));
                 }
-                return default(T);
+                return default;
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
-                return default(T);
+                return default;
             }
         }
         private T GetAttributeValueOrDefault<T>(XmlNode node, string attributeName, T defaultValue)//Getting or setting values to the XMl nodes
         {
             try
             {
+                errorOccurred = false;
                 if (node == null || string.IsNullOrEmpty(attributeName))
                 {
                     return defaultValue;
@@ -2119,6 +2325,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return defaultValue;
             }
@@ -2127,7 +2334,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string dateString = GetAttributeValue<string>(node, attributeName);
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 if (!string.IsNullOrEmpty(dateString))
                 {
                     if (DateTime.TryParse(dateString, out DateTime result))
@@ -2139,6 +2351,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return DateTime.MinValue;
             }
@@ -2147,7 +2360,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string decimalString = GetAttributeValue<string>(node, attributeName);
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 if (!string.IsNullOrEmpty(decimalString) && decimal.TryParse(decimalString, out decimal result))
                 {
                     return result;
@@ -2156,6 +2374,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -2165,6 +2384,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (errorLogged)
                     return; // Abort further logging if an error has already been logged
 
@@ -2195,14 +2415,16 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     // Log an additional error if logging itself fails
-                    Console.WriteLine(ex.Message);
+                    MessageBox.Show(ex.Message);
                 }
 
                 errorLogged = true; // Set errorLogged flag to true after logging the first error
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return;
             }
@@ -2211,6 +2433,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string notes = GetAttributeValue(serviceNode, Constants.Notes);
 
                 // Check if notes attribute starts with "{Constants.AtIdEqualTto}", "{Constants.AtIdEqualTtoCaps}", Constants.IdHyphen, or Constants.IdColon
@@ -2232,6 +2455,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -2241,6 +2465,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(Constants.InsertLog, connection)
@@ -2263,7 +2488,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.ErrorLoggingMessage}{ex.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.ErrorLoggingMessage}{ex.Message}");
             }
         }
         public void DeleteBatchochin(string batchId)//Delete All Values form all Ochin tables 
@@ -2272,6 +2498,7 @@ namespace RWDE
 
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
 
@@ -2286,6 +2513,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 MessageBox.Show(ex.Message);
             }
@@ -2295,9 +2523,15 @@ namespace RWDE
             string connectionString = GetConnectionString();
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     string storedProcedure = GetStoredProcedureByType(type);
+                    if (ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
                     using (SqlCommand command = new SqlCommand(storedProcedure, connection))
                     {
                         connection.Open();
@@ -2310,6 +2544,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception($"{Constants.ErrorDeletingBatch}{batchId}", ex);
             }
@@ -2318,6 +2553,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 // Adjust the stored procedure name based on the batch type
                 if (type == Constants.ClientTrack)
                 {
@@ -2338,6 +2574,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -2348,6 +2585,7 @@ namespace RWDE
             string connectionString = GetConnectionString();
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 using (SqlCommand command = new SqlCommand(Constants.ViewAllBatchDatas, connection))
                 {
@@ -2360,6 +2598,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2372,6 +2611,7 @@ namespace RWDE
             string connectionString = GetConnectionString();
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 using (SqlCommand command = new SqlCommand(Constants.ViewAllBatchDatasLoad, connection))
                 {
@@ -2384,6 +2624,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2396,6 +2637,7 @@ namespace RWDE
             string connectionString = GetConnectionString();
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 using (SqlCommand command = new SqlCommand(Constants.ViewAllBatchDatasHcc, connection))
                 {
@@ -2408,6 +2650,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2418,6 +2661,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -2436,6 +2680,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -2447,6 +2692,7 @@ namespace RWDE
 
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 using (SqlCommand command = new SqlCommand(Constants.GetParticularBatchDatas, connection))
                 {
@@ -2462,6 +2708,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2472,6 +2719,7 @@ namespace RWDE
             List<string> batchTypeValues = new List<string>();
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetAllBatchType;
 
                 using (SqlConnection sql = new SqlConnection(connectionString))
@@ -2492,6 +2740,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Optionally, log the exception
                 MessageBox.Show(ex.Message);
             }
@@ -2503,6 +2752,7 @@ namespace RWDE
             List<string> batchTypeValues = new List<string>();
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetAllBatchTypeHcc;
 
                 using (SqlConnection sql = new SqlConnection(connectionString))
@@ -2523,6 +2773,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Optionally, log the exception
                 MessageBox.Show(ex.Message);
             }
@@ -2534,6 +2785,7 @@ namespace RWDE
             List<string> batchTypeValues = new List<string>();
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetallbatchtypEview;
 
                 using (SqlConnection sql = new SqlConnection(connectionString))
@@ -2554,6 +2806,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Optionally, log the exception
                 MessageBox.Show(ex.Message);
             }
@@ -2566,6 +2819,7 @@ namespace RWDE
             string connectionStringLocal = GetConnectionString();//to get the Connection String
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 using (SqlCommand command = new SqlCommand(Constants.GetParticularConversionDatas, connection))
                 {
@@ -2581,6 +2835,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 MessageBox.Show(ex.Message);
             }
@@ -2593,6 +2848,7 @@ namespace RWDE
 
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 using (SqlCommand command = new SqlCommand(Constants.GetParticularnGenerationDatasConversionXml, connection))
                 {
@@ -2608,6 +2864,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2619,6 +2876,7 @@ namespace RWDE
             string connectionStringLocal = GetConnectionString();//To get the Connection String
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 using (SqlCommand command = new SqlCommand(Constants.GetParticularnGenerationDatasConversion, connection))
                 {
@@ -2634,6 +2892,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2647,6 +2906,7 @@ namespace RWDE
 
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 using (SqlCommand command = new SqlCommand(Constants.GetParticularnGenerationDatasConversionHcc, connection))
                 {
@@ -2662,6 +2922,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2678,6 +2939,7 @@ namespace RWDE
 
             try
             {
+                errorOccurred = false;
                 // Use a using statement to ensure the SqlConnection is properly disposed of after use
                 using (SqlConnection com = new SqlConnection(connectionString))
                 {
@@ -2701,8 +2963,9 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Catch any exceptions and write the error message to the console
-                Console.WriteLine(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             // Return the populated DataTable
             return dataTable;
@@ -2713,6 +2976,7 @@ namespace RWDE
             string query = Constants.SpGetTopServiceCodeSetup;
             try
             {
+                errorOccurred = false;
                 using (SqlConnection com = new SqlConnection(connectionString))
                 {
                     com.Open();
@@ -2726,12 +2990,13 @@ namespace RWDE
                 }
                 if (dataTable.Rows.Count == 0)
                 {
-                    Console.WriteLine(Constants.QueryExecutedButNoDataFound);
+                    MessageBox.Show(Constants.QueryExecutedButNoDataFound);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
             }
             return dataTable;
         }
@@ -2739,6 +3004,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 var results = new List<Dictionary<string, string>>();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -2765,6 +3031,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -2774,6 +3041,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 var results = new List<Dictionary<string, string>>();
                 var insertData = new List<SqlParameter[]>();
 
@@ -2837,6 +3105,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -2846,6 +3115,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 var results = new List<Dictionary<string, string>>();
                 var insertData = new List<SqlParameter[]>();
 
@@ -2908,6 +3178,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -2916,6 +3187,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 var results = new List<Dictionary<string, string>>();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -2940,6 +3212,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -2953,6 +3226,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     connection.Open();
                     using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
                     {
@@ -2966,6 +3240,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -2976,6 +3251,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 var results = new List<Dictionary<string, string>>();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3000,6 +3276,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3008,6 +3285,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 var results = new List<Dictionary<string, string>>();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3057,6 +3335,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3065,6 +3344,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 var result = new List<Dictionary<string, string>>();
                 using (SqlConnection sql = new SqlConnection(connectionString))
                 {
@@ -3107,6 +3387,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 throw new Exception(Constants.ErrorRetrievingData, ex);
             }
         }
@@ -3114,10 +3395,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedCd4);//fetch particular client data values
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3126,10 +3409,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromMedVl);//fetch particular client data values
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3138,10 +3423,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromHivTest);//fetch particular client data values
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3150,10 +3437,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromInsur);//fetch particular client data values
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3162,10 +3451,12 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 return FetchSubClientValues(clientid, batchid, Constants.FetchSubClientDataFromRace);//fetch particular client data values
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3181,6 +3472,7 @@ namespace RWDE
             string operation = "";
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand(Constants.InsertOrUpdateContract, connection))
@@ -3209,8 +3501,9 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Log the exception or handle it as per your application's error handling strategy
-                Console.WriteLine($@"{Constants.ErrorInInsertOrUpdateContractMethod}{ex.Message}");
+                MessageBox.Show($@"{Constants.ErrorInInsertOrUpdateContractMethod}{ex.Message}");
                 throw; // Re-throw the exception to propagate it to the caller
             }
             return operation;
@@ -3220,6 +3513,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
                 {
                     // Define the name of the stored procedure
@@ -3245,6 +3539,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Show a message box with the error message
                 MessageBox.Show(ex.Message);
             }
@@ -3255,6 +3550,7 @@ namespace RWDE
 
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionStringLocal))
                 {
                     using (SqlCommand command = new SqlCommand(Constants.UpdateContract, connection))
@@ -3275,6 +3571,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
         }
@@ -3282,6 +3579,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(GetConnectionString()))
                 {
                     // Define the name of the stored procedure
@@ -3307,6 +3605,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Show a message box with the error message
                 MessageBox.Show(ex.Message);
             }
@@ -3315,6 +3614,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand(Constants.InsertOrUpdateServiceCode, connection))
@@ -3351,6 +3651,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
         }
@@ -3369,6 +3670,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand(Constants.InsertOrUpdateServiceCode, connection))
@@ -3408,6 +3710,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Log or handle the error as needed
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
                 return null; // or return an appropriate error value
@@ -3418,6 +3721,7 @@ namespace RWDE
             DataTable contracts = new DataTable();
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     // Define the name of the stored procedure
@@ -3440,6 +3744,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Log or handle the error as needed
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
             }
@@ -3451,6 +3756,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 // Validate that the dates are within the SQL Server range
                 if (startDate < new DateTime(1753, 1, 1)) startDate = new DateTime(1753, 1, 1);
                 if (endDate > new DateTime(9999, 12, 31)) endDate = new DateTime(9999, 12, 31);
@@ -3475,6 +3781,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3484,6 +3791,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 // Validate that the dates are within the SQL Server range
                 if (startDate < new DateTime(1753, 1, 1)) startDate = new DateTime(1753, 1, 1);
                 if (endDate > new DateTime(9999, 12, 31)) endDate = new DateTime(9999, 12, 31);
@@ -3508,6 +3816,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3516,6 +3825,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 DataTable dataTable = new DataTable();
                 string query = Constants.GetFilteredDataQuery;
 
@@ -3532,6 +3842,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3544,6 +3855,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     conn.Open();
                     string query = Constants.LoadDataMonthYearQuery;
 
@@ -3560,6 +3872,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     // Handle exceptions (logging, rethrowing, etc.)
                     throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
                 }
@@ -3574,6 +3887,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     conn.Open();
                     string query = Constants.LoadDataQuery;
 
@@ -3590,6 +3904,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     // Handle exceptions (logging, rethrowing, etc.)
                     throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
                 }
@@ -3605,6 +3920,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     conn.Open();
                     string query = Constants.SpUploadDashboardReport; // Ensure this is the correct store procedure name
 
@@ -3622,6 +3938,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     // Handle exceptions (logging, rethrowing, etc.)//PUSH AGAIN
                     MessageBox.Show(ex.Message);
                 }
@@ -3637,6 +3954,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     conn.Open();
 
                     // Execute the stored procedure to update HCCServices if needed
@@ -3679,6 +3997,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
                 }
             }
@@ -3690,6 +4009,7 @@ namespace RWDE
             List<int> noDataIds = new List<int>();
             try
             {
+                errorOccurred = false;
                 foreach (int onebatch in batchids)
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
@@ -3726,6 +4046,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
             return result;
@@ -3736,6 +4057,7 @@ namespace RWDE
             DataTable dt = result[0].Clone();
             try
             {
+                errorOccurred = false;
                 // Create an empty table with the same structure
                 foreach (var table in result)
                 {
@@ -3747,6 +4069,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
             return dt;
@@ -3758,6 +4081,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     conn.Open();
 
                     // Choose stored procedure based on filterType
@@ -3779,6 +4103,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -3791,6 +4116,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     conn.Open();
                     string query = Constants.ClientDemographicsQuery; // Ordering by the minimum date in each group
 
@@ -3805,6 +4131,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     // Handle exceptions (logging, rethrowing, etc.)
                     MessageBox.Show(ex.Message);
                 }
@@ -3819,6 +4146,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     conn.Open();
                     string query = Constants.ManualUploadReport; // Ordering by the minimum date in each group
 
@@ -3834,6 +4162,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     // Handle exceptions (logging, rethrowing, etc.)
                     MessageBox.Show(ex.Message);
                 }
@@ -3848,6 +4177,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     conn.Open();
                     string query = Constants.LoadLogErrorQuery; // Ordering by the minimum date in each group
 
@@ -3862,6 +4192,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     // Handle exceptions (logging, rethrowing, etc.)
                     MessageBox.Show(ex.Message);
                 }
@@ -3873,6 +4204,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 DataTable hccServices = new DataTable();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3885,6 +4217,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3893,6 +4226,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 DataTable hccClients = new DataTable();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -3904,6 +4238,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3912,6 +4247,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 DataTable hccClients = new DataTable();
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -3933,6 +4269,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3941,6 +4278,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 DataTable hccServiceCodeSetup = new DataTable();
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -3954,6 +4292,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3962,6 +4301,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 List<string> clientIds = new List<string>();
                 string query = Constants.GetAgencyClientIdQuery;
 
@@ -3983,6 +4323,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -3992,6 +4333,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 int totalServiceEntries = 0;
                 string query = Constants.GetTotalServiceQuery;
 
@@ -4007,6 +4349,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return -1;
             }
@@ -4015,6 +4358,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 int serviceEntriesNotMappedToHcc = 0;
                 string query = Constants.GetNotMappedServicesQuery;
 
@@ -4030,6 +4374,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return -1;
             }
@@ -4039,11 +4384,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetMappedServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4053,11 +4400,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetNotExportedServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4067,11 +4416,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetMhServiceCountQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4081,11 +4432,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetPostTimeBoxServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4096,11 +4449,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetMissingExpiryServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4110,11 +4465,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetMissingHccIdServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4124,11 +4481,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetNotEnrolledServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4138,11 +4497,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetPreRegServiceCountQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4152,11 +4513,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetEligibilityMissingServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4166,11 +4529,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetStaffMissingServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4180,11 +4545,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetZerUnitOfServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4194,11 +4561,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetWaiverServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4208,6 +4577,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetServiceDatesQuery;
 
                 var serviceDates = new List<DateTime>();
@@ -4232,6 +4602,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -4241,6 +4612,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 var result = new List<DateTime>();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -4263,6 +4635,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -4271,11 +4644,13 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetItDropServicesQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4286,6 +4661,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 int result = 0;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -4299,6 +4675,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
@@ -4309,6 +4686,7 @@ namespace RWDE
             int currentBatchId = 0;
             try
             {
+                errorOccurred = false;
                 // SQL query to get the latest batch ID from the database
                 string query = Constants.GetAbortBatchIdQuery;
 
@@ -4329,6 +4707,7 @@ namespace RWDE
                     }
                     catch (Exception ex)
                     {
+                        errorOccurred = true;
                         // Handle any exceptions, like logging or showing a message
                         MessageBox.Show(Constants.ErrorFetchingTheBatchId + ex.Message);
                     }
@@ -4341,6 +4720,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return currentBatchId;
             }
@@ -4350,19 +4730,22 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 string query = Constants.GetMXmlBatchIdQuery;
                 return ExecuteScalarQuery(query);
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return 0;
             }
         }
-        public static string GetFileName(bool includeClient)//to get the filename of the generated XML
+        public string GetFileName(bool includeClient)//to get the filename of the generated XML
         {
             try
             {
+                errorOccurred = false;
                 string fileName = DateTime.Now.ToString(Constants.YyyyMMdd);
 
                 if (includeClient)
@@ -4373,6 +4756,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -4385,6 +4769,7 @@ namespace RWDE
             {
                 try
                 {
+                    errorOccurred = false;
                     conn.Open();
                     string query = Constants.PieChartData;
 
@@ -4402,6 +4787,7 @@ namespace RWDE
                 }
                 catch (Exception ex)
                 {
+                    errorOccurred = true;
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -4411,6 +4797,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -4425,7 +4812,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.ErrorClearingtables}{ex.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.ErrorClearingtables}{ex.Message}");
                 throw; // Re-throw if you want to handle it in the calling method
             }
         }
@@ -4436,6 +4824,11 @@ namespace RWDE
                 conn.Open();
                 //Getting BatchId for particular file to generate CSV
                 int batchid = GetMaxXmlBatchId();
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 // to execute the stored procedure
                 using (SqlCommand cmd = new SqlCommand(Constants.Ctclientsmapping, conn))
                 {
@@ -4472,8 +4865,14 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 //Getting BatchId for particular file to generate CSV
                 int batchid = GetMaxXmlBatchId();
+                if (ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 // SQL query to execute the stored procedure
                 using (SqlConnection conn = new SqlConnection(connectionString))//
                 {
@@ -4512,6 +4911,7 @@ namespace RWDE
             }
             catch (UnauthorizedAccessException)
             {
+                errorOccurred = true;
                 MessageBox.Show(Constants.Accessdeniedtothefolder, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
@@ -4523,6 +4923,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlCommand cmd = new SqlCommand(Constants.InsertIntoDatabaseQuery, conn, transaction))
                 {
                     cmd.Parameters.AddWithValue(Constants.AtHccTable, hccTable);
@@ -4539,14 +4940,16 @@ namespace RWDE
             }
             catch (SqlException ex)
             {
+                errorOccurred = true;
                 // Handle SQL exceptions
-                Console.WriteLine($@"{Constants.SqlError}{ex.Message}");
+                MessageBox.Show($@"{Constants.SqlError}{ex.Message}");
                 transaction.Rollback(); // Rollback transaction if needed
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 // Handle any other exceptions
-                Console.WriteLine($@"{Constants.Errorsp}{ex.Message}");
+                MessageBox.Show($@"{Constants.Errorsp}{ex.Message}");
                 transaction.Rollback(); // Rollback transaction if needed
             }
         }
@@ -4555,6 +4958,7 @@ namespace RWDE
             DataTable dt = new DataTable();
             try
             {
+                errorOccurred = false;
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand(Constants.Filtersourcefilename, conn))
@@ -4573,8 +4977,9 @@ namespace RWDE
                             }
                             catch (Exception ex)
                             {
+                                errorOccurred = true;
                                 // Handle exceptions (e.g., logging)
-                                Console.WriteLine(Constants.Errorsp + ex.Message);
+                                MessageBox.Show(Constants.Errorsp + ex.Message);
                                 return null;
                             }
                         }
@@ -4583,6 +4988,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -4591,6 +4997,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (!string.IsNullOrEmpty(statusValue))
                 {
                     string valueSelectQuery = Constants.ListValueXml;
@@ -4615,6 +5022,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -4624,6 +5032,7 @@ namespace RWDE
             int totalRows = 0;
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -4638,7 +5047,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.ErrorGettingTotalRows}  {ex.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.ErrorGettingTotalRows}  {ex.Message}");
             }
             return totalRows;
         }
@@ -4646,6 +5056,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (listId == 20)
                 {
                     using (SqlConnection connection = new SqlConnection(connectionString))
@@ -4692,6 +5103,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
         }
@@ -4699,6 +5111,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 if (listId == 20)
                 {
                     using (SqlConnection connection = new SqlConnection(connectionString))
@@ -4726,37 +5139,42 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
         }
         public int GetTotalRowsForBatchclient(int selectedBatchId)//Getting total rows from particular table
         {
-            int totalRows = 0;
             try
             {
+                errorOccurred = false;
+                int totalRows = 0;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
 
-                    using (SqlCommand command = new SqlCommand(Constants.CountXmlServices, connection))
+                    using (SqlCommand command = new SqlCommand(Constants.CountXmlClients, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
                         command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
                         totalRows = (int)command.ExecuteScalar();
+                        return totalRows;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.ErrorGettingTotalRows}  {ex.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.ErrorGettingTotalRows}  {ex.Message}");
             }
-            return totalRows;
+            return 0;
         }
-        public void UpdateBatchStatusabort(int batchId, int status, string xmlDirectoryPath, String filename)//to update aborted batch status 
+        public void UpdateBatchStatusabort(int batchId, int status, string filename)//to update aborted batch status 
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -4777,7 +5195,7 @@ namespace RWDE
                         int rowsAffected = command.ExecuteNonQuery();
 
                         // Check if any rows were affected (optional)
-                        Console.WriteLine(rowsAffected > 0
+                        MessageBox.Show(rowsAffected > 0
                             ? Constants.Batchstatusupdatedsuccessfully
                             : Constants.NobatchwasfoundwiththegivenId);
                     }
@@ -4786,7 +5204,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Constants.Errorupdatingbatchstatus, ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(Constants.Errorupdatingbatchstatus, ex.Message);
                 // Log or handle the exception appropriately
             }
         }
@@ -4794,6 +5213,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -4805,11 +5225,18 @@ namespace RWDE
                         command.ExecuteNonQuery();
                         //to delete the Aborted Batch data
                         ClearAbortedTables(batchId);
+                        if (ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
                     }
                 }
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
         }
@@ -4817,6 +5244,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -4830,7 +5258,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.ErrorClearingtables}{ex.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.ErrorClearingtables}{ex.Message}");
                 throw; // Re-throw if you want to handle it in the calling method
             }
         }
@@ -4838,6 +5267,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 DateTime? conversionStartedAt = null;
                 DateTime? conversionEndedAt = null;
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -4862,6 +5292,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return (null, null);
             }
@@ -4871,6 +5302,7 @@ namespace RWDE
             int totalRows = 0;
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -4883,14 +5315,16 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
             }
             return totalRows;
         }
-        public async void MapCmsClients(int selectedBatchId)//to map the Cms Clients to Hcc Tables
+        public async Task MapCmsClientsAsync(int selectedBatchId)//to map the Cms Clients to Hcc Tables
         {
             try
             {
+                errorOccurred = false;
                 FrmConvertToHcc frmConvertToHcc = new FrmConvertToHcc();
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -4904,7 +5338,13 @@ namespace RWDE
                         command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
 
                         // Get the total number of rows to be inserted
-                        int totalRows =GetTotalRows(selectedBatchId);
+                        int totalRows = GetTotalRows(selectedBatchId);
+                        if (ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
 
                         // Initialize progress variables
                         int insertedRows = 0;
@@ -4927,14 +5367,15 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
-
             }
         }
         public void UpdateBatch(int batchId, DateTime startTime, DateTime endTime, int allTotalRows)//Updating status and Time on Batch Table  
         {
             try
             {
+                errorOccurred = false;
                 allTotalRows++;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -4957,7 +5398,8 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.Errorupdatingbatch}{ex.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.Errorupdatingbatch}{ex.Message}");
                 // Log or handle the exception appropriately
             }
         }
@@ -4965,6 +5407,7 @@ namespace RWDE
         {
             try
             {
+                errorOccurred = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -4985,13 +5428,15 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Constants.Errorupdatingbatchstatus, ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(Constants.Errorupdatingbatchstatus, ex.Message);
             }
         }
-        public async void MapDlServices(int selectedBatchId)//to Map the DlServices to Hcc Tables
+        public async Task MapDlServicesAsync(int selectedBatchId)//to Map the DlServices to Hcc Tables
         {
             try
             {
+                errorOccurred = false;
                 FrmConvertToHcc frmConvertToHcc = new FrmConvertToHcc();
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -5007,6 +5452,12 @@ namespace RWDE
 
                         // Get the total number of rows to be inserted
                         int totalRows = GetTotalRowsForBatchservices(selectedBatchId);
+                        if (ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
 
                         // Initialize progress variables
                         int insertedRows = 0;
@@ -5029,15 +5480,17 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
-
         }
         public int GetTotalRowsForBatchservices(int batchId)//Getting total rows from required table
         {
-            int totalRows = 0;
+            
             try
             {
+                errorOccurred = false;
+                int totalRows = 0;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -5046,20 +5499,24 @@ namespace RWDE
                     {
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         totalRows = (int)command.ExecuteScalar();
+                        return totalRows;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                return 0;
             }
-            return totalRows;
+            
         }
         public int GetTotalForBatch(int batchId)//getting total rows from particular tables
         {
-            int totalRows = 0;
             try
             {
+                errorOccurred = false;
+                int totalRows = 0;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -5067,14 +5524,17 @@ namespace RWDE
                     {
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         totalRows = (int)command.ExecuteScalar();
+                        return totalRows;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                return 0;
             }
-            return totalRows;
+            
         }
         public void AddRemovedBatchIdToDatabase(int batchId)// // Method to add a removed batch ID to the database table
         {
@@ -5090,10 +5550,11 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.ErroraddingremovedbatchIDtodatabase} {ex.Message}");
+                errorOccurred = true;
+                MessageBox.Show($@"{Constants.ErroraddingremovedbatchIDtodatabase} {ex.Message}");
             }
         }
-        public object UpdateGridStatus(int status)
+        public object UpdateGridStatus(int status)//to upadte the Grid status 
         {
             try
             {
@@ -5111,13 +5572,14 @@ namespace RWDE
                     }
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
         }
-        public object GetListValue(string statusValue)
+        public object GetListValue(string statusValue)//to get the value of the status 
         {
             try
             {
@@ -5144,15 +5606,16 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 return null;
             }
         }
         public int GetTotalRowsOfCmsClients(int batchId)//getting total rows from particular tables
         {
-            int totalRows = 0;
             try
             {
+                int totalRows = 0;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -5160,18 +5623,21 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand(Constants.CountCmsClients, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = 120;
                         command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                         totalRows = (int)command.ExecuteScalar();
+                        return totalRows;
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                return 0;
             }
-            return totalRows;
         }
-        public async void CountCmsClients(int selectedBatchId)//to update the progress bar of clients(Ochin to RWDE)
+        public void MapCmsClients(int selectedBatchId)//to Map the Cms  clients to HCC tables(Ochin to RWDE)
         {
             try
             {
@@ -5183,36 +5649,16 @@ namespace RWDE
                     using (SqlCommand command = new SqlCommand(Constants.MapCmsClients, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-
+                        command.CommandTimeout = 120;
                         // Pass the selected BatchID to the stored procedure
                         command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
-
-                        // Get the total number of rows to be inserted
-                        int totalRows = GetTotalRowsOfCmsClients(selectedBatchId);
-
-                        // Initialize progress variables
-                        int insertedRows = 0;
-
-                        // Update progress textbox with initial progress information
-                        await ochinToRwdeConversion.UpdateProgressAsync(insertedRows, totalRows);
-
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (insertedRows < totalRows)
-                            {
-                                // Process each row
-                                insertedRows++;
-
-                                // Update progress bar and text box
-                                await ochinToRwdeConversion.UpdateProgressAsync(insertedRows, totalRows);
-
-                            }
-                        }
+                        command.ExecuteNonQuery();
                     }
                 }
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
             }
         }
@@ -5233,6 +5679,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                errorOccurred = true;
                 MessageBox.Show(ex.Message);
 
                 throw; // Re-throw if you want to handle it in the calling method
@@ -5246,6 +5693,12 @@ namespace RWDE
                 {
                     connection.Open();
                     ClearTablesOchintoRwde(selectedBatchId);//to clear the data in table
+                    if (ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+
                     // Construct the SQL UPDATE statement
                     string query = Constants.UpdateBatch;
                     // Create and execute the SqlCommand
@@ -5263,7 +5716,96 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Constants.Errorupdatingbatchstatus, ex.Message);
+                errorOccurred = true;
+                MessageBox.Show(Constants.Errorupdatingbatchstatus, ex.Message);
+            }
+        }
+        public int GetTotalRowsForBatchservicesOchin(int batchId)//Getting total rows from required table
+        {
+            try
+            {
+                int totalRows = 0;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(Constants.CountCmsServices, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue(Constants.AtBatchid, batchId);
+                        totalRows = (int)command.ExecuteScalar();
+                        return totalRows;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
+            }
+            return 0;
+        }
+
+        //to Map the CMS Services to Hcc Tables
+        public void MapCmsServicesToHccServices(int selectedBatchId)
+        {
+            try
+            {
+                OchinToRwdeConversion ochinToRwdeConversion = new OchinToRwdeConversion();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                     connection.Open();
+                    using (SqlCommand command = new SqlCommand(Constants.MapCmsServicesToHccServices, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue(Constants.AtBatchid, selectedBatchId);
+
+                        //Getting total rows from required table
+                        int totalRows = GetTotalRowsForBatchservicesOchin(selectedBatchId);
+                        if (ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
+                        if (totalRows <= 0)
+                        {
+                            throw new InvalidOperationException("Total rows must be greater than zero.");
+                        }
+                        // Execute the stored procedure
+                         command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
+            }
+        }
+        public void UpdateGridStatus(int batchId, int status)// Updates the status label on the form based on a given status code retrieved from the database.
+        {
+            try
+            {
+
+                string valueSelectQuery = Constants.UpdateGrid;
+
+                using (SqlConnection sql = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand com = new SqlCommand(valueSelectQuery, sql))
+                    {
+                        sql.Open();
+                        com.CommandType = CommandType.StoredProcedure;
+                        com.Parameters.AddWithValue(Constants.AtListsId, status);
+
+                        com.ExecuteScalar();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception appropriately
+                MessageBox.Show($@"{Constants.ErrorUpdatingGridStatus}{ex.Message}");
             }
         }
 

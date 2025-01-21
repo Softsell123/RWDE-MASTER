@@ -10,8 +10,7 @@ namespace RWDE
     public sealed partial class ServiceCodeSetup : Form
     {
         private readonly DbHelper dbHelper;
-        private DataTable dataTable;
-        private bool isHandlingClick = false;
+         
         public ServiceCodeSetup()// Your custom initialization code goes here
         {
             DataGridView gridView = new DataGridView
@@ -30,9 +29,9 @@ namespace RWDE
             gridView.CellEndEdit += dataGridView_CellEndEdit;
             gridView.CellValidating += dataGridView_CellValidating;
             gridView.EditingControlShowing += DataGridView_EditingControlShowingStatus;
-            PopulateGrid();
+
             // Setup the DataTable and DataGridView when the form loads
-            SetupDataGridView();
+            PopulateGrid();
             RegisterEvents(this); //Assigning events to all Controls
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
@@ -190,13 +189,18 @@ namespace RWDE
         // Ensure that these event handlers are hooked up in the form's constructor or Load event
         private void PopulateGrid()//populate grid
         {
+            DataTable dataTable;
             try
             {
                 dataGridView.AutoGenerateColumns = false;
 
                 //to retrieve the service list data
                 dataTable = dbHelper.GetAllServiceLists();
-
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 if (dataTable != null)
                 {
                     dataGridView.DataSource = dataTable;
@@ -228,6 +232,11 @@ namespace RWDE
                 {
                     // Fetch contracts from database
                     DataTable contracts = dbHelper.GetActiveContracts();
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
 
                     // Create the ComboBox column
                     DataGridViewComboBoxColumn contractColumn = new DataGridViewComboBoxColumn
@@ -294,7 +303,11 @@ namespace RWDE
 
                 //to retrieve the service list data
                 DataTable result = dbHelper.GetAllServiceLists();
-
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 DataGridViewComboBoxColumn statusColumn = new DataGridViewComboBoxColumn
                 {
                     Name = Constants.Status,
@@ -368,6 +381,13 @@ namespace RWDE
                     // Set the DataTable as the DataSource of the DataGridView
                     dataGridView.DataSource = dataTable;
                     dataGridView.Columns[Constants.Status].ReadOnly = true;
+                    dataGridView.DataSource = dataTable;
+
+                    // Set the height for individual rows
+                    foreach (DataGridViewRow row in dataGridView.Rows)
+                    {
+                        row.Height = 80; // Adjust the height as needed
+                    }
                 }
             }
             catch (Exception ex)
@@ -394,6 +414,12 @@ namespace RWDE
             try
             {
                 DataTable contracts = dbHelper.GetActiveContracts();//to get contracts list in service code
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 DataGridViewComboBoxColumn comboBoxColumn = (DataGridViewComboBoxColumn)dataGridView.Columns[Constants.ContractId];
                 comboBoxColumn.DataSource = contracts;
             }
@@ -531,24 +557,6 @@ namespace RWDE
                 return true;
             }
         }
-        private void SetupDataGridView()//setup grid
-        {
-            try
-            {
-                // Assuming 'dataGridView' is your DataGridView and 'dataTable' is your DataTable
-                dataGridView.DataSource = dataTable;
-
-                // Set the height for individual rows
-                foreach (DataGridViewRow row in dataGridView.Rows)
-                {
-                    row.Height = 80; // Adjust the height as needed
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
         private void btnClose_Click(object sender, EventArgs e)//to close the form
         {
             try
@@ -608,6 +616,7 @@ namespace RWDE
         {
             try
             {
+                DataTable dataTable = (DataTable)dataGridView.DataSource;
                 // Allow editing for the entire DataGridView initially
                 dataGridView.ReadOnly = false;
                 dataGridView.Columns[Constants.Status].ReadOnly = false;
@@ -800,6 +809,8 @@ namespace RWDE
         {
             try
             {
+                bool isHandlingClick=false;
+
                 if (isHandlingClick)
                 {
                     isHandlingClick = false;
@@ -870,6 +881,11 @@ namespace RWDE
                         // Update the status to Constants.Delete
                         dataGridView.Rows[rowIndex].Cells[Constants.Status].Value = Constants.Delete;
                         dbHelper.ServiceCodeIdUpdateStatus(serviceCodeId, Constants.DeleteContractstatus); // this function updates the status in the database
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         MessageBox.Show($@"{Constants.DeletedContractId} {serviceCodeId} {Constants.Successfully}", Constants.ServiceCodeSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
                     }
@@ -913,6 +929,11 @@ namespace RWDE
                         {
                             // Calling the helper function to update the service code
                             dbHelper.EditServiceCode(serviceCodeId, service, hccExportToAries, hccContractId, hccPrimaryService, hccSecondaryService, hccSubservice, unitsOfMeasure, unitValue, status);
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
 
                         }
                     }
@@ -996,6 +1017,11 @@ namespace RWDE
                     unitValue,
                     statusString
                 );
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 dataGridView.ReadOnly = true;
 
                 // Display appropriate message

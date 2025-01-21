@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Xml;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
 
@@ -14,17 +12,13 @@ namespace RWDE
 {
     public partial class FrmUploadXmlFile : Form
     {
-        private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        public string FileName;
-        public string Path;
-        public int TotalRows;
-
+       
         // Define a class-level variable to store the default path.
         private readonly string defaultPath = null;
 
         // Returns the file path of the source file where the method is called, using the CallerFilePath attribute.
-        private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;
+       
         public Panel PanelToReplace
         {
             get
@@ -39,7 +33,7 @@ namespace RWDE
                 InitializeComponent();
                 LoadDefaultPath();
                 dbHelper = new DbHelper();
-                connectionString = dbHelper.GetConnectionString();//to get the Connection String
+
                 this.ControlBox = false;
                 this.WindowState = FormWindowState.Maximized;
                 DateTime currenttime = DateTime.Now;
@@ -219,8 +213,12 @@ namespace RWDE
                             xmlDoc.Load(xmlFilePath);
 
                             int batchId = dbHelper.GetNextBatchId();//to get next BatchId for Insertion
-                            Path = xmlFilePath;
-                            FileName = System.IO.Path.GetFileName(xmlFilePath);
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+                            string FileName = Path.GetFileName(xmlFilePath);
                             txtFileName.Text = FileName;
                             txtBatchid.Text = batchId.ToString();
                             string date = startTime.ToString(Constants.MMddyyyybkslash);
@@ -229,23 +227,28 @@ namespace RWDE
                             string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                             txtUploadStarted.Text = formattime;
 
-                            using (SqlConnection conn = new SqlConnection(connectionString))
+                            using (SqlConnection conn = new SqlConnection(dbHelper.GetConnectionString()))
+
                             {
                                 conn.Open();
 
                                 // to get the total number of rows in the given XmlDocument.
-                                TotalRows = await GetTotalRowsInXml(xmlDoc);
+                                int TotalRows = await GetTotalRowsInXml(xmlDoc);
                                 DateTime uploadStartedAt = DateTime.Now;
 
                                 // to insert data from an XmlDocument into a database table asynchronously.
-                                await InsertXmlDataIntoTable(xmlDoc, batchId, xmlFilePath, TotalRows, conn, values);
+                                await InsertXmlDataIntoTable(xmlDoc, batchId, xmlFilePath, TotalRows, conn, values, FileName);
 
                                 int successfulRows = TotalRows;
                                 string description = $"{Constants.Batch} {batchId} - {FileName}";
 
                                 //update batch status in database
                                 dbHelper.InsertBatch(batchId, FileName, xmlFilePath, Constants.ClientTrackCode, description, uploadStartedAt, TotalRows, successfulRows, Constants.StatusCode);
-
+                                if (dbHelper.ErrorOccurred)
+                                {
+                                    MessageBox.Show(Constants.ErrorOccurred);
+                                    return;
+                                }
                                 processedXmlFiles++;
                                 UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);//to update the file progress
                             }
@@ -269,6 +272,11 @@ namespace RWDE
                 catch (Exception ex)
                 {
                     MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    btnUploadXML.Enabled = true;
+                    btnClose.Text = Constants.Close;
+                }
+                finally
+                {
                     btnUploadXML.Enabled = true;
                     btnClose.Text = Constants.Close;
                 }
@@ -296,36 +304,65 @@ namespace RWDE
                 return -1;
             }
         }
-        private async Task InsertXmlDataIntoTable(XmlDocument xmlDoc, int batchId, string xmlFilePath, int totalRows, SqlConnection conn, bool value)// This method inserts data from an XmlDocument into a database table asynchronously.
+        private async Task InsertXmlDataIntoTable(XmlDocument xmlDoc, int batchId, string xmlFilePath, int totalRows, SqlConnection conn, bool value,string fileName)// This method inserts data from an XmlDocument into a database table asynchronously.
         {
             int totalInsertedRows = 0;
-            string baseFilename = System.IO.Path.GetFileNameWithoutExtension(xmlFilePath);
+            string baseFilename = Path.GetFileNameWithoutExtension(xmlFilePath);
             try
             {
                 //insertion into log table
                 dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrackCode, baseFilename, Constants.Uploadct);// Log the start of the upload process for the given base filename
-
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 //insert clients into database from Xml
-                int insertedClients = dbHelper.InsertClients(xmlDoc, batchId, conn, FileName, value);
+                int insertedClients = dbHelper.InsertClients(xmlDoc, batchId, conn, fileName, value);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 totalInsertedRows += insertedClients;
 
                 //insertion of eligibility document from xml file
-                int insertedEligibilityDocs = dbHelper.InsertEligibilityDocuments(xmlDoc, batchId, conn, FileName);
+                int insertedEligibilityDocs = dbHelper.InsertEligibilityDocuments(xmlDoc, batchId, conn, fileName);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 totalInsertedRows += insertedEligibilityDocs;
 
                 //insertion of service table from xml file
-                int insertedServiceLineItems = dbHelper.InsertServiceLineItems(xmlDoc, batchId, conn, FileName);
+                int insertedServiceLineItems = dbHelper.InsertServiceLineItems(xmlDoc, batchId, conn, fileName);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 totalInsertedRows += insertedServiceLineItems;
 
                 await UpdateProgressBar(totalRows);// Update the progress bar to reflect the total number of rows being processed.
                 dbHelper.Log($"{Constants.UploadForBaseFileNameHasCompleted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrackCode, baseFilename, Constants.Uploadct);// Log the end of the upload process for the given base filename
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
             catch (Exception ex)
             {
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertXmlDataIntoTable), FileName, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(InsertXmlDataIntoTable), fileName, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 throw;
             }
         }
@@ -447,8 +484,7 @@ namespace RWDE
             }
         }
 
-
-        private void btnClose_Click(object sender, EventArgs e)
+        private async void btnClose_Click(object sender, EventArgs e)
         {
             try
             {
@@ -465,8 +501,18 @@ namespace RWDE
 
                     if (result == DialogResult.Yes) // Check if the user clicked "Yes"
                     {
-                        // to update the batch record in the database
-                        UpdateBatch(batchId, FileName, Path);
+                        string folderPath = txtPath.Text.Trim();
+                        string[] xmlFiles = Directory.GetFiles(folderPath, Constants.AllXmlExtention);
+                        string FileName = txtFileName.Text;
+
+                            foreach (string xmlFilePath in xmlFiles)
+                        {
+                            XmlDocument xmlDoc = new XmlDocument();
+                            xmlDoc.Load(xmlFilePath);
+                            int TotalRows =await GetTotalRowsInXml(xmlDoc);
+                            // to update the batch record in the database
+                            UpdateBatch(batchId, FileName, xmlFilePath, TotalRows);
+                        }
                         MessageBox.Show(Constants.AbortedSuccessfully, Constants.XmlFileUpload);
                     }
                     else
@@ -482,21 +528,32 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void UpdateBatch(int batchId, string fileName, string path)// This method updates the batch record in the database with the specified batch ID, file name, and path.
+        private void UpdateBatch(int batchId, string fileName, string path,int TotalRows)// This method updates the batch record in the database with the specified batch ID, file name, and path.
         {
             try
             {
                 DateTime currentTime = DateTime.Now;
                 int successfulRows = 0;
+                string description = Constants.Abortedfile;
                 // Insert batch details into the database, including batch ID, file name, path, timestamps, row counts, and status.
-                dbHelper.InsertBatch(batchId, fileName, path, Constants.ClientTrackCode, null, currentTime, TotalRows, successfulRows, Constants.Fileaborted);
-
+                dbHelper.InsertBatch(batchId, fileName, path, Constants.ClientTrackCode, description, currentTime, TotalRows, successfulRows, Constants.Fileaborted);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 //to clear the tables associated with the specified batch ID.
                 dbHelper.ClearTables(batchId);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.Errorupdatingbatch}{ex.Message}");
+                MessageBox.Show($@"{Constants.Errorupdatingbatch}{ex.Message}");
             }
         }
     }

@@ -10,16 +10,13 @@ namespace RWDE//
 {
     public partial class FrmUploadOchinCsv : Form
     {
-        private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        bool isUploading = false;
-        public string Path;
-        private int lastProgress = -1;
+       
         public FrmUploadOchinCsv()//to initialize data
         {
             InitializeComponent();
             dbHelper = new DbHelper();
-            connectionString = dbHelper.GetConnectionString();//to get the connection String
+
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
 
@@ -91,7 +88,7 @@ namespace RWDE//
 
         private void btnClose_Click(object sender, EventArgs e)//To Close the form and Restart the Application
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
             {
                 try
                 {
@@ -106,17 +103,27 @@ namespace RWDE//
                         DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, Constants.UploadOchinCsv, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (result == DialogResult.Yes)
                         {
+                            string folderPath = txtPath.Text;
+                            string[] csvFiles = Directory.GetFiles(folderPath, Constants.AllCsvExtention);
+
                             int batchId = Convert.ToInt32(txtBatchid.Text);// Get the current batch ID
                             string fileName = txtFileName.Text;
 
-                            // Show confirmation message
-                            MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadOchinCsv);
-
-                            //to Update the Aborted data information 
-                            UpdateBatch(batchId, fileName, Path);
-                            Close();
+                            foreach (string csvFilePath in csvFiles)
+                            {
+                                //to Update the Aborted data information 
+                                UpdateBatch(batchId, fileName, csvFilePath);
+                            }
                             //Delete All Values form all Ochin tables 
                             dbHelper.DeleteBatchochin(batchId.ToString());
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+                            // Show confirmation message
+                            MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadOchinCsv);
+                            Close();
                             Application.Restart();
                         }
                     }
@@ -131,21 +138,24 @@ namespace RWDE//
         }
         private void UpdateBatch(int batchid, string filename, string path)//to Update the Aborted data information 
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                try
-                {
-                    string description = Constants.Abortedfile;
-                    DateTime startTime = DateTime.Now;
+                string description = Constants.Abortedfile;
+                DateTime startTime = DateTime.Now;
 
-                    // update batch status in database
-                    dbHelper.InsertBatch(batchid, filename, path, Constants.OchinCode, description, startTime, 0, 0, Constants.Fileaborted);
-                }
-                catch (Exception ex)
+                // update batch status in database
+                dbHelper.InsertBatch(batchid, filename, path, Constants.OchinCode, description, startTime, 0, 0, Constants.Fileaborted);
+                if (dbHelper.ErrorOccurred)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
         private async void btnUpload_Click(object sender, EventArgs e)//to upload data into table in database
         {
@@ -186,9 +196,9 @@ namespace RWDE//
                 }
                 btnClose.Text = Constants.Abort;
                 btnUpload.Enabled = false;
-                isUploading = true;
+                bool isUploading = true;
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
                 {
                     try
                     {
@@ -219,11 +229,15 @@ namespace RWDE//
                             DateTime startTime = DateTime.Now;
 
                             int batchid = dbHelper.GetNextBatchId(); // to get the Next Batch ID
-
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
                             foreach (string csvFilePath in csvFiles)
                             {
-                                string baseFilename = System.IO.Path.GetFileNameWithoutExtension(csvFilePath).Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                                string fileName = System.IO.Path.GetFileName(csvFilePath);
+                                string baseFilename = Path.GetFileNameWithoutExtension(csvFilePath).Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                                string fileName = Path.GetFileName(csvFilePath);
                                 txtFileName.Text = fileName;
                                 if (!isUploading)
                                     break;
@@ -238,7 +252,7 @@ namespace RWDE//
                                 txtDesc.Text = $@"{Constants.OchinCsvUploadonAt.Replace("{date}", date).Replace("{time}", time)}";
                                 string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                                 txtUploadStarted.Text = formattime;
-                                Path = csvFilePath;
+                                
                                 if (isUploading)
                                 {
                                     // Await the async method call
@@ -249,7 +263,7 @@ namespace RWDE//
                                     progressBarfile.Value = currentCsvFileIndex;
 
                                     // Log successful insertion
-                                    fileName = System.IO.Path.GetFileName(csvFilePath);
+                                    fileName = Path.GetFileName(csvFilePath);
                                     string description = txtDesc.Text;
                                     int successfulRows = result.Item1;
                                     DateTime endtime = DateTime.Now;
@@ -257,6 +271,11 @@ namespace RWDE//
                                     {
                                         //update batch status in database
                                         dbHelper.InsertBatch(batchid, fileName, csvFilePath, Constants.OchinCode, description, startTime, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
+                                        if (dbHelper.ErrorOccurred)
+                                        {
+                                            MessageBox.Show(Constants.ErrorOccurred);
+                                            return;
+                                        }
                                         UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//no of files insertion progress
                                     }
                                 }
@@ -326,12 +345,17 @@ namespace RWDE//
                 progressBarLines.Value = currentCsvFileIndex;
                 txtProgressfile.Text = $@"{currentCsvFileIndex}/{totalCsvFiles} ({progressPercentage}%)";
 
-                await Task.Delay(50); // Slow down progress bar update
+                await Task.Delay(30); // Slow down progress bar update
             }
             catch (Exception ex)
             {
                 // Log error if needed
                 dbHelper.Log($"{Constants.ErrorUpdatingFileProgress} {ex.Message}", Constants.Error, Constants.ProgressUpdate, Constants.Uploadochin);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         public async Task<Tuple<int, bool>> InsertCsvDataIntoTable(string csvFilePath, int batchId, SqlConnection connection)//functionality to insert particular data 
@@ -345,6 +369,7 @@ namespace RWDE//
             List<string[]> clientData = new List<string[]>();
             List<string[]> serviceData = new List<string[]>();
 
+            bool isUploading = true;
             try
             {
                 using (StreamReader reader = new StreamReader(csvFilePath))
@@ -373,6 +398,11 @@ namespace RWDE//
                             if (!hasLoggedClient)
                             {
                                 dbHelper.Log(Constants.UploadforOchincsVstarted, Constants.OchinCode, baseFilename + Constants.CsvExtention, Constants.Uploadochin);
+                                if (dbHelper.ErrorOccurred)
+                                {
+                                    MessageBox.Show(Constants.ErrorOccurred);
+                                    break;
+                                }
                                 hasLoggedClient = true;
                             }
                         }
@@ -383,6 +413,11 @@ namespace RWDE//
                             if (!hasLoggedService)
                             {
                                 dbHelper.Log(Constants.UploadforOchincsVstarted, Constants.OchinCode, baseFilename + Constants.CsvExtention, Constants.Uploadochin);
+                                if (dbHelper.ErrorOccurred)
+                                {
+                                    MessageBox.Show(Constants.ErrorOccurred);
+                                    break;
+                                }
                                 hasLoggedService = true;
                             }
                         }
@@ -395,14 +430,29 @@ namespace RWDE//
                     if (chckPHI.Checked == true && chckURN.Checked == false)
                     {
                         dbHelper.InsertClientInformationPhi(connection, data, batchId);//insertion of the client file with PHI DATA MASKING CONDITION
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            break;
+                        }
                     }
                     else if (chckURN.Checked == true)
                     {
                         dbHelper.InsertClientInformationphiurn(connection, data, batchId);//insertion of the client file without PHI DATA MASKING CONDITION
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            break;
+                        }
                     }
                     else
                     {
                         dbHelper.InsertClientInformation(connection, data, batchId);//insertion of the client file without PHI DATA MASKING CONDITION
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            break;
+                        }
                     }
                     
                     rowsInserted++;
@@ -422,10 +472,20 @@ namespace RWDE//
                     if (chckPHI.Checked == true)//InsertClientServiceDataPHI
                     {
                         dbHelper.InsertClientServiceData(connection, data, batchId);//insertion of the services file with PHI DATA MASKING CONDITION
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            break;
+                        }
                     }
                     else
                     {
                         dbHelper.InsertClientServiceData(connection, data, batchId);//insertion of the services file with PHI DATA MASKING CONDITION
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            break;
+                        }
                     }
                     rowsInserted++;
                     await UpdateProgress(rowsInserted, totalRows); // Await the progress update
@@ -433,6 +493,11 @@ namespace RWDE//
                 if (isUploading)
                 {
                     dbHelper.Log(Constants.UploadforOchincsVcompletedsuccessfull, Constants.OchinCode, baseFilename + Constants.CsvExtention, Constants.Uploadochin);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return Tuple.Create(0, false);
+                    }
                 }
                 return Tuple.Create(rowsInserted, true);
             }
@@ -443,6 +508,11 @@ namespace RWDE//
                     MessageBox.Show(Constants.TheFileisbeingUsedinanotherprocessClosethefileandTryagain+baseFilename, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 dbHelper.Log($"{Constants.ErrorInsertingCsvDataFromFileIntoTheTable.Replace("{csvFilePath}", csvFilePath)}", Constants.Error, baseFilename, Constants.Uploadochin);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred); 
+                    return Tuple.Create(0, false);
+                }
                 return Tuple.Create(0, false);
             }
         }
@@ -451,6 +521,7 @@ namespace RWDE//
         {
             try
             {
+                int lastProgress = -1;
                 progressBarLines.Minimum = 0;
                 progressBarLines.Maximum = totalRowsInCurrentFile;
 
@@ -469,6 +540,11 @@ namespace RWDE//
             {
                 // Log the error instead of showing a message box
                 dbHelper.Log($"{Constants.ErrorUpdatingFileProgress}{ex.Message}", Constants.Error, Constants.ProgressUpdate, Constants.Uploadochin);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         private void btnBrowse_Click(object sender, EventArgs e)//to select the folder containing Ochin Csv file

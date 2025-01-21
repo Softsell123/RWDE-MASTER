@@ -5,7 +5,6 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-
 namespace RWDE
 {
     public partial class ErrorLogReport : Form
@@ -87,6 +86,12 @@ namespace RWDE
                     dataGridView.ForeColor = Color.Black;
 
                     DataTable result = dbHelper.LoadErrorlog(startDate, endDate);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+
 
                     // Now you can use the result, e.g., bind it to a DataGridView or process it
                     dataGridView.DataSource = result;

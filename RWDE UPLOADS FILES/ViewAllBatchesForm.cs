@@ -94,7 +94,11 @@ namespace RWDE
             {
                 //Get all Values from Batch Table
                 DataTable dataTable = dbHelper.GetAllBatches();
-
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 dataGridView.AutoGenerateColumns = false;
                 dataGridView.DataSource = dataTable;
                 dataGridView.Columns.Clear();
@@ -144,7 +148,11 @@ namespace RWDE
             {
                 // Calling Batch table Values
                 DataTable dataTable = dbHelper.GetAllBatchesLoad();
-
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 dataGridView.AutoGenerateColumns = false;
                 dataGridView.DataSource = dataTable;
                 dataGridView.Columns.Clear();
@@ -194,6 +202,11 @@ namespace RWDE
             {
                 //Get all Values from Batch Table
                 DataTable dataTable = dbHelper.GetAllBatcheshcc();
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
                 dataGridView.AutoGenerateColumns = false;
                 dataGridView.DataSource = dataTable;
@@ -484,6 +497,12 @@ namespace RWDE
                         {
                             // Calling Delete Function
                             dbHelper.DeleteBatch(batchId, type);
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+
                             // Refresh the DataGridView after deletion
                             if (type == Constants.Hccdata)
                             {
@@ -541,6 +560,12 @@ namespace RWDE
 
                 //extraction of particular batch from data
                 DataTable result = dbHelper.GetParticularDataFromBatchTable(batchType, fromDate, endDate);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 dataGridView.DataSource = result;
 
                 if (result == null || result.Rows.Count == 0)
@@ -579,6 +604,12 @@ namespace RWDE
             {
                 //get all batches type
                 List<string> batchTypes = dbHelper.GetAllBatchTypesview();
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 cbBatchType.Items.Clear();  // Clear existing items
                 foreach (string batchType in batchTypes)
                 {

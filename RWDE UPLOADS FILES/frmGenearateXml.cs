@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using ComboBox = System.Windows.Forms.ComboBox;
 using ScrollBar = System.Windows.Forms.ScrollBar;
@@ -19,7 +18,6 @@ namespace RWDE
     {
         private readonly string connectionString;
         private readonly DbHelper dbHelper;
-        private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;
         public FrmGeneratorXml()
         {
             InitializeComponent();
@@ -33,6 +31,12 @@ namespace RWDE
             dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;
             //Handle BatchType Values
             List<string> batchTypes = dbHelper.GetAllBatchTypesHcc();
+            if (dbHelper.ErrorOccurred)
+            {
+                MessageBox.Show(Constants.ErrorOccurred);
+                return;
+            }
+
             dtpStartDate.Value = DateTime.Now.AddYears(-1);//
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
@@ -140,7 +144,7 @@ namespace RWDE
             try
             {
                 string query = Constants.GenerationStarted;
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -230,7 +234,13 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(DataGridView_DataBindingComplete), Constants.ServiceCttohcc, lineNumber);
+
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(DataGridView_DataBindingComplete), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         public Panel PanelToReplace
@@ -245,7 +255,7 @@ namespace RWDE
             try
             {
                 string query = Constants.GenerationOchin;
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -278,7 +288,12 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(PopulateDataGridView), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(PopulateDataGridView), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         private async void btnGeneration_Click(object sender, EventArgs e)//handle the Generation Process
@@ -331,7 +346,12 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(btnGeneration_Click), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(btnGeneration_Click), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)//Description of Status values
@@ -344,6 +364,12 @@ namespace RWDE
 
                     //to get value of the ListId
                     var result = dbHelper.FormatStatus(statusValue);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+
                     if (result != null)
                     {
                         e.Value = result.ToString();
@@ -363,10 +389,14 @@ namespace RWDE
             {
                 //progressClient.Value = 0;
                 var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationservices(batchId);//to check whether the generation completed or not
-
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 if (batchDetails == null)
                 {
-                    Console.WriteLine(Constants.BatchNotfound);
+                    MessageBox.Show(Constants.BatchNotfound);
                     return;
                 }
 
@@ -396,18 +426,45 @@ namespace RWDE
                 
                 //Getting total rows from particular table
                 int totalRows = dbHelper.GetTotalRowsForBatch(selectedBatchId);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 List<Dictionary<string, string>> data;
 
                 // Update status of service and fetch error data
                 data = chkError.Checked ? dbHelper.GetServiceserror(selectedBatchId) :
+
                     // Update status of service and fetch standard service data
                     dbHelper.GetServices(selectedBatchId);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
                 //calling XmlStructure Function
                 List<Dictionary<string, string>> xmlStructure = dbHelper.GetXmlStructure();//get xml Structure
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
                 string baseFilename = Constants.ServiceCttohcc;
                 dbHelper.Log(Constants.GeneratetoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
                 //calling Service xml file generation Method
                 XElement xml = await GenerateXmlService(data, xmlStructure);//generate services Xml
@@ -444,14 +501,23 @@ namespace RWDE
                 //Populating GRID from table
                 PopulateDataGridView(new DataTable());//populate data
                 dbHelper.Log(Constants.GeneratetoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
             catch (Exception ex)
             {
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(GenerateXmlForServicesAsync), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(GenerateXmlForServicesAsync), Constants.ServiceCttohcc, lineNumber);
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (dbHelper.ErrorOccurred)
+                {
+                    return;
+                }
             }
         }
         private async Task<XElement> GenerateXmlService(List<Dictionary<string, string>> data, List<Dictionary<string, string>> xmlStructure)//Service Xml Generation
@@ -524,8 +590,12 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                string xmlFilePath = GetCurrentFilePath();
-                dbHelper.LogError(ex.Message, xmlFilePath, ex.StackTrace, nameof(GenerateXmlService), Constants.ServiceCttohcc, lineNumber);
+                
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(GenerateXmlService), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 throw;
             }
         }
@@ -629,11 +699,13 @@ namespace RWDE
                                 else if (parsedTagNumber >= 605 && parsedTagNumber <= 1775)
                                 {
                                     //Handle the MedicalValues
+                                    //this method is an exception for passing parameters as reference variable
                                     HandleMedicalValues(parsedTagNumber, dataRow, batchId, xmlStructure, clientProfileElement, ref medical, ref medicalChild, ref medicalSubChild, tagName, fieldName, presetValue, defaultValue, empty, hasChild);
                                 }
                                 else if (parsedTagNumber > 1775 && parsedTagNumber <= 1925)
                                 {
                                     //Handle the living situation Values
+                                    //this method is an exception for passing parameters as reference variable
                                     HandleLivingValues(parsedTagNumber, xmlStructure, clientProfileElement, ref live, ref livingChild, ref subChild, tagName, dataRow, fieldName, presetValue, defaultValue, empty, hasChild);
                                 }
 
@@ -672,7 +744,11 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(GenerateXmlClient), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError (ex.Message, ex.StackTrace, nameof(GenerateXmlClient), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 throw;
             }
         }
@@ -686,6 +762,12 @@ namespace RWDE
                 {
                     // Retrieve the Rece values using FetchSubClientFromRace Method
                     List<Dictionary<string, string>> subClientData = dbHelper.FetchSubClientValuesFromRace(clientId, batchId);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+
                     foreach (var subDataRow in subClientData)
                     {
                         foreach (var subStructureRow in xmlStructure.Where(x => int.TryParse(x[XmlConstants.TagNumber], out int subTagNumber) && subTagNumber >= 525 && subTagNumber <= 540))
@@ -714,10 +796,16 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(HandleRaceValues), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleRaceValues), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         //  method to handle medical values
+        //this method is an exception for passing parameters as reference variable
         private void HandleMedicalValues(int parsedTagNumber, Dictionary<string, string> dataRow, int batchId, List<Dictionary<string, string>> xmlStructure, XElement clientProfileElement, ref XElement medical, ref XElement medicalChild, ref XElement medicalSubChild, string tagName, string fieldName, string presetValue, string defaultValue, bool empty, bool hasChild)
         {
             try
@@ -786,10 +874,16 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(HandleMedicalValues), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleMedicalValues), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         // method to handle living values
+        //this method is an exception for passing parameters as reference variable
         private void HandleLivingValues(int parsedTagNumber, List<Dictionary<string, string>> xmlStructure, XElement clientProfileElement, ref XElement live, ref XElement livingChild, ref XElement subChild, string tagName, Dictionary<string, string> dataRow, string fieldName, string presetValue, string defaultValue, bool empty, bool hasChild)
         {
             try
@@ -853,7 +947,12 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(HandleLivingValues), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleLivingValues), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         //method to handle Medical child values
@@ -872,21 +971,41 @@ namespace RWDE
                 {
                     case 710:
                         fetchMethod = dbHelper.FetchSubClientValuesFromMedC4;//fetch particular client Medical values
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         min = 710;
                         max = 735;
                         break;
                     case 825:
                         fetchMethod = dbHelper.FetchSubClientValuesFromMedVl;//fetch particular client Medical values
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         min = 825;
                         max = 850;
                         break;
                     case 940:
                         fetchMethod = dbHelper.FetchSubClientValuesFromHivTest;//fetch particular client HIV test values
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         min = 940;
                         max = 960;
                         break;
                     case 1010:
                         fetchMethod = dbHelper.FetchSubClientValuesFromInsur;//fetch particular client Insurance values
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         min = 1010;
                         max = 1050;
                         break;
@@ -928,7 +1047,12 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(HandleMedicalChildValues), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleMedicalChildValues), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
 
         }
@@ -980,7 +1104,12 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(HandleRootInformationSection), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleRootInformationSection), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         //create the rootElemt of client and serives xml file
@@ -997,7 +1126,11 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(CreateRootElement), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(CreateRootElement), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 throw;
             }
         }
@@ -1014,7 +1147,11 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(CreateSourceSystemElement), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(CreateSourceSystemElement), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 throw;
             }
         }
@@ -1038,7 +1175,12 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(AddDynamicElements), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(AddDynamicElements), Constants.ServiceCttohcc, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
         }
         public static string GetContractServiceTagName(List<Dictionary<string, string>> xmlStructure, string tagNumber) //Adding the Client Profile Tag for Client File
@@ -1106,7 +1248,7 @@ namespace RWDE
             try
             {
                 string query = Constants.Generation;
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -1170,6 +1312,12 @@ namespace RWDE
 
                         //to update status in batch table
                         dbHelper.UpdateStatus(batchId,listId, startTime, endTime);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
                         // Refresh the dataGridView outside the loop
                         PopulateDataGridView(new DataTable());
                         dataGridView.Refresh();
@@ -1194,6 +1342,12 @@ namespace RWDE
 
                         //to update the status of service file
                         dbHelper.UpdateServiceStatus(batchId, listId, startTime, endTime);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
                         // Refresh the dataGridView outside the loop
                         PopulateDataGridView(new DataTable());
                         dataGridView.Refresh();
@@ -1260,10 +1414,14 @@ namespace RWDE
             {
                 // progressServices.Value = 0;
                 var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationlients(batchId);//to check whether the generation completed or not
-
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 if (batchDetails == null)
                 {
-                    Console.WriteLine(Constants.BatchNotfound);
+                    MessageBox.Show(Constants.BatchNotfound);
                     return;
                 }
 
@@ -1286,6 +1444,12 @@ namespace RWDE
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
 
                 int totalRows = dbHelper.GetTotalRowsForBatchclient(batchId);//Getting total rows from particular table
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 DateTime startTime = DateTime.Now;
 
                 txtBatchid.Text = batchId.ToString();
@@ -1294,9 +1458,19 @@ namespace RWDE
 
                 //calling Store Procedure Function
                 List<Dictionary<string, string>> data = dbHelper.GetClients(selectedBatchId);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
                 //calling XmlStructure Function
                 List<Dictionary<string, string>> xmlStructure = dbHelper.GetClientFileXmlStructure();
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
                 //calling Service xml file generation Method               
                 XElement xml = await GenerateXmlClient(data, xmlStructure, selectedBatchId);
@@ -1393,7 +1567,13 @@ namespace RWDE
                         string selectedFolderPath = txtPath.Text;
 
                         // Update the status of the selected batch to Status "19" (Abort)
-                        dbHelper.UpdateBatchStatusabort(batchId, Constants.Xmlabort, selectedFolderPath, filename);
+                        dbHelper.UpdateBatchStatusabort(batchId, Constants.Xmlabort, filename);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
 
                         // Delete XML files in the specified directory
                         DeleteXmlFiles(selectedFolderPath);
@@ -1433,7 +1613,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.ErrorDeletingXmlFiles} {ex.Message}");
+                MessageBox.Show($@"{Constants.ErrorDeletingXmlFiles} {ex.Message}");
                 // Log or handle the exception appropriately
                 throw; // Re-throw if you want to handle it in the calling method
             }
@@ -1489,6 +1669,11 @@ namespace RWDE
 
                 // Retrieve and bind data
                 DataTable result = dbHelper.GetParticularnGenerationDatas(batchType, fromDate, endDate);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 dataGridView.DataSource = result;
 
                 if (result == null || result.Rows.Count == 0)
@@ -1518,6 +1703,12 @@ namespace RWDE
 
                 //get all batches type except Client Track
                 List<string> batchTypes = dbHelper.GetAllBatchTypesHcc();
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 cbBatchType.Items.Clear();  // Clear existing items
                 foreach (string batchType in batchTypes)
                 {

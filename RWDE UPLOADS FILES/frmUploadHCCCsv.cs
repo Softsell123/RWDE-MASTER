@@ -10,15 +10,13 @@ namespace RWDE
 {
     public partial class FrmUploadHccCsv : Form
     {
-        private readonly string connectionString;
         private readonly DbHelper dbHelper;
 
-        private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;//to get file path
         public FrmUploadHccCsv()//initializing of data
         {
             InitializeComponent();
             dbHelper = new DbHelper();
-            connectionString = dbHelper.GetConnectionString();//get connection string
+
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
             DateTime currenttime = DateTime.Now;
@@ -134,7 +132,7 @@ namespace RWDE
                 btnClose.Text = Constants.Abort;
                 btnUpload.Enabled = false;
                 bool isUploading = true;
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
                 {
                     string fileName = "";
                     connection.Open();
@@ -182,6 +180,12 @@ namespace RWDE
                                     //bool batchId = false; 
                                     int batchid;
                                     batchid = dbHelper.GetNextBatchId(false);//to get next batch id
+                                    if (dbHelper.ErrorOccurred)
+                                    {
+                                        MessageBox.Show(Constants.ErrorOccurred);
+                                        return;
+                                    }
+
                                     txtBatchid.Text = batchid.ToString();
                                     string date = startTime.ToString(Constants.MMddyyyybkslash);
                                     string time = startTime.ToString(Constants.HHmmss);
@@ -210,6 +214,11 @@ namespace RWDE
                                         if (isUploading)
                                         {
                                             dbHelper.InsertBatch(batchid, fileName, baseFilename, Constants.Hcc, description, DateTime.Now, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
+                                            if (dbHelper.ErrorOccurred)
+                                            {
+                                                MessageBox.Show(Constants.ErrorOccurred);
+                                                return;
+                                            }
                                             //progress of total files insertion 
                                             UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, isUploading);
                                         }
@@ -240,8 +249,12 @@ namespace RWDE
                         var st = new StackTrace(ex, true);
                         var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                         int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                        dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(btnUpload_Click), fileName, lineNumber);
+                        dbHelper.LogError(ex.Message, ex.StackTrace, nameof(btnUpload_Click), fileName, lineNumber);
                         MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            return;
+                        }
                     }
                 }
             }
@@ -261,9 +274,11 @@ namespace RWDE
             try
             {
                 dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.Hcc, baseFilename + Constants.CsvExtention, Constants.Uploadhcc);
-
-                // No need to open the connection here as it's already open
-
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return Tuple.Create(0, false);
+                }
                 using (StreamReader reader = new StreamReader(csvFilePath))
                 {
                     string headerLine = reader.ReadLine();
@@ -285,26 +300,51 @@ namespace RWDE
                             if (chckPHI.Checked == true)
                             {
                                 dbHelper.InsertClientDataPhi(connection, data, batchid, fileNameWithExtension);//insertion of aries clients
+                                if (dbHelper.ErrorOccurred)
+                                {
+                                    MessageBox.Show(Constants.ErrorOccurred);
+                                    break;
+                                }
                             }
                             else
                             {
                                 dbHelper.InsertClientData(connection, data, batchid, fileNameWithExtension);//insertion of aries clients
+                                if (dbHelper.ErrorOccurred)
+                                {
+                                    MessageBox.Show(Constants.ErrorOccurred);
+                                    break;
+                                }
                             }
                             rowsInserted++;
                         }
                         if (baseFilename == Constants.AriesDeceased)//insertion of AriesDeceased
                         {
-                            dbHelper.InsertdeceasedData(connection, data, batchid, fileNameWithExtension);//insertion of deceased clients
+                            dbHelper.InsertdeceasedData(connection, data, batchid);//insertion of deceased clients
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                break  ;
+                            }
                             rowsInserted++;
                         }
                         if (baseFilename == Constants.AriesConsent)//insertion of AriesConsent
                         {
-                            dbHelper.InsertConsentData(connection, data, batchid, fileNameWithExtension);//insertion of InsertConsentData
+                            dbHelper.InsertConsentData(connection, data, batchid);//insertion of InsertConsentData
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                break;
+                            }
                             rowsInserted++;
                         }
                         if (baseFilename == Constants.AriesEligibility)//insertion of AriesEligibility
                         {
-                            dbHelper.InsertDlEligibility(connection, data, batchid, fileNameWithExtension);
+                            dbHelper.InsertDlEligibility(connection, data, batchid);
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                break;
+                            }
                             rowsInserted++;
                         }
                         if (baseFilename == Constants.AriesServices)//insertion of AriesServices
@@ -313,20 +353,35 @@ namespace RWDE
                             {
                                 int row = rowsInserted;
                                 dbHelper.InsertDlServicesPhi(connection, data, batchid, fileNameWithExtension, row);
+                                if (dbHelper.ErrorOccurred)
+                                {
+                                    MessageBox.Show(Constants.ErrorOccurred);
+                                    break;
+                                }
                                 rowsInserted++;//insertion of aries clients
                             }
                             else
                             {
                                 int row = rowsInserted;
                                 dbHelper.InsertDlServices(connection, data, batchid, fileNameWithExtension, row);
+                                if (dbHelper.ErrorOccurred)
+                                {
+                                    MessageBox.Show(Constants.ErrorOccurred);
+                                    break;
+                                }
                                 rowsInserted++;//insertion of AriesServices
                             }
                         }
                         if (baseFilename == Constants.AriesFinanacial)//insertion of AriesFinancial
                         {
-                            dbHelper.InsertDlFinancials(connection, data, batchid, fileNameWithExtension);//insertion of AriesFinancial
-                            rowsInserted++;//
-                            //rowsInserted++;
+                            dbHelper.InsertDlFinancials(connection, data, batchid);//insertion of AriesFinancial
+
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                break;
+                            }
+                            rowsInserted++;
                         }
                         if (isUploading)
                         {
@@ -338,6 +393,11 @@ namespace RWDE
                 if (isUploading)
                 {
                     dbHelper.Log($"{Constants.UploadForBaseFileNameHasCompleted.Replace("{baseFilename}", baseFilename)}", Constants.OchinCode, baseFilename + Constants.CsvExtention, Constants.Uploadhcc);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return Tuple.Create(0, false);
+                    }
                 }
                 return Tuple.Create(rowsInserted, true);
             }
@@ -347,7 +407,11 @@ namespace RWDE
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 //int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertCsvDataIntoTable), filename, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(InsertCsvDataIntoTable), filename, lineNumber);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                }
                 return Tuple.Create(0, false);
             }
         }
@@ -393,7 +457,7 @@ namespace RWDE
 
         private void btnClose_Click(object sender, EventArgs e) //close the window
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
             {
                 try
                 {
@@ -414,10 +478,15 @@ namespace RWDE
 
                             // Show confirmation message
                             MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadHccCsv);
-                            String path = txtpath.Text;
+                            string path = txtpath.Text;
                             UpdateBatch(batchId, fileName, path);
                             Close();
                             dbHelper.DeleteBatchochin(batchId.ToString());
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
                             Application.Restart();
                         }
                     }
@@ -437,11 +506,17 @@ namespace RWDE
                 DateTime currentTime = DateTime.Now;
                 int totalRows = 0; // Assuming no rows were successfully processed
                 int successfulRows = 0;
-                dbHelper.InsertBatch(batchId, fileName, path, Constants.Hcc, null, currentTime, totalRows, successfulRows, 12);
+                string description = Constants.Abortedfile;
+                dbHelper.InsertBatch(batchId, fileName, path, Constants.Hcc, description, currentTime, totalRows, successfulRows, 12);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"{Constants.ErrorLoadingData} {ex.Message}");
+                MessageBox.Show($@"{Constants.ErrorLoadingData} {ex.Message}");
                 // Log or handle the exception appropriately
             }
         }

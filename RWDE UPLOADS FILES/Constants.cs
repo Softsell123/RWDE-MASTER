@@ -440,7 +440,7 @@ namespace RWDE
         public const string FromDateMustBeEarlierThanToDate = "From date must be earlier than To date.";
         public const string SelectedFutureDate = "You have selected the future date.Please select today's date (or) earlier date.";
         public const string ContractIdIsExpiringToday = "The Contract ID {0} is expiring today. It's time to renew the contract. Please refresh the form after renewing the contract.";
-
+        public const string ErrorOccurred = "Error Occurred";
 
 
 
@@ -468,7 +468,7 @@ namespace RWDE
         public const string UpdateXmlClient = "updatexmlCLIENT";
         public const string UpdateXml = "updatexml";
         public const string CountXml = "countxml";
-        public const string CountXmlServices = "countxmlservices";
+        public const string CountXmlClients = "countxmlclients";
         public const string CountXmlRows = "countxmlrows";
         public const string AbortDelete = "abortdelete";
         public const string ListConversion = "listconversion";
@@ -478,7 +478,7 @@ namespace RWDE
         public const string ConversionHcc = "ConversionHCC";
         public const string CountCmsServices = "countcmsservices";
         public const string UpdateGrid = "updategrid";
-        public const string CountCmsClients = "COUNTCMSCLIENTS";
+        public const string CountCmsClients = "CountCmsClients";
         public const string UpdateBatch = "Updatebatch";
         public const string AbortConversionDelete = "abortconversiondelete";
         //DbHelper
@@ -498,6 +498,8 @@ namespace RWDE
         public const string InsertClientInfoPhi = "InsertClientInfoPHI";
         public const string InsertIntoDlClients = "InsertIntoDlClients";
         public const string InsertIntoDlDeceasedClients = "InsertIntoDlDeceasedClients";
+        public const string InsertIntoDlClientsPhi = "InsertIntoDlClientsPHI";
+
         public const string InsertClientData = "InsertClientData";
         public const string InsertDlConsent = "InsertDLConsent";
         public const string InsertDlEligibility = "InsertDlEligibility";
@@ -1130,7 +1132,7 @@ namespace RWDE
         public const string UnitValue = "UnitValue";
         public const string Update = "Update";
         public const string Insert = "Insert";
-
+        public const string Renew = "Renew";
 
 
         //
@@ -1227,6 +1229,7 @@ namespace RWDE
 
         public const string Contractupdatedsuccessfully = "Contract updated successfully";
         public const string Contractsavedsuccessfully = "Contract saved successfully";
+        public const string Contractrenewedsuccessfully = "Contract renewed successfully";
         public const string Nochangesdetectedintheselectedrow = "No changes detected in the selected row.";
         public const string MustbeaDataGridViewCalendarCell = "Must be a DataGridViewCalendarCell";
 

@@ -10,7 +10,8 @@ namespace RWDE
 {
     public partial class FrmMain : Form
     {
-        private readonly string connectionString;
+        // private readonly string connectionString;
+        private DbHelper dbHelper;
         private Panel panelFrom;
         private readonly Panel pnlForm;
         public FrmMain()//initialize data
@@ -18,8 +19,7 @@ namespace RWDE
             this.pnlForm = null;
             InitializeComponent();
 
-            DbHelper dbHelper1 = new DbHelper();
-            connectionString = dbHelper1.GetConnectionString();//to get the Connection String
+            dbHelper = new DbHelper();
             btnHccCsv.Visible = false;
             uploadCSVToOCHINToolStripMenuItem = new ToolStripMenuItem();
             BackColor = Color.White;
@@ -280,7 +280,7 @@ namespace RWDE
                 // Fetch data from the Batch table
                 string query = Constants.BatchTableQuery;
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
@@ -788,6 +788,12 @@ namespace RWDE
 
                 //to get the data of the PieChart
                 DataTable dt = dbHelper.GetPieChartData(StartDate, EndDate);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 if (dt.Rows.Count == 0)
                 {
                     MessageBox.Show(Constants.Nodatafoundbetweenselecteddates);

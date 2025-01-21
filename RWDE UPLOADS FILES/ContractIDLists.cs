@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 // ReSharper disable PossibleNullReferenceException
@@ -11,12 +12,12 @@ namespace RWDE
     public partial class ContractIdLists : Form
     {
         private readonly DbHelper dbHelper;
-        private readonly string connectionString;//CONNECTION STRING
+        
         public ContractIdLists()//Initialize the form or object
         {
             InitializeComponent();
             dbHelper = new DbHelper();
-            connectionString = dbHelper.GetConnectionString();//to get the Connection String
+
             WindowState = FormWindowState.Maximized;
             ControlBox = false;
             // Populate the DataGridView with data and configure its columns
@@ -278,6 +279,11 @@ namespace RWDE
             {
                 dataGridView.AutoGenerateColumns = false;
                 DataTable dataTable = dbHelper.GetAllContractLists();//to get the contractid which are stored in db table
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
                 if (dataTable != null)
                 {
@@ -577,14 +583,21 @@ namespace RWDE
                 if (sender is DataGridViewCalendarEditingControl startedDateTimePicker)
                 {
                     DateTime startedDateTime = startedDateTimePicker.Value;
-
+                    DateTime updatedStartTime = new DateTime(
+    startedDateTime.Year,
+    startedDateTime.Month,
+    startedDateTime.Day,
+    12,  // Hour (12 PM)
+    0,   // Minute
+    0    // Second
+         );
                     // Calculate the EndedDateTime as one day less than one year from the StartedDateTime
                     DateTime endedDateTime = startedDateTime.AddYears(1).AddDays(-1).Date.AddHours(11).AddMinutes(59).AddSeconds(59);
                     // Get the current row being edited
                     DataGridViewRow currentRow = dataGridView.CurrentRow;
                     if (currentRow != null)
                     {
-                        currentRow.Cells[Constants.StartedDateTime].Value = startedDateTime;
+                        currentRow.Cells[Constants.StartedDateTime].Value = updatedStartTime;
                         currentRow.Cells[Constants.EndedDateTime].Value = endedDateTime;
                     }
                 }
@@ -715,25 +728,40 @@ namespace RWDE
             {
                 if (!save)
                 {
-                    var statusString = row[Constants.Status].ToString();
+                    var statusString = Constants.ActiveContractstatus;
 
-                    if (statusString == Constants.Active)
-                    {
-                        statusString = Constants.ActiveContractstatus;
-                    }
-                    else if (statusString == Constants.Inactive)
-                    {
-                        statusString = Constants.InactiveContractstatus;
-                    }
-                    else if (statusString == Constants.Delete)
-                    {
-                        statusString = Constants.DeleteContractstatus;
-                    }
                     string currentContractId = row[Constants.ContractId].ToString();
-                    MessageBox.Show(string.Format(Constants.ContractIdIsExpiringToday, currentContractId), Constants.ContractsSetup,MessageBoxButtons.OK,MessageBoxIcon.Information);
-                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    int ContractId = Convert.ToInt32(currentContractId);
+                    if (int.TryParse(currentContractId, out int UpdatedContractId))
                     {
-                        string contractName = row[Constants.ContractName].ToString();
+                        // Increment the numeric value by 1
+                        UpdatedContractId += 1;
+
+                        // Convert back to string
+                        currentContractId = UpdatedContractId.ToString();
+                    }
+
+                    string contractName = row[Constants.ContractName].ToString();
+
+                    // Match and increment single year (e.g., 2024 -> 2025)
+                    contractName = Regex.Replace(contractName, @"\b(\d{4})\b", match =>
+                    {
+                        int year = int.Parse(match.Value);
+                        return (year + 1).ToString();
+                    });
+
+                    // Match and increment year range (e.g., 23/24 -> 24/25)
+                    contractName = Regex.Replace(contractName, @"\b(\d{2})/(\d{2})\b", match =>
+                    {
+                        int startYear = int.Parse(match.Groups[1].Value) + 1;
+                        int endYear = int.Parse(match.Groups[2].Value) + 1;
+                        return $"{startYear:D2}/{endYear:D2}";
+                    });
+
+                    MessageBox.Show(string.Format(Constants.ContractIdIsExpiringToday, ContractId), Constants.ContractsSetup,MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
+                    {
+                        
                         string startedDateTimeStr = row[Constants.StartedDateTime].ToString();
 
                         // Validate Contract ID and Contract Name
@@ -767,7 +795,11 @@ namespace RWDE
                             statusString,
                             Constants.Sakku,
                             DateTime.Now);
-
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         dataGridView.ReadOnly = true;
 
                         // Display appropriate message
@@ -778,6 +810,10 @@ namespace RWDE
                         else if (operation == Constants.Insert)
                         {
                             MessageBox.Show(ContractIdList.Contractsavedsuccessfully, Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else if (operation == Constants.Renew)
+                        {
+                            MessageBox.Show(ContractIdList.Contractrenewedsuccessfully, Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
@@ -800,7 +836,7 @@ namespace RWDE
 
                     string currentContractId = row[Constants.ContractId].ToString();
                     
-                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
                     {
                         string contractName = row[Constants.ContractName].ToString();
                         string startedDateTimeStr = row[Constants.StartedDateTime].ToString();
@@ -836,7 +872,11 @@ namespace RWDE
                             statusString,
                             Constants.Sakku,
                             DateTime.Now);
-
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         dataGridView.ReadOnly = true;
 
                         // Display appropriate message
@@ -1036,9 +1076,13 @@ namespace RWDE
                     {
                         //to edit particular contract id from contract list
                         dbHelper.ContractIdEdit(contractId, contractName, startedDateTime, endedDateTime, status);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         dataGridView.Columns[Constants.Status].ReadOnly = true;
-                        // Refresh the DataGridView after editing
-                        //PopulateDataGridView();
+                        
                     }
                     else
                     {
@@ -1206,7 +1250,11 @@ namespace RWDE
                         // Update the status to Constants.Delete
                         dataGridView.Rows[rowIndex].Cells[Constants.Status].Value = Constants.Delete;
                         dbHelper.ContractIdUpdateStatus(contractId, Constants.DeleteContractstatus); //this function updates the status in the database
-
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         // Refresh the DataGridView to reflect the status change
                         // PopulateDataGridView();
                         MessageBox.Show($@"{Constants.DeletedContractId}{contractId} {Constants.Successfully}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1275,7 +1323,7 @@ namespace RWDE
                         if (row.IsNewRow) continue;
 
                         // Get the"Ended At"column value
-                        if (DateTime.TryParse(row.Cells[Constants.EndedDateTime].Value?.ToString(), out DateTime endedAt))
+                        if (DateTime.TryParse(row.Cells[Constants.EndedDateTime].Value?.ToString(), out DateTime endedAt) && row.Cells[Constants.Status].Value.ToString() == Constants.Active)
                         {
                             // If the"Ended At"date matches today's date
                             if (endedAt.Date == DateTime.Today.Date)
@@ -1285,7 +1333,7 @@ namespace RWDE
 
                                 // Update the"Ended At"column to one year later
                                 row.Cells[Constants.EndedDateTime].Value = DateTime.Today.AddYears(1);
-                                if (row.DataBoundItem is DataRowView rowToSave)
+                                if (row.DataBoundItem is DataRowView rowToSave && row.Cells[Constants.Status].Value.ToString()==Constants.Active)
                                 {
                                     SaveContract(rowToSave.Row, false);
                                 }

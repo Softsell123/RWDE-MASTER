@@ -18,9 +18,33 @@ namespace RWDE
             DateTime endTime = DateTime.MaxValue; // Or a specific default date
                                                   // Fetch data from the database
             DataTable clientIds = dbHelper.GetClientIDs(startTime, endTime);//to load data of clients
+            if (dbHelper.ErrorOccurred)
+            {
+                MessageBox.Show(Constants.ErrorOccurred);
+                return;
+            }
+            
             DataTable serviceIds = dbHelper.GetServiceIDs(startTime, endTime);//to load data of services
+            if (dbHelper.ErrorOccurred)
+            {
+                MessageBox.Show(Constants.ErrorOccurred);
+                return;
+            }
+
             DataTable hccServices = dbHelper.GetHccServices();//to load data of services
+            if (dbHelper.ErrorOccurred)
+            {
+                MessageBox.Show(Constants.ErrorOccurred);
+                return;
+            }
+
             DataTable hccClients = dbHelper.GetHccClients();// Similarly get and populate hccClients
+            if (dbHelper.ErrorOccurred)
+            {
+                MessageBox.Show(Constants.ErrorOccurred);
+                return;
+            }
+
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
@@ -171,7 +195,11 @@ namespace RWDE
                     {
                         //to display the data based on BatchId
                         result = dbHelper.LoadDatafilterServiceReconbatchid(batchids); //
-
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
                         if (result.Rows.Count == 0)
                         {
                             //to display the empty GridView
@@ -191,6 +219,12 @@ namespace RWDE
                 {
                     //to load the service-recon for created and service date filter
                     result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+
                 }
 
                 // Add a 'Sl No' column for serial number

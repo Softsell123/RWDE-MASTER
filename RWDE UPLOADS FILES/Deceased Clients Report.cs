@@ -267,6 +267,11 @@ namespace RWDE
 
                 // Fetch filtered data from the database
                 DataTable dataTable = dbHelper.GetFilteredDataFromDatabase(startDate, endDate);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
                 // Populate DataGridView with the fetched data
                 PopulateDataGridView(dataTable);
