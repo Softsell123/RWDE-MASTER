@@ -82,7 +82,6 @@ namespace RWDE
             this.lblTitle.Size = new System.Drawing.Size(206, 35);
             this.lblTitle.TabIndex = 19;
             this.lblTitle.Text = "Error Log Report";
-            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
             // 
             // btnClose
             // 
@@ -146,7 +145,6 @@ namespace RWDE
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1600, 407);
             this.dataGridView.TabIndex = 17;
-            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
             // Column5
             // 
@@ -236,7 +234,6 @@ namespace RWDE
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1600, 157);
             this.pnl.TabIndex = 16;
-            this.pnl.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_Paint);
             // 
             // btnClr
             // 
@@ -368,20 +365,6 @@ namespace RWDE
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private void lblTitle_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pnl_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
+       
     }
 }

@@ -98,7 +98,6 @@ namespace RWDE
                     return;
                 }
 
-
                 //to Write the CSV data of Services
                 dbHelper.WriteServicesCsvData(ServicesfilePath);
                 if (dbHelper.ErrorOccurred)

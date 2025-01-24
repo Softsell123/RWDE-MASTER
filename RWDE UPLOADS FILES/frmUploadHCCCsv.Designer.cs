@@ -23,57 +23,7 @@ namespace RWDE
             base.Dispose(disposing);
         }
         public int currentFileIndex { get; private set; }
-        private void progressBar_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void pnlProgress_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void lblLabelType_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblPath_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void txtBatchId_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblUploadStarts_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtDesc_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressBarfile_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblLines_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblfiles_Click(object sender, EventArgs e)
-        {
-
-        }
+        
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -144,7 +94,6 @@ namespace RWDE
             this.pnlCsvXml.Name = "pnlCsvXml";
             this.pnlCsvXml.Size = new System.Drawing.Size(4999, 919);
             this.pnlCsvXml.TabIndex = 0;
-            this.pnlCsvXml.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlCsvXml_Paint);
             // 
             // label2
             // 
@@ -298,7 +247,6 @@ namespace RWDE
             this.progressBarfile.Name = "progressBarfile";
             this.progressBarfile.Size = new System.Drawing.Size(240, 39);
             this.progressBarfile.TabIndex = 3;
-            this.progressBarfile.Click += new System.EventHandler(this.progressBarfile_Click);
             // 
             // txtUploadStarted
             // 
@@ -344,7 +292,6 @@ namespace RWDE
             this.lblUploadStarts.Size = new System.Drawing.Size(224, 35);
             this.lblUploadStarts.TabIndex = 30;
             this.lblUploadStarts.Text = "Upload Started At:";
-            this.lblUploadStarts.Click += new System.EventHandler(this.lblUploadStarts_Click);
             // 
             // lblBatch
             // 
@@ -378,7 +325,6 @@ namespace RWDE
             this.lblProgress.Size = new System.Drawing.Size(114, 35);
             this.lblProgress.TabIndex = 0;
             this.lblProgress.Text = "Progress";
-            this.lblProgress.Click += new System.EventHandler(this.label4_Click);
             // 
             // txtProgressLines
             // 
@@ -391,8 +337,7 @@ namespace RWDE
             this.txtProgressLines.Size = new System.Drawing.Size(240, 40);
             this.txtProgressLines.TabIndex = 1;
             this.txtProgressLines.TabStop = false;
-            this.txtProgressLines.Text = Constants.ZeroPercent;
-            this.txtProgressLines.TextChanged += new System.EventHandler(this.txtProgressbar_TextChanged);
+            this.txtProgressLines.Text = "0%";
             // 
             // lblfiles
             // 
@@ -405,7 +350,6 @@ namespace RWDE
             this.lblfiles.Size = new System.Drawing.Size(96, 36);
             this.lblfiles.TabIndex = 2;
             this.lblfiles.Text = "# Files:";
-            this.lblfiles.Click += new System.EventHandler(this.lblfiles_Click);
             // 
             // lblLines
             // 
@@ -418,7 +362,6 @@ namespace RWDE
             this.lblLines.Size = new System.Drawing.Size(103, 36);
             this.lblLines.TabIndex = 4;
             this.lblLines.Text = "# Lines:";
-            this.lblLines.Click += new System.EventHandler(this.lblLines_Click);
             // 
             // txtProgressfile
             // 
@@ -432,7 +375,6 @@ namespace RWDE
             this.txtProgressfile.TabIndex = 5;
             this.txtProgressfile.TabStop = false;
             this.txtProgressfile.Text = "0/0 (0%)";
-            this.txtProgressfile.TextChanged += new System.EventHandler(this.txtProgressfile_TextChanged);
             // 
             // progressBarLines
             // 
@@ -441,7 +383,6 @@ namespace RWDE
             this.progressBarLines.Name = "progressBarLines";
             this.progressBarLines.Size = new System.Drawing.Size(240, 39);
             this.progressBarLines.TabIndex = 6;
-            this.progressBarLines.Click += new System.EventHandler(this.progressBar_Click);
             // 
             // pnl
             // 
@@ -464,7 +405,6 @@ namespace RWDE
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1693, 381);
             this.pnl.TabIndex = 2;
-            this.pnl.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // chckPHI
             // 
@@ -486,7 +426,6 @@ namespace RWDE
             this.txtDesc.Name = "txtDesc";
             this.txtDesc.Size = new System.Drawing.Size(632, 40);
             this.txtDesc.TabIndex = 5;
-            this.txtDesc.TextChanged += new System.EventHandler(this.txtDesc_TextChanged);
             // 
             // lblBatchType
             // 
@@ -508,7 +447,6 @@ namespace RWDE
             this.txtType.Size = new System.Drawing.Size(240, 40);
             this.txtType.TabIndex = 5;
             this.txtType.Text = "HCC";
-            this.txtType.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // lblHeading
             // 
@@ -522,7 +460,6 @@ namespace RWDE
             this.lblHeading.Size = new System.Drawing.Size(1459, 70);
             this.lblHeading.TabIndex = 3;
             this.lblHeading.Text = resources.GetString("lblHeading.Text");
-            this.lblHeading.Click += new System.EventHandler(this.lblHeading_Click);
             // 
             // lblDesc
             // 
@@ -557,7 +494,6 @@ namespace RWDE
             this.txtpath.ShortcutsEnabled = false;
             this.txtpath.Size = new System.Drawing.Size(828, 40);
             this.txtpath.TabIndex = 3;
-            this.txtpath.TextChanged += new System.EventHandler(this.textPath_TextChanged);
             // 
             // btnBrowse
             // 
@@ -587,7 +523,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(240, 45);
             this.btnClose.TabIndex = 1;
-            this.btnClose.Text = Constants.Close;
+            this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -624,41 +560,6 @@ namespace RWDE
             this.pnl.PerformLayout();
             this.ResumeLayout(false);
 
-        }
-
-        private void textPath_TextChanged(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void lblHeading_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-           
-        }
-
-        private void txtProgressfile_TextChanged(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void txtProgressbar_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void pnlCsvXml_Paint(object sender, PaintEventArgs e)
-        {
-            
         }
 
         #endregion

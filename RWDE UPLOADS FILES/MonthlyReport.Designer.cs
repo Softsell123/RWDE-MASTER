@@ -366,11 +366,7 @@ namespace RWDE
         private System.Windows.Forms.Button btnClr;
         private System.Windows.Forms.ComboBox cbDateFilter;
         private System.Windows.Forms.Label lblDateRange;
-        private void txtBoxFilter_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
+     
         private System.Windows.Forms.DataGridViewTextBoxColumn Monthyear;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesUploaded;
         private System.Windows.Forms.DataGridViewTextBoxColumn UnitsOfServiceUploaded;

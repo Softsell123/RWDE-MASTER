@@ -261,7 +261,6 @@ namespace RWDE
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1698, 467);
             this.dataGridView.TabIndex = 11;
-            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick_1);
             // 
             // user
             // 
@@ -421,7 +420,6 @@ namespace RWDE
             this.Controls.Add(this.pnl);
             this.Name = "ClientDemographicsReport";
             this.Text = "Client_Demographic_Report";
-            this.Load += new System.EventHandler(this.Client_Demographics_Report_Load);
             this.pnl.ResumeLayout(false);
             this.pnl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
@@ -462,14 +460,8 @@ namespace RWDE
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceCodeExportToAries;
         private System.Windows.Forms.DataGridViewTextBoxColumn CreatedOn;
 
-        private void Client_Demographics_Report_Load(object sender, EventArgs e)
-        {
+        
 
-        }
-
-        private void dataGridView_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
+        
     }
 }

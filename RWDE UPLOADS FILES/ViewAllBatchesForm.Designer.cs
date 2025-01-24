@@ -15,8 +15,6 @@ namespace RWDE
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
-        private Button deleteButton;
-        private Button closeButton;
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -116,7 +114,6 @@ namespace RWDE
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(5000, 900);
             this.panel1.TabIndex = 1;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // pnl
             // 
@@ -219,7 +216,6 @@ namespace RWDE
             this.lblHeading.TabIndex = 1;
             this.lblHeading.Text = " All batches in RWDE are displayed below.\r\n";
             this.lblHeading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblHeading.Click += new System.EventHandler(this.pnlLabel_Click);
             // 
             // btnSubmit
             // 
@@ -595,25 +591,10 @@ namespace RWDE
             this.ResumeLayout(false);
 
         }
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void pnlLabel_Click(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
         private void pnl_Paint(object sender, PaintEventArgs e)
         {
             IntPtr hDC = GetDC(this.Handle);
             ReleaseDC(this.Handle, hDC);
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         #endregion

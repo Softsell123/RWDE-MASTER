@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RWDE
@@ -42,13 +42,6 @@ namespace RWDE
             else
             {
                 txtpath.Clear();  // Clear the text box if the file doesn't exist
-            }
-        }
-        public Panel PanelToReplace
-        {
-            get
-            {
-                return pnlCsvXml;
             }
         }
         private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
@@ -132,11 +125,10 @@ namespace RWDE
                 btnClose.Text = Constants.Abort;
                 btnUpload.Enabled = false;
                 bool isUploading = true;
-                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
-                {
+                SqlConnection connection=dbHelper.GetConnection();
                     string fileName = "";
-                    connection.Open();
-                    //SqlTransaction transaction = connection.BeginTransaction();
+                    
+                    
                     try
                     {
                         string folderPath = txtpath.Text;
@@ -256,14 +248,13 @@ namespace RWDE
                             return;
                         }
                     }
-                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        public Tuple<int, bool> InsertCsvDataIntoTable(string csvFilePath, int batchid, SqlConnection connection, Boolean isUploading)//Insertion of CSV DATA into tables
+        public  Tuple<int, bool> InsertCsvDataIntoTable(string csvFilePath, int batchid, SqlConnection connection, Boolean isUploading)//Insertion of CSV DATA into tables
         {
             int rowsInserted = 0;
             int totalRows = 0;
@@ -415,7 +406,7 @@ namespace RWDE
                 return Tuple.Create(0, false);
             }
         }
-        private async void UpdateProgress(int currentRowIndex, int totalRowsInCurrentFile)//progress of total rows insertion of csv files 
+        private void UpdateProgress(int currentRowIndex, int totalRowsInCurrentFile)//progress of total rows insertion of csv files 
         {
             try
             {
@@ -457,8 +448,6 @@ namespace RWDE
 
         private void btnClose_Click(object sender, EventArgs e) //close the window
         {
-            using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
-            {
                 try
                 {
                     if (btnClose.Text == Constants.Close)
@@ -497,7 +486,6 @@ namespace RWDE
                     // Handle any exceptions by showing the error message
                     MessageBox.Show(Constants.ErrorCode + ex.Message, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
         }
         private void UpdateBatch(int batchId, string fileName, string path)//getting information of the entired data
         {

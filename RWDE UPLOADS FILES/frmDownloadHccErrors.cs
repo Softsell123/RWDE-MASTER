@@ -136,9 +136,7 @@ namespace RWDE
                     return;
                 }
 
-                // Prepare to insert into database
-                using (SqlConnection conn = new SqlConnection(dbHelper.GetConnectionString()))
-                {
+               SqlConnection conn = dbHelper.GetConnection();
                     conn.Open();
                     using (SqlTransaction transaction = conn.BeginTransaction())
                     {
@@ -211,7 +209,6 @@ namespace RWDE
                             MessageBox.Show(Constants.Errorinsertingdataintothedatabase + ex.Message, Constants.DownloadHccErrors);
                         }
                     }
-                }
             }
             catch (Exception ex)
             {

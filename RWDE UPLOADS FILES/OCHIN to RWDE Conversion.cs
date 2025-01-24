@@ -13,7 +13,7 @@ namespace RWDE
     public partial class OchinToRwdeConversion : Form
     {
         private readonly DbHelper dbHelper;
-        
+
         public OchinToRwdeConversion()//to initialize the data
         {
             InitializeComponent();
@@ -98,19 +98,19 @@ namespace RWDE
             try
             {
                 foreach (Control control in parent.Controls)
-            {
-                if (control is Button || control is CheckBox || control is DateTimePicker ||control is ComboBox || control is ScrollBar || control is ScrollBar)
                 {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar || control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        //Assigning events to all child Controls
+                        RegisterEvents(control);
+                    }
                 }
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    //Assigning events to all child Controls
-                    RegisterEvents(control);
-                }
-            }
             }
             catch (Exception ex)
             {
@@ -362,7 +362,7 @@ namespace RWDE
                         btnNext.Enabled = true;
                         return;
                     }
-                    
+
                     dbHelper.UpdateGridStatus(selectedBatchId, Constants.Hccstartcon);//update the Status label in Status Column
                     if (dbHelper.ErrorOccurred)
                     {
@@ -405,8 +405,7 @@ namespace RWDE
                         return;
                     }
 
-
-                    int i =0;
+                    int i = 0;
                     while (i < totalRows)
                     {
                         // Process each row
@@ -414,7 +413,6 @@ namespace RWDE
                         // Update progress bar and text box
                         await UpdateProgressAsync(i, totalRows);
                     }
-
 
                     DateTime endedTime = DateTime.Now;
                     TimeSpan totalTime = endedTime - startTime;
@@ -511,43 +509,41 @@ namespace RWDE
 
         private async Task GetservicesAsync(int selectedBatchId)//Mapping from CTServices to HCCServices
         {
-            //btncloseHCC.Text = Constants.Abort;
             try
             {
-                //progressbarHcc.Visible = false;
                 progressbarClients.Value = 0;
 
                 // to get the ConversionStartedAt and ConversionEndedAt values
                 var batchDetails = await dbHelper.GetBatchDetailsFromSpAsync(selectedBatchId);//to check whether the conversion completed or not
-                if (dbHelper.ErrorOccurred)
+                if (dbHelper.ErrorOccurred == true)
                 {
+                    MessageBox.Show(Constants.ErrorOccurred);
                     return;
                 }
                 if (batchDetails == null)
                 {
-                        MessageBox.Show(Constants.BatchNotfound);
-                        return;
+                    MessageBox.Show(Constants.BatchNotfound);
+                    return;
                 }
-                    // Check if ConversionStartedAt and ConversionEndedAt are not null
-                    if (batchDetails.ConversionStartedAt!= null && batchDetails.ConversionEndedAt != null)
-                    {
-                       MessageBox.Show(Constants.Conversionhasalreadybeencompletedforthisbatch,Constants.Ochintorwdeconversion,MessageBoxButtons.OK,MessageBoxIcon.Information);
-                        txtProgressClients.Text = Constants.ZeroPercent;
-                        txtProgressServices.Text = Constants.ZeroPercent;
-                        txtBatchid.Text = null;
-                        txtUploadStarted.Text = null;
-                        txtUploadEnded.Text = null;
-                        txtTotaltime.Text = null;
-                        return;
-                    }
-                    btnClose.Text = Constants.Abort;
-                    txtBatchid.Text = selectedBatchId.ToString();
-                    DateTime starttime = DateTime.Now;
+                // Check if ConversionStartedAt and ConversionEndedAt are not null
+                if (batchDetails.ConversionStartedAt != null && batchDetails.ConversionEndedAt != null)
+                {
+                    MessageBox.Show(Constants.Conversionhasalreadybeencompletedforthisbatch, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    txtProgressClients.Text = Constants.ZeroPercent;
+                    txtProgressServices.Text = Constants.ZeroPercent;
+                    txtBatchid.Text = null;
+                    txtUploadStarted.Text = null;
                     txtUploadEnded.Text = null;
                     txtTotaltime.Text = null;
-                    btnConversion.Enabled = false;
-                    txtUploadStarted.Text = starttime.ToString(Constants.MMddyyyyHHmmssbkslash);
-
+                    return;
+                }
+                btnClose.Text = Constants.Abort;
+                txtBatchid.Text = selectedBatchId.ToString();
+                DateTime starttime = DateTime.Now;
+                txtUploadEnded.Text = null;
+                txtTotaltime.Text = null;
+                btnConversion.Enabled = false;
+                txtUploadStarted.Text = starttime.ToString(Constants.MMddyyyyHHmmssbkslash);
 
                 // Get the total number of rows to be inserted
                 int totalRows = dbHelper.GetTotalRowsForBatchservicesOchin(selectedBatchId);//to get total rows
@@ -556,7 +552,6 @@ namespace RWDE
                     MessageBox.Show(Constants.ErrorOccurred);
                     return;
                 }
-
 
                 // Initialize progress variables
                 int insertedRows = 0;
@@ -595,7 +590,6 @@ namespace RWDE
                         return;
                     }
 
-
                     for (int i = 1; i <= totalRows; i++)
                     {
                         // Update progress bar and text box
@@ -609,8 +603,6 @@ namespace RWDE
                         MessageBox.Show(Constants.ErrorOccurred);
                         return;
                     }
-
-
                     //insertion into log table
                     dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
                     if (dbHelper.ErrorOccurred)
@@ -618,9 +610,6 @@ namespace RWDE
                         MessageBox.Show(Constants.ErrorOccurred);
                         return;
                     }
-
-                    MessageBox.Show(Constants.MappingcompletedsuccessfullyforBatchId + selectedBatchId);
-
                     //update batch Services data
                     dbHelper.UpdateBatchServices(selectedBatchId, startTime, endTime, totalRows);
                     if (dbHelper.ErrorOccurred)
@@ -642,7 +631,6 @@ namespace RWDE
                     PopulateDataGridView();
                     dataGridView.Refresh();
                     btnConversion.Enabled = true;
-
                 }
                 else
                 {
@@ -653,44 +641,47 @@ namespace RWDE
             {
                 MessageBox.Show(Constants.Errorsp + ex.Message);
             }
+            finally
+            {
+                btnClose.Text = Constants.Close;
+                btnConversion.Enabled = true;
+            }
         }
         private void PopulateDataGridView()//load data in the grid
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
+                string query = Constants.ConversionOchin;
+                DataTable dataTable = dbHelper.FillTheGrid(query);//to fill the Gird 
+                if (dbHelper.ErrorOccurred)
                 {
-                    SqlCommand command = new SqlCommand(Constants.ConversionOchin, connection)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
-
-                    adapter.Fill(dataTable);
-
-                    //Bind the DataTable to the DataGridView
-                    dataGridView.AutoGenerateColumns = false; // Prevent auto-generation of columns
-                    dataGridView.Columns.Clear(); // Clear existing columns
-
-                    // Define DataGridView columns and map them to DataTable columns
-                    dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
-                    dataGridView.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
-                    dataGridView.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
-                    dataGridView.Columns[Constants.Type].DataPropertyName = Constants.Type;
-                    dataGridView.Columns.Add(Constants.Description, Constants.Description);
-                    dataGridView.Columns[Constants.Description].DataPropertyName = Constants.Description;
-                    dataGridView.Columns.Add(Constants.FileName, Constants.FileNamesp);
-                    dataGridView.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
-                    AddDateTime(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridView);
-                    AddDateTime(Constants.UploadEndedAt, Constants.UploadEndedAtHeader, dataGridView);
-                    AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridView);
-                    AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridView);
-                    dataGridView.Columns.Add(Constants.Status, Constants.Status);
-                    dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
-                    // Bind the DataTable to the DataGridView
-                    dataGridView.DataSource = dataTable;
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
                 }
+
+
+                //Bind the DataTable to the DataGridView
+                dataGridView.AutoGenerateColumns = false; // Prevent auto-generation of columns
+                dataGridView.Columns.Clear(); // Clear existing columns
+
+                // Define DataGridView columns and map them to DataTable columns
+                dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
+                dataGridView.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
+                dataGridView.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
+                dataGridView.Columns[Constants.Type].DataPropertyName = Constants.Type;
+                dataGridView.Columns.Add(Constants.Description, Constants.Description);
+                dataGridView.Columns[Constants.Description].DataPropertyName = Constants.Description;
+                dataGridView.Columns.Add(Constants.FileName, Constants.FileNamesp);
+                dataGridView.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
+                AddDateTime(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridView);
+                AddDateTime(Constants.UploadEndedAt, Constants.UploadEndedAtHeader, dataGridView);
+                AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridView);
+                AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridView);
+                dataGridView.Columns.Add(Constants.Status, Constants.Status);
+                dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
+                // Bind the DataTable to the DataGridView
+                dataGridView.DataSource = dataTable;
+
             }
             catch (Exception ex)
             {
@@ -701,39 +692,35 @@ namespace RWDE
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
+                string query = Constants.ConversionHcc;
+                DataTable dataTable = dbHelper.FillTheGrid(query);//to fill the Gird 
+                if (dbHelper.ErrorOccurred)
                 {
-                    SqlCommand command = new SqlCommand(Constants.ConversionHcc, connection)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
-
-                    adapter.Fill(dataTable);
-
-                    //Bind the DataTable to the DataGridView
-                    dataGridViewHCC.AutoGenerateColumns = false; // Prevent auto-generation of columns
-                    dataGridViewHCC.Columns.Clear(); // Clear existing columns
-
-                    // Define DataGridView columns and map them to DataTable columns
-                    dataGridViewHCC.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
-                    dataGridViewHCC.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
-                    dataGridViewHCC.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
-                    dataGridViewHCC.Columns[Constants.Type].DataPropertyName = Constants.Type;
-                    dataGridViewHCC.Columns.Add(Constants.Description, Constants.Description);
-                    dataGridViewHCC.Columns[Constants.Description].DataPropertyName = Constants.Description;
-                    dataGridViewHCC.Columns.Add(Constants.FileName, Constants.FileNamesp);
-                    dataGridViewHCC.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
-                    AddDateTime(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridViewHCC);
-                    AddDateTime(Constants.UploadEndedAt, Constants.UploadEndedAtHeader, dataGridViewHCC);
-                    AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridViewHCC);
-                    AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridViewHCC);
-                    dataGridViewHCC.Columns.Add(Constants.Status, Constants.Status);
-                    dataGridViewHCC.Columns[Constants.Status].DataPropertyName = Constants.Status;
-                    // Bind the DataTable to the DataGridView
-                    dataGridViewHCC.DataSource = dataTable;
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
                 }
+
+                //Bind the DataTable to the DataGridView
+                dataGridViewHCC.AutoGenerateColumns = false; // Prevent auto-generation of columns
+                dataGridViewHCC.Columns.Clear(); // Clear existing columns
+
+                // Define DataGridView columns and map them to DataTable columns
+                dataGridViewHCC.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
+                dataGridViewHCC.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
+                dataGridViewHCC.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
+                dataGridViewHCC.Columns[Constants.Type].DataPropertyName = Constants.Type;
+                dataGridViewHCC.Columns.Add(Constants.Description, Constants.Description);
+                dataGridViewHCC.Columns[Constants.Description].DataPropertyName = Constants.Description;
+                dataGridViewHCC.Columns.Add(Constants.FileName, Constants.FileNamesp);
+                dataGridViewHCC.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
+                AddDateTime(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridViewHCC);
+                AddDateTime(Constants.UploadEndedAt, Constants.UploadEndedAtHeader, dataGridViewHCC);
+                AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridViewHCC);
+                AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridViewHCC);
+                dataGridViewHCC.Columns.Add(Constants.Status, Constants.Status);
+                dataGridViewHCC.Columns[Constants.Status].DataPropertyName = Constants.Status;
+                // Bind the DataTable to the DataGridView
+                dataGridViewHCC.DataSource = dataTable;
             }
             catch (Exception ex)
             {
@@ -755,7 +742,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show( ex.Message);
+                MessageBox.Show(ex.Message);
             }
             return;
         }
@@ -782,21 +769,18 @@ namespace RWDE
                 MessageBox.Show(Constants.Errorsp + ex.Message);
             }
         }
-        
+
         private void btncloseHCC_Click(object sender, EventArgs e)//Closing form
         {
             try
             {
-                int batchId = dbHelper.GetNextBatchId();
-                if (dbHelper.ErrorOccurred)
-                {
-                    MessageBox.Show(Constants.ErrorOccurred);
-                    return;
-                }
+                int selectedRowIndex = dataGridView.SelectedRows[0].Index;
+                int batchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
+
                 if (btnClose.Text == Constants.Abort)
                 {
-                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort,Constants.Ochin, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                   
+                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, Constants.Ochin, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
                     // Check if the user clicked "Yes"
                     if (result == DialogResult.Yes)
                     {
@@ -824,7 +808,7 @@ namespace RWDE
                     Close();
                     Application.Restart();
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -837,19 +821,19 @@ namespace RWDE
             try
             {
                 txtBatchid.Clear();
-            txtTotaltime.Clear();
-            txtUploadStarted.Clear();
-            txtUploadEnded.Clear();
-            txtProgressClients.Text = Constants.ZeroPercent;
-            progressbarClients.Value = 0;
-            txtProgressServices.Text = Constants.ZeroPercent;
-            progressBarServices.Value = 0;
+                txtTotaltime.Clear();
+                txtUploadStarted.Clear();
+                txtUploadEnded.Clear();
+                txtProgressClients.Text = Constants.ZeroPercent;
+                progressbarClients.Value = 0;
+                txtProgressServices.Text = Constants.ZeroPercent;
+                progressBarServices.Value = 0;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-        }    
+        }
         private void btnSubmit_Click(object sender, EventArgs e)//to insert data
         {
             try
@@ -932,7 +916,8 @@ namespace RWDE
         }
         private void dtpStartDate_ValueChanged_1(object sender, EventArgs e)//to format date when the Start date is changed
         {
-            try { 
+            try
+            {
                 dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpStartDate.Format = DateTimePickerFormat.Custom;
             }
@@ -944,7 +929,8 @@ namespace RWDE
 
         private void dtpEndDate_ValueChanged_1(object sender, EventArgs e)//to format date
         {
-            try { 
+            try
+            {
                 dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Format = DateTimePickerFormat.Custom;
             }
@@ -956,7 +942,8 @@ namespace RWDE
 
         private void btnNext_Click(object sender, EventArgs e)//navigate to next page for next process
         {
-            try {
+            try
+            {
                 FrmMain mainForm = Application.OpenForms.OfType<FrmMain>().FirstOrDefault();
 
                 if (mainForm != null)

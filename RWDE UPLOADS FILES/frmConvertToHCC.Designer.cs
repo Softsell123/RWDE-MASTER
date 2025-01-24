@@ -105,7 +105,6 @@ namespace RWDE
             this.pnlHCCConversion.Name = "pnlHCCConversion";
             this.pnlHCCConversion.Size = new System.Drawing.Size(5004, 1059);
             this.pnlHCCConversion.TabIndex = 20;
-            this.pnlHCCConversion.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlHCCConversion_Paint_1);
             // 
             // lblTitle
             // 
@@ -136,7 +135,6 @@ namespace RWDE
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1720, 462);
             this.pnl.TabIndex = 26;
-            this.pnl.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_Paint);
             // 
             // txtBatchtype
             // 
@@ -392,7 +390,6 @@ namespace RWDE
             this.pnlProgress.Name = "pnlProgress";
             this.pnlProgress.Size = new System.Drawing.Size(1720, 267);
             this.pnlProgress.TabIndex = 25;
-            this.pnlProgress.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlProgress_Paint);
             // 
             // txtTotaltime
             // 
@@ -571,7 +568,6 @@ namespace RWDE
             this.txtProgresshcc.Size = new System.Drawing.Size(240, 40);
             this.txtProgresshcc.TabIndex = 14;
             this.txtProgresshcc.Text = Constants.ZeroPercent;
-            this.txtProgresshcc.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // lblStatus
             // 
@@ -580,7 +576,6 @@ namespace RWDE
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 35);
             this.lblStatus.TabIndex = 23;
-            this.lblStatus.Click += new System.EventHandler(this.label1_Click);
             // 
             // btncloseHCC
             // 
@@ -646,7 +641,6 @@ namespace RWDE
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FrmConvertToHcc";
             this.Text = "CT to HCC Conversion";
-            this.Load += new System.EventHandler(this.frmConvertToHCC_Load);
             this.pnlHCCConversion.ResumeLayout(false);
             this.pnlHCCConversion.PerformLayout();
             this.pnl.ResumeLayout(false);
@@ -656,67 +650,6 @@ namespace RWDE
             this.pnlProgress.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rwdeDataSet1)).EndInit();
             this.ResumeLayout(false);
-
-        }
-
-        private void progressBarServices_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void pnlProgress_Paint(object sender, PaintEventArgs e)
-        {
-            
-        }
-
-        private void pnl_Paint(object sender, PaintEventArgs e)
-        {
-           
-        }
-
-        private void frmConvertToHCC_Load(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void lblCaption_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void pnlHCCConversion_Paint_1(object sender, PaintEventArgs e)
-        {
-
-        }
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-          
-        }
-        private void pnlHCCConversion_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressbarHcc_Click(object sender, EventArgs e)
-        {
 
         }
 

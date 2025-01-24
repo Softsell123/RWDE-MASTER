@@ -269,7 +269,6 @@ namespace RWDE
             this.cbBatchType.Name = "cbBatchType";
             this.cbBatchType.Size = new System.Drawing.Size(247, 37);
             this.cbBatchType.TabIndex = 35;
-            this.cbBatchType.SelectedIndexChanged += new System.EventHandler(this.cbBatchType_SelectedIndexChanged_1);
             // 
             // dtpStartDate
             // 
@@ -344,7 +343,6 @@ namespace RWDE
             this.lblEndTo.Size = new System.Drawing.Size(100, 29);
             this.lblEndTo.TabIndex = 29;
             this.lblEndTo.Text = "To Date :";
-            this.lblEndTo.Click += new System.EventHandler(this.lblEndTo_Click_1);
             // 
             // lblBatchType
             // 
@@ -391,7 +389,6 @@ namespace RWDE
             this.dataGridViewHCC.RowTemplate.Height = 24;
             this.dataGridViewHCC.Size = new System.Drawing.Size(1685, 137);
             this.dataGridViewHCC.TabIndex = 9;
-            this.dataGridViewHCC.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewHCC_CellContentClick);
             this.dataGridViewHCC.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridViewHCC_Scroll);
             // 
             // Column7
@@ -463,7 +460,6 @@ namespace RWDE
             this.lblHcc.Size = new System.Drawing.Size(136, 35);
             this.lblHcc.TabIndex = 7;
             this.lblHcc.Text = "HCC Batch";
-            this.lblHcc.Click += new System.EventHandler(this.lblHcc_Click);
             // 
             // lblOchin
             // 
@@ -770,7 +766,6 @@ namespace RWDE
             this.pnlOCHINConversion.Name = "pnlOCHINConversion";
             this.pnlOCHINConversion.Size = new System.Drawing.Size(2942, 1006);
             this.pnlOCHINConversion.TabIndex = 6;
-            this.pnlOCHINConversion.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // OchinToRwdeConversion
             // 
@@ -781,7 +776,6 @@ namespace RWDE
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "OchinToRwdeConversion";
             this.Text = "OCHIN_to_RWDE_Conversion";
-            this.Load += new System.EventHandler(this.OCHIN_to_RWDE_Conversion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).EndInit();
             this.pnl.ResumeLayout(false);
@@ -795,137 +789,6 @@ namespace RWDE
             this.ResumeLayout(false);
 
         }
-        private void lblFileInformation_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblUploadStarts_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtUploadEnded_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void cbBatchType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dtpStartDate_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblStartFrom_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dtpEndDate_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblEndTo_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblBatchType_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTotaltime_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtUploadStarted_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtBatchid_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblTotaltime_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblUploadEnded_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblBatch_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblServices_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtProgressServices_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void prsHeading_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressbarHcc_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-        private void lblEndTo_Click_1(object sender, EventArgs e)
-        {
-
-
-        }
-
-        private void cbBatchType_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-
-        }
-        private void OCHIN_to_RWDE_Conversion_Load(object sender, EventArgs e)
-        {
-
-        }
-        private void dataGridViewHCC_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            dataGridView.ScrollBars = ScrollBars.Both;
-
-        }
-
-        private void lblHcc_Click(object sender, EventArgs e)
-        {
-          
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-           
-        }
-
         #endregion
         private RWDEDataSet rWDEDataSet;
         private BindingSource batchBindingSource;

@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Data;
-using System.Data.SqlClient;
+using System.Data; 
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -41,17 +40,6 @@ namespace RWDE
             set { base.BackColor = value; }
         }
 
-        //private void MainForm_Load(object sender, EventArgs e)//to load main form
-        //{
-        //    try
-        //    {
-        //        BackColor = Color.White;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message);
-        //    }
-        //}
         private void ShowNewForm(object sender, EventArgs e)//to show new form
         {
             try
@@ -279,16 +267,7 @@ namespace RWDE
                 }
                 // Fetch data from the Batch table
                 string query = Constants.BatchTableQuery;
-
-                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
-                {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
-
-                    adapter.Fill(dataTable);
-                    // Bind the DataTable to the DataGridView in frmConvertToHCC
-                }
+                DataTable dataTable = dbHelper.FillTheGridQuery(query);//to fill the Gird using Query
             }
             catch (Exception ex)
             {
@@ -314,7 +293,7 @@ namespace RWDE
                 pnlRightChart.Visible = false;
 
                 // Create an instance of btnCT and show it
-                FrmUploadOchinCsv frmUploadXmlFile = new FrmUploadOchinCsv
+                FrmUploadHccCsv frmUploadXmlFile = new FrmUploadHccCsv
                 {
                     MdiParent = this
                 };
@@ -804,7 +783,7 @@ namespace RWDE
 
                 // Add a new series to the chart for Pie chart
                 var series = chartServices.Series.Add("Service Data");
-                series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+                series.ChartType = SeriesChartType.Pie;
 
                 foreach (DataRow row in dt.Rows)
                 {
@@ -827,7 +806,7 @@ namespace RWDE
                         series["PieLabelStyle"] = "Outside";
                         series["LabelDistance"] = "4";
 
-                        await Task.Delay(500);
+                        await Task.Delay(300);
                         for (int value = 0; value <= targetValue; value++) // Gradual increments
                         {
                             point.YValues[0] =value;
@@ -945,11 +924,6 @@ namespace RWDE
             {
                 MessageBox.Show(ex.Message);
             }
-        }
-
-        private void lblFrom_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

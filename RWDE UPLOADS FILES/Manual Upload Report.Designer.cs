@@ -317,7 +317,6 @@ namespace RWDE
             this.Controls.Add(this.pnl);
             this.Name = "FrmManualUpload";
             this.Text = "Client_Demographic_Report";
-            this.Load += new System.EventHandler(this.Client_Demographics_Report_Load);
             this.pnl.ResumeLayout(false);
             this.pnl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
@@ -340,11 +339,6 @@ namespace RWDE
         private System.Windows.Forms.Label lblStartDate;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button btnClear;
-
-        private void Client_Demographics_Report_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private DataGridViewTextBoxColumn CaseManager;
         private DataGridViewTextBoxColumn Clnt_id;

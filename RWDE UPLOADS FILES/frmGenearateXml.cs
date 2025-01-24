@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -16,13 +15,11 @@ namespace RWDE
 {
     public partial class FrmGeneratorXml : Form
     {
-        private readonly string connectionString;
         private readonly DbHelper dbHelper;
         public FrmGeneratorXml()
         {
             InitializeComponent();
             dbHelper = new DbHelper();
-            connectionString = dbHelper.GetConnectionString();
             LoadBatchStatus();//load data
             PopulateDataGridView();//Handle the Grid View 
             ControlBox = false;
@@ -144,15 +141,15 @@ namespace RWDE
             try
             {
                 string query = Constants.GenerationStarted;
-                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
+                
+                DataTable dataTable = dbHelper.FillTheGrid(query);//to fill the Gird 
+                if (dbHelper.ErrorOccurred)
                 {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
-                    adapter.Fill(dataTable);
-
-                    dataGridView.AutoGenerateColumns = false;
+                dataGridView.AutoGenerateColumns = false;
                     dataGridView.Columns.Clear();
 
                     dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
@@ -174,8 +171,6 @@ namespace RWDE
                     dataGridView.Columns.Add(Constants.Status, Constants.Status);
                     dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
                     dataGridView.DataSource = dataTable;
-
-                }
             }
             catch (Exception ex)
             {
@@ -243,45 +238,37 @@ namespace RWDE
                 }
             }
         }
-        public Panel PanelToReplace
-        {
-            get
-            {
-                return panel1;
-            }
-        }
         public void PopulateDataGridView(DataTable dt)//Populating GRID from table
         {
             try
             {
                 string query = Constants.GenerationOchin;
-                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
+                DataTable dataTable = dbHelper.FillTheGrid(query);//to fill the Gird 
+                if (dbHelper.ErrorOccurred)
                 {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
-
-                    adapter.Fill(dataTable);
-
-                    dataGridView.AutoGenerateColumns = false;
-                    dataGridView.Columns.Clear();
-
-                    dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
-                    dataGridView.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
-                    dataGridView.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
-                    dataGridView.Columns[Constants.Type].DataPropertyName = Constants.Type;
-                    dataGridView.Columns.Add(Constants.Description, Constants.BatchDescriptionSp);
-                    dataGridView.Columns[Constants.Description].DataPropertyName = Constants.Description;
-                    dataGridView.Columns.Add(Constants.FileName, Constants.FileNamesp);
-                    dataGridView.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
-                    AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridView);
-                    AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridView);
-                    AddDateTime(Constants.GenerationStartedAt, Constants.GenerationStartedAtHeader, dataGridView);
-                    AddDateTime(Constants.GenerationEndedAt, Constants.GenerationEndedAtHeader, dataGridView);
-                    dataGridView.Columns.Add(Constants.Status, Constants.Status);
-                    dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
-                    dataGridView.DataSource = dataTable;
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
                 }
+
+
+                dataGridView.AutoGenerateColumns = false;
+                dataGridView.Columns.Clear();
+
+                dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
+                dataGridView.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
+                dataGridView.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
+                dataGridView.Columns[Constants.Type].DataPropertyName = Constants.Type;
+                dataGridView.Columns.Add(Constants.Description, Constants.BatchDescriptionSp);
+                dataGridView.Columns[Constants.Description].DataPropertyName = Constants.Description;
+                dataGridView.Columns.Add(Constants.FileName, Constants.FileNamesp);
+                dataGridView.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
+                AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridView);
+                AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridView);
+                AddDateTime(Constants.GenerationStartedAt, Constants.GenerationStartedAtHeader, dataGridView);
+                AddDateTime(Constants.GenerationEndedAt, Constants.GenerationEndedAtHeader, dataGridView);
+                dataGridView.Columns.Add(Constants.Status, Constants.Status);
+                dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
+                dataGridView.DataSource = dataTable;
             }
             catch (Exception ex)
             {
@@ -382,7 +369,6 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        //private int selectedBatchID = 0;
         public async Task GenerateXmlForServicesAsync(int batchId)//Handle the Service Xml File Process
         {
             try
@@ -655,7 +641,6 @@ namespace RWDE
                         bool empty = bool.Parse(structureRow[XmlConstants.Empty]);
                         bool hasChild = bool.Parse(structureRow[XmlConstants.HasChild]);
                         string delimi = structureRow[XmlConstants.DelimiterxmlGeneratorId];
-                        string value = null;
 
                         if (int.TryParse(tagNumber, out int parsedTagNumber))
                         {
@@ -1192,6 +1177,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 throw;
             }
         }
@@ -1204,6 +1190,7 @@ namespace RWDE
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 throw;
             }
 
@@ -1248,33 +1235,33 @@ namespace RWDE
             try
             {
                 string query = Constants.Generation;
-                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
+                DataTable dataTable = dbHelper.FillTheGrid(query);//to fill the Gird 
+                if (dbHelper.ErrorOccurred)
                 {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
-
-                    adapter.Fill(dataTable);
-
-                    dataGridView.AutoGenerateColumns = false;
-                    dataGridView.Columns.Clear();
-
-                    dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
-                    dataGridView.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
-                    dataGridView.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
-                    dataGridView.Columns[Constants.Type].DataPropertyName = Constants.Type;
-                    dataGridView.Columns.Add(Constants.Description, Constants.BatchDescriptionSp);
-                    dataGridView.Columns[Constants.Description].DataPropertyName = Constants.Description;
-                    dataGridView.Columns.Add(Constants.FileName, Constants.FileNamesp);
-                    dataGridView.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
-                    AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridView);
-                    AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridView);
-                    AddDateTime(Constants.GenerationStartedAt, Constants.GenerationStartedAtHeader, dataGridView);
-                    AddDateTime(Constants.GenerationEndedAt, Constants.GenerationEndedAtHeader, dataGridView);
-                    dataGridView.Columns.Add(Constants.Status, Constants.Status);
-                    dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
-                    dataGridView.DataSource = dataTable;
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
                 }
+
+
+                dataGridView.AutoGenerateColumns = false;
+                dataGridView.Columns.Clear();
+
+                dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
+                dataGridView.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
+                dataGridView.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
+                dataGridView.Columns[Constants.Type].DataPropertyName = Constants.Type;
+                dataGridView.Columns.Add(Constants.Description, Constants.BatchDescriptionSp);
+                dataGridView.Columns[Constants.Description].DataPropertyName = Constants.Description;
+                dataGridView.Columns.Add(Constants.FileName, Constants.FileNamesp);
+                dataGridView.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
+                AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridView);
+                AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridView);
+                AddDateTime(Constants.GenerationStartedAt, Constants.GenerationStartedAtHeader, dataGridView);
+                AddDateTime(Constants.GenerationEndedAt, Constants.GenerationEndedAtHeader, dataGridView);
+                dataGridView.Columns.Add(Constants.Status, Constants.Status);
+                dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
+                dataGridView.DataSource = dataTable;
+
             }
             catch (Exception ex)
             {

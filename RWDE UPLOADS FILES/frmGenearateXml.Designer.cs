@@ -22,17 +22,6 @@ namespace RWDE
             }
             base.Dispose(disposing);
         }
-
-
-
-        private void txtBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void prgClient_Click(object sender, EventArgs e)
-        {
-
-        }
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -65,12 +54,6 @@ namespace RWDE
             this.lblXml = new System.Windows.Forms.Label();
             this.lblHeading = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.startedAtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.endedAtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.batchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.rWDEDataSet = new RWDE.RWDEDataSet();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlProgress = new System.Windows.Forms.Panel();
@@ -94,17 +77,23 @@ namespace RWDE
             this.btnGeneration = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnNext = new System.Windows.Forms.Button();
+            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.startedAtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.endedAtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.batchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.rWDEDataSet = new RWDE.RWDEDataSet();
             this.batchTableAdapter = new RWDE.RWDEDataSetTableAdapters.BatchTableAdapter();
             this.batchTableAdapter1 = new RWDE.RWDEDataSet1TableAdapters.BatchTableAdapter();
             this.panel1.SuspendLayout();
             this.pnl.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlProgress.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -125,7 +114,6 @@ namespace RWDE
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(2993, 1116);
             this.panel1.TabIndex = 0;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // lblXmlHeader
             // 
@@ -153,7 +141,6 @@ namespace RWDE
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1768, 464);
             this.pnl.TabIndex = 29;
-            this.pnl.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // chkError
             // 
@@ -310,7 +297,6 @@ namespace RWDE
             this.txtPath.ReadOnly = true;
             this.txtPath.Size = new System.Drawing.Size(573, 36);
             this.txtPath.TabIndex = 2;
-            this.txtPath.TextChanged += new System.EventHandler(this.txtBox_TextChanged);
             // 
             // lblXml
             // 
@@ -380,56 +366,6 @@ namespace RWDE
             this.dataGridView.TabIndex = 0;
             this.dataGridView.TabStop = false;
             this.dataGridView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView_Scroll);
-            // 
-            // descriptionDataGridViewTextBoxColumn
-            // 
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.descriptionDataGridViewTextBoxColumn.Frozen = true;
-            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
-            this.descriptionDataGridViewTextBoxColumn.MaxInputLength = 8;
-            this.descriptionDataGridViewTextBoxColumn.MinimumWidth = 10;
-            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
-            this.descriptionDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // startedAtDataGridViewTextBoxColumn
-            // 
-            this.startedAtDataGridViewTextBoxColumn.DataPropertyName = "StartedAt";
-            this.startedAtDataGridViewTextBoxColumn.HeaderText = "StartedAt";
-            this.startedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.startedAtDataGridViewTextBoxColumn.Name = "startedAtDataGridViewTextBoxColumn";
-            this.startedAtDataGridViewTextBoxColumn.ReadOnly = true;
-            this.startedAtDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // endedAtDataGridViewTextBoxColumn
-            // 
-            this.endedAtDataGridViewTextBoxColumn.DataPropertyName = "EndedAt";
-            this.endedAtDataGridViewTextBoxColumn.HeaderText = "EndedAt";
-            this.endedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.endedAtDataGridViewTextBoxColumn.Name = "endedAtDataGridViewTextBoxColumn";
-            this.endedAtDataGridViewTextBoxColumn.ReadOnly = true;
-            this.endedAtDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // statusDataGridViewTextBoxColumn
-            // 
-            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
-            this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
-            this.statusDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
-            this.statusDataGridViewTextBoxColumn.ReadOnly = true;
-            this.statusDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // batchBindingSource
-            // 
-            this.batchBindingSource.DataMember = "Batch";
-            this.batchBindingSource.DataSource = this.rWDEDataSet;
-            // 
-            // rWDEDataSet
-            // 
-            this.rWDEDataSet.DataSetName = "RWDEDataSet";
-            this.rWDEDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // pictureBox2
             // 
@@ -673,7 +609,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(240, 43);
             this.btnClose.TabIndex = 1;
-            this.btnClose.Text = Constants.Close;
+            this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -713,6 +649,56 @@ namespace RWDE
             this.btnNext.UseVisualStyleBackColor = false;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
+            // descriptionDataGridViewTextBoxColumn
+            // 
+            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            this.descriptionDataGridViewTextBoxColumn.Frozen = true;
+            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
+            this.descriptionDataGridViewTextBoxColumn.MaxInputLength = 8;
+            this.descriptionDataGridViewTextBoxColumn.MinimumWidth = 10;
+            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
+            this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
+            this.descriptionDataGridViewTextBoxColumn.Width = 200;
+            // 
+            // startedAtDataGridViewTextBoxColumn
+            // 
+            this.startedAtDataGridViewTextBoxColumn.DataPropertyName = "StartedAt";
+            this.startedAtDataGridViewTextBoxColumn.HeaderText = "StartedAt";
+            this.startedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.startedAtDataGridViewTextBoxColumn.Name = "startedAtDataGridViewTextBoxColumn";
+            this.startedAtDataGridViewTextBoxColumn.ReadOnly = true;
+            this.startedAtDataGridViewTextBoxColumn.Width = 200;
+            // 
+            // endedAtDataGridViewTextBoxColumn
+            // 
+            this.endedAtDataGridViewTextBoxColumn.DataPropertyName = "EndedAt";
+            this.endedAtDataGridViewTextBoxColumn.HeaderText = "EndedAt";
+            this.endedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.endedAtDataGridViewTextBoxColumn.Name = "endedAtDataGridViewTextBoxColumn";
+            this.endedAtDataGridViewTextBoxColumn.ReadOnly = true;
+            this.endedAtDataGridViewTextBoxColumn.Width = 200;
+            // 
+            // statusDataGridViewTextBoxColumn
+            // 
+            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
+            this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
+            this.statusDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
+            this.statusDataGridViewTextBoxColumn.ReadOnly = true;
+            this.statusDataGridViewTextBoxColumn.Width = 200;
+            // 
+            // batchBindingSource
+            // 
+            this.batchBindingSource.DataMember = "Batch";
+            this.batchBindingSource.DataSource = this.rWDEDataSet;
+            // 
+            // rWDEDataSet
+            // 
+            this.rWDEDataSet.DataSetName = "RWDEDataSet";
+            this.rWDEDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
             // batchTableAdapter
             // 
             this.batchTableAdapter.ClearBeforeFill = true;
@@ -730,7 +716,6 @@ namespace RWDE
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FrmGeneratorXml";
             this.Text = "Generate HCC xml files.";
-            this.Load += new System.EventHandler(this.frmXMLGenerator_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.pnl.ResumeLayout(false);
@@ -738,52 +723,15 @@ namespace RWDE
             this.pnlFilter.ResumeLayout(false);
             this.pnlFilter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.pnlProgress.ResumeLayout(false);
             this.pnlProgress.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).EndInit();
             this.ResumeLayout(false);
 
         }
-
-        private void lblUploadStarts_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void progressBar_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-           
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-           
-        }
-
-        private void frmXMLGenerator_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
 
         #endregion
 

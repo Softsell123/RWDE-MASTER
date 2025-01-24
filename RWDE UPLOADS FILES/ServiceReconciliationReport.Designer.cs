@@ -10,7 +10,6 @@ namespace RWDE
         /// </summary>
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.DateTimePicker startDatePicker;
-        private System.Windows.Forms.DateTimePicker endDatePicker;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -109,7 +108,6 @@ namespace RWDE
             this.lblTitle.Size = new System.Drawing.Size(355, 35);
             this.lblTitle.TabIndex = 3;
             this.lblTitle.Text = "Service Reconciliation Report";
-            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
             // 
             // btnDownload
             // 
@@ -162,7 +160,6 @@ namespace RWDE
             this.lblEndDate.Size = new System.Drawing.Size(129, 35);
             this.lblEndDate.TabIndex = 3;
             this.lblEndDate.Text = "End Date:";
-            this.lblEndDate.Click += new System.EventHandler(this.lblEndDate_Click);
             // 
             // dtpEndDate
             // 
@@ -187,7 +184,6 @@ namespace RWDE
             this.lblDateFilter.Size = new System.Drawing.Size(152, 35);
             this.lblDateFilter.TabIndex = 4;
             this.lblDateFilter.Text = "Date Filter :";
-            this.lblDateFilter.Click += new System.EventHandler(this.lblDateFilter_Click);
             // 
             // dtpDateFilter
             // 
@@ -238,7 +234,6 @@ namespace RWDE
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1738, 157);
             this.pnl.TabIndex = 0;
-            this.pnl.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_Paint);
             // 
             // txtBatchID
             // 
@@ -295,7 +290,6 @@ namespace RWDE
             this.lblHeader.TabIndex = 4;
             this.lblHeader.Text = "This report displays all services for a specified period, filtered by Created Dat" +
     "e or Service Date.";
-            this.lblHeader.Click += new System.EventHandler(this.lblHeader_Click);
             // 
             // dataGridView
             // 
@@ -547,38 +541,6 @@ namespace RWDE
             ((System.ComponentModel.ISupportInitialize)(this.rwdeDataSet2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
-        }
-
-
-
-
-
-        private void lblDateFilter_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-        private void lblHeader_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void lblTitle_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pnl_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-
-
-        private void lblEndDate_Click(object sender, EventArgs e)
-        {
 
         }
         #endregion

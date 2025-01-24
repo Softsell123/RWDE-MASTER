@@ -84,8 +84,6 @@ namespace RWDE
             this.lblHeading.Size = new System.Drawing.Size(444, 33);
             this.lblHeading.TabIndex = 1;
             this.lblHeading.Text = "All ServiceCodes  are displayed below.";
-            this.lblHeading.Click += new System.EventHandler(this.lblHeading_Click);
-            // 
             // btnAdd
             // 
             this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
@@ -123,7 +121,6 @@ namespace RWDE
             this.lblTitle.Size = new System.Drawing.Size(239, 35);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Service Code SetUp";
-            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
             // 
             // lblTilte
             // 
@@ -140,7 +137,6 @@ namespace RWDE
             this.lblTilte.Name = "lblTilte";
             this.lblTilte.Size = new System.Drawing.Size(2900, 1365);
             this.lblTilte.TabIndex = 12;
-            this.lblTilte.Paint += new System.Windows.Forms.PaintEventHandler(this.lblTilte_Paint);
             // 
             // dataGridView
             // 
@@ -308,11 +304,6 @@ namespace RWDE
             this.ResumeLayout(false);
 
         }
-        private void lblTilte_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void ServiceCodeSetup_Load(object sender, EventArgs e)
         {
             // Set the form to be maximized on load
@@ -324,25 +315,6 @@ namespace RWDE
 
             // Optional: Center the form on the screen
             this.StartPosition = FormStartPosition.CenterScreen;
-        }
-        private void lblTitle_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblHeading_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void flowLayoutPanel_Paint(object sender, PaintEventArgs e)
-        {
-
         }
         #endregion
 

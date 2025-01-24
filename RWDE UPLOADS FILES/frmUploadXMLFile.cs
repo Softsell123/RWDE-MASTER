@@ -14,24 +14,11 @@ namespace RWDE
     {
         private readonly DbHelper dbHelper;
        
-        // Define a class-level variable to store the default path.
-        private readonly string defaultPath = null;
-
-        // Returns the file path of the source file where the method is called, using the CallerFilePath attribute.
-       
-        public Panel PanelToReplace
-        {
-            get
-            {
-                return pnlCsvXml;//
-            }
-        }
         public FrmUploadXmlFile()
         {
             try
             {
                 InitializeComponent();
-                LoadDefaultPath();
                 dbHelper = new DbHelper();
 
                 this.ControlBox = false;
@@ -227,10 +214,7 @@ namespace RWDE
                             string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                             txtUploadStarted.Text = formattime;
 
-                            using (SqlConnection conn = new SqlConnection(dbHelper.GetConnectionString()))
-
-                            {
-                                conn.Open();
+                            SqlConnection conn = dbHelper.GetConnection();
 
                                 // to get the total number of rows in the given XmlDocument.
                                 int TotalRows = await GetTotalRowsInXml(xmlDoc);
@@ -251,7 +235,7 @@ namespace RWDE
                                 }
                                 processedXmlFiles++;
                                 UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);//to update the file progress
-                            }
+                            
                             DateTime endTime = DateTime.Now;
                             TimeSpan totalTime = endTime - startTime;
                             double totalSeconds = totalTime.TotalSeconds;
@@ -470,20 +454,6 @@ namespace RWDE
             }
         }
 
-        // Method to load the default path when the form is initialized.
-        private void LoadDefaultPath()
-        {
-            try
-            {
-                // Optionally, set the TextBox to the default path.
-                txtPath.Text = defaultPath;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
         private async void btnClose_Click(object sender, EventArgs e)
         {
             try
@@ -505,11 +475,11 @@ namespace RWDE
                         string[] xmlFiles = Directory.GetFiles(folderPath, Constants.AllXmlExtention);
                         string FileName = txtFileName.Text;
 
-                            foreach (string xmlFilePath in xmlFiles)
+                        foreach (string xmlFilePath in xmlFiles)
                         {
                             XmlDocument xmlDoc = new XmlDocument();
                             xmlDoc.Load(xmlFilePath);
-                            int TotalRows =await GetTotalRowsInXml(xmlDoc);
+                            int TotalRows = await GetTotalRowsInXml(xmlDoc);
                             // to update the batch record in the database
                             UpdateBatch(batchId, FileName, xmlFilePath, TotalRows);
                         }
@@ -549,7 +519,6 @@ namespace RWDE
                     MessageBox.Show(Constants.ErrorOccurred);
                     return;
                 }
-
             }
             catch (Exception ex)
             {

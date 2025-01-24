@@ -75,7 +75,6 @@ namespace RWDE
             this.pnlGrid.Name = "pnlGrid";
             this.pnlGrid.Size = new System.Drawing.Size(1922, 1080);
             this.pnlGrid.TabIndex = 0;
-            this.pnlGrid.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlGrid_Paint);
             // 
             // btnAdd
             // 
@@ -232,7 +231,6 @@ namespace RWDE
             this.lblTitle.TabIndex = 3;
             this.lblTitle.Text = "Contracts Setup";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.lblTitle.Click += new System.EventHandler(this.lblContract_Click);
             // 
             // rWDEDataSet2
             // 
@@ -260,7 +258,6 @@ namespace RWDE
             this.Name = "ContractIdLists";
             this.Text = "Contracts Setup";
             this.TransparencyKey = System.Drawing.Color.White;
-            this.Load += new System.EventHandler(this.ContractIDLists_Load);
             this.pnlGrid.ResumeLayout(false);
             this.pnlGrid.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
@@ -271,15 +268,6 @@ namespace RWDE
 
         }
 
-        private void ContractIDLists_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pnlGrid_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
         #endregion
 
         private System.Windows.Forms.Panel pnlGrid;
@@ -297,9 +285,6 @@ namespace RWDE
         private DataGridViewTextBoxColumn Column1;
 
         private DataGridViewTextBoxColumn Column3;
-        private void lblContract_Click(object sender, EventArgs e)
-        {
-
-        }
+       
     }
 }

@@ -153,7 +153,6 @@ namespace RWDE
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1723, 410);
             this.dataGridView.TabIndex = 7;
-            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
             // HCCID
             // 
@@ -351,7 +350,6 @@ namespace RWDE
             this.dtpStartDate.Size = new System.Drawing.Size(172, 40);
             this.dtpStartDate.TabIndex = 0;
             this.dtpStartDate.Value = new System.DateTime(2024, 6, 5, 15, 21, 59, 0);
-            this.dtpStartDate.ValueChanged += new System.EventHandler(this.dtpStartDate_ValueChanged);
             // 
             // lblStartDate
             // 
@@ -386,11 +384,6 @@ namespace RWDE
 
         }
 
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         #endregion
 
         private System.Windows.Forms.Button btnDownload;
@@ -417,9 +410,6 @@ namespace RWDE
         private DataGridViewTextBoxColumn CMSMatchDate;
         private DataGridViewTextBoxColumn Count;
         private DataGridViewTextBoxColumn CreatedOn;
-        private void dtpStartDate_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }

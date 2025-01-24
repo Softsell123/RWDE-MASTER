@@ -259,7 +259,7 @@ namespace RWDE
                 if (e.Value != null)
                 {
                     // Example condition to change color
-                    e.CellStyle.ForeColor = e.CellStyle.ForeColor == Color.Black ? Color.Blue : Color.Black; // Default color for other cases
+                    e.CellStyle.ForeColor = e.CellStyle.ForeColor == Color.Black ? Color.Black : Color.Black; // Default color for other cases
                 }
             }
             catch (Exception ex)

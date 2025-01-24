@@ -95,7 +95,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void dataGridView_KeyDown(object sender, KeyEventArgs e)//to control the delete button functionality
+        private void DataGridView_KeyDownDelete(object sender, KeyEventArgs e)//to control the delete button functionality
         {
             try
             {
@@ -348,7 +348,7 @@ namespace RWDE
                     UseColumnTextForButtonValue = true
                 };
                 dataGridView.KeyDown += DataGridView_KeyDown;
-
+                dataGridView.KeyDown += DataGridView_KeyDownDelete;
                 dataGridView.Columns.Add(deleteButtonColumn);
                 dataGridView.CellPainting += dataGridView_CelleditPainting;
                 /*dataGridView.CellClick += dataGridView_Celledit;*/
@@ -386,7 +386,7 @@ namespace RWDE
                     // Set the height for individual rows
                     foreach (DataGridViewRow row in dataGridView.Rows)
                     {
-                        row.Height = 80; // Adjust the height as needed
+                        row.Height = 37; // Adjust the height as needed
                     }
                 }
             }

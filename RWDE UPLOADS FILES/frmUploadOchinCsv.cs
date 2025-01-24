@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -11,7 +12,8 @@ namespace RWDE//
     public partial class FrmUploadOchinCsv : Form
     {
         private readonly DbHelper dbHelper;
-       
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
         public FrmUploadOchinCsv()//to initialize data
         {
             InitializeComponent();
@@ -88,53 +90,57 @@ namespace RWDE//
 
         private void btnClose_Click(object sender, EventArgs e)//To Close the form and Restart the Application
         {
-            using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
+            try
             {
-                try
+                if (btnClose.Text == Constants.Close)
                 {
-                    if (btnClose.Text == Constants.Close)
+                    Close();
+                    Application.Restart();
+                    return;
+                }
+                if (btnClose.Text == Constants.Abort)
+                {
+                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, Constants.UploadOchinCsv, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (result == DialogResult.Yes)
                     {
-                        Close();
-                        Application.Restart();
-                        return;
-                    }
-                    if (btnClose.Text == Constants.Abort)
-                    {
-                        DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, Constants.UploadOchinCsv, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                        if (result == DialogResult.Yes)
+                        _cancellationTokenSource.Cancel();
+                        string folderPath = txtPath.Text;
+                        string[] csvFiles = Directory.GetFiles(folderPath, Constants.AllCsvExtention);
+
+                        int batchId = Convert.ToInt32(txtBatchid.Text);// Get the current batch ID
+
+                        foreach (string csvFilePath in csvFiles)
                         {
-                            string folderPath = txtPath.Text;
-                            string[] csvFiles = Directory.GetFiles(folderPath, Constants.AllCsvExtention);
-
-                            int batchId = Convert.ToInt32(txtBatchid.Text);// Get the current batch ID
-                            string fileName = txtFileName.Text;
-
-                            foreach (string csvFilePath in csvFiles)
+                            string fileName = Path.GetFileName(csvFilePath);
+                            if(txtFileName.Text== fileName)
                             {
                                 //to Update the Aborted data information 
                                 UpdateBatch(batchId, fileName, csvFilePath);
                             }
-                            //Delete All Values form all Ochin tables 
-                            dbHelper.DeleteBatchochin(batchId.ToString());
-                            if (dbHelper.ErrorOccurred)
-                            {
-                                MessageBox.Show(Constants.ErrorOccurred);
-                                return;
-                            }
-                            // Show confirmation message
-                            MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadOchinCsv);
-                            Close();
-                            Application.Restart();
                         }
+                        _cancellationTokenSource.Cancel();
+                        MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadOchinCsv);
+                        //Delete All Values form all Ochin tables 
+                        dbHelper.DeleteBatchochin(batchId.ToString());
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+                        // Show confirmation message
+                        Close();
+
+                        Application.Restart();
                     }
-                    // Restart the application
                 }
-                catch (Exception ex)
-                {
-                    // Handle any exceptions by showing the error message
-                    MessageBox.Show(Constants.ErrorCode + ex.Message, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                // Restart the application
             }
+            catch (Exception ex)
+            {
+                // Handle any exceptions by showing the error message
+                MessageBox.Show(Constants.ErrorCode + ex.Message, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
         private void UpdateBatch(int batchid, string filename, string path)//to Update the Aborted data information 
         {
@@ -198,12 +204,9 @@ namespace RWDE//
                 btnUpload.Enabled = false;
                 bool isUploading = true;
 
-                using (SqlConnection connection = new SqlConnection(dbHelper.GetConnectionString()))
-                {
+                SqlConnection connection = dbHelper.GetConnection();
                     try
                     {
-                        connection.Open();
-
                         string folderPath = txtPath.Text;
 
                         if (!string.IsNullOrEmpty(folderPath))
@@ -256,7 +259,7 @@ namespace RWDE//
                                 if (isUploading)
                                 {
                                     // Await the async method call
-                                    var result = await InsertCsvDataIntoTable(csvFilePath, batchid, connection);
+                                    var result = await InsertCsvDataIntoTable(csvFilePath, batchid, connection, _cancellationTokenSource.Token);
 
                                     totalRowsInserted += result.Item1;
                                     totalRowsInCurrentFile += result.Item1;
@@ -315,11 +318,15 @@ namespace RWDE//
                         MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         ResetUi();
                     }
-                }
             }
             catch (Exception)
             {
                 throw; // TODO handle exception
+            }
+            finally
+            {
+                btnUpload.Enabled = true;
+                btnClose.Text = Constants.Close;
             }
         }
         private void ResetUi()//to reset button
@@ -345,7 +352,7 @@ namespace RWDE//
                 progressBarLines.Value = currentCsvFileIndex;
                 txtProgressfile.Text = $@"{currentCsvFileIndex}/{totalCsvFiles} ({progressPercentage}%)";
 
-                await Task.Delay(30); // Slow down progress bar update
+                await Task.Delay(15); // Slow down progress bar update
             }
             catch (Exception ex)
             {
@@ -358,7 +365,7 @@ namespace RWDE//
                 }
             }
         }
-        public async Task<Tuple<int, bool>> InsertCsvDataIntoTable(string csvFilePath, int batchId, SqlConnection connection)//functionality to insert particular data 
+        public async Task<Tuple<int, bool>> InsertCsvDataIntoTable(string csvFilePath, int batchId, SqlConnection connection,CancellationToken cancellationToken)//functionality to insert particular data 
         {
             int rowsInserted = 0;
             int totalRows = 0;
@@ -382,6 +389,11 @@ namespace RWDE//
 
                     while (!reader.EndOfStream)
                     {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                            // Exit the loop if cancellation is requested
+                        }
                         if (!isUploading)
                             break;
                         string line = reader.ReadLine();
@@ -459,7 +471,7 @@ namespace RWDE//
                     if (isUploading)
                     {
                         await UpdateProgress(rowsInserted, totalRows); // Await the progress update
-                        //await Task.Delay(500); // Adding delay of 500 milliseconds
+                        
                     }
                 }
                 if (serviceData.Count == 0&& baseFilename.Contains(Constants.Services))
@@ -471,7 +483,7 @@ namespace RWDE//
                 {
                     if (chckPHI.Checked == true)//InsertClientServiceDataPHI
                     {
-                        dbHelper.InsertClientServiceData(connection, data, batchId);//insertion of the services file with PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientServiceDataPhi(connection, data, batchId);//insertion of the services file with PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -533,7 +545,7 @@ namespace RWDE//
                     lastProgress = currentRowIndex;
 
                     // Slow down the progress update
-                    await Task.Delay(50); // Adding asynchronous delay of 0.5 milliseconds
+                    await Task.Delay(15); // Adding asynchronous delay of 0.5 milliseconds
                 }
             }
             catch (Exception ex)
