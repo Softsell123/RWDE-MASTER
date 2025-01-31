@@ -92,7 +92,6 @@ namespace RWDE
                         return;
                     }
 
-
                     // Now you can use the result, e.g., bind it to a DataGridView or process it
                     dataGridView.DataSource = result;
                     //PopulateMonthYearGrid(startDate, endDate);
@@ -165,7 +164,7 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.Selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selectthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {

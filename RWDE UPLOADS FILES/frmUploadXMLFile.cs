@@ -7,7 +7,6 @@ using System.Data.SqlClient;
 using System.Xml;
 using System.Diagnostics;
 
-
 namespace RWDE
 {
     public partial class FrmUploadXmlFile : Form
@@ -341,7 +340,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(InsertXmlDataIntoTable), fileName, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(InsertXmlDataIntoTable), fileName, lineNumber, Constants.ClientTrackCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);

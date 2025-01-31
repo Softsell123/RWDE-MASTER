@@ -108,7 +108,7 @@ namespace RWDE
                 // Now you can use the result, e.g., bind it to a DataGridView or process it
                 if (result.Rows.Count == 0)
                 {
-                    MessageBox.Show(ManualUploadConstants.NoManualUploadsbetweenselecteddates, Constants.Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Constants.NoManualUploadsbetweenselecteddates, Constants.Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 dataGridView.DataSource = result;
@@ -179,12 +179,12 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.Selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selectthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
                             // Base file name and directory
-                            string baseFileName = ManualUploadConstants.ManualUploadClientsReport;
+                            string baseFileName = Constants.ManualUploadClientsReport;
                             string directoryPath = folderBrowserDialog.SelectedPath;
                             string fileExtension =Constants.XlsxExtention;
 
@@ -200,7 +200,7 @@ namespace RWDE
                             }
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($@"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", ManualUploadConstants.ManualUploadClientsReport, MessageBoxButtons.OK,MessageBoxIcon.Information);
+                            MessageBox.Show($@"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", Constants.ManualUploadClientsReport, MessageBoxButtons.OK,MessageBoxIcon.Information);
                         }
                     }
                 }

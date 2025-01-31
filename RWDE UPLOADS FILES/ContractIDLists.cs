@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-// ReSharper disable PossibleNullReferenceException
+
 namespace RWDE
 {
     public partial class ContractIdLists : Form
@@ -812,7 +811,6 @@ namespace RWDE
                     {
                         MessageBox.Show(ContractIdList.Contractrenewedsuccessfully, Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-
                 }
                 else
                 {
@@ -832,7 +830,6 @@ namespace RWDE
                     }
 
                     string currentContractId = row[Constants.ContractId].ToString();
-
 
                     string contractName = row[Constants.ContractName].ToString();
                     string startedDateTimeStr = row[Constants.StartedDateTime].ToString();
@@ -1120,7 +1117,6 @@ namespace RWDE
                     // Create a new GraphicsPath object to define the rounded rectangle
                     using (GraphicsPath path = CreateRoundedRectanglePath(buttonRectangle, 5))
                     {
-
                         using (Brush brush = new SolidBrush(buttonColor))
                         {
                             e.Graphics.FillPath(brush, path);
@@ -1237,7 +1233,7 @@ namespace RWDE
             try
             {
                 var cell = dataGridView.Rows[rowIndex].Cells[Constants.DeleteColumnName];
-                if (cell.Value != null && cell.Value.ToString() == Constants.DeleteButtonText)
+                if (cell.Value != null && cell.Value.ToString() == Constants.DeleteColumnName)
                 {
                     int contractId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[Constants.ContractId].Value);
 

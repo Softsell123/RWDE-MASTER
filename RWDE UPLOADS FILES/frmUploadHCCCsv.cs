@@ -119,7 +119,7 @@ namespace RWDE
 
                 if (!allFilesAreCsv)
                 {
-                    MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Hcc, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 btnClose.Text = Constants.Abort;
@@ -127,8 +127,7 @@ namespace RWDE
                 bool isUploading = true;
                 SqlConnection connection=dbHelper.GetConnection();
                     string fileName = "";
-                    
-                    
+
                     try
                     {
                         string folderPath = txtpath.Text;
@@ -140,7 +139,7 @@ namespace RWDE
                             // Check if the batch ID already exists and matches the previous batch ID
                             if (!string.IsNullOrEmpty(existingBatchId))
                             {
-                                MessageBox.Show($@"{Constants.BatchIdAlreadyExists.Replace("{existingBatchId}", existingBatchId)}", Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show($@"{Constants.BatchIdAlreadyExists.Replace("{existingBatchId}", existingBatchId)}", Constants.Hcc, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 btnUpload.Enabled = false;
                                 btnClose.Text = Constants.Close;
                                 btnBrowse.Enabled = false;
@@ -205,7 +204,7 @@ namespace RWDE
 
                                         if (isUploading)
                                         {
-                                            dbHelper.InsertBatch(batchid, fileName, baseFilename, Constants.Hcc, description, DateTime.Now, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
+                                            dbHelper.InsertBatch(batchid, fileName, baseFilename, Constants.HccCode, description, DateTime.Now, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
                                             if (dbHelper.ErrorOccurred)
                                             {
                                                 MessageBox.Show(Constants.ErrorOccurred);
@@ -227,7 +226,7 @@ namespace RWDE
                             }
                             else
                             {
-                                MessageBox.Show(Constants.ThesefileshavealreadybeenuploadedCloseandreopentouploadnewfiles, Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show(Constants.ThesefileshavealreadybeenuploadedCloseandreopentouploadnewfiles, Constants.Hcc, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 btnUpload.Enabled = true;
                             }
                         }
@@ -241,7 +240,7 @@ namespace RWDE
                         var st = new StackTrace(ex, true);
                         var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                         int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                        dbHelper.LogError(ex.Message, ex.StackTrace, nameof(btnUpload_Click), fileName, lineNumber);
+                        dbHelper.LogError(ex.Message, ex.StackTrace, nameof(btnUpload_Click), fileName, lineNumber,Constants.HccCode);
                         MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         if (dbHelper.ErrorOccurred)
                         {
@@ -264,7 +263,7 @@ namespace RWDE
             string baseFilename = filenameParts[0];
             try
             {
-                dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.Hcc, baseFilename + Constants.CsvExtention, Constants.Uploadhcc);
+                dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.HccCode, baseFilename + Constants.CsvExtention, Constants.Uploadhcc);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -284,7 +283,7 @@ namespace RWDE
                         if (string.IsNullOrEmpty(line))
                             continue;
 
-                        string[] data = line.Split(',');
+                        string[] data = line.Replace("\"", "").Replace("/","-").Split(',');
 
                         if (baseFilename == Constants.AriesClients)
                         {
@@ -363,7 +362,7 @@ namespace RWDE
                                 rowsInserted++;//insertion of AriesServices
                             }
                         }
-                        if (baseFilename == Constants.AriesFinanacial)//insertion of AriesFinancial
+                        if (baseFilename == Constants.AriesFinancial)//insertion of AriesFinancial
                         {
                             dbHelper.InsertDlFinancials(connection, data, batchid);//insertion of AriesFinancial
 
@@ -398,7 +397,7 @@ namespace RWDE
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 //int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(InsertCsvDataIntoTable), filename, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(InsertCsvDataIntoTable), filename, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -495,7 +494,7 @@ namespace RWDE
                 int totalRows = 0; // Assuming no rows were successfully processed
                 int successfulRows = 0;
                 string description = Constants.Abortedfile;
-                dbHelper.InsertBatch(batchId, fileName, path, Constants.Hcc, description, currentTime, totalRows, successfulRows, 12);
+                dbHelper.InsertBatch(batchId, fileName, path, Constants.HccCode, description, currentTime, totalRows, successfulRows, 12);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -527,7 +526,7 @@ namespace RWDE
 
                         if (!allFilesAreXml)
                         {
-                            MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Hccdata, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Hcc, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                         // Save the path to the file

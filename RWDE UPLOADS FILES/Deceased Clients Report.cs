@@ -87,6 +87,7 @@ namespace RWDE
                 dataGridView.Columns.Clear();
 
                 // Add columns to the DataGridView
+                dataGridView.Columns.Add(Constants.SiNo, Constants.SiNo);
                 dataGridView.Columns.Add(Constants.HccId, Constants.HccIdsp);
                 dataGridView.Columns.Add(Constants.ClientName, Constants.ClientNamesp);
                 dataGridView.Columns.Add(Constants.Status, Constants.Status);
@@ -102,6 +103,7 @@ namespace RWDE
                 dataGridView.Columns.Add(Constants.CreatedOn, Constants.CreatedOnsp);
 
                 // Set column widths (adjust as needed)
+                dataGridView.Columns[Constants.SiNo].Width = 50;
                 dataGridView.Columns[Constants.HccId].Width = 100;
                 dataGridView.Columns[Constants.ClientName].Width = 200;
                 dataGridView.Columns[Constants.Status].Width = 120;
@@ -137,6 +139,7 @@ namespace RWDE
                 foreach (DataRow row in dataTable.Rows)
                 {
                     dataGridView.Rows.Add(
+                        row[Constants.SiNo],
                         row[Constants.HccIdsp],
                         row[Constants.ClientNamesp],
                         row[Constants.Status],
@@ -217,7 +220,7 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.Selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selectthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {

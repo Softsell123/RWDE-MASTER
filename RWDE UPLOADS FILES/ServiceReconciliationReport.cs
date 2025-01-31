@@ -122,7 +122,7 @@ namespace RWDE
                 dataGridView.Columns.Add(Constants.ActualMinutesSpent, Constants.ActualMinutesSpentSp);
                 dataGridView.Columns.Add(Constants.ServiceId, Constants.ServiceIdSp);
                 dataGridView.Columns.Add(Constants.ServiceExportedToHcc, Constants.ServiceExportedToHccSp);
-                dataGridView.Columns.Add(Constants.ServiceDate, Constants.ServiceDateSp);
+                dataGridView.Columns.Add(Constants.ServiceDateSp, Constants.ServiceDateSp);
                 dataGridView.Columns.Add(Constants.EntryDate, Constants.EntryDateSp);
                 dataGridView.Columns.Add(Constants.Lag, Constants.Lag);
                 dataGridView.Columns.Add(Constants.LagStatus, Constants.LagStatusSp);
@@ -164,8 +164,8 @@ namespace RWDE
                 {
                     switch (dtpDateFilter.SelectedItem.ToString())
                     {
-                        case Constants.Servicedate:
-                            filterType = Constants.ServiceDate;
+                        case Constants.ServiceDateSp:
+                            filterType = Constants.ServiceDateSp;
                             break;
                         case Constants.CreatedDatesp:
                             filterType = Constants.CreatedDate;
@@ -311,7 +311,7 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.Selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selectthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {

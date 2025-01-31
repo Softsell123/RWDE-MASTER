@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -121,7 +120,7 @@ namespace RWDE
         {
             try
             {
-                if (dataGridViewHCC.Columns[e.ColumnIndex].Name == Constants.StatusHeader)
+                if (dataGridViewHCC.Columns[e.ColumnIndex].Name == Constants.Status)
                 {
                     string statusValue = e.Value?.ToString();
 
@@ -132,7 +131,6 @@ namespace RWDE
                         MessageBox.Show(Constants.ErrorOccurred);
                         return;
                     }
-
 
                     if (result != null)
                     {
@@ -354,7 +352,6 @@ namespace RWDE
                         return;
                     }
 
-
                     if (conversionStartedAt != null && conversionEndedAt != null)
                     {
                         DialogResult result = MessageBox.Show($@"{Constants.BatchIdHeader} {selectedBatchId} {Constants.Hasalreadycompletedtheconversion}", Constants.OchinToHccConversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -557,7 +554,7 @@ namespace RWDE
                 int insertedRows = 0;
 
                 string baseFilename = Constants.CtServices;
-                dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.Hcc, baseFilename, Constants.Uploadhcc);
+                dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.HccCode, baseFilename, Constants.Uploadhcc);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -567,15 +564,15 @@ namespace RWDE
                 DateTime startTime = DateTime.Now;
                 txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                 // Update progress textbox with initial progress information
-                if (totalRows != 0)
-                {
-                    await UpdateProgressAsyncservices(insertedRows, totalRows);//to update the progress Bar for Services
-                }
-                else
-                {
-                    MessageBox.Show(Constants.Nodataexistsforthisbatchid, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
+                    if (totalRows != 0)
+                    {
+                        await UpdateProgressAsyncservices(insertedRows, totalRows);//to update the progress Bar for Services
+                    }
+                    else
+                    {
+                        MessageBox.Show(Constants.Nodataexistsforthisbatchid, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+               
                 // Check if a batch has been selected
                 if (selectedBatchId >= 0)
                 {
@@ -659,7 +656,6 @@ namespace RWDE
                     return;
                 }
 
-
                 //Bind the DataTable to the DataGridView
                 dataGridView.AutoGenerateColumns = false; // Prevent auto-generation of columns
                 dataGridView.Columns.Clear(); // Clear existing columns
@@ -732,13 +728,14 @@ namespace RWDE
         {
             try
             {
-                // Calculate progress percentage
-                int progressPercentage = (int)((double)insertedRows / totalRows * 100);
+                    // Calculate progress percentage
+                    int progressPercentage = (int)((double)insertedRows / totalRows * 100);
 
-                // Update UI controls directly (assume running on the UI thread)
-                txtProgressServices.Text = $"{insertedRows}/{totalRows} ({progressPercentage}%)";
-                progressBarServices.Value = progressPercentage;
-                await Task.Delay(20);
+                    // Update UI controls directly (assume running on the UI thread)
+                    txtProgressServices.Text = $"{insertedRows}/{totalRows} ({progressPercentage}%)";
+                    progressBarServices.Value = progressPercentage;
+                    await Task.Delay(10);
+                
             }
             catch (Exception ex)
             {
@@ -762,7 +759,7 @@ namespace RWDE
 
                 // Update the progress bar
                 progressbarClients.Value = insertedRows;
-                await Task.Delay(20);
+                await Task.Delay(15);
             }
             catch (Exception ex)
             {
@@ -776,6 +773,7 @@ namespace RWDE
             {
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int batchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
+                string filename = dataGridView.Rows[selectedRowIndex].Cells[Constants.FileName].Value.ToString();
 
                 if (btnClose.Text == Constants.Abort)
                 {
@@ -784,25 +782,42 @@ namespace RWDE
                     // Check if the user clicked "Yes"
                     if (result == DialogResult.Yes)
                     {
-                        foreach (DataGridViewRow row in dataGridView.Rows)
-                        {
-                            row.Cells[Constants.Status].Value = Constants.Hccabort;
-                            break;
-                        }
+                        dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = Constants.Hccabort;
+
                         // Update the status of the selected batch to Status "19" (Abort)
-                        dbHelper.UpdateBatchStatusOchin(batchId, Constants.Hccabort);
+                        dbHelper.UpdateBatchStatusOchin(batchId, Constants.Hccabort, filename);
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
                             return;
                         }
-
-                        // Show a message box indicating successful abort
-                        MessageBox.Show(Constants.AbortedSuccessfully);
-                        Close();
-                        Application.Restart();
+                        if (filename.Contains(Constants.Service))
+                        {
+                            dbHelper.AbortServiceConversion(batchId);//to clear the data in table
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+                        }
+                        else if (filename.Contains(Constants.Client))
+                        {
+                            dbHelper.AbortClientConversion(batchId);//to clear the data in table
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+                        }
                     }
+
+
+                    // Show a message box indicating successful abort
+                    MessageBox.Show(Constants.AbortedSuccessfully);
+                    Close();
+                    Application.Restart();
                 }
+            
                 else
                 {
                     Close();
@@ -875,7 +890,7 @@ namespace RWDE
 
                 if (result == null || result.Rows.Count == 0)
                 {
-                    MessageBox.Show(Constants.NoFilterDatas, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.NoFilterDatas, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)

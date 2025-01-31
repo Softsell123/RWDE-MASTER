@@ -118,8 +118,6 @@ namespace RWDE//
                                 UpdateBatch(batchId, fileName, csvFilePath);
                             }
                         }
-                        _cancellationTokenSource.Cancel();
-                        MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadOchinCsv);
                         //Delete All Values form all Ochin tables 
                         dbHelper.DeleteBatchochin(batchId.ToString());
                         if (dbHelper.ErrorOccurred)
@@ -128,8 +126,9 @@ namespace RWDE//
                             return;
                         }
                         // Show confirmation message
+                        _cancellationTokenSource.Cancel(); // Signal cancellation
+                        MessageBox.Show(Constants.AbortedSuccessfully, Constants.UploadOchinCsv);
                         Close();
-
                         Application.Restart();
                     }
                 }
@@ -139,6 +138,7 @@ namespace RWDE//
             {
                 // Handle any exceptions by showing the error message
                 MessageBox.Show(Constants.ErrorCode + ex.Message, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Restart();
             }
 
         }
@@ -194,7 +194,7 @@ namespace RWDE//
                 }
                 string[] files = Directory.GetFiles(txtPath.Text);
                 bool allFilesAreCsv = files.All(file => System.IO.Path.GetExtension(file).Equals(Constants.CsvExtention, StringComparison.OrdinalIgnoreCase));
-           
+
                 if (!allFilesAreCsv)
                 {
                     MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -205,119 +205,128 @@ namespace RWDE//
                 bool isUploading = true;
 
                 SqlConnection connection = dbHelper.GetConnection();
-                    try
+                try
+                {
+                    string folderPath = txtPath.Text;
+
+                    if (!string.IsNullOrEmpty(folderPath))
                     {
-                        string folderPath = txtPath.Text;
+                        string existingBatchId = txtBatchid.Text;
 
-                        if (!string.IsNullOrEmpty(folderPath))
+                        // Check if the batch ID already exists
+                        if (!string.IsNullOrEmpty(existingBatchId))
                         {
-                            string existingBatchId = txtBatchid.Text;
+                            MessageBox.Show($@"{Constants.BatchIdAlreadyExistsCloseAndReopen.Replace("{existingBatchId}", existingBatchId)}", Constants.BatchIdExists, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            ResetUi();
+                            return;
+                        }
 
-                            // Check if the batch ID already exists
-                            if (!string.IsNullOrEmpty(existingBatchId))
+                        string[] csvFiles = Directory.GetFiles(folderPath, Constants.AllCsvExtention);
+                        int totalCsvFiles = csvFiles.Length;
+                        int currentCsvFileIndex = 0;
+                        int totalRowsInserted = 0;
+                        progressBarLines.Value = 0;
+                        progressBarfile.Value = 0;
+                        progressBarfile.Maximum = totalCsvFiles;
+
+                        DateTime startTime = DateTime.Now;
+
+                        int batchid = dbHelper.GetNextBatchId(); // to get the Next Batch ID
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+                        foreach (string csvFilePath in csvFiles)
+                        {
+                            if (_cancellationTokenSource.Token.IsCancellationRequested)
                             {
-                                MessageBox.Show($@"{Constants.BatchIdAlreadyExistsCloseAndReopen.Replace("{existingBatchId}", existingBatchId)}", Constants.BatchIdExists, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                ResetUi();
-                                return;
+                                break; // Exit the loop if cancellation is requested
                             }
 
-                            string[] csvFiles = Directory.GetFiles(folderPath, Constants.AllCsvExtention);
-                            int totalCsvFiles = csvFiles.Length;
-                            int currentCsvFileIndex = 0;
-                            int totalRowsInserted = 0;
-                            progressBarLines.Value = 0;
-                            progressBarfile.Value = 0;
-                            progressBarfile.Maximum = totalCsvFiles;
+                            string baseFilename = Path.GetFileNameWithoutExtension(csvFilePath).Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                            string fileName = Path.GetFileName(csvFilePath);
+                            txtFileName.Text = fileName;
+                            if (!isUploading)
+                                break;
+                            UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//to update the file Progress
+                            currentCsvFileIndex++;
 
-                            DateTime startTime = DateTime.Now;
+                            int totalRowsInCurrentFile = 0; // Initialize within the loop
 
-                            int batchid = dbHelper.GetNextBatchId(); // to get the Next Batch ID
-                            if (dbHelper.ErrorOccurred)
+                            txtBatchid.Text = batchid.ToString();
+                            string date = startTime.ToString(Constants.MMddyyyybkslash);
+                            string time = startTime.ToString(Constants.HHmmss);
+                            txtDesc.Text = $@"{Constants.OchinCsvUploadonAt.Replace("{date}", date).Replace("{time}", time)}";
+                            string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+                            txtUploadStarted.Text = formattime;
+
+                            if (isUploading)
                             {
-                                MessageBox.Show(Constants.ErrorOccurred);
-                                return;
-                            }
-                            foreach (string csvFilePath in csvFiles)
-                            {
-                                string baseFilename = Path.GetFileNameWithoutExtension(csvFilePath).Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                                string fileName = Path.GetFileName(csvFilePath);
-                                txtFileName.Text = fileName;
-                                if (!isUploading)
-                                    break;
-                                UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//to update the file Progress
-                                currentCsvFileIndex++;
+                                // Await the async method call
+                                var result = await InsertCsvDataIntoTable(csvFilePath, batchid, connection, _cancellationTokenSource.Token);
 
-                                int totalRowsInCurrentFile = 0; // Initialize within the loop
+                                totalRowsInserted += result.Item1;
+                                totalRowsInCurrentFile += result.Item1;
+                                progressBarfile.Value = currentCsvFileIndex;
 
-                                txtBatchid.Text = batchid.ToString();
-                                string date = startTime.ToString(Constants.MMddyyyybkslash);
-                                string time = startTime.ToString(Constants.HHmmss);
-                                txtDesc.Text = $@"{Constants.OchinCsvUploadonAt.Replace("{date}", date).Replace("{time}", time)}";
-                                string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
-                                txtUploadStarted.Text = formattime;
-                                
+                                // Log successful insertion
+                                fileName = Path.GetFileName(csvFilePath);
+                                string description = txtDesc.Text;
+                                int successfulRows = result.Item1;
+                                DateTime endtime = DateTime.Now;
                                 if (isUploading)
                                 {
-                                    // Await the async method call
-                                    var result = await InsertCsvDataIntoTable(csvFilePath, batchid, connection, _cancellationTokenSource.Token);
-
-                                    totalRowsInserted += result.Item1;
-                                    totalRowsInCurrentFile += result.Item1;
-                                    progressBarfile.Value = currentCsvFileIndex;
-
-                                    // Log successful insertion
-                                    fileName = Path.GetFileName(csvFilePath);
-                                    string description = txtDesc.Text;
-                                    int successfulRows = result.Item1;
-                                    DateTime endtime = DateTime.Now;
-                                    if (isUploading)
+                                    if (_cancellationTokenSource.Token.IsCancellationRequested)
                                     {
-                                        //update batch status in database
-                                        dbHelper.InsertBatch(batchid, fileName, csvFilePath, Constants.OchinCode, description, startTime, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
-                                        if (dbHelper.ErrorOccurred)
-                                        {
-                                            MessageBox.Show(Constants.ErrorOccurred);
-                                            return;
-                                        }
-                                        UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//no of files insertion progress
+                                        break; // Exit the loop if cancellation is requested
                                     }
-                                }
-
-                                if (baseFilename.Contains(Constants.Clients))
-                                {
-                                    //btnClose.Text = Constants.close;
-                                    TimeSpan elapsedTime = DateTime.Now - startTime;
-                                    string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
-                                }
-
-                                if (baseFilename.Contains(Constants.Services))
-                                {
-                                    //btnClose.Text = Constants.close;
-                                    TimeSpan elapsedTime = DateTime.Now - startTime;
-                                    string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
-                                    double totalSeconds = elapsedTime.TotalSeconds;
-                                    txtUploadEnded.Text = eTime;
-                                    txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
-                                    btnUpload.Enabled = true;
-                                    btnClose.Text = Constants.Close;
-                                }
-                                else
-                                {
-                                    btnUpload.Enabled = true;
+                                    //update batch status in database
+                                    dbHelper.InsertBatch(batchid, fileName, csvFilePath, Constants.OchinCode, description, startTime, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
+                                    if (dbHelper.ErrorOccurred)
+                                    {
+                                        MessageBox.Show(Constants.ErrorOccurred);
+                                        return;
+                                    }
+                                    UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//no of files insertion progress
                                 }
                             }
-                        }
-                        else
-                        {
-                            btnUpload.Enabled = true;
-                            btnClose.Text = Constants.Close;
+
+                            if (baseFilename.Contains(Constants.Clients))
+                            {
+                                //btnClose.Text = Constants.close;
+                                TimeSpan elapsedTime = DateTime.Now - startTime;
+                                string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
+                            }
+
+                            if (baseFilename.Contains(Constants.Services))
+                            {
+                                //btnClose.Text = Constants.close;
+                                TimeSpan elapsedTime = DateTime.Now - startTime;
+                                string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
+                                double totalSeconds = elapsedTime.TotalSeconds;
+                                txtUploadEnded.Text = eTime;
+                                txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
+                                btnUpload.Enabled = true;
+                                btnClose.Text = Constants.Close;
+                            }
+                            else
+                            {
+                                btnUpload.Enabled = true;
+                            }
                         }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        ResetUi();
+                        btnUpload.Enabled = true;
+                        btnClose.Text = Constants.Close;
                     }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message), Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ResetUi();
+                }
             }
             catch (Exception)
             {
@@ -439,9 +448,15 @@ namespace RWDE//
                 // Insert all client data first
                 foreach (var data in clientData)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return Tuple.Create(0, false);
+                        // break; Exit the loop if cancellation is requested
+                    } 
+
                     if (chckPHI.Checked == true && chckURN.Checked == false)
                     {
-                        dbHelper.InsertClientInformationPhi(connection, data, batchId);//insertion of the client file with PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientInformationPhi(connection, data, batchId, baseFilename);//insertion of the client file with PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -450,7 +465,7 @@ namespace RWDE//
                     }
                     else if (chckURN.Checked == true)
                     {
-                        dbHelper.InsertClientInformationphiurn(connection, data, batchId);//insertion of the client file without PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientInformationphiurn(connection, data, batchId, baseFilename);//insertion of the client file without PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -459,7 +474,7 @@ namespace RWDE//
                     }
                     else
                     {
-                        dbHelper.InsertClientInformation(connection, data, batchId);//insertion of the client file without PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientInformation(connection, data, batchId, baseFilename);//insertion of the client file without PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -471,7 +486,6 @@ namespace RWDE//
                     if (isUploading)
                     {
                         await UpdateProgress(rowsInserted, totalRows); // Await the progress update
-                        
                     }
                 }
                 if (serviceData.Count == 0&& baseFilename.Contains(Constants.Services))
@@ -483,7 +497,7 @@ namespace RWDE//
                 {
                     if (chckPHI.Checked == true)//InsertClientServiceDataPHI
                     {
-                        dbHelper.InsertClientServiceDataPhi(connection, data, batchId);//insertion of the services file with PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientServiceDataPhi(connection, data, batchId, baseFilename);//insertion of the services file with PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -492,7 +506,7 @@ namespace RWDE//
                     }
                     else
                     {
-                        dbHelper.InsertClientServiceData(connection, data, batchId);//insertion of the services file with PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientServiceData(connection, data, batchId,baseFilename);//insertion of the services file with PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -545,7 +559,7 @@ namespace RWDE//
                     lastProgress = currentRowIndex;
 
                     // Slow down the progress update
-                    await Task.Delay(15); // Adding asynchronous delay of 0.5 milliseconds
+                    await Task.Delay(15); // Adding asynchronous delay of 0.015 milliseconds
                 }
             }
             catch (Exception ex)

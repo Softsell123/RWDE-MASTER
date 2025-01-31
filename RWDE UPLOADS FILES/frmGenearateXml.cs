@@ -230,7 +230,7 @@ namespace RWDE
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
 
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(DataGridView_DataBindingComplete), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(DataGridView_DataBindingComplete), Constants.ServiceCttohcc, lineNumber,Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -249,7 +249,6 @@ namespace RWDE
                     MessageBox.Show(Constants.ErrorOccurred);
                     return;
                 }
-
 
                 dataGridView.AutoGenerateColumns = false;
                 dataGridView.Columns.Clear();
@@ -275,7 +274,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(PopulateDataGridView), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(PopulateDataGridView), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -333,7 +332,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(btnGeneration_Click), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(btnGeneration_Click), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -498,7 +497,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(GenerateXmlForServicesAsync), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(GenerateXmlForServicesAsync), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -577,7 +576,7 @@ namespace RWDE
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
                 
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(GenerateXmlService), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(GenerateXmlService), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -729,7 +728,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError (ex.Message, ex.StackTrace, nameof(GenerateXmlClient), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError (ex.Message, ex.StackTrace, nameof(GenerateXmlClient), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -781,7 +780,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleRaceValues), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleRaceValues), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -859,7 +858,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleMedicalValues), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleMedicalValues), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -932,7 +931,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleLivingValues), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleLivingValues), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1032,7 +1031,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleMedicalChildValues), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleMedicalChildValues), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1089,7 +1088,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleRootInformationSection), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(HandleRootInformationSection), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1111,7 +1110,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(CreateRootElement), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(CreateRootElement), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1132,7 +1131,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(CreateSourceSystemElement), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(CreateSourceSystemElement), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1160,7 +1159,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(AddDynamicElements), Constants.ServiceCttohcc, lineNumber);
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(AddDynamicElements), Constants.ServiceCttohcc, lineNumber, Constants.HccCode);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1241,7 +1240,6 @@ namespace RWDE
                     MessageBox.Show(Constants.ErrorOccurred);
                     return;
                 }
-
 
                 dataGridView.AutoGenerateColumns = false;
                 dataGridView.Columns.Clear();
@@ -1499,7 +1497,6 @@ namespace RWDE
 
                 //Handle the Grid View 
                 PopulateDataGridView();
-                //await GenerateXMLForServicesAsync(selectedBatchID);
             }
             catch (Exception ex)
             {
@@ -1560,7 +1557,6 @@ namespace RWDE
                             MessageBox.Show(Constants.ErrorOccurred);
                             return;
                         }
-
 
                         // Delete XML files in the specified directory
                         DeleteXmlFiles(selectedFolderPath);
@@ -1843,7 +1839,4 @@ namespace RWDE
     }
 
 }
-
-
-
 

@@ -264,7 +264,6 @@ namespace RWDE
                 txtBatchid.Text = selectedBatchId.ToString();
                 txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);// Record the start time
 
-
                 // Get the total number of rows to be inserted
                 int totalRows = dbHelper.GetTotalRows(selectedBatchId);
                 if (dbHelper.ErrorOccurred)
@@ -320,7 +319,6 @@ namespace RWDE
                 MessageBox.Show(Constants.Errorsp + ex.Message);
             }
         }
-
 
         public sealed override string Text
         {
@@ -380,7 +378,7 @@ namespace RWDE
                     }
 
                     string baseFilename = Constants.CtClients;
-                    dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.Hcc, baseFilename, Constants.Uploadhcc);
+                    dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.HccCode, baseFilename, Constants.Uploadhcc);
                     if (dbHelper.ErrorOccurred)
                     {
                         MessageBox.Show(Constants.ErrorOccurred);
@@ -669,12 +667,12 @@ namespace RWDE
                 // Validate inputs
                 if (string.IsNullOrEmpty(batchType))
                 {
-                    MessageBox.Show(Constants.EmptyvalueMessage, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.EmptyvalueMessage, Constants.Clientsandservicescttohcc, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
                 if (endDate < fromDate)
                 {
-                    MessageBox.Show(Constants.DateShouldBeGreaterThen, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.DateShouldBeGreaterThen, Constants.Clientsandservicescttohcc, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
                 // Retrieve and bind data //retrieve data for according to the start and end date
@@ -689,7 +687,7 @@ namespace RWDE
 
                 if (result == null || result.Rows.Count == 0)
                 {
-                    MessageBox.Show(Constants.NoFilterDatas, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.NoFilterDatas, Constants.Clientsandservicescttohcc, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
@@ -703,7 +701,7 @@ namespace RWDE
         {
             try
             {
-                //txtBatchtype.Items.Clear();
+                //txtBatchtype.Clear();
                 PopulateDataGridView();
                 List<string> batchTypes = dbHelper.GetAllBatchTypes();
                 if (dbHelper.ErrorOccurred)
@@ -711,11 +709,10 @@ namespace RWDE
                     MessageBox.Show(Constants.ErrorOccurred);
                     return;
                 }
-
-                // txtBatchtype.Items.Clear();  // Clear existing items
+                //txtBatchtype.Clear();  // Clear existing items
                 foreach (string batchType in batchTypes)
                 {
-                    //txtBatchtype.Items.Add(batchType);
+                    //txtBatchtype.Add(batchType);
                 }
             }
             catch (Exception ex)
@@ -750,5 +747,4 @@ namespace RWDE
         }
     }
 }
-
 

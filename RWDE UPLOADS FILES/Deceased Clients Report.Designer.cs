@@ -39,6 +39,15 @@ namespace RWDE
             this.lblTitle = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.pnl = new System.Windows.Forms.Panel();
+            this.btnClr = new System.Windows.Forms.Button();
+            this.btnReport = new System.Windows.Forms.Button();
+            this.lblHeader = new System.Windows.Forms.Label();
+            this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
+            this.lblEndDate = new System.Windows.Forms.Label();
+            this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
+            this.lblStartDate = new System.Windows.Forms.Label();
+            this.SINo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.HCCID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ClientId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AriesId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,14 +60,6 @@ namespace RWDE
             this.CMSMatchDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CreatedOn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pnl = new System.Windows.Forms.Panel();
-            this.btnClr = new System.Windows.Forms.Button();
-            this.btnReport = new System.Windows.Forms.Button();
-            this.lblHeader = new System.Windows.Forms.Label();
-            this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
-            this.lblEndDate = new System.Windows.Forms.Label();
-            this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
-            this.lblStartDate = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
@@ -97,7 +98,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 8;
-            this.btnClose.Text = Constants.Close;
+            this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -117,6 +118,7 @@ namespace RWDE
             this.dataGridView.ColumnHeadersHeight = 51;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.SINo,
             this.HCCID,
             this.ClientId,
             this.AriesId,
@@ -153,112 +155,6 @@ namespace RWDE
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1723, 410);
             this.dataGridView.TabIndex = 7;
-            // 
-            // HCCID
-            // 
-            this.HCCID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.HCCID.DefaultCellStyle = dataGridViewCellStyle2;
-            this.HCCID.HeaderText = Constants.HccIdsp;
-            this.HCCID.MinimumWidth = 6;
-            this.HCCID.Name = Constants.HccId;
-            this.HCCID.ReadOnly = true;
-            this.HCCID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.HCCID.Width = 200;
-            // 
-            // ClientId
-            // 
-            this.ClientId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ClientId.HeaderText = "Client Name";
-            this.ClientId.MinimumWidth = 6;
-            this.ClientId.Name = "ClientId";
-            this.ClientId.ReadOnly = true;
-            this.ClientId.Width = 200;
-            // 
-            // AriesId
-            // 
-            this.AriesId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.AriesId.HeaderText = Constants.Status;
-            this.AriesId.MinimumWidth = 6;
-            this.AriesId.Name = "AriesId";
-            this.AriesId.ReadOnly = true;
-            this.AriesId.Width = 200;
-            // 
-            // Program
-            // 
-            this.Program.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Program.HeaderText = "Date of Death";
-            this.Program.MinimumWidth = 6;
-            this.Program.Name = "Program";
-            this.Program.ReadOnly = true;
-            this.Program.Width = 200;
-            // 
-            // Classification
-            // 
-            this.Classification.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Classification.HeaderText = "Download Date";
-            this.Classification.MinimumWidth = 6;
-            this.Classification.Name = "Classification";
-            this.Classification.ReadOnly = true;
-            this.Classification.Width = 200;
-            // 
-            // DownloadDate
-            // 
-            this.DownloadDate.HeaderText = "Last service Date";
-            this.DownloadDate.MinimumWidth = 6;
-            this.DownloadDate.Name = "DownloadDate";
-            this.DownloadDate.ReadOnly = true;
-            this.DownloadDate.Width = 240;
-            // 
-            // Extracted
-            // 
-            this.Extracted.HeaderText = "Extracted Y/N";
-            this.Extracted.MinimumWidth = 6;
-            this.Extracted.Name = "Extracted";
-            this.Extracted.ReadOnly = true;
-            this.Extracted.Width = 204;
-            // 
-            // ExtractionDate
-            // 
-            this.ExtractionDate.HeaderText = "Extraction Date";
-            this.ExtractionDate.MinimumWidth = 6;
-            this.ExtractionDate.Name = "ExtractionDate";
-            this.ExtractionDate.ReadOnly = true;
-            this.ExtractionDate.Width = 224;
-            // 
-            // CMSMatch
-            // 
-            this.CMSMatch.HeaderText = "CMS Match";
-            this.CMSMatch.MinimumWidth = 6;
-            this.CMSMatch.Name = "CMSMatch";
-            this.CMSMatch.ReadOnly = true;
-            this.CMSMatch.Width = 177;
-            // 
-            // CMSMatchDate
-            // 
-            this.CMSMatchDate.HeaderText = "CMS Match Date";
-            this.CMSMatchDate.MinimumWidth = 6;
-            this.CMSMatchDate.Name = "CMSMatchDate";
-            this.CMSMatchDate.ReadOnly = true;
-            this.CMSMatchDate.Width = 239;
-            // 
-            // Count
-            // 
-            this.Count.HeaderText = "Service Count After Death ";
-            this.Count.MinimumWidth = 6;
-            this.Count.Name = "Count";
-            this.Count.ReadOnly = true;
-            this.Count.Width = 351;
-            // 
-            // CreatedOn
-            // 
-            this.CreatedOn.HeaderText = "Created On";
-            this.CreatedOn.MinimumWidth = 6;
-            this.CreatedOn.Name = "CreatedOn";
-            this.CreatedOn.ReadOnly = true;
-            this.CreatedOn.Width = 176;
             // 
             // pnl
             // 
@@ -363,7 +259,121 @@ namespace RWDE
             this.lblStartDate.TabIndex = 1;
             this.lblStartDate.Text = "Start Date:";
             // 
-            // Deceased_Clients
+            // SINo
+            // 
+            this.SINo.HeaderText = "SI No";
+            this.SINo.MinimumWidth = 6;
+            this.SINo.Name = "SINo";
+            this.SINo.ReadOnly = true;
+            this.SINo.Width = 103;
+            // 
+            // HCCID
+            // 
+            this.HCCID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.HCCID.DefaultCellStyle = dataGridViewCellStyle2;
+            this.HCCID.HeaderText = "HCC ID";
+            this.HCCID.MinimumWidth = 6;
+            this.HCCID.Name = "HCCID";
+            this.HCCID.ReadOnly = true;
+            this.HCCID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.HCCID.Width = 200;
+            // 
+            // ClientId
+            // 
+            this.ClientId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ClientId.HeaderText = "Client Name";
+            this.ClientId.MinimumWidth = 6;
+            this.ClientId.Name = "ClientId";
+            this.ClientId.ReadOnly = true;
+            this.ClientId.Width = 200;
+            // 
+            // AriesId
+            // 
+            this.AriesId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.AriesId.HeaderText = "Status";
+            this.AriesId.MinimumWidth = 6;
+            this.AriesId.Name = "AriesId";
+            this.AriesId.ReadOnly = true;
+            this.AriesId.Width = 200;
+            // 
+            // Program
+            // 
+            this.Program.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Program.HeaderText = "Date of Death";
+            this.Program.MinimumWidth = 6;
+            this.Program.Name = "Program";
+            this.Program.ReadOnly = true;
+            this.Program.Width = 200;
+            // 
+            // Classification
+            // 
+            this.Classification.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Classification.HeaderText = "Download Date";
+            this.Classification.MinimumWidth = 6;
+            this.Classification.Name = "Classification";
+            this.Classification.ReadOnly = true;
+            this.Classification.Width = 200;
+            // 
+            // DownloadDate
+            // 
+            this.DownloadDate.HeaderText = "Last service Date";
+            this.DownloadDate.MinimumWidth = 6;
+            this.DownloadDate.Name = "DownloadDate";
+            this.DownloadDate.ReadOnly = true;
+            this.DownloadDate.Width = 240;
+            // 
+            // Extracted
+            // 
+            this.Extracted.HeaderText = "Extracted Y/N";
+            this.Extracted.MinimumWidth = 6;
+            this.Extracted.Name = "Extracted";
+            this.Extracted.ReadOnly = true;
+            this.Extracted.Width = 204;
+            // 
+            // ExtractionDate
+            // 
+            this.ExtractionDate.HeaderText = "Extraction Date";
+            this.ExtractionDate.MinimumWidth = 6;
+            this.ExtractionDate.Name = "ExtractionDate";
+            this.ExtractionDate.ReadOnly = true;
+            this.ExtractionDate.Width = 224;
+            // 
+            // CMSMatch
+            // 
+            this.CMSMatch.HeaderText = "CMS Match";
+            this.CMSMatch.MinimumWidth = 6;
+            this.CMSMatch.Name = "CMSMatch";
+            this.CMSMatch.ReadOnly = true;
+            this.CMSMatch.Width = 177;
+            // 
+            // CMSMatchDate
+            // 
+            this.CMSMatchDate.HeaderText = "CMS Match Date";
+            this.CMSMatchDate.MinimumWidth = 6;
+            this.CMSMatchDate.Name = "CMSMatchDate";
+            this.CMSMatchDate.ReadOnly = true;
+            this.CMSMatchDate.Width = 239;
+            // 
+            // Count
+            // 
+            this.Count.HeaderText = "Service Count After Death ";
+            this.Count.MinimumWidth = 6;
+            this.Count.Name = "Count";
+            this.Count.ReadOnly = true;
+            this.Count.Width = 351;
+            // 
+            // CreatedOn
+            // 
+            this.CreatedOn.HeaderText = "Created On";
+            this.CreatedOn.MinimumWidth = 6;
+            this.CreatedOn.Name = "CreatedOn";
+            this.CreatedOn.ReadOnly = true;
+            this.CreatedOn.Width = 176;
+            // 
+            // DeceasedClients
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -398,6 +408,7 @@ namespace RWDE
         private System.Windows.Forms.DateTimePicker dtpStartDate;
         private System.Windows.Forms.Label lblStartDate;
         private Button btnClr;
+        private DataGridViewTextBoxColumn SINo;
         private DataGridViewTextBoxColumn HCCID;
         private DataGridViewTextBoxColumn ClientId;
         private DataGridViewTextBoxColumn AriesId;
@@ -410,6 +421,5 @@ namespace RWDE
         private DataGridViewTextBoxColumn CMSMatchDate;
         private DataGridViewTextBoxColumn Count;
         private DataGridViewTextBoxColumn CreatedOn;
-        
     }
 }

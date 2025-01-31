@@ -872,7 +872,7 @@ namespace RWDE
             try
             {
                 var cell = dataGridView.Rows[rowIndex].Cells[Constants.DeleteColumnName];
-                if (cell.Value != null && cell.Value.ToString() == Constants.DeleteButtonText)
+                if (cell.Value != null && cell.Value.ToString() == Constants.DeleteColumnName)
                 {
                     int serviceCodeId = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[Constants.ServiceCodeId].Value);
 

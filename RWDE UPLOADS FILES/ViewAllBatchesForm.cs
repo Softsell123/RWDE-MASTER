@@ -105,7 +105,7 @@ namespace RWDE
 
                 // Add columns to the DataGridView
                 AddColumn(Constants.BatchId, Constants.BatchIdHeader, dataGridView);
-                AddColumn(Constants.Description, Constants.DescriptionHeader, dataGridView);
+                AddColumn(Constants.Description, Constants.Description, dataGridView);
                 AddColumn(Constants.Type, Constants.BatchTypeHeader, dataGridView);
 
                 // Format time columns to include seconds
@@ -118,13 +118,13 @@ namespace RWDE
 
                 AddColumn(Constants.TotalRows, Constants.TotalRowsHeader, dataGridView);
                 AddColumn(Constants.SuccessfulRows, Constants.SuccessfulRowsHeader, dataGridView);
-                AddColumn(Constants.Status, Constants.StatusHeader, dataGridView);
+                AddColumn(Constants.Status, Constants.Status, dataGridView);
 
                 // Add a delete button column to the DataGridView
                 DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn
                 {
                     Name = Constants.DeleteColumnName,
-                    Text = Constants.DeleteButtonText,
+                    Text = Constants.DeleteColumnName,
                     Width = 80,
                     UseColumnTextForButtonValue = true
                 };
@@ -159,7 +159,7 @@ namespace RWDE
 
                 // Add columns to the DataGridView
                 AddColumn(Constants.BatchId, Constants.BatchIdHeader, dataGridView);
-                AddColumn(Constants.Description, Constants.DescriptionHeader, dataGridView);
+                AddColumn(Constants.Description, Constants.Description, dataGridView);
                 AddColumn(Constants.Type, Constants.BatchTypeHeader, dataGridView);
 
                 // Format time columns to include seconds
@@ -172,13 +172,13 @@ namespace RWDE
 
                 AddColumn(Constants.TotalRows, Constants.TotalRowsHeader, dataGridView);
                 AddColumn(Constants.SuccessfulRows, Constants.SuccessfulRowsHeader, dataGridView);
-                AddColumn(Constants.Status, Constants.StatusHeader, dataGridView);
+                AddColumn(Constants.Status, Constants.Status, dataGridView);
 
                 // Add a delete button column to the DataGridView
                 DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn
                 {
                     Name = Constants.DeleteColumnName,
-                    Text = Constants.DeleteButtonText,
+                    Text = Constants.DeleteColumnName,
                     Width = 80,
                     UseColumnTextForButtonValue = true
                 };
@@ -214,7 +214,7 @@ namespace RWDE
 
                 // Add columns to the DataGridView
                 AddColumn(Constants.BatchId, Constants.BatchIdHeader, dataGridView);
-                AddColumn(Constants.Description, Constants.DescriptionHeader, dataGridView);
+                AddColumn(Constants.Description, Constants.Description, dataGridView);
                 AddColumn(Constants.Type, Constants.BatchTypeHeader, dataGridView);
 
                 // Format time columns to include seconds
@@ -227,13 +227,13 @@ namespace RWDE
 
                 AddColumn(Constants.TotalRows, Constants.TotalRowsHeader, dataGridView);
                 AddColumn(Constants.SuccessfulRows, Constants.SuccessfulRowsHeader, dataGridView);
-                AddColumn(Constants.Status, Constants.StatusHeader, dataGridView);
+                AddColumn(Constants.Status, Constants.Status, dataGridView);
 
                 // Add a delete button column to the DataGridView
                 DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn
                 {
                     Name = Constants.DeleteColumnName,
-                    Text = Constants.DeleteButtonText,
+                    Text = Constants.DeleteColumnName,
                     Width = 80,
                     UseColumnTextForButtonValue = true
                 };
@@ -267,7 +267,7 @@ namespace RWDE
                     {
                         // Create the button's rectangle and draw the button
                         var buttonRectangle = new Rectangle(e.CellBounds.X + 2, e.CellBounds.Y + 2, e.CellBounds.Width - 4, e.CellBounds.Height - 4);
-                        var buttonText = Constants.DeleteButtonText;
+                        var buttonText = Constants.DeleteColumnName;
                         Color buttonColor = Color.FromArgb(128, 128, 255); // Default blue color
 
                         // Fill the button area with the color and rounded corners
@@ -484,7 +484,7 @@ namespace RWDE
             try
             {
                 var cell = dataGridView.Rows[rowIndex].Cells[Constants.DeleteColumnName];
-                if (cell.Value != null && cell.Value.ToString() == Constants.DeleteButtonText)
+                if (cell.Value != null && cell.Value.ToString() == Constants.DeleteColumnName)
                 {
                     string batchId = dataGridView.Rows[rowIndex].Cells[Constants.BatchId].Value?.ToString();
                     string type = dataGridView.Rows[rowIndex].Cells[Constants.Type].Value?.ToString();
@@ -504,7 +504,7 @@ namespace RWDE
                             }
 
                             // Refresh the DataGridView after deletion
-                            if (type == Constants.Hccdata)
+                            if (type == Constants.Hcc)
                             {
                                 // Populate the DataGridView with HCC data from the Batch table 
                                 PopulateDataGridViewLoaDhcc();

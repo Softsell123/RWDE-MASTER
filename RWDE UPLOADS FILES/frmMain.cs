@@ -811,8 +811,8 @@ namespace RWDE
                         {
                             point.YValues[0] =value;
                             chartServices.Refresh(); // Redraw the chart
-                            if(targetValue<25) await Task.Delay(50);    // Control the animation speed
-                            if (targetValue > 50) value += 50;
+                            if(targetValue-value<50) await Task.Delay(25);    // Control the animation speed
+                            if (value+50 <targetValue) value += 49;
                         }
                         foreach (var points in series.Points)
                         {
