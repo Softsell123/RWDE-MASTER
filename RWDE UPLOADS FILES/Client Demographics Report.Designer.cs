@@ -5,15 +5,15 @@ namespace RWDE
 {
     partial class ClientDemographicsReport
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -25,10 +25,10 @@ namespace RWDE
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -266,7 +266,7 @@ namespace RWDE
             // 
             this.user.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.user.FillWeight = 161.5385F;
-            this.user.HeaderText = "Client ID";
+            this.user.HeaderText = "ClientID";
             this.user.MinimumWidth = 6;
             this.user.Name = "user";
             this.user.Width = 189;
@@ -442,26 +442,22 @@ namespace RWDE
         private System.Windows.Forms.Label lblStartDate;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button btnClear;
-        private System.Windows.Forms.DataGridViewTextBoxColumn user;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Clnt_id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LastName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Agency_client_2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn MothersMaidenName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Program;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Classification;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IsRelatedOrAffected;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AriesConsentExprireDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CaseManager;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ServiceGroup;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AriesContractId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn UnitsOfService;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ActualMinutesSpent;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ServiceCodeExportToAries;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CreatedOn;
-
-        
-
-        
+        private DataGridViewTextBoxColumn user;
+        private DataGridViewTextBoxColumn Clnt_id;
+        private DataGridViewTextBoxColumn LastName;
+        private DataGridViewTextBoxColumn Agency_client_2;
+        private DataGridViewTextBoxColumn MothersMaidenName;
+        private DataGridViewTextBoxColumn Program;
+        private DataGridViewTextBoxColumn Classification;
+        private DataGridViewTextBoxColumn IsRelatedOrAffected;
+        private DataGridViewTextBoxColumn Status;
+        private DataGridViewTextBoxColumn AriesConsentExprireDate;
+        private DataGridViewTextBoxColumn CaseManager;
+        private DataGridViewTextBoxColumn ServiceGroup;
+        private DataGridViewTextBoxColumn AriesContractId;
+        private DataGridViewTextBoxColumn UnitsOfService;
+        private DataGridViewTextBoxColumn ActualMinutesSpent;
+        private DataGridViewTextBoxColumn ServiceCodeExportToAries;
+        private DataGridViewTextBoxColumn CreatedOn;
     }
 }

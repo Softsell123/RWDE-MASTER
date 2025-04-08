@@ -5,15 +5,15 @@ namespace RWDE
 {
     partial class FrmGeneratorXml
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>//
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>//
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -24,10 +24,10 @@ namespace RWDE
         }
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
@@ -54,6 +54,12 @@ namespace RWDE
             this.lblXml = new System.Windows.Forms.Label();
             this.lblHeading = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.startedAtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.endedAtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.batchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.rWDEDataSet = new RWDE.RWDEDataSet();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlProgress = new System.Windows.Forms.Panel();
@@ -77,23 +83,17 @@ namespace RWDE
             this.btnGeneration = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnNext = new System.Windows.Forms.Button();
-            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.startedAtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.endedAtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.statusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.batchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.rWDEDataSet = new RWDE.RWDEDataSet();
             this.batchTableAdapter = new RWDE.RWDEDataSetTableAdapters.BatchTableAdapter();
             this.batchTableAdapter1 = new RWDE.RWDEDataSet1TableAdapters.BatchTableAdapter();
             this.panel1.SuspendLayout();
             this.pnl.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlProgress.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -326,6 +326,7 @@ namespace RWDE
             this.dataGridView.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.dataGridView.AutoGenerateColumns = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -366,6 +367,57 @@ namespace RWDE
             this.dataGridView.TabIndex = 0;
             this.dataGridView.TabStop = false;
             this.dataGridView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView_Scroll);
+            this.dataGridView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView_KeyUp);
+            // 
+            // descriptionDataGridViewTextBoxColumn
+            // 
+            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            this.descriptionDataGridViewTextBoxColumn.Frozen = true;
+            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
+            this.descriptionDataGridViewTextBoxColumn.MaxInputLength = 8;
+            this.descriptionDataGridViewTextBoxColumn.MinimumWidth = 10;
+            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
+            this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
+            this.descriptionDataGridViewTextBoxColumn.Width = 200;
+            // 
+            // startedAtDataGridViewTextBoxColumn
+            // 
+            this.startedAtDataGridViewTextBoxColumn.DataPropertyName = "StartedAt";
+            this.startedAtDataGridViewTextBoxColumn.HeaderText = "StartedAt";
+            this.startedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.startedAtDataGridViewTextBoxColumn.Name = "startedAtDataGridViewTextBoxColumn";
+            this.startedAtDataGridViewTextBoxColumn.ReadOnly = true;
+            this.startedAtDataGridViewTextBoxColumn.Width = 200;
+            // 
+            // endedAtDataGridViewTextBoxColumn
+            // 
+            this.endedAtDataGridViewTextBoxColumn.DataPropertyName = "EndedAt";
+            this.endedAtDataGridViewTextBoxColumn.HeaderText = "EndedAt";
+            this.endedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.endedAtDataGridViewTextBoxColumn.Name = "endedAtDataGridViewTextBoxColumn";
+            this.endedAtDataGridViewTextBoxColumn.ReadOnly = true;
+            this.endedAtDataGridViewTextBoxColumn.Width = 200;
+            // 
+            // statusDataGridViewTextBoxColumn
+            // 
+            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
+            this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
+            this.statusDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
+            this.statusDataGridViewTextBoxColumn.ReadOnly = true;
+            this.statusDataGridViewTextBoxColumn.Width = 200;
+            // 
+            // batchBindingSource
+            // 
+            this.batchBindingSource.DataMember = "Batch";
+            this.batchBindingSource.DataSource = this.rWDEDataSet;
+            // 
+            // rWDEDataSet
+            // 
+            this.rWDEDataSet.DataSetName = "RWDEDataSet";
+            this.rWDEDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // pictureBox2
             // 
@@ -649,56 +701,6 @@ namespace RWDE
             this.btnNext.UseVisualStyleBackColor = false;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
-            // descriptionDataGridViewTextBoxColumn
-            // 
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.descriptionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.descriptionDataGridViewTextBoxColumn.Frozen = true;
-            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
-            this.descriptionDataGridViewTextBoxColumn.MaxInputLength = 8;
-            this.descriptionDataGridViewTextBoxColumn.MinimumWidth = 10;
-            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
-            this.descriptionDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // startedAtDataGridViewTextBoxColumn
-            // 
-            this.startedAtDataGridViewTextBoxColumn.DataPropertyName = "StartedAt";
-            this.startedAtDataGridViewTextBoxColumn.HeaderText = "StartedAt";
-            this.startedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.startedAtDataGridViewTextBoxColumn.Name = "startedAtDataGridViewTextBoxColumn";
-            this.startedAtDataGridViewTextBoxColumn.ReadOnly = true;
-            this.startedAtDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // endedAtDataGridViewTextBoxColumn
-            // 
-            this.endedAtDataGridViewTextBoxColumn.DataPropertyName = "EndedAt";
-            this.endedAtDataGridViewTextBoxColumn.HeaderText = "EndedAt";
-            this.endedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.endedAtDataGridViewTextBoxColumn.Name = "endedAtDataGridViewTextBoxColumn";
-            this.endedAtDataGridViewTextBoxColumn.ReadOnly = true;
-            this.endedAtDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // statusDataGridViewTextBoxColumn
-            // 
-            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
-            this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
-            this.statusDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
-            this.statusDataGridViewTextBoxColumn.ReadOnly = true;
-            this.statusDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // batchBindingSource
-            // 
-            this.batchBindingSource.DataMember = "Batch";
-            this.batchBindingSource.DataSource = this.rWDEDataSet;
-            // 
-            // rWDEDataSet
-            // 
-            this.rWDEDataSet.DataSetName = "RWDEDataSet";
-            this.rWDEDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
             // batchTableAdapter
             // 
             this.batchTableAdapter.ClearBeforeFill = true;
@@ -723,12 +725,12 @@ namespace RWDE
             this.pnlFilter.ResumeLayout(false);
             this.pnlFilter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.pnlProgress.ResumeLayout(false);
             this.pnlProgress.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.batchBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rWDEDataSet)).EndInit();
             this.ResumeLayout(false);
 
         }

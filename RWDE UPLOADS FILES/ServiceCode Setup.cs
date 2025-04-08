@@ -24,7 +24,7 @@ namespace RWDE
             InitializeComponent();
             dbHelper = new DbHelper();
 
-            //to initialize the gridview
+            // to initialize the gridview
             InitializeDataGridView();
             gridView.CellEndEdit += dataGridView_CellEndEdit;
             gridView.CellValidating += dataGridView_CellValidating;
@@ -32,9 +32,9 @@ namespace RWDE
 
             // Setup the DataTable and DataGridView when the form loads
             PopulateGrid();
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -45,7 +45,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -56,7 +56,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -79,7 +79,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void DataGridView_KeyDown(object sender, KeyEventArgs e)//Your custom code for handling key down events goes here
+        private void DataGridView_KeyDown(object sender, KeyEventArgs e)// Your custom code for handling key down events goes here
         {
             try
             {
@@ -95,7 +95,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void DataGridView_KeyDownDelete(object sender, KeyEventArgs e)//to control the delete button functionality
+        private void DataGridView_KeyDownDelete(object sender, KeyEventArgs e)// to control the delete button functionality
         {
             try
             {
@@ -126,7 +126,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void DeleteSelectedRow()//delete if any rows are selected in the DataGridView
+        private void DeleteSelectedRow()// delete if any rows are selected in the DataGridView
         {
             try
             {
@@ -146,7 +146,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)//to edit the selected row
+        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)// to edit the selected row
         {
             try
             {// Reset the row's background color to white when editing is completed
@@ -174,7 +174,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void InitializeDataGridView()//to initialize the gridview
+        private void InitializeDataGridView()// to initialize the gridview
         {
             try
             {
@@ -187,14 +187,14 @@ namespace RWDE
             }
         }
         // Ensure that these event handlers are hooked up in the form's constructor or Load event
-        private void PopulateGrid()//populate grid
+        private void PopulateGrid()// populate grid
         {
             DataTable dataTable;
             try
             {
                 dataGridView.AutoGenerateColumns = false;
 
-                //to retrieve the service list data
+                // to retrieve the service list data
                 dataTable = dbHelper.GetAllServiceLists();
                 if (dbHelper.ErrorOccurred)
                 {
@@ -274,7 +274,7 @@ namespace RWDE
                         row.Cells[Constants.HccExportToAries].Value = "";
                     }
                 }
-                Load += new EventHandler(Form1_Load);//to load form
+                Load += new EventHandler(Form1_Load);// to load form
 
                 // Handle the DataError event to catch and manage errors gracefully
                 dataGridView.DataError += new DataGridViewDataErrorEventHandler(DataGridViewDataError);
@@ -301,7 +301,7 @@ namespace RWDE
                 dataGridView.Columns[Constants.UnitValue].DataPropertyName = Constants.UnitValue;
                 dataGridView.Columns[Constants.UnitValue].Width = 220;
 
-                //to retrieve the service list data
+                // to retrieve the service list data
                 DataTable result = dbHelper.GetAllServiceLists();
                 if (dbHelper.ErrorOccurred)
                 {
@@ -328,7 +328,7 @@ namespace RWDE
                 // Add the column to the DataGridView
                 dataGridView.Columns.Add(statusColumn);
 
-                dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;//to edit particular row
+                dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;// to edit particular row
                 DataGridViewButtonColumn editButtonColumn = new DataGridViewButtonColumn
                 {
                     Name = Constants.Edit,
@@ -354,8 +354,8 @@ namespace RWDE
                 /*dataGridView.CellClick += dataGridView_Celledit;*/
 
                 dataGridView.CellPainting += dataGridView_CellPainting;
-                dataGridView.CellClick += dataGridView_CellClickdelete;//to apply styles to delete button
-                //dataGridView.ClearSelection();
+                dataGridView.CellClick += dataGridView_CellClickdelete;// to apply styles to delete button
+                // dataGridView.ClearSelection();
 
                 dataGridView.Columns[Constants.Status].ReadOnly = true;
 
@@ -395,13 +395,13 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Form1_Load(object sender, EventArgs e)//call function to load form
+        private void Form1_Load(object sender, EventArgs e)// call function to load form
         {
             try
             {
-                //to populate data in ComboBox
+                // to populate data in ComboBox
                 PopulateContractComboBoxColumn();
-                //populate grid 
+                // populate grid 
                 PopulateGrid();
             }
             catch (Exception ex)
@@ -409,11 +409,11 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void PopulateContractComboBoxColumn()//to populate data in contracts ComboBox
+        private void PopulateContractComboBoxColumn()// to populate data in contracts ComboBox
         {
             try
             {
-                DataTable contracts = dbHelper.GetActiveContracts();//to get contracts list in service code
+                DataTable contracts = dbHelper.GetActiveContracts();// to get contracts list in service code
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -439,14 +439,14 @@ namespace RWDE
                     var buttonRectangle = new Rectangle(e.CellBounds.X + 2, e.CellBounds.Y + 2, e.CellBounds.Width - 4, e.CellBounds.Height - 4);
                     var buttonText = Constants.DeleteColumnName;
                     Color buttonColor = Color.FromArgb(128, 128, 255);
-                    bool isEmptyRow = IsRowEmpty(e.RowIndex);//to apply styles
+                    bool isEmptyRow = IsRowEmpty(e.RowIndex);// to apply styles
 
                     if (isEmptyRow)
                     {
                         buttonColor = Color.Silver;
                         buttonText = string.Empty;
                     }
-                    //design format of button
+                    // design format of button
                     using (GraphicsPath path = CreateRoundedRectanglePath(buttonRectangle, 5))
                     {
                         using (Brush brush = new SolidBrush(buttonColor))
@@ -490,7 +490,7 @@ namespace RWDE
                         buttonColor = Color.Silver;
                         buttonText = string.Empty;
                     }
-                    //design format of button
+                    // design format of button
                     using (GraphicsPath path = CreateRoundedRectanglePath(buttonRectangle, 5))
                     {
                         using (Brush brush = new SolidBrush(buttonColor))
@@ -516,7 +516,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int radius)//design format of button
+        private GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int radius)// design format of button
         {
             try
             {
@@ -538,7 +538,7 @@ namespace RWDE
                 return null;
             }
         }
-        private bool IsRowEmpty(int rowIndex)//to update boolean value
+        private bool IsRowEmpty(int rowIndex)// to update boolean value
         {
             try
             {
@@ -557,7 +557,7 @@ namespace RWDE
                 return true;
             }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void btnClose_Click(object sender, EventArgs e)// to close the form
         {
             try
             {
@@ -569,7 +569,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)//to display the drop down
+        private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)// to display the drop down
         {
             try
             {
@@ -612,7 +612,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnAdd_Click(object sender, EventArgs e)//to add a new row
+        private void btnAdd_Click(object sender, EventArgs e)// to add a new row
         {
             try
             {
@@ -664,7 +664,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnSave_Click(object sender, EventArgs e)//to save into database table
+        private void btnSave_Click(object sender, EventArgs e)// to save into database table
         {
             try
             {
@@ -795,7 +795,7 @@ namespace RWDE
                         dataGridView.EditingControlShowing += DataGridView_EditingControlShowingStatus;
 
                         // Call a method to handle the edit process (update UI, save changes, etc.)
-                        HandleEditServiceCode(e.RowIndex);//to handle edit data
+                        HandleEditServiceCode(e.RowIndex);// to handle edit data
                     }
                 }
             }
@@ -805,7 +805,7 @@ namespace RWDE
             }
         }
 
-        private void dataGridView_CellClickdelete(object sender, DataGridViewCellEventArgs e) //to delete particular row
+        private void dataGridView_CellClickdelete(object sender, DataGridViewCellEventArgs e) // to delete particular row
         {
             try
             {
@@ -858,7 +858,7 @@ namespace RWDE
                         {
                             row.ReadOnly = row.Index != e.RowIndex;
                         }
-                        HandleDelete(e.RowIndex);//function to perform the delete data in database
+                        HandleDelete(e.RowIndex);// function to perform the delete data in database
                     }
                 }
             }
@@ -867,7 +867,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public void HandleDelete(int rowIndex)//to delete particular row
+        public void HandleDelete(int rowIndex)// to delete particular row
         {
             try
             {
@@ -900,7 +900,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void HandleEditServiceCode(int rowIndex)//updating data
+        private void HandleEditServiceCode(int rowIndex)// updating data
         {
             try
             {
@@ -948,7 +948,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void SaveServiceCode(DataRow row)//save data in database
+        private void SaveServiceCode(DataRow row)// save data in database
         {
             try
             {
@@ -1043,14 +1043,14 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void DataGridView_EditingControlShowingStatus(object sender, DataGridViewEditingControlShowingEventArgs e)//to update status
+        private void DataGridView_EditingControlShowingStatus(object sender, DataGridViewEditingControlShowingEventArgs e)// to update status
         {
             try
             {
                 if (dataGridView.CurrentCell.ColumnIndex == dataGridView.Columns[Constants.Status].Index && e.Control is ComboBox comboBox)
                 {
                     // Remove existing event handlers to prevent multiple subscriptions
-                    comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;//to create dropdown
+                    comboBox.SelectedIndexChanged -= ComboBox_SelectedIndexChanged;// to create dropdown
                     comboBox.SelectedIndexChanged += ComboBox_SelectedIndexChanged;
                     comboBox.BackColor = Color.Red;
                 }
@@ -1060,7 +1060,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)//to handle the dropdown of Status
+        private void ComboBox_SelectedIndexChanged(object sender, EventArgs e)// to handle the dropdown of Status
         {
             try
             {

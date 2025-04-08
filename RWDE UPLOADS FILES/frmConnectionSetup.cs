@@ -28,7 +28,7 @@ namespace RWDE
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)//To Save the Given DataSource
+        private void btnSave_Click(object sender, EventArgs e)// To Save the Given DataSource
         {
             try
             {
@@ -43,7 +43,7 @@ namespace RWDE
                 if (ValidateDataSource(newDataSource))
                 {
                     // Update only the Data Source in the connection string
-                    UpdateConnectionString(newDataSource);//to update the new Data Source in connectionString
+                    UpdateConnectionString(newDataSource);// to update the new Data Source in connectionString
                     MessageBox.Show(Constants.DataSourceupdatedsuccessfully, Constants.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     DialogResult = DialogResult.OK;
                 }

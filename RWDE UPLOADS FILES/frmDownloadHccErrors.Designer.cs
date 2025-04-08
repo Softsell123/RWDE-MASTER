@@ -2,15 +2,15 @@
 {
     partial class FrmDownloadHccErrors
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmDownloadHccErrors));
@@ -54,9 +54,9 @@
             this.panel1.SuspendLayout();
             this.pnlFilter.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lblName
-            // 
+            //
+            //lblName
+            //
             this.lblName.AutoSize = true;
             this.lblName.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.ForeColor = System.Drawing.Color.Black;
@@ -65,9 +65,9 @@
             this.lblName.Size = new System.Drawing.Size(189, 35);
             this.lblName.TabIndex = 0;
             this.lblName.Text = "HCC Error File :";
-            // 
-            // txtPath
-            // 
+            //
+            //txtPath
+            //
             this.txtPath.BackColor = System.Drawing.Color.White;
             this.txtPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPath.Location = new System.Drawing.Point(258, 72);
@@ -76,9 +76,9 @@
             this.txtPath.ReadOnly = true;
             this.txtPath.Size = new System.Drawing.Size(594, 40);
             this.txtPath.TabIndex = 4;
-            // 
-            // btnBrowse
-            // 
+            //
+            //btnBrowse
+            //
             this.btnBrowse.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBrowse.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowse.Image")));
             this.btnBrowse.ImageAlign = System.Drawing.ContentAlignment.TopRight;
@@ -92,9 +92,9 @@
             this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
-            // 
-            // dataGridView
-            // 
+            //
+            //dataGridView
+            //
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
@@ -126,9 +126,9 @@
             this.dataGridView.ShowCellErrors = false;
             this.dataGridView.Size = new System.Drawing.Size(1509, 438);
             this.dataGridView.TabIndex = 10;
-            // 
-            // Status
-            // 
+            //
+            //Status
+            //
             this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Status.DataPropertyName = Constants.BatchId;
             this.Status.HeaderText = "HCC Tables";
@@ -136,9 +136,9 @@
             this.Status.Name = Constants.Status;
             this.Status.ReadOnly = true;
             this.Status.Width = 350;
-            // 
-            // Message
-            // 
+            //
+            //Message
+            //
             this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Message.DataPropertyName = Constants.BatchId;
             this.Message.HeaderText = "Error Message";
@@ -146,27 +146,27 @@
             this.Message.Name = "Message";
             this.Message.ReadOnly = true;
             this.Message.Width = 350;
-            // 
-            // Sourceid
-            // 
+            //
+            //Sourceid
+            //
             this.Sourceid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Sourceid.HeaderText = Constants.SourceId;
             this.Sourceid.MinimumWidth = 6;
             this.Sourceid.Name = Constants.SourceId;
             this.Sourceid.ReadOnly = true;
             this.Sourceid.Width = 350;
-            // 
-            // SourceFileName
-            // 
+            //
+            //SourceFileName
+            //
             this.SourceFileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.SourceFileName.HeaderText = "Source File Name";
             this.SourceFileName.MinimumWidth = 6;
             this.SourceFileName.Name = Constants.SourceFileName;
             this.SourceFileName.ReadOnly = true;
             this.SourceFileName.Width = 350;
-            // 
-            // panel1
-            // 
+            //
+            //panel1
+            //
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.pnlFilter);
             this.panel1.Controls.Add(this.lblHeading);
@@ -177,9 +177,9 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1509, 212);
             this.panel1.TabIndex = 11;
-            // 
-            // pnlFilter
-            // 
+            //
+            //pnlFilter
+            //
             this.pnlFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlFilter.Controls.Add(this.txtFileName);
             this.pnlFilter.Controls.Add(this.btnClr);
@@ -191,17 +191,17 @@
             this.pnlFilter.Name = "pnlFilter";
             this.pnlFilter.Size = new System.Drawing.Size(1418, 58);
             this.pnlFilter.TabIndex = 7;
-            // 
-            // txtFileName
-            // 
+            //
+            //txtFileName
+            //
             this.txtFileName.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFileName.Location = new System.Drawing.Point(234, 10);
             this.txtFileName.Name = "txtFileName";
             this.txtFileName.Size = new System.Drawing.Size(594, 40);
             this.txtFileName.TabIndex = 24;
-            // 
-            // btnClr
-            // 
+            //
+            //btnClr
+            //
             this.btnClr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClr.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClr.ForeColor = System.Drawing.Color.Black;
@@ -212,9 +212,9 @@
             this.btnClr.Text = "Clear";
             this.btnClr.UseVisualStyleBackColor = false;
             this.btnClr.Click += new System.EventHandler(this.btnClr_Click);
-            // 
-            // lblFileName
-            // 
+            //
+            //lblFileName
+            //
             this.lblFileName.AutoSize = true;
             this.lblFileName.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFileName.ForeColor = System.Drawing.Color.Black;
@@ -224,9 +224,9 @@
             this.lblFileName.Size = new System.Drawing.Size(224, 35);
             this.lblFileName.TabIndex = 23;
             this.lblFileName.Text = "Source File Name:";
-            // 
-            // bnClear
-            // 
+            //
+            //bnClear
+            //
             this.bnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.bnClear.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bnClear.ForeColor = System.Drawing.Color.Black;
@@ -237,9 +237,9 @@
             this.bnClear.TabIndex = 22;
             this.bnClear.Text = "Clear";
             this.bnClear.UseVisualStyleBackColor = false;
-            // 
-            // btnSubmit
-            // 
+            //
+            //btnSubmit
+            //
             this.btnSubmit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnSubmit.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSubmit.ForeColor = System.Drawing.Color.Black;
@@ -251,9 +251,9 @@
             this.btnSubmit.Text = "Filter";
             this.btnSubmit.UseVisualStyleBackColor = false;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
-            // 
-            // lblHeading
-            // 
+            //
+            //lblHeading
+            //
             this.lblHeading.AutoSize = true;
             this.lblHeading.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHeading.Location = new System.Drawing.Point(29, 16);
@@ -261,9 +261,9 @@
             this.lblHeading.Size = new System.Drawing.Size(617, 35);
             this.lblHeading.TabIndex = 6;
             this.lblHeading.Text = "This report displays all errors from HCC with details.";
-            // 
-            // lblTitle
-            // 
+            //
+            //lblTitle
+            //
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(864, 48);
@@ -271,9 +271,9 @@
             this.lblTitle.Size = new System.Drawing.Size(265, 35);
             this.lblTitle.TabIndex = 12;
             this.lblTitle.Text = Constants.DownloadHccErrors;
-            // 
-            // btnClose
-            // 
+            //
+            //btnClose
+            //
             this.btnClose.AutoSize = true;
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(125)))), ((int)(((byte)(255)))));
             this.btnClose.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -286,9 +286,9 @@
             this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // btnUpload
-            // 
+            //
+            //btnUpload
+            //
             this.btnUpload.AutoSize = true;
             this.btnUpload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnUpload.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -301,9 +301,9 @@
             this.btnUpload.Text = "Submit";
             this.btnUpload.UseVisualStyleBackColor = false;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
-            // 
-            // FrmDownloadHccErrors
-            // 
+            //
+            //FrmDownloadHccErrors
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;

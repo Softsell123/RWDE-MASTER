@@ -29,7 +29,7 @@ namespace RWDE
                 txtProgressLines.Text = Constants.ZeroPercent;
                 txtProgressfile.Text = Constants.InitialProgress;
                 string pathFile = Constants.LastFolderPathTxt;
-                RegisterEvents(this); //Assigning events to all Controls
+                RegisterEvents(this); // Assigning events to all Controls
 
                 // Check if the file exists
                 if (File.Exists(pathFile))
@@ -57,7 +57,7 @@ namespace RWDE
             }
         }
 
-        private void cbMask_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void cbMask_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -68,7 +68,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void cbMask_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void cbMask_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -79,7 +79,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -90,7 +90,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -101,7 +101,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -116,7 +116,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to all child Controls
+                        // Assigning events to all child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -126,7 +126,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private async void btnUploadXML_Click(object sender, EventArgs e)//to read and Store the Xml File
+        private async void btnUploadXML_Click(object sender, EventArgs e)// to read and Store the Xml File
         {
             try
             {
@@ -198,7 +198,7 @@ namespace RWDE
                             XmlDocument xmlDoc = new XmlDocument();
                             xmlDoc.Load(xmlFilePath);
 
-                            int batchId = dbHelper.GetNextBatchId();//to get next BatchId for Insertion
+                            int batchId = dbHelper.GetNextBatchId();// to get next BatchId for Insertion
                             if (dbHelper.ErrorOccurred)
                             {
                                 MessageBox.Show(Constants.ErrorOccurred);
@@ -225,7 +225,7 @@ namespace RWDE
                                 int successfulRows = TotalRows;
                                 string description = $"{Constants.Batch} {batchId} - {FileName}";
 
-                                //update batch status in database
+                                // update batch status in database
                                 dbHelper.InsertBatch(batchId, FileName, xmlFilePath, Constants.ClientTrackCode, description, uploadStartedAt, TotalRows, successfulRows, Constants.StatusCode);
                                 if (dbHelper.ErrorOccurred)
                                 {
@@ -233,7 +233,7 @@ namespace RWDE
                                     return;
                                 }
                                 processedXmlFiles++;
-                                UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);//to update the file progress
+                                UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);// to update the file progress
                             
                             DateTime endTime = DateTime.Now;
                             TimeSpan totalTime = endTime - startTime;
@@ -293,14 +293,14 @@ namespace RWDE
             string baseFilename = Path.GetFileNameWithoutExtension(xmlFilePath);
             try
             {
-                //insertion into log table
+                // insertion into log table
                 dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrackCode, baseFilename, Constants.Uploadct);// Log the start of the upload process for the given base filename
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
                     return;
                 }
-                //insert clients into database from Xml
+                // insert clients into database from Xml
                 int insertedClients = dbHelper.InsertClients(xmlDoc, batchId, conn, fileName, value);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -309,7 +309,7 @@ namespace RWDE
                 }
                 totalInsertedRows += insertedClients;
 
-                //insertion of eligibility document from xml file
+                // insertion of eligibility document from xml file
                 int insertedEligibilityDocs = dbHelper.InsertEligibilityDocuments(xmlDoc, batchId, conn, fileName);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -318,7 +318,7 @@ namespace RWDE
                 }
                 totalInsertedRows += insertedEligibilityDocs;
 
-                //insertion of service table from xml file
+                // insertion of service table from xml file
                 int insertedServiceLineItems = dbHelper.InsertServiceLineItems(xmlDoc, batchId, conn, fileName);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -511,7 +511,7 @@ namespace RWDE
                     MessageBox.Show(Constants.ErrorOccurred);
                     return;
                 }
-                //to clear the tables associated with the specified batch ID.
+                // to clear the tables associated with the specified batch ID.
                 dbHelper.ClearTables(batchId);
                 if (dbHelper.ErrorOccurred)
                 {

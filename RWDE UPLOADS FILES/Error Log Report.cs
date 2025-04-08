@@ -9,7 +9,7 @@ namespace RWDE
 {
     public partial class ErrorLogReport : Form
     {
-        public ErrorLogReport()//initialize data
+        public ErrorLogReport()// initialize data
         {
             InitializeComponent();
             ControlBox = false;
@@ -18,9 +18,9 @@ namespace RWDE
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -31,7 +31,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -42,7 +42,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -56,7 +56,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to child Controls
+                        // Assigning events to child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -66,7 +66,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnReport_Click(object sender, EventArgs e)//to get the filtered data
+        private void btnReport_Click(object sender, EventArgs e)// to get the filtered data
         {
             try
             {
@@ -94,7 +94,7 @@ namespace RWDE
 
                     // Now you can use the result, e.g., bind it to a DataGridView or process it
                     dataGridView.DataSource = result;
-                    //PopulateMonthYearGrid(startDate, endDate);
+                    // PopulateMonthYearGrid(startDate, endDate);
                 }
                 catch (Exception ex)
                 {
@@ -108,7 +108,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void btnClose_Click(object sender, EventArgs e)// to close the form
         {
             try
             {
@@ -121,7 +121,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
+        private void btnDownload_Click(object sender, EventArgs e)// to export the report to selected folder
         {
             try
             {
@@ -195,7 +195,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClr_Click(object sender, EventArgs e)//to clear data in the grid
+        private void btnClr_Click(object sender, EventArgs e)// to clear data in the grid
         {
             try
             {// Reset DateTimePickers to one year back from the current date

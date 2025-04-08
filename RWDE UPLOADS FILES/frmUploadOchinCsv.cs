@@ -7,14 +7,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RWDE//
+namespace RWDE// 
 {
     public partial class FrmUploadOchinCsv : Form
     {
         private readonly DbHelper dbHelper;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public FrmUploadOchinCsv()//to initialize data
+        public FrmUploadOchinCsv()// to initialize data
         {
             InitializeComponent();
             dbHelper = new DbHelper();
@@ -22,9 +22,9 @@ namespace RWDE//
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
 
-            //load description data
+            // load description data
             Descriptionformat();
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
             if (File.Exists(Constants.LastFolderPathhcc))
             {
                 string lastFolderPathhcc = File.ReadAllText(Constants.LastFolderPathhcc).Trim();  // Trim to remove any extra spaces or newlines
@@ -40,7 +40,7 @@ namespace RWDE//
             }
         }
        
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -51,7 +51,7 @@ namespace RWDE//
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -62,7 +62,7 @@ namespace RWDE//
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -77,7 +77,7 @@ namespace RWDE//
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
-                    //Assigning events to all child Controls
+                    // Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
@@ -88,7 +88,7 @@ namespace RWDE//
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e)//To Close the form and Restart the Application
+        private void btnClose_Click(object sender, EventArgs e)// To Close the form and Restart the Application
         {
             try
             {
@@ -114,11 +114,11 @@ namespace RWDE//
                             string fileName = Path.GetFileName(csvFilePath);
                             if(txtFileName.Text== fileName)
                             {
-                                //to Update the Aborted data information 
+                                // to Update the Aborted data information 
                                 UpdateBatch(batchId, fileName, csvFilePath);
                             }
                         }
-                        //Delete All Values form all Ochin tables 
+                        // Delete All Values form all Ochin tables 
                         dbHelper.DeleteBatchochin(batchId.ToString());
                         if (dbHelper.ErrorOccurred)
                         {
@@ -142,7 +142,7 @@ namespace RWDE//
             }
 
         }
-        private void UpdateBatch(int batchid, string filename, string path)//to Update the Aborted data information 
+        private void UpdateBatch(int batchid, string filename, string path)// to Update the Aborted data information 
         {
             try
             {
@@ -161,9 +161,9 @@ namespace RWDE//
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
-        private async void btnUpload_Click(object sender, EventArgs e)//to upload data into table in database
+
+        private async void btnUpload_Click(object sender, EventArgs e) // to upload data into table in database
         {
             try
             {
@@ -171,7 +171,9 @@ namespace RWDE//
                 {
                     MessageBox.Show(Constants.TheFolderPathCannotBeEmpty, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
-                } // Get all files in the selected folder
+                }
+
+                // Get all files in the selected folder
                 string[] filesempty = Directory.GetFiles(txtPath.Text);
 
                 // Check if the folder is empty
@@ -200,8 +202,10 @@ namespace RWDE//
                     MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+
                 btnClose.Text = Constants.Abort;
                 btnUpload.Enabled = false;
+                btnNext.Enabled = false;
                 bool isUploading = true;
 
                 SqlConnection connection = dbHelper.GetConnection();
@@ -237,6 +241,7 @@ namespace RWDE//
                             MessageBox.Show(Constants.ErrorOccurred);
                             return;
                         }
+
                         foreach (string csvFilePath in csvFiles)
                         {
                             if (_cancellationTokenSource.Token.IsCancellationRequested)
@@ -248,8 +253,11 @@ namespace RWDE//
                             string fileName = Path.GetFileName(csvFilePath);
                             txtFileName.Text = fileName;
                             if (!isUploading)
+                            {
                                 break;
-                            UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//to update the file Progress
+                            }
+
+                            UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);// to update the file Progress
                             currentCsvFileIndex++;
 
                             int totalRowsInCurrentFile = 0; // Initialize within the loop
@@ -281,44 +289,49 @@ namespace RWDE//
                                     {
                                         break; // Exit the loop if cancellation is requested
                                     }
-                                    //update batch status in database
+
+                                    // update batch status in database
                                     dbHelper.InsertBatch(batchid, fileName, csvFilePath, Constants.OchinCode, description, startTime, totalRowsInCurrentFile, successfulRows, Constants.StatusCode);
                                     if (dbHelper.ErrorOccurred)
                                     {
                                         MessageBox.Show(Constants.ErrorOccurred);
                                         return;
                                     }
-                                    UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);//no of files insertion progress
+
+                                    UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);// no of files insertion progress
                                 }
                             }
 
                             if (baseFilename.Contains(Constants.Clients))
                             {
-                                //btnClose.Text = Constants.close;
+                                // btnClose.Text = Constants.close;
                                 TimeSpan elapsedTime = DateTime.Now - startTime;
                                 string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
                             }
 
                             if (baseFilename.Contains(Constants.Services))
                             {
-                                //btnClose.Text = Constants.close;
+                                // btnClose.Text = Constants.close;
                                 TimeSpan elapsedTime = DateTime.Now - startTime;
                                 string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
                                 double totalSeconds = elapsedTime.TotalSeconds;
                                 txtUploadEnded.Text = eTime;
                                 txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
                                 btnUpload.Enabled = true;
+                                btnNext.Enabled = true;
                                 btnClose.Text = Constants.Close;
                             }
                             else
                             {
                                 btnUpload.Enabled = true;
+                                btnNext.Enabled = true;
                             }
                         }
                     }
                     else
                     {
                         btnUpload.Enabled = true;
+                        btnNext.Enabled = true;
                         btnClose.Text = Constants.Close;
                     }
                 }
@@ -335,23 +348,27 @@ namespace RWDE//
             finally
             {
                 btnUpload.Enabled = true;
+                btnNext.Enabled = true;
                 btnClose.Text = Constants.Close;
             }
         }
-        private void ResetUi()//to reset button
+
+        private void ResetUi() // to reset button
         {
             try
             {
                 btnUpload.Enabled = true;
-            btnClose.Text = Constants.Close;
-            btnBrowse.Enabled = true;
+                btnNext.Enabled = true;
+                btnClose.Text = Constants.Close;
+                btnBrowse.Enabled = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private async void UpdateFileProgress(int currentCsvFileIndex, int totalCsvFiles, int totalRowsInserted)//to show the progress of lines inserted
+
+        private async void UpdateFileProgress(int currentCsvFileIndex, int totalCsvFiles, int totalRowsInserted) // to show the progress of lines inserted
         {
             try
             {
@@ -374,11 +391,12 @@ namespace RWDE//
                 }
             }
         }
-        public async Task<Tuple<int, bool>> InsertCsvDataIntoTable(string csvFilePath, int batchId, SqlConnection connection,CancellationToken cancellationToken)//functionality to insert particular data 
+
+        public async Task<Tuple<int, bool>> InsertCsvDataIntoTable(string csvFilePath, int batchId, SqlConnection connection, CancellationToken cancellationToken) // functionality to insert particular data 
         {
             int rowsInserted = 0;
             int totalRows = 0;
-            string filename = System.IO.Path.GetFileNameWithoutExtension(csvFilePath);//to get file name
+            string filename = System.IO.Path.GetFileNameWithoutExtension(csvFilePath); // to get file name
             string[] filenameParts = filename.Split(new[] { " (" }, StringSplitOptions.RemoveEmptyEntries);
             string baseFilename = filenameParts[0];
 
@@ -401,14 +419,21 @@ namespace RWDE//
                         if (cancellationToken.IsCancellationRequested)
                         {
                             break;
+
                             // Exit the loop if cancellation is requested
                         }
+
                         if (!isUploading)
+                        {
                             break;
+                        }
+
                         string line = reader.ReadLine();
 
                         if (string.IsNullOrEmpty(line))
+                        {
                             continue;
+                        }
 
                         string[] data = line.Split('|');
 
@@ -424,6 +449,7 @@ namespace RWDE//
                                     MessageBox.Show(Constants.ErrorOccurred);
                                     break;
                                 }
+
                                 hasLoggedClient = true;
                             }
                         }
@@ -439,24 +465,26 @@ namespace RWDE//
                                     MessageBox.Show(Constants.ErrorOccurred);
                                     break;
                                 }
+
                                 hasLoggedService = true;
                             }
                         }
                     }
                 }
-               
+
                 // Insert all client data first
                 foreach (var data in clientData)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
                         return Tuple.Create(0, false);
+
                         // break; Exit the loop if cancellation is requested
-                    } 
+                    }
 
                     if (chckPHI.Checked == true && chckURN.Checked == false)
                     {
-                        dbHelper.InsertClientInformationPhi(connection, data, batchId, baseFilename);//insertion of the client file with PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientInformationPhi(connection, data, batchId, baseFilename); // insertion of the client file with PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -465,7 +493,7 @@ namespace RWDE//
                     }
                     else if (chckURN.Checked == true)
                     {
-                        dbHelper.InsertClientInformationphiurn(connection, data, batchId, baseFilename);//insertion of the client file without PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientInformationphiurn(connection, data, batchId, baseFilename); // insertion of the client file without PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -474,30 +502,32 @@ namespace RWDE//
                     }
                     else
                     {
-                        dbHelper.InsertClientInformation(connection, data, batchId, baseFilename);//insertion of the client file without PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientInformation(connection, data, batchId, baseFilename);// insertion of the client file without PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
                             break;
                         }
                     }
-                    
+
                     rowsInserted++;
                     if (isUploading)
                     {
                         await UpdateProgress(rowsInserted, totalRows); // Await the progress update
                     }
                 }
+
                 if (serviceData.Count == 0&& baseFilename.Contains(Constants.Services))
                 {
                     MessageBox.Show(Constants.UploadingEmptyFile+baseFilename, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+
                 // Insert all service data next
                 foreach (var data in serviceData)
                 {
-                    if (chckPHI.Checked == true)//InsertClientServiceDataPHI
+                    if (chckPHI.Checked == true)// InsertClientServiceDataPHI
                     {
-                        dbHelper.InsertClientServiceDataPhi(connection, data, batchId, baseFilename);//insertion of the services file with PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientServiceDataPhi(connection, data, batchId, baseFilename); // insertion of the services file with PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -506,13 +536,14 @@ namespace RWDE//
                     }
                     else
                     {
-                        dbHelper.InsertClientServiceData(connection, data, batchId,baseFilename);//insertion of the services file with PHI DATA MASKING CONDITION
+                        dbHelper.InsertClientServiceData(connection, data, batchId,baseFilename); // insertion of the services file with PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
                             break;
                         }
                     }
+
                     rowsInserted++;
                     await UpdateProgress(rowsInserted, totalRows); // Await the progress update
                 }
@@ -533,17 +564,20 @@ namespace RWDE//
                 {
                     MessageBox.Show(Constants.TheFileisbeingUsedinanotherprocessClosethefileandTryagain+baseFilename, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
                 dbHelper.Log($"{Constants.ErrorInsertingCsvDataFromFileIntoTheTable.Replace("{csvFilePath}", csvFilePath)}", Constants.Error, baseFilename, Constants.Uploadochin);
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred); 
                     return Tuple.Create(0, false);
                 }
+
                 return Tuple.Create(0, false);
             }
         }
+
         // Track the last progress value
-        private async Task UpdateProgress(int currentRowIndex, int totalRowsInCurrentFile)//to update no of lines inserted in progress bar 
+        private async Task UpdateProgress(int currentRowIndex, int totalRowsInCurrentFile) // to update no of lines inserted in progress bar 
         {
             try
             {
@@ -573,7 +607,8 @@ namespace RWDE//
                 }
             }
         }
-        private void btnBrowse_Click(object sender, EventArgs e)//to select the folder containing Ochin Csv file
+
+        private void btnBrowse_Click(object sender, EventArgs e) // to select the folder containing Ochin Csv file
         {
             try
             {
@@ -590,10 +625,7 @@ namespace RWDE//
                         // Check if the folder is empty
                         if (files.Length == 0)
                         {
-                            MessageBox.Show(Constants.TheSelectedFolderIsEmpty,
-                                Constants.ErrorTitle,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                            MessageBox.Show( Constants.TheSelectedFolderIsEmpty, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
@@ -602,10 +634,7 @@ namespace RWDE//
 
                         if (!allFilesAreCsv)
                         {
-                            MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles,
-                                Constants.Ochin,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                            MessageBox.Show(Constants.ThefoldercontainsnonCsVfilesUploadisallowedonlyforCsVfiles, Constants.Ochin,  MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
@@ -619,7 +648,8 @@ namespace RWDE//
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Descriptionformat()//load description data
+
+        private void Descriptionformat() // load description data
         {
             try
             {
@@ -633,14 +663,17 @@ namespace RWDE//
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnNext_Click(object sender, EventArgs e)// Handles the click event for the 'Next' button to navigate to the next page in the process.
+
+        private void btnNext_Click(object sender, EventArgs e) // Handles the click event for the 'Next' button to navigate to the next page in the process.
         {
             try
             {
                 FrmMain mainForm = Application.OpenForms.OfType<FrmMain>().FirstOrDefault();
 
                 if (mainForm != null)
-                    mainForm.ShowOchinToHccScreenHcc();//to navigate to Ochin to Rwde Conversion Page
+                {
+                    mainForm.ShowOchinToHccScreenHcc(); // to navigate to Ochin to Rwde Conversion Page
+                }
             }
             catch (Exception ex)
             {
@@ -649,4 +682,3 @@ namespace RWDE//
         }
     }
 }
-

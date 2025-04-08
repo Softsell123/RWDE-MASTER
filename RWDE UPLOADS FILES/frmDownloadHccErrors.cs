@@ -19,9 +19,9 @@ namespace RWDE
             WindowState = FormWindowState.Maximized;
             dbHelper = new DbHelper();
 
-            //to load the default gridView
+            // to load the default gridView
             InitializeDataGridView();
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
         }
 
         public sealed override Color BackColor
@@ -30,7 +30,7 @@ namespace RWDE
             set { base.BackColor = value; }
         }
 
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -41,7 +41,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -52,7 +52,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -66,7 +66,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to child Controls
+                        // Assigning events to child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -76,7 +76,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void InitializeDataGridView()//to load the default gridView
+        private void InitializeDataGridView()// to load the default gridView
         {
             try
             {
@@ -88,7 +88,7 @@ namespace RWDE
             }
         }
 
-        private void btnBrowse_Click(object sender, EventArgs e)//to select the Error file
+        private void btnBrowse_Click(object sender, EventArgs e)// to select the Error file
         {
             try
             {
@@ -110,7 +110,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool IsAllowedFileType(string filePath)//to check whether the selected filetype  is Excel or not
+        private bool IsAllowedFileType(string filePath)// to check whether the selected filetype  is Excel or not
         {
             try
             {
@@ -123,74 +123,72 @@ namespace RWDE
                 return false;
             }
         }
-        private void ProcessExcelData(string sourceFileName)//to read  and store excel data in Database
+        private void ProcessExcelData(string sourceFileName)// to read  and store excel data in Database
         {
             try
             {
-                DataTable excelData = ReadExcelFile(sourceFileName);//to read the excel
+                DataTable excelData = ReadExcelFile(sourceFileName); // to read the excel
 
                 // Ensure the required columns exist
-                if (!excelData.Columns.Contains(Constants.HccTable) || !excelData.Columns.Contains(Constants.ErrorMessage))
+                    if (!excelData.Columns.Contains(Constants.HccTable) || !excelData.Columns.Contains(Constants.ErrorMessage))
                 {
                     MessageBox.Show(Constants.TheRequiredColumnsAreMissing, Constants.DownloadHccErrors);
                     return;
                 }
-
                SqlConnection conn = dbHelper.GetConnection();
-                    conn.Open();
-                    using (SqlTransaction transaction = conn.BeginTransaction())
+                using (SqlTransaction transaction = conn.BeginTransaction())
+                {
+                    try
                     {
-                        try
+                        foreach (DataRow row in excelData.Rows)
                         {
-                            foreach (DataRow row in excelData.Rows)
-                            {
-                                string sourceFileNameStr = row[Constants.SourceFileName].ToString();
-                                string hccTable = row[Constants.HccTable].ToString();
-                                string errorMessage = row[Constants.ErrorMessage].ToString();
+                            string sourceFileNameStr = row[Constants.SourceFileName].ToString();
+                            string hccTable = row[Constants.HccTable].ToString();
+                            string errorMessage = row[Constants.ErrorMessage].ToString();
                                 string clientId = row[Constants.SourceId].ToString();
+                            
+                            // Replace values in HccTable based on specific cases
+                            switch (hccTable)
+                            {
+                                case Constants.ClntDemo:
+                                case Constants.ClntEthnDtl:
+                                    hccTable = Constants.Hccclients;
+                                    break;
+                                case Constants.ClntHivInfo:
+                                    hccTable = Constants.HccClientMedCd4;
+                                    break;
+                                case Constants.ClntHivTest:
+                                    hccTable = Constants.HccClientHivTest;
+                                    break;
+                                case Constants.ClntLvngSttn:
+                                    hccTable = Constants.HccLvngSttn;
+                                    break;
+                                case Constants.ClntRaceDtl:
+                                    hccTable = Constants.HccClientRace;
+                                    break;
+                                case Constants.ClntSite:
+                                    hccTable = Constants.HccClientAddr;
+                                    break;
+                                case Constants.ClntHsngAsstnc:
+                                    hccTable = Constants.HccLvngSttn;
+                                    break;
+                                case Constants.ClntHshldIncome:
+                                    hccTable = Constants.HccClients;
+                                    break;
 
-                                // Replace values in HccTable based on specific cases
-                                switch (hccTable)
-                                {
-                                    case Constants.ClntDemo:
-                                    case Constants.ClntEthnDtl:
-                                        hccTable = Constants.Hccclients;
-                                        break;
-                                    case Constants.ClntHivInfo:
-                                        hccTable = Constants.HccClientMedCd4;
-                                        break;
-                                    case Constants.ClntHivTest:
-                                        hccTable = Constants.HccClientHivTest;
-                                        break;
-                                    case Constants.ClntLvngSttn:
-                                        hccTable = Constants.HccLvngSttn;
-                                        break;
-                                    case Constants.ClntRaceDtl:
-                                        hccTable = Constants.HccClientRace;
-                                        break;
-                                    case Constants.ClntSite:
-                                        hccTable = Constants.HccClientAddr;
-                                        break;
-                                    case Constants.ClntHsngAsstnc:
-                                        hccTable = Constants.HccLvngSttn;
-                                        break;
-                                    case Constants.ClntHshldIncome:
-                                        hccTable = Constants.HccClients;
-                                        break;
-
-                                    default:
-                                        if (hccTable.Contains(Constants.Site))
-                                        {
-                                            hccTable = Constants.HccServices;
-                                        }
-                                        else
-                                        {
-                                            // Handle unexpected cases or set a default value
-                                            hccTable = "";
-                                        }
-                                        break;
-                                }
-                                // Insert the Errors into database
+                                default:
+                                    if (hccTable.Contains(Constants.Site))
+                                    {
+                                        hccTable = Constants.HccServices;
+                                    }
+                                    else
+                                    {
+                                        // Handle unexpected cases or set a default value
+                                        hccTable = "";
+                                    }
+                                    break;
+                            }
+                            // Insert the Errors into database
                                 dbHelper.InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
                                 if (dbHelper.ErrorOccurred)
                                 {
@@ -198,24 +196,24 @@ namespace RWDE
                                     return;
                                 }
 
-                                AddRowToGrid(errorMessage, hccTable, clientId, sourceFileNameStr);
-                            }
-                            transaction.Commit();
-                            MessageBox.Show(Constants.Dataprocessedandinsertedintothedatabasesuccessfully, Constants.DownloadHccErrors);
+                            AddRowToGrid(errorMessage, hccTable, clientId, sourceFileNameStr);
                         }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            MessageBox.Show(Constants.Errorinsertingdataintothedatabase + ex.Message, Constants.DownloadHccErrors);
-                        }
+                        transaction.Commit();
+                        MessageBox.Show(Constants.Dataprocessedandinsertedintothedatabasesuccessfully, Constants.DownloadHccErrors);
                     }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        MessageBox.Show(Constants.Errorinsertingdataintothedatabase + ex.Message, Constants.DownloadHccErrors);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private void AddRowToGrid(string errorMessage, string hccTable, string clientId, string sourceFileName)//to add every row in excel to grid
+        private void AddRowToGrid(string errorMessage, string hccTable, string clientId, string sourceFileName)// to add every row in excel to grid
         {
             try
             {
@@ -237,7 +235,7 @@ namespace RWDE
             }
         }
 
-        private DataTable ReadExcelFile(string filePath)//to read the excel file with header
+        private DataTable ReadExcelFile(string filePath)// to read the excel file with header
         {
             try
             {
@@ -264,7 +262,7 @@ namespace RWDE
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void btnClose_Click(object sender, EventArgs e)// to close the form
         {
             try
             {
@@ -277,7 +275,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnUpload_Click(object sender, EventArgs e)//to read  and store excel data in Database
+        private void btnUpload_Click(object sender, EventArgs e)// to read  and store excel data in Database
         {
             try
             {
@@ -299,7 +297,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnSubmit_Click(object sender, EventArgs e)//to fetch the data of the given Source file 
+        private void btnSubmit_Click(object sender, EventArgs e)// to fetch the data of the given Source file 
         {
             try
             {
@@ -318,7 +316,7 @@ namespace RWDE
                 string sourceFileName = txtFileName.Text; // Text box for SourceFileName
                 DataTable dt = new DataTable();
 
-                //filter HCCErrors as per the filename
+                // filter HCCErrors as per the filename
                 dt = dbHelper.FilterHccErrors(sourceFileName);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -335,11 +333,11 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClr_Click(object sender, EventArgs e)//to set all default values
+        private void btnClr_Click(object sender, EventArgs e)// to set all default values
         {
             try
             {
-                //to load the default gridView
+                // to load the default gridView
                 InitializeDataGridView();
                 dataGridView.Rows.Clear();
                 dataGridView.Rows.Clear();

@@ -13,7 +13,7 @@ namespace RWDE
         private DbHelper dbHelper;
         private Panel panelFrom;
         private readonly Panel pnlForm;
-        public FrmMain()//initialize data
+        public FrmMain()// initialize data
         {
             this.pnlForm = null;
             InitializeComponent();
@@ -22,15 +22,14 @@ namespace RWDE
             btnHccCsv.Visible = false;
             uploadCSVToOCHINToolStripMenuItem = new ToolStripMenuItem();
             BackColor = Color.White;
-            //Load += MainForm_Load;
+            // Load += MainForm_Load;
             WindowState = FormWindowState.Maximized;
             btnConversion.Visible = false;
             IsMdiContainer = true;
-            //to set StartDate as First date of the Current Month
+            // to set StartDate as First date of the Current Month
             loadStratDate();
-            //to fill the data in Pie Chart
-            //fillChartServices();
-            RegisterEvents(this); //Assigning events to all Controls
+           
+            RegisterEvents(this); // Assigning events to all Controls
 
         }
 
@@ -40,7 +39,7 @@ namespace RWDE
             set { base.BackColor = value; }
         }
 
-        private void ShowNewForm(object sender, EventArgs e)//to show new form
+        private void ShowNewForm(object sender, EventArgs e)// to show new form
         {
             try
             {
@@ -63,7 +62,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -74,7 +73,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -85,7 +84,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -100,7 +99,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to all child Controls
+                        // Assigning events to all child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -110,7 +109,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private bool IsAnotherControlActive()//to control the files
+        private bool IsAnotherControlActive()// to control the files
         {
             try
             {
@@ -131,7 +130,7 @@ namespace RWDE
                 return false;
             }
         }
-        private void OpenFile(object sender, EventArgs e)//to extract the files
+        private void OpenFile(object sender, EventArgs e)// to extract the files
         {
             try
             {
@@ -151,7 +150,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)//to extract from folder
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)// to extract from folder
         {
             try
             {
@@ -171,7 +170,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)//to close
+        private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)// to close
         {
             try
             {
@@ -182,7 +181,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void ToolBarToolStripMenuItem_Click(object sender, EventArgs e)//to open the prescribed form
+        private void ToolBarToolStripMenuItem_Click(object sender, EventArgs e)// to open the prescribed form
         {
             try
             {
@@ -200,7 +199,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnGenerator_Click(object sender, EventArgs e)//xml generation process 
+        private void btnGenerator_Click(object sender, EventArgs e)// xml generation process 
         {
             try
             {
@@ -222,7 +221,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnOCHINHCCConversion_Click(object sender, EventArgs e)//OCHIN to RWDE insertion
+        private void btnOCHINHCCConversion_Click(object sender, EventArgs e)// OCHIN to RWDE insertion
         {
             try
             {
@@ -239,7 +238,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnHccConversion_Click(object sender, EventArgs e)//CT to HCC Conversion
+        private void btnHccConversion_Click(object sender, EventArgs e)// CT to HCC Conversion
         {
             try
             {
@@ -267,14 +266,14 @@ namespace RWDE
                 }
                 // Fetch data from the Batch table
                 string query = Constants.BatchTableQuery;
-                DataTable dataTable = dbHelper.FillTheGridQuery(query);//to fill the Gird using Query
+                DataTable dataTable = dbHelper.FillTheGridQuery(query);// to fill the Gird using Query
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnHccCsv_Click(object sender, EventArgs e)//Csv uploads
+        private void btnHccCsv_Click(object sender, EventArgs e)// Csv uploads
         {
             try
             {// Show the stored form (if any)
@@ -304,7 +303,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnXml_Click(object sender, EventArgs e)//Xml uploads
+        private void btnXml_Click(object sender, EventArgs e)// Xml uploads
         {
             // Show the stored form (if any)
             try
@@ -337,7 +336,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public void ShowOchinToHccScreenHcc()//function to navigate to next page
+        public void ShowOchinToHccScreenHcc()// function to navigate to next page
         {
             try
             {
@@ -355,7 +354,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public void ShowOchinToHccScreen()//function to navigate to next page       
+        public void ShowOchinToHccScreen()// function to navigate to next page       
         {
             try
             {
@@ -373,7 +372,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public void ShowOchinToHccScreenGenerate()////function to navigate to next page
+        public void ShowOchinToHccScreenGenerate()// // function to navigate to next page
         {
             try
             {
@@ -393,7 +392,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public void ShowOchinToHccScreenMain()//function to navigate to next page
+        public void ShowOchinToHccScreenMain()// function to navigate to next page
         {
             try
             {
@@ -404,7 +403,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void uploadCSVToOCHINToolStripMenuItem_Click(object sender, EventArgs e)//csv uploads 
+        private void uploadCSVToOCHINToolStripMenuItem_Click(object sender, EventArgs e)// csv uploads 
         {
             try
             {
@@ -431,7 +430,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void oCHINToHCCConversionToolStripMenuItem_Click(object sender, EventArgs e)//ochin to hcc conversion
+        private void oCHINToHCCConversionToolStripMenuItem_Click(object sender, EventArgs e)// ochin to hcc conversion
         {
             try
             {
@@ -453,7 +452,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void generateHCCXmlFilesToolStripMenuItem_Click(object sender, EventArgs e)//Xml Generator
+        private void generateHCCXmlFilesToolStripMenuItem_Click(object sender, EventArgs e)// Xml Generator
         {
             try
             {
@@ -475,7 +474,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void allBatchesToolStripMenuItem_Click(object sender, EventArgs e)//all batches updates
+        private void allBatchesToolStripMenuItem_Click(object sender, EventArgs e)// all batches updates
         {
             try
             {
@@ -493,7 +492,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void BtnochincCsv_Click(object sender, EventArgs e)//ochin csv uploads
+        private void BtnochincCsv_Click(object sender, EventArgs e)// ochin csv uploads
         {
             try
             {
@@ -511,7 +510,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void uploadOchinCSVToolStripMenuItem_Click(object sender, EventArgs e)//hcc csv uploads
+        private void uploadOchinCSVToolStripMenuItem_Click(object sender, EventArgs e)// hcc csv uploads
         {
             try
             {
@@ -532,7 +531,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void xMLFileUploadsToolStripMenuItem_Click(object sender, EventArgs e)//xml file insertion
+        private void xMLFileUploadsToolStripMenuItem_Click(object sender, EventArgs e)// xml file insertion
         {
             try
             {
@@ -550,7 +549,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void oCHINToolStripMenuItem_Click(object sender, EventArgs e)//Ochin to RWDE
+        private void oCHINToolStripMenuItem_Click(object sender, EventArgs e)// Ochin to RWDE
         {
             try
             {
@@ -572,7 +571,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void serviceReconciliationReportDotNotUseToolStripMenuItem1_Click(object sender, EventArgs e)//to display ServiceRecon Report
+        private void serviceReconciliationReportDotNotUseToolStripMenuItem1_Click(object sender, EventArgs e)// to display ServiceRecon Report
         {
             try
             {
@@ -590,7 +589,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void deceasedClientsReportToolStripMenuItem_Click(object sender, EventArgs e)//to display DeceasedClient Report
+        private void deceasedClientsReportToolStripMenuItem_Click(object sender, EventArgs e)// to display DeceasedClient Report
         {
             try
             {
@@ -608,7 +607,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void uploadDashboardToolStripMenuItem_Click(object sender, EventArgs e)//to display Monthly Report
+        private void uploadDashboardToolStripMenuItem_Click(object sender, EventArgs e)// to display Monthly Report
         {
             try
             {
@@ -627,7 +626,7 @@ namespace RWDE
             }
         }
 
-        private void hCCRECONToolStripMenuItem_Click(object sender, EventArgs e)//to display HCCRecon Report
+        private void hCCRECONToolStripMenuItem_Click(object sender, EventArgs e)// to display HCCRecon Report
         {
             try
             {
@@ -645,7 +644,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void clientDemographicsReportToolStripMenuItem_Click(object sender, EventArgs e)//to display ClientDemographics Report
+        private void clientDemographicsReportToolStripMenuItem_Click(object sender, EventArgs e)// to display ClientDemographics Report
         {
             try
             {
@@ -663,7 +662,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void errorLogReportToolStripMenuItem_Click(object sender, EventArgs e)//to display ErrorLog Report
+        private void errorLogReportToolStripMenuItem_Click(object sender, EventArgs e)// to display ErrorLog Report
         {
             try
             {
@@ -681,7 +680,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void downloadHCCErrorsToolStripMenuItem_Click(object sender, EventArgs e)//to display DownloadHcc Errors
+        private void downloadHCCErrorsToolStripMenuItem_Click(object sender, EventArgs e)// to display DownloadHcc Errors
         {
             try
             {
@@ -703,7 +702,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void cSVFILESToolStripMenuItem_Click(object sender, EventArgs e)//to display Csv Generation Screen
+        private void cSVFILESToolStripMenuItem_Click(object sender, EventArgs e)// to display Csv Generation Screen
         {
             try
             {
@@ -721,7 +720,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void manualUploadReportToolStripMenuItem_Click(object sender, EventArgs e)//to display ManualUpload Report
+        private void manualUploadReportToolStripMenuItem_Click(object sender, EventArgs e)// to display ManualUpload Report
         {
             try
             {
@@ -740,7 +739,7 @@ namespace RWDE
             }
         }
 
-        private void loadStratDate()//to set StartDate as First date of the Current Month
+        private void loadStratDate() // to set StartDate as First date of the Current Month
         {
             try
             {
@@ -753,19 +752,20 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private async void fillChartServices()//to fill the data in Pie Chart
+        private async void fillChartServices()// to fill the data in Pie Chart
         {
             try
             {
-                if (!Validatedate())//to Validate the Selected Dates  
+                if (!Validatedate())// to Validate the Selected Dates  
                 {
                     return;
                 }
                 DbHelper dbHelper = new DbHelper();
+                DateTime Today = DateTime.Now;
                 DateTime StartDate = dtpStartDate.Value.Date;
                 DateTime EndDate = dtpEndDate.Value.Date.AddDays(1).AddTicks(-1);
 
-                //to get the data of the PieChart
+                // to get the data of the PieChart
                 DataTable dt = dbHelper.GetPieChartData(StartDate, EndDate);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -795,13 +795,13 @@ namespace RWDE
 
                         if (columnName.Length > 25)  // Check if the column name is too long
                         {
-                            //columnName = InsertLineBreaks(columnName);//to split the header
+                            // columnName = InsertLineBreaks(columnName);// to split the header
                         }
-                        //Add an initial point with value 0
+                        // Add an initial point with value 0
                         var pointIndex = series.Points.AddXY(columnName, 0); // Add the point and get its index
                         var point = series.Points[pointIndex];             // Retrieve the actual DataPoint object
 
-                        //customizing the chart appearance (labels, colors,)
+                        // customizing the chart appearance (labels, colors,)
                         series.IsValueShownAsLabel = true;
                         series["PieLabelStyle"] = "Outside";
                         series["LabelDistance"] = "4";
@@ -827,7 +827,7 @@ namespace RWDE
             }
         }
 
-        //to insert line breaks into the header text
+        // to insert line breaks into the header text
         private string InsertLineBreaks(string header)
         {
             try
@@ -845,7 +845,7 @@ namespace RWDE
                 string thirdLine = "";
                 if (secondLine.Length > maxLength)
                 {
-                    thirdLine = InsertLineBreaks(secondLine); //to insert line breaks into the header text
+                    thirdLine = InsertLineBreaks(secondLine); // to insert line breaks into the header text
                 }
                 if (thirdLine.Length > 1)
                 {
@@ -862,7 +862,7 @@ namespace RWDE
                 return header;
             }
         }
-        private bool Validatedate()//to Validate the Selected Dates  
+        private bool Validatedate()// to Validate the Selected Dates  
         {
             try
             {
@@ -879,7 +879,7 @@ namespace RWDE
                     MessageBox.Show(Constants.SelectedFutureDate);
                     return false;
                 }
-                else if (EndDate <= StartDate)
+                else if (EndDate < StartDate)
                 {
                     MessageBox.Show(Constants.FromDateMustBeEarlierThanToDate);
                     return false;
@@ -900,9 +900,9 @@ namespace RWDE
         {
             try
             {
-                if (Validatedate())//to Validate the Selected Dates  
+                if (Validatedate())// to Validate the Selected Dates  
                 {
-                    fillChartServices();//to fill the data in Pie Chart
+                    fillChartServices();// to fill the data in Pie Chart
                 }
             }
             catch (Exception ex)
@@ -915,9 +915,9 @@ namespace RWDE
         {
             try
             {
-                if (Validatedate())//to Validate the Selected Dates  
+                if (Validatedate())// to Validate the Selected Dates  
                 {
-                    fillChartServices();//to fill the data in Pie Chart
+                    fillChartServices();// to fill the data in Pie Chart
                 }
             }
             catch (Exception ex)
@@ -925,6 +925,19 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void FrmMain_Resize(object sender, EventArgs e)
+        {
+            if (this.Width < 1200 || this.Height < 800) // Adjust based on minimum size
+            {
+                this.AutoScroll = true;
+                this.IsMdiContainer = true;
+            }
+            else
+            {
+                this.AutoScroll = false;
+                this.IsMdiContainer = true;
+            }
+        }
     }
 }
-          

@@ -3,13 +3,13 @@ using ClosedXML.Excel;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows.Forms; 
 
 namespace RWDE
 {
     public partial class ClientDemographicsReport : Form
     {
-        public ClientDemographicsReport()//initialize data
+        public ClientDemographicsReport()// initialize data
         {
             InitializeComponent();
             WindowState = FormWindowState.Maximized;
@@ -19,17 +19,17 @@ namespace RWDE
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             Cursor = Cursors.Hand;
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             Cursor = Cursors.Default;
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -43,7 +43,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to Child Controls
+                        // Assigning events to Child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -53,7 +53,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void BtnClose_Click(object sender, EventArgs e)//to close the form
+        private void BtnClose_Click(object sender, EventArgs e)// to close the form
         {
             try
             {
@@ -66,7 +66,8 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void BtnReport_Click(object sender, EventArgs e)//to get filtered data in the grid
+
+        private void BtnReport_Click(object sender, EventArgs e) // to get filtered data in the grid
         {
             try
             {
@@ -84,15 +85,15 @@ namespace RWDE
                     // Call the LoadData method to fetch the data
                     dataGridView.ForeColor = Color.Black;
 
-                    //to get details of clients applied for services
-                    DataTable result = dbHelper.LoadConfigurationfilter(startDate, endDate);//to get data in the grid
+                    // to get details of clients applied for services
+                    DataTable result = dbHelper.LoadConfigurationfilter(startDate, endDate);// to get data in the grid
                     if (dbHelper.ErrorOccurred)
                     {
                         MessageBox.Show(Constants.ErrorOccurred);
                         return;
                     }
 
-                    //to bind the data in DataGridView
+                    // to bind the data in DataGridView
                     dataGridView.DataSource = result;
                 }
             }
@@ -103,7 +104,7 @@ namespace RWDE
             }
         }
 
-        private void Clear_Click(object sender, EventArgs e)//to clear data in the grid
+        private void Clear_Click(object sender, EventArgs e)// to clear data in the grid
         {
             try
             {
@@ -123,7 +124,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void BtnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
+        private void BtnDownload_Click(object sender, EventArgs e)// to export the report to selected folder
         {
             try
             {

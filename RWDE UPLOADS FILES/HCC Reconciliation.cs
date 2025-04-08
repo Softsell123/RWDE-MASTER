@@ -11,7 +11,7 @@ namespace RWDE
 {
     public partial class HccReconciliation : Form
     {
-        public HccReconciliation()//initialize data
+        public HccReconciliation()// initialize data
         {
             InitializeComponent();
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
@@ -20,9 +20,9 @@ namespace RWDE
             dtpEndDate.Value = DateTime.Now;
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -33,7 +33,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -44,7 +44,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -59,7 +59,7 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
-                    //Assigning events to all child Controls
+                    // Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
@@ -71,7 +71,7 @@ namespace RWDE
         }
 
         // Define methods to fetch data from the database
-        private void btnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
+        private void btnDownload_Click(object sender, EventArgs e)// to export the report to selected folder
         {
             try {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
@@ -141,7 +141,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void btnClose_Click(object sender, EventArgs e)// to close the form
         {
             try
             {
@@ -154,7 +154,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnReport_Click(object sender, EventArgs e)//to get the filtered data in the grid
+        private void btnReport_Click(object sender, EventArgs e)// to get the filtered data in the grid
         {
             try
             {
@@ -185,7 +185,7 @@ namespace RWDE
                     switch (dtpDateFilter.SelectedItem.ToString())
                     {
                         case Constants.ServiceDateSp:
-                            filterType = Constants.ServiceDateSp;
+                            filterType = Constants.ServiceDate;
                             break;
                         case Constants.CreatedDatesp:
                             filterType = Constants.CreatedDate;
@@ -206,7 +206,7 @@ namespace RWDE
                     if (filterType == Constants.BatchId)
                     {
                         List<DataTable> allidtables;
-                        //to load the HCCRecon for Batch ID filter
+                        // to load the HCCRecon for Batch ID filter
                         allidtables = dbHelper.LoadDatafilterhccreconBatchid(startDate, endDate, batchids, filterType);
                         if (dbHelper.ErrorOccurred)
                         {
@@ -214,13 +214,13 @@ namespace RWDE
                             return;
                         }
 
-                        //to combine all the data for different BatchID
+                        // to combine all the data for different BatchID
                         result = dbHelper.CombineAllResults(allidtables);
                         
                     }
                     else
                     {
-                        //to load the HCCRecon for created and service date filter
+                        // to load the HCCRecon for created and service date filter
                         result = dbHelper.LoadDatafilterhccrecon(startDate, endDate, filterType);
                         if (dbHelper.ErrorOccurred)
                         {
@@ -255,7 +255,7 @@ namespace RWDE
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
             }
         }
-        private void btnClr_Click(object sender, EventArgs e)//clear the data in the grid
+        private void btnClr_Click(object sender, EventArgs e)// clear the data in the grid
         {
             try { 
                 // Reset DateTimePickers to one year back from the current date

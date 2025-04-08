@@ -11,27 +11,27 @@ namespace RWDE
     public sealed partial class ServiceReconciliationReport : Form
     {
         private readonly DbHelper dbHelper = new DbHelper();
-        public ServiceReconciliationReport()//initialization of data
+        public ServiceReconciliationReport()// initialization of data
         {
             InitializeComponent();
             DateTime startTime = DateTime.MinValue; // Or a specific default date
             DateTime endTime = DateTime.MaxValue; // Or a specific default date
                                                   // Fetch data from the database
-            DataTable clientIds = dbHelper.GetClientIDs(startTime, endTime);//to load data of clients
+            DataTable clientIds = dbHelper.GetClientIDs(startTime, endTime);// to load data of clients
             if (dbHelper.ErrorOccurred)
             {
                 MessageBox.Show(Constants.ErrorOccurred);
                 return;
             }
             
-            DataTable serviceIds = dbHelper.GetServiceIDs(startTime, endTime);//to load data of services
+            DataTable serviceIds = dbHelper.GetServiceIDs(startTime, endTime);// to load data of services
             if (dbHelper.ErrorOccurred)
             {
                 MessageBox.Show(Constants.ErrorOccurred);
                 return;
             }
 
-            DataTable hccServices = dbHelper.GetHccServices();//to load data of services
+            DataTable hccServices = dbHelper.GetHccServices();// to load data of services
             if (dbHelper.ErrorOccurred)
             {
                 MessageBox.Show(Constants.ErrorOccurred);
@@ -54,9 +54,9 @@ namespace RWDE
             MaximizedBounds = Screen.FromHandle(Handle).WorkingArea;
             WindowState = FormWindowState.Maximized;
             txtBatchID.Text = "";
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -67,7 +67,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -78,7 +78,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -93,7 +93,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to all child Controls
+                        // Assigning events to all child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -103,7 +103,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void DisplayHeadersOnly()//to display the empty GridView
+        private void DisplayHeadersOnly()// to display the empty GridView
         {
             try
             {
@@ -134,7 +134,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnReport_Click(object sender, EventArgs e)//to display the data as per the given inputs
+        private void btnReport_Click(object sender, EventArgs e)// to display the data as per the given inputs
         {
             try
             {
@@ -150,7 +150,7 @@ namespace RWDE
                 }
 
                 // Create instance of DBHelper
-                //DbHelper dbHelper = new DbHelper();
+                // DbHelper dbHelper = new DbHelper();
                 dataGridView.Columns.Clear();
                 dataGridView.CellFormatting += new DataGridViewCellFormattingEventHandler(dataGridView_CellFormatting);
 
@@ -178,7 +178,7 @@ namespace RWDE
                 else
                 {
                     MessageBox.Show(Constants.PleaseEnterAValidBatchIdOrSelectAFilterType, Constants.InputError);
-                    //to display the empty GridView
+                    // to display the empty GridView
                     DisplayHeadersOnly();
                     return;
                 }
@@ -193,8 +193,8 @@ namespace RWDE
                     batchids = txtBatchID.Text.Split(',').Select(int.Parse).Distinct().ToArray();
                     if (batchids.Length > 0)
                     {
-                        //to display the data based on BatchId
-                        result = dbHelper.LoadDatafilterServiceReconbatchid(batchids); //
+                        // to display the data based on BatchId
+                        result = dbHelper.LoadDatafilterServiceReconbatchid(batchids); // 
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -202,7 +202,7 @@ namespace RWDE
                         }
                         if (result.Rows.Count == 0)
                         {
-                            //to display the empty GridView
+                            // to display the empty GridView
                             DisplayHeadersOnly();
                             return;
                         }
@@ -210,14 +210,14 @@ namespace RWDE
                     else
                     {
                         MessageBox.Show(Constants.PleaseEnterValidBatchIds, Constants.InvalidInput);
-                        //to display the empty GridView
+                        // to display the empty GridView
                         DisplayHeadersOnly();
                         return;
                     }
                 }
                 else
                 {
-                    //to load the service-recon for created and service date filter
+                    // to load the service-recon for created and service date filter
                     result = dbHelper.LoadDatafilterServiceRecon(startDate, endDate, filterType);
                     if (dbHelper.ErrorOccurred)
                     {
@@ -246,12 +246,12 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                //to display the empty GridView
+                // to display the empty GridView
                 DisplayHeadersOnly();
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
             }
         }
-        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)//to set all Cell's text Color as Black
+        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)// to set all Cell's text Color as Black
         {
             try
             {
@@ -343,7 +343,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void btnClose_Click(object sender, EventArgs e)// to close the form
         {
             try
             {
@@ -356,7 +356,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClr_Click(object sender, EventArgs e)//to clear data and filter date to default one
+        private void btnClr_Click(object sender, EventArgs e)// to clear data and filter date to default one
         {
             try
             {

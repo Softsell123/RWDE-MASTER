@@ -9,7 +9,7 @@ namespace RWDE
 {
     public partial class FrmManualUpload : Form
     {
-        public FrmManualUpload()//initialize data
+        public FrmManualUpload()// initialize data
         {
             InitializeComponent();
             WindowState = FormWindowState.Maximized;
@@ -19,9 +19,9 @@ namespace RWDE
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -32,7 +32,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -43,7 +43,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -58,7 +58,7 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
-                    //Assigning events to all child Controls
+                    // Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
@@ -68,7 +68,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void btnClose_Click(object sender, EventArgs e)// to close the form
         {
             try {
                 // Close the current form (dispose it)
@@ -80,7 +80,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnReport_Click(object sender, EventArgs e)//to get filtered data in the grid
+        private void btnReport_Click(object sender, EventArgs e)// to get filtered data in the grid
         {
             try
             {
@@ -98,7 +98,7 @@ namespace RWDE
                 dataGridView.ForeColor = Color.Black;
 
                 // to get details of clients applied for services
-                DataTable result = dbHelper.LoadManualUploadReport(startDate, endDate);//to get data in the grid
+                DataTable result = dbHelper.LoadManualUploadReport(startDate, endDate);// to get data in the grid
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -119,7 +119,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Clear_Click(object sender, EventArgs e)//to clear data in the grid
+        private void Clear_Click(object sender, EventArgs e)// to clear data in the grid
         {
             try 
             { 
@@ -139,7 +139,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
+        private void btnDownload_Click(object sender, EventArgs e)// to export the report to selected folder
         {
             try
             {

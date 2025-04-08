@@ -2,15 +2,15 @@
 {
     partial class CsvFileConversion
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CsvFileConversion));
@@ -35,9 +35,9 @@
             this.btnBrowse = new System.Windows.Forms.Button();
             this.lblCtCsvFiles = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // btnReport
-            // 
+            //
+            //btnReport
+            //
             this.btnReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnReport.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReport.ForeColor = System.Drawing.Color.Black;
@@ -49,9 +49,9 @@
             this.btnReport.Text = "Submit";
             this.btnReport.UseVisualStyleBackColor = false;
             this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
-            // 
-            // lblName
-            // 
+            //
+            //lblName
+            //
             this.lblName.AutoSize = true;
             this.lblName.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.ForeColor = System.Drawing.Color.Black;
@@ -60,9 +60,9 @@
             this.lblName.Size = new System.Drawing.Size(115, 35);
             this.lblName.TabIndex = 8;
             this.lblName.Text = "CSV File:";
-            // 
-            // txtPath
-            // 
+            //
+            //txtPath
+            //
             this.txtPath.BackColor = System.Drawing.Color.White;
             this.txtPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPath.Location = new System.Drawing.Point(448, 112);
@@ -71,9 +71,9 @@
             this.txtPath.ReadOnly = true;
             this.txtPath.Size = new System.Drawing.Size(594, 40);
             this.txtPath.TabIndex = 9;
-            // 
-            // btnBrowse
-            // 
+            //
+            //btnBrowse
+            //
             this.btnBrowse.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBrowse.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowse.Image")));
             this.btnBrowse.ImageAlign = System.Drawing.ContentAlignment.TopRight;
@@ -87,9 +87,9 @@
             this.btnBrowse.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
-            // 
-            // lblCtCsvFiles
-            // 
+            //
+            //lblCtCsvFiles
+            //
             this.lblCtCsvFiles.AutoSize = true;
             this.lblCtCsvFiles.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCtCsvFiles.ForeColor = System.Drawing.Color.Black;
@@ -99,9 +99,9 @@
             this.lblCtCsvFiles.Size = new System.Drawing.Size(161, 35);
             this.lblCtCsvFiles.TabIndex = 11;
             this.lblCtCsvFiles.Text = "CT CSV Files:";
-            // 
-            // CsvFile_Conversion
-            // 
+            //
+            //CsvFile_Conversion
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;

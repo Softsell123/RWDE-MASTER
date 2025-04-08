@@ -10,23 +10,31 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using ComboBox = System.Windows.Forms.ComboBox;
 using ScrollBar = System.Windows.Forms.ScrollBar;
+using System.Text;
+using System.Runtime.InteropServices;
 
 namespace RWDE
 {
     public partial class FrmGeneratorXml : Form
     {
         private readonly DbHelper dbHelper;
+        //// Import Mouse Click Functions
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, IntPtr dwExtraInfo);
+
+        private const uint MOUSEEVENTFLEFTDOWN = 0x02;
+        private const uint MOUSEEVENTFLEFTUP = 0x04;
         public FrmGeneratorXml()
         {
             InitializeComponent();
             dbHelper = new DbHelper();
-            LoadBatchStatus();//load data
-            PopulateDataGridView();//Handle the Grid View 
+            LoadBatchStatus();// load data
+            PopulateDataGridView();// Handle the Grid View 
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
             dataGridView.CellFormatting += dataGridView_CellFormatting;
             dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;
-            //Handle BatchType Values
+            // Handle BatchType Values
             List<string> batchTypes = dbHelper.GetAllBatchTypesHcc();
             if (dbHelper.ErrorOccurred)
             {
@@ -34,13 +42,13 @@ namespace RWDE
                 return;
             }
 
-            dtpStartDate.Value = DateTime.Now.AddYears(-1);//
+            dtpStartDate.Value = DateTime.Now.AddYears(-1);// 
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
             cbBatchType.Items.Clear();
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
             // Clear existing items
             foreach (string batchType in batchTypes)
             {
@@ -68,7 +76,7 @@ namespace RWDE
                 txtPath.Clear();  // Clear the text box if the file doesn't exist
             }
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -79,7 +87,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -90,7 +98,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void dataGridView_Scroll(object sender, ScrollEventArgs e)//Changing Cursor as Hand on hover
+        private void dataGridView_Scroll(object sender, ScrollEventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -101,7 +109,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -115,7 +123,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to child Controls
+                        // Assigning events to child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -125,24 +133,24 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void LoadBatchStatus()//load data
+        private void LoadBatchStatus()// load data
         {
             try
             {
-                PopulateDataGridViewstartedstatus();//populate data in Grid
+                PopulateDataGridViewstartedstatus();// populate data in Grid
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private void PopulateDataGridViewstartedstatus()//populate data
+        private void PopulateDataGridViewstartedstatus()// populate data
         {
             try
             {
                 string query = Constants.GenerationStarted;
                 
-                DataTable dataTable = dbHelper.FillTheGrid(query);//to fill the Gird 
+                DataTable dataTable = dbHelper.FillTheGrid(query);// to fill the Gird 
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -177,7 +185,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)//Incresing of Width of Grid
+        private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)// Incresing of Width of Grid
         {
             try
             {
@@ -238,12 +246,12 @@ namespace RWDE
                 }
             }
         }
-        public void PopulateDataGridView(DataTable dt)//Populating GRID from table
+        public void PopulateDataGridView(DataTable dt)// Populating GRID from table
         {
             try
             {
                 string query = Constants.GenerationOchin;
-                DataTable dataTable = dbHelper.FillTheGrid(query);//to fill the Gird 
+                DataTable dataTable = dbHelper.FillTheGrid(query);// to fill the Gird 
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -282,7 +290,8 @@ namespace RWDE
                 }
             }
         }
-        private async void btnGeneration_Click(object sender, EventArgs e)//handle the Generation Process
+
+        private async void btnGeneration_Click(object sender, EventArgs e)// handle the Generation Process
         {
             try
             {
@@ -291,6 +300,7 @@ namespace RWDE
                     MessageBox.Show(Constants.PleaseselectarowwithaBatchIDtoproceed, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method early if no row is selected
                 }
+
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
                 int selectedRowCount = dataGridView.SelectedRows.Count;
@@ -299,33 +309,38 @@ namespace RWDE
                     MessageBox.Show(Constants.Pleaseselectonlyonebatchatatime, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return; // Exit the method early
                 }
+
                 if (selectedBatchId == 0)
                 {
                     MessageBox.Show(Constants.PleaseselectabatchtogenerateXml, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+
                 if (txtPath.Text == "")
                 {
                     MessageBox.Show(Constants.Pleaseselectthefolder, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+
                 btnClose.Text = Constants.Abort;
                 btnGeneration.Enabled = false;
-                //Calling Client Xml Method
+                btnNext.Enabled = false;
 
+                // Calling Client Xml Method
                 string fileName = dataGridView.Rows[selectedRowIndex].Cells[Constants.SmallFileName].Value.ToString();
 
                 if (fileName.Contains(Constants.Client))
                 {
-                    await GenerateXmlForClientsAsync(selectedBatchId);//generate xml clients
+                    await GenerateXmlForClientsAsync(selectedBatchId); // generate xml clients
                 }
 
                 if (fileName.Contains(Constants.Service))
                 {
-                    await GenerateXmlForServicesAsync(selectedBatchId);//generate xml services
-
+                    await GenerateXmlForServicesAsync(selectedBatchId); // generate xml services
                 }
+
                 btnClose.Text = Constants.Close;
                 btnGeneration.Enabled = true;
+                btnNext.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -340,7 +355,8 @@ namespace RWDE
                 }
             }
         }
-        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)//Description of Status values
+
+        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) // Description of Status values
         {
             try
             {
@@ -348,7 +364,7 @@ namespace RWDE
                 {
                     string statusValue = e.Value?.ToString();
 
-                    //to get value of the ListId
+                    // to get value of the ListId
                     var result = dbHelper.FormatStatus(statusValue);
                     if (dbHelper.ErrorOccurred)
                     {
@@ -368,12 +384,12 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public async Task GenerateXmlForServicesAsync(int batchId)//Handle the Service Xml File Process
+        public async Task GenerateXmlForServicesAsync(int batchId)// Handle the Service Xml File Process
         {
             try
             {
-                //progressClient.Value = 0;
-                var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationservices(batchId);//to check whether the generation completed or not
+                // progressClient.Value = 0;
+                var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationservices(batchId);// to check whether the generation completed or not
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -392,7 +408,7 @@ namespace RWDE
                     txtProgressBar.Text = Constants.ZeroPercent;
                     txtClient.Text = Constants.ZeroPercent;
                     txtBatchid.Text = null;
-                    txtUploadStarted.Text = null;//
+                    txtUploadStarted.Text = null;// 
                     txtUploadEnded.Text = null;
                     txtTotaltime.Text = null;
                     return;
@@ -409,7 +425,7 @@ namespace RWDE
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
 
                 
-                //Getting total rows from particular table
+                // Getting total rows from particular table
                 int totalRows = dbHelper.GetTotalRowsForBatch(selectedBatchId);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -435,8 +451,8 @@ namespace RWDE
                     return;
                 }
 
-                //calling XmlStructure Function
-                List<Dictionary<string, string>> xmlStructure = dbHelper.GetXmlStructure();//get xml Structure
+                // calling XmlStructure Function
+                List<Dictionary<string, string>> xmlStructure = dbHelper.GetXmlStructure();// get xml Structure
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -451,8 +467,8 @@ namespace RWDE
                     return;
                 }
 
-                //calling Service xml file generation Method
-                XElement xml = await GenerateXmlService(data, xmlStructure);//generate services Xml
+                // calling Service xml file generation Method
+                XElement xml = await GenerateXmlService(data, xmlStructure);// generate services Xml
                 string folderPath = txtPath.Text;
                 Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
                 string baseFileName = $"{Constants.ServiceXmlHeader}{DateTime.Now.ToString(Constants.DdMMyyyy)}{Constants.XmlFooter}";
@@ -481,10 +497,10 @@ namespace RWDE
                 txtUploadEnded.Text = eTime;
                 txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
                 btnClose.Text = Constants.Close;
-                //update services status
+                // update services status
                 UpdateStatusColumnServices(selectedBatchId, Constants.Hccxmlstatusf, startTime, endTime);
-                //Populating GRID from table
-                PopulateDataGridView(new DataTable());//populate data
+                // Populating GRID from table
+                PopulateDataGridView(new DataTable());// populate data
                 dbHelper.Log(Constants.GeneratetoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -505,23 +521,23 @@ namespace RWDE
                 }
             }
         }
-        private async Task<XElement> GenerateXmlService(List<Dictionary<string, string>> data, List<Dictionary<string, string>> xmlStructure)//Service Xml Generation
+        private async Task<XElement> GenerateXmlService(List<Dictionary<string, string>> data, List<Dictionary<string, string>> xmlStructure)// Service Xml Generation
         {
             try
             {
                 string rootTag = XmlConstants.TagNumberFive;
                 XElement root = CreateRootElement(xmlStructure, rootTag);
 
-                //Create a Source system for client and services xml file
+                // Create a Source system for client and services xml file
                 XElement sourceSystemElement = CreateSourceSystemElement(xmlStructure, XmlConstants.TagNumberTen);
 
-                //Adding the Source System Element for Client and Service Xml File
+                // Adding the Source System Element for Client and Service Xml File
                 AddDynamicElements(sourceSystemElement, xmlStructure, rootTag);
 
-                //Adding the Client Profile Tag for Client File
+                // Adding the Client Profile Tag for Client File
                 string contractServiceTagName = GetContractServiceTagName(xmlStructure, XmlConstants.ContractServicesTagNumber);
 
-                //Adding the Client Profile Title Attribute For Client file
+                // Adding the Client Profile Title Attribute For Client file
                 string contractServicesTitle = GetContractServicesTitle(xmlStructure, XmlConstants.ContractServicesTagNumber);
                 int totalRows = data.Count;
                 int processedRows = 0;
@@ -529,7 +545,7 @@ namespace RWDE
                 foreach (var dataRow in data)
                 {
                     processedRows++;
-                    await Updateprogress(processedRows, totalRows);//progress of lines inserted
+                    await Updateprogress(processedRows, totalRows);// progress of lines inserted
 
                     XElement contractServicesElement = new XElement(contractServiceTagName);
 
@@ -562,7 +578,7 @@ namespace RWDE
 
                     sourceSystemElement.Add(contractServicesElement);
 
-                    await Updateprogress(processedRows, totalRows);//progress of lines inserted
+                    await Updateprogress(processedRows, totalRows);// progress of lines inserted
                     progressServices.Minimum = 0;
                     progressServices.Maximum = totalRows;
 
@@ -584,7 +600,7 @@ namespace RWDE
                 throw;
             }
         }
-        private async Task<XElement> GenerateXmlClient(List<Dictionary<string, string>> data, List<Dictionary<string, string>> xmlStructure, int batchId)//Client Xml Generation
+        private async Task<XElement> GenerateXmlClient(List<Dictionary<string, string>> data, List<Dictionary<string, string>> xmlStructure, int batchId)// Client Xml Generation
         {
             try
             {
@@ -595,7 +611,7 @@ namespace RWDE
                 // Create the source system element
                 XElement sourceSystemElement = CreateSourceSystemElement(xmlStructure, XmlConstants.TagNumberTen);
 
-                //Adding the Source System Element for Client and Service Xml File
+                // Adding the Source System Element for Client and Service Xml File
                 AddDynamicElements(sourceSystemElement, xmlStructure, rootTag);
 
                 // Get the tag name and title for client profile
@@ -606,14 +622,14 @@ namespace RWDE
 
                 int totalRows = data.Count;
                 int processedRows = 0;
-                await Updateprogressclient(processedRows, totalRows);//progress of lines inserted
+                await Updateprogressclient(processedRows, totalRows);// progress of lines inserted
                 progressClient.Minimum = 0;
                 progressClient.Maximum = totalRows;
 
                 var tasks = data.Select(async (dataRow, index) =>
                 {
                     processedRows++;
-                    await Updateprogressclient(processedRows, totalRows);//progress of lines inserted
+                    await Updateprogressclient(processedRows, totalRows);// progress of lines inserted
                     XElement clientProfileElement = new XElement(contractServiceTagName);
 
                     // Set title attribute if present
@@ -682,14 +698,14 @@ namespace RWDE
                                 }
                                 else if (parsedTagNumber >= 605 && parsedTagNumber <= 1775)
                                 {
-                                    //Handle the MedicalValues
-                                    //this method is an exception for passing parameters as reference variable
+                                    // Handle the MedicalValues
+                                    // this method is an exception for passing parameters as reference variable
                                     HandleMedicalValues(parsedTagNumber, dataRow, batchId, xmlStructure, clientProfileElement, ref medical, ref medicalChild, ref medicalSubChild, tagName, fieldName, presetValue, defaultValue, empty, hasChild);
                                 }
                                 else if (parsedTagNumber > 1775 && parsedTagNumber <= 1925)
                                 {
-                                    //Handle the living situation Values
-                                    //this method is an exception for passing parameters as reference variable
+                                    // Handle the living situation Values
+                                    // this method is an exception for passing parameters as reference variable
                                     HandleLivingValues(parsedTagNumber, xmlStructure, clientProfileElement, ref live, ref livingChild, ref subChild, tagName, dataRow, fieldName, presetValue, defaultValue, empty, hasChild);
                                 }
 
@@ -716,7 +732,7 @@ namespace RWDE
                     // Add the client profile element to the source system element
                     sourceSystemElement.Add(clientProfileElement);
 
-                    //Making values as Array totalRows to synchronous the execution
+                    // Making values as Array totalRows to synchronous the execution
                 }).ToArray();
                 await Task.WhenAll(tasks);
 
@@ -788,8 +804,8 @@ namespace RWDE
                 }
             }
         }
-        //  method to handle medical values
-        //this method is an exception for passing parameters as reference variable
+        // method to handle medical values
+        // this method is an exception for passing parameters as reference variable
         private void HandleMedicalValues(int parsedTagNumber, Dictionary<string, string> dataRow, int batchId, List<Dictionary<string, string>> xmlStructure, XElement clientProfileElement, ref XElement medical, ref XElement medicalChild, ref XElement medicalSubChild, string tagName, string fieldName, string presetValue, string defaultValue, bool empty, bool hasChild)
         {
             try
@@ -832,17 +848,17 @@ namespace RWDE
                 if (parsedTagNumber == 710 || parsedTagNumber == 825 || parsedTagNumber == 940 || parsedTagNumber == 1010)
                 {
                     string clientId = dataRow.ContainsKey(Constants.Clntid) ? dataRow[Constants.Clntid] : null;
-                    //This method to handle Medical child values
+                    // This method to handle Medical child values
                     HandleMedicalChildValues(parsedTagNumber, clientId, batchId, xmlStructure, medicalChild, medicalSubChild, dataRow);
                 }
                 else if (!empty && !hasChild && !(parsedTagNumber >= 1655 && parsedTagNumber <= 1660) && !(parsedTagNumber >= 1510 && parsedTagNumber <= 1540) && !(parsedTagNumber > 710 && parsedTagNumber <= 810) && !(parsedTagNumber > 825 && parsedTagNumber <= 850) && !(parsedTagNumber > 940 && parsedTagNumber <= 960) && !(parsedTagNumber > 1010 && parsedTagNumber <= 1050))
                 {
-                    //This method to handle Medical Values
+                    // This method to handle Medical Values
                     AddXmlElement(dataRow, fieldName, presetValue, defaultValue, tagName, medicalSubChild);
                 }
                 else if ((parsedTagNumber >= 1510 && parsedTagNumber <= 1540) || (parsedTagNumber >= 1655 && parsedTagNumber <= 1660))
                 {
-                    //This method to Add Medical Values
+                    // This method to Add Medical Values
                     AddXmlElement(dataRow, fieldName, presetValue, defaultValue, tagName, medicalChild);
                 }
                 if (parsedTagNumber == 1700)
@@ -867,7 +883,7 @@ namespace RWDE
             }
         }
         // method to handle living values
-        //this method is an exception for passing parameters as reference variable
+        // this method is an exception for passing parameters as reference variable
         private void HandleLivingValues(int parsedTagNumber, List<Dictionary<string, string>> xmlStructure, XElement clientProfileElement, ref XElement live, ref XElement livingChild, ref XElement subChild, string tagName, Dictionary<string, string> dataRow, string fieldName, string presetValue, string defaultValue, bool empty, bool hasChild)
         {
             try
@@ -939,7 +955,7 @@ namespace RWDE
                 }
             }
         }
-        //method to handle Medical child values
+        // method to handle Medical child values
         private void HandleMedicalChildValues(int parsedTagNumber, string clientId, int batchId, List<Dictionary<string, string>> xmlStructure, XElement medicalChild, XElement medicalSubChild, Dictionary<string, string> dataRow)
         {
             try
@@ -954,7 +970,7 @@ namespace RWDE
                 switch (parsedTagNumber)
                 {
                     case 710:
-                        fetchMethod = dbHelper.FetchSubClientValuesFromMedC4;//fetch particular client Medical values
+                        fetchMethod = dbHelper.FetchSubClientValuesFromMedC4;// fetch particular client Medical values
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -964,7 +980,7 @@ namespace RWDE
                         max = 735;
                         break;
                     case 825:
-                        fetchMethod = dbHelper.FetchSubClientValuesFromMedVl;//fetch particular client Medical values
+                        fetchMethod = dbHelper.FetchSubClientValuesFromMedVl;// fetch particular client Medical values
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -974,7 +990,7 @@ namespace RWDE
                         max = 850;
                         break;
                     case 940:
-                        fetchMethod = dbHelper.FetchSubClientValuesFromHivTest;//fetch particular client HIV test values
+                        fetchMethod = dbHelper.FetchSubClientValuesFromHivTest;// fetch particular client HIV test values
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -984,7 +1000,7 @@ namespace RWDE
                         max = 960;
                         break;
                     case 1010:
-                        fetchMethod = dbHelper.FetchSubClientValuesFromInsur;//fetch particular client Insurance values
+                        fetchMethod = dbHelper.FetchSubClientValuesFromInsur;// fetch particular client Insurance values
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -1015,7 +1031,7 @@ namespace RWDE
                             if (!bool.Parse(subStructureRow[XmlConstants.Empty]) && !bool.Parse(subStructureRow[XmlConstants.HasChild]))
                             {
                                 XElement subElement = new XElement(subTagName);
-                                //string value = Convert.ToInt32(subDataRow.ContainsKey(subFieldName) && !string.IsNullOrEmpty(subDataRow[subFieldName]) ? subDataRow[subFieldName] : !string.IsNullOrEmpty(subPresetValue) ? subPresetValue : subDefaultValue).ToString();
+                                // string value = Convert.ToInt32(subDataRow.ContainsKey(subFieldName) && !string.IsNullOrEmpty(subDataRow[subFieldName]) ? subDataRow[subFieldName] : !string.IsNullOrEmpty(subPresetValue) ? subPresetValue : subDefaultValue).ToString();
 
                                 string value = subDataRow.ContainsKey(subFieldName) && !string.IsNullOrEmpty(subDataRow[subFieldName]) ? subDataRow[subFieldName] : !string.IsNullOrEmpty(subPresetValue) ? subPresetValue : subDefaultValue;
 
@@ -1096,7 +1112,7 @@ namespace RWDE
                 }
             }
         }
-        //create the rootElemt of client and serives xml file
+        // create the rootElemt of client and serives xml file
         public XElement CreateRootElement(List<Dictionary<string, string>> xmlStructure, string rootTag)
         {
             try
@@ -1118,7 +1134,7 @@ namespace RWDE
                 throw;
             }
         }
-        //Create a Source system for client and services xml file
+        // Create a Source system for client and services xml file
         public XElement CreateSourceSystemElement(List<Dictionary<string, string>> xmlStructure, string tagNumber)
         {
             try
@@ -1139,7 +1155,7 @@ namespace RWDE
                 throw;
             }
         }
-        //Adding the Source System Element for Client and Service Xml File
+        // Adding the Source System Element for Client and Service Xml File
         public void AddDynamicElements(XElement parentElement, List<Dictionary<string, string>> xmlStructure, string rootTag)
         {
             try
@@ -1167,7 +1183,7 @@ namespace RWDE
                 }
             }
         }
-        public static string GetContractServiceTagName(List<Dictionary<string, string>> xmlStructure, string tagNumber) //Adding the Client Profile Tag for Client File
+        public static string GetContractServiceTagName(List<Dictionary<string, string>> xmlStructure, string tagNumber) // Adding the Client Profile Tag for Client File
         {
             try
             {
@@ -1180,7 +1196,7 @@ namespace RWDE
                 throw;
             }
         }
-        public static string GetContractServicesTitle(List<Dictionary<string, string>> xmlStructure, string tagNumber) //Adding the Client Profile Title Attribute For Client file
+        public static string GetContractServicesTitle(List<Dictionary<string, string>> xmlStructure, string tagNumber) // Adding the Client Profile Title Attribute For Client file
         {
             try
             {
@@ -1212,7 +1228,8 @@ namespace RWDE
                 return (XmlConstants.TagNumber, XmlConstants.TagNumber, XmlConstants.TagNumber, XmlConstants.TagNumber, XmlConstants.TagNumber);
             }
         }
-        private async Task Updateprogress(int insertedRows, int totalRows)// Handle the Progress Values
+
+        private async Task Updateprogress(int insertedRows, int totalRows) // Handle the Progress Values
         {
             try
             {
@@ -1229,12 +1246,13 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void PopulateDataGridView()//Handle the Grid View 
+
+        private void PopulateDataGridView() // Handle the Grid View
         {
             try
             {
                 string query = Constants.Generation;
-                DataTable dataTable = dbHelper.FillTheGrid(query);//to fill the Gird 
+                DataTable dataTable = dbHelper.FillTheGrid(query); // to fill the Gird
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1259,14 +1277,14 @@ namespace RWDE
                 dataGridView.Columns.Add(Constants.Status, Constants.Status);
                 dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
                 dataGridView.DataSource = dataTable;
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private void AddDateTime(string name, string value, DataGridView dataGridViews)//Adding the Date Format to the Column
+
+        private void AddDateTime(string name, string value, DataGridView dataGridViews) // Adding the Date Format to the Column
         {
             try
             {
@@ -1285,7 +1303,7 @@ namespace RWDE
             }
         }
 
-        private void UpdateStatusColumn(int batchId, int listId, DateTime startTime, DateTime endTime)//update status
+        private void UpdateStatusColumn(int batchId, int listId, DateTime startTime, DateTime endTime)// update status
         {
             try
             {
@@ -1295,7 +1313,7 @@ namespace RWDE
                     {
                         row.Cells[Constants.Status].Value = listId; // Store the ListID as the status value
 
-                        //to update status in batch table
+                        // to update status in batch table
                         dbHelper.UpdateStatus(batchId,listId, startTime, endTime);
                         if (dbHelper.ErrorOccurred)
                         {
@@ -1315,7 +1333,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void UpdateStatusColumnServices(int batchId, int listId, DateTime startTime, DateTime endTime)//update services status
+        private void UpdateStatusColumnServices(int batchId, int listId, DateTime startTime, DateTime endTime)// update services status
         {
             try
             {
@@ -1325,7 +1343,7 @@ namespace RWDE
                     {
                         row.Cells[Constants.Status].Value = listId; // Store the ListID as the status value
 
-                        //to update the status of service file
+                        // to update the status of service file
                         dbHelper.UpdateServiceStatus(batchId, listId, startTime, endTime);
                         if (dbHelper.ErrorOccurred)
                         {
@@ -1345,7 +1363,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public FrmGeneratorXml(string message, int displayDuration)//Automation process
+        public FrmGeneratorXml(string message, int displayDuration)// Automation process
         {
             // Set up form properties
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -1393,12 +1411,12 @@ namespace RWDE
             set { base.Text = value; }
         }
 
-        public async Task GenerateXmlForClientsAsync(int batchId)//Clients xml generation
+        public async Task GenerateXmlForClientsAsync(int batchId)// Clients xml generation
         {
             try
             {
                 // progressServices.Value = 0;
-                var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationlients(batchId);//to check whether the generation completed or not
+                var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationlients(batchId);// to check whether the generation completed or not
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1428,7 +1446,7 @@ namespace RWDE
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
 
-                int totalRows = dbHelper.GetTotalRowsForBatchclient(batchId);//Getting total rows from particular table
+                int totalRows = dbHelper.GetTotalRowsForBatchclient(batchId);// Getting total rows from particular table
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1441,7 +1459,7 @@ namespace RWDE
                 string time = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                 txtUploadStarted.Text = time;
 
-                //calling Store Procedure Function
+                // calling Store Procedure Function
                 List<Dictionary<string, string>> data = dbHelper.GetClients(selectedBatchId);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -1449,7 +1467,7 @@ namespace RWDE
                     return;
                 }
 
-                //calling XmlStructure Function
+                // calling XmlStructure Function
                 List<Dictionary<string, string>> xmlStructure = dbHelper.GetClientFileXmlStructure();
                 if (dbHelper.ErrorOccurred)
                 {
@@ -1457,7 +1475,7 @@ namespace RWDE
                     return;
                 }
 
-                //calling Service xml file generation Method               
+                // calling Service xml file generation Method               
                 XElement xml = await GenerateXmlClient(data, xmlStructure, selectedBatchId);
 
                 // Save the XML to a file with automatic numbering if the file exists
@@ -1492,10 +1510,10 @@ namespace RWDE
                 txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
                 DateTime endtime = DateTime.Now;
 
-                //update status
+                // update status
                 UpdateStatusColumn(selectedBatchId, Constants.Hccxmlstatusf, startTime, endtime);
 
-                //Handle the Grid View 
+                // Handle the Grid View 
                 PopulateDataGridView();
             }
             catch (Exception ex)
@@ -1503,7 +1521,7 @@ namespace RWDE
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private async Task Updateprogressclient(int insertedRows, int totalRows)//Progress of rows Insertion
+        private async Task Updateprogressclient(int insertedRows, int totalRows)// Progress of rows Insertion
         {
             try
             {
@@ -1520,7 +1538,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClose_Click(object sender, EventArgs e)//close main form
+        private void btnClose_Click(object sender, EventArgs e)// close main form
         {
             try
             {
@@ -1561,7 +1579,7 @@ namespace RWDE
                         // Delete XML files in the specified directory
                         DeleteXmlFiles(selectedFolderPath);
 
-                        //Show a message box indicating successful abort
+                        // Show a message box indicating successful abort
                         MessageBox.Show(Constants.AbortedSuccessfully, Constants.GenerateXml);
                         Application.Restart();
                     }
@@ -1578,7 +1596,7 @@ namespace RWDE
             }
         }
 
-        private void DeleteXmlFiles(string directoryPath) //Deleting the xml after abort
+        private void DeleteXmlFiles(string directoryPath) // Deleting the xml after abort
         {
             try
             {
@@ -1602,7 +1620,7 @@ namespace RWDE
             }
         }
 
-        private void btnBrowse_Click(object sender, EventArgs e)//selecting path to save xml file
+        private void btnBrowse_Click(object sender, EventArgs e)// selecting path to save xml file
         {
             try
             {
@@ -1629,7 +1647,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnSubmit_Click(object sender, EventArgs e)//Handle the filtered data
+        private void btnSubmit_Click(object sender, EventArgs e)// Handle the filtered data
         {
             try
             {
@@ -1670,13 +1688,13 @@ namespace RWDE
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void bnClear_Click(object sender, EventArgs e)//Handle to clear the filter datas
+        private void bnClear_Click(object sender, EventArgs e)// Handle to clear the filter datas
         {
             try
             {
                 cbBatchType.Items.Clear();
 
-                //Handle the Grid View 
+                // Handle the Grid View 
                 PopulateDataGridView();
                 dtpEndDate.CustomFormat = Constants.Space;
                 dtpEndDate.Format = DateTimePickerFormat.Custom;
@@ -1684,7 +1702,7 @@ namespace RWDE
                 dtpStartDate.CustomFormat = Constants.Space;
                 dtpStartDate.Format = DateTimePickerFormat.Custom;
 
-                //get all batches type except Client Track
+                // get all batches type except Client Track
                 List<string> batchTypes = dbHelper.GetAllBatchTypesHcc();
                 if (dbHelper.ErrorOccurred)
                 {
@@ -1708,7 +1726,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void dtpStartDate_ValueChanged(object sender, EventArgs e)//format date
+        private void dtpStartDate_ValueChanged(object sender, EventArgs e)// format date
         {
             try
             {
@@ -1721,7 +1739,7 @@ namespace RWDE
             }
         }
 
-        private void dtpEndDate_ValueChanged(object sender, EventArgs e)//format date
+        private void dtpEndDate_ValueChanged(object sender, EventArgs e)// format date
         {
             try
             {
@@ -1734,7 +1752,7 @@ namespace RWDE
             }
         }
 
-        private void btnNext_Click(object sender, EventArgs e)//navigate to next page
+        private void btnNext_Click(object sender, EventArgs e)// navigate to next page
         {
             try
             {
@@ -1742,7 +1760,7 @@ namespace RWDE
 
                 if (mainForm != null)
                 {
-                    mainForm.ShowOchinToHccScreenMain();//to restart the Application
+                    mainForm.ShowOchinToHccScreenMain();// to restart the Application
                 }
             }
             catch (Exception ex)
@@ -1755,8 +1773,36 @@ namespace RWDE
         {
 
         }
+
+        private void dataGridView_KeyUp(object sender, KeyEventArgs e) // to Read the Key events
+        {
+            if (e.KeyCode == Keys.S) // Ctrl + Space to select row
+            {
+                SelectCurrentRow(); // to select the current row
+            }
+        }
+
+        private void SelectCurrentRow()
+        {
+            if (dataGridView.CurrentCell != null) // Ensure a cell is selected
+            {
+                int rowIndex = dataGridView.CurrentCell.RowIndex; // Get current row index
+                dataGridView.ClearSelection(); // Clear previous selection
+
+                // Simulate user clicking the row header
+                dataGridView.Rows[rowIndex].Selected = true;
+                dataGridView.CurrentCell = dataGridView.Rows[rowIndex].Cells[0]; // Move focus to first cell of the row
+
+                // Optional: Simulate a Mouse Click on Row Header (-1 Column)
+                Rectangle headerCellRect = dataGridView.GetCellDisplayRectangle(-1, rowIndex, true);
+                Point clickPoint = dataGridView.PointToScreen(new Point(headerCellRect.X + 5, headerCellRect.Y + 5));
+                Cursor.Position = clickPoint;
+                mouse_event(MOUSEEVENTFLEFTDOWN | MOUSEEVENTFLEFTUP, 0, 0, 0, IntPtr.Zero);
+            }
+        }
     }
-    //Client Profile Tag Numbers
+
+    // Client Profile Tag Numbers
     public enum TagNumbers
     {
         Tag85 = 85,
@@ -1769,14 +1815,14 @@ namespace RWDE
         Tag580 = 580,
         Tag605 = 605
     }
-    //Client Profile Chile Tag numbers
+    // Client Profile Chile Tag numbers
     public enum ChildTagNumbers
     {
         Tag270 = 270,
         Tag330 = 330,
         Tag550 = 550
     }
-    //Medical Chile Tag Numbers
+    // Medical Chile Tag Numbers
     public enum MedicalChild
     {
         Tag610 = 610,
@@ -1793,7 +1839,7 @@ namespace RWDE
         Tag1650 = 1650,
         Tag1670 = 1670,
     }
-    //Medical Sub Child Tag Numbers
+    // Medical Sub Child Tag Numbers
     public enum MedicalSubChild
     {
         Tag620 = 620,
@@ -1817,7 +1863,7 @@ namespace RWDE
         Tag1700 = 1705,
         Tag1735 = 1735
     }
-    //Medical MedicalSubChildDynamic
+    // Medical MedicalSubChildDynamic
     public enum MedicalSubChildDynamic
     {
         Tag525 = 525,
@@ -1829,7 +1875,7 @@ namespace RWDE
         Tag1010 = 1010
 
     }
-    //public living_situation Child Tag Numbers
+    // public living_situation Child Tag Numbers
     public enum LiveSubChild
     {
         Tag1790 = 1790,

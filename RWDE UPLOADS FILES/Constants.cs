@@ -1,15 +1,15 @@
 ﻿
 namespace RWDE
 {
-    /// <summary>
-    /// Class containing constants used in the application.
-    /// </summary>
+    // /<summary>
+    // /Class containing constants used in the application.
+    // /</summary>
     public static class Constants
     {
         #region General
-        //
-        //General
-        //
+        // 
+        // General
+        // 
         public const string Sheet1 = "Sheet1";
         public const string XlsxExtention = ".xlsx";
 
@@ -28,7 +28,7 @@ namespace RWDE
 
         #region General Column Headers
 
-        //General Column Headers
+        // General Column Headers
         public const string BatchId = "BatchID";
         public const string Description = "Description";
         public const string Type = "Type";
@@ -54,17 +54,17 @@ namespace RWDE
         #endregion
 
         #region FrmMain
-        //
-        //FrmMain
-        //
+        // 
+        // FrmMain
+        // 
         public const string AllExtention = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
 
         #endregion FrmMain
 
         #region FrmConnectionSetup
-        //
-        //FrmConnectionSetup
-        //
+        // 
+        // FrmConnectionSetup
+        // 
 
         public const string MyConnection = "MyConnection";
         public const string PlaceHolder = "PLACEHOLDER";
@@ -73,18 +73,18 @@ namespace RWDE
         #endregion FrmConnectionSetup
 
         #region HCCReconciliation
-        //
-        //HCCReconciliation
-        //
+        // 
+        // HCCReconciliation
+        // 
 
         public const string HccReconciliation = "HCC_Reconciliation";
 
         #endregion HCCReconciliation
 
         #region ViewAllBatches
-        //
-        //View All Batches Constants String Values
-        //
+        // 
+        // View All Batches Constants String Values
+        // 
         public const string ErrorTitle = "Error";
         public const string ErrorAddingColumn = "Error adding column ";
         public const string ErrorAdjustingColumnWidths = "Error adjusting column widths: ";
@@ -96,9 +96,9 @@ namespace RWDE
         #endregion
 
         #region ContractIdList
-        //
-        //ContractIdList
-        //
+        // 
+        // ContractIdList
+        // 
         public const string Sakku = "Sakku ";
 
         public const string ContractName = "ContractName";
@@ -124,9 +124,9 @@ namespace RWDE
         #endregion
 
         #region DeceasedClientReport 
-        //
-        //DeceasedClientReport
-        //
+        // 
+        // DeceasedClientReport
+        // 
         public const string SiNo = "SI No";
         public const string HccId = "HCCID";
         public const string HccIdsp = "HCC ID";
@@ -157,9 +157,9 @@ namespace RWDE
         #endregion
 
         #region frmConvertToHCC 
-        //
-        //frmConvertToHCC
-        //
+        // 
+        // frmConvertToHCC
+        // 
         public const string Space = " ";
         public const string ServiceCttohcc = "Services CT TO HCC";
         public const string ConverttoHcCforbatchIdStarted = "Convert to HCC  for batch ID Started.";
@@ -174,9 +174,9 @@ namespace RWDE
         #endregion
 
         #region DateTime 
-        //
-        //DateTime
-        //
+        // 
+        // DateTime
+        // 
         public const string MMddyyyyHHmmss = "MM-dd-yyyy HH:mm:ss";
         public const string DateFormatMMddyyyy = "MM-dd-yyyy";
         public const string DdMMyyyyHHmmss = "dd-MM-yyyy HH:mm:ss";
@@ -203,9 +203,9 @@ namespace RWDE
         #endregion
 
         #region MessageBox 
-        //
-        //MessageBox
-        //
+        // 
+        // MessageBox
+        // 
         public const string ErrorCode = "E";
         public const string Alreadysaved = " already saved";
         public const string Norowselectedtosave = "No row selected to save.";
@@ -362,18 +362,18 @@ namespace RWDE
         #endregion MessageBox
 
         #region DialogBox 
-        //
-        //DialogBox
-        //
+        // 
+        // DialogBox
+        // 
         public const string ExcelFilesXlsx = "Excel Files|*.xlsx";
         public const string SelectAnExcelFile = "Select an Excel File";
         public const string Selectthefoldertosave = "Select the folder to save the data";
         #endregion
 
         #region StoreProcedureConstants 
-        //
-        //StoreProcedureConstants
-        //
+        // 
+        // StoreProcedureConstants
+        // 
         public const string Ctclientsmapping = "ctclientsmapping";
         public const string GetCtServicesForCsv = "GetCTServicesForCSV";
         public const string MapCmsClientstest = "MapCMSClientstest";
@@ -405,9 +405,9 @@ namespace RWDE
         #endregion StoreProcedureConstants
 
         #region DbHelperStoreProcedures 
-        //
-        //DbHelperStoreProcedures 
-        //
+        // 
+        // DbHelperStoreProcedures 
+        // 
         public const string ServiceXmlGeneration = "Servicegenerator";
         public const string ServicegeneratorError = "ServicegeneratorERROR";
         public const string ClientsXmlGeneration = "clientgeneratorXMLDEMO";
@@ -466,6 +466,8 @@ namespace RWDE
         public const string FetchSubClientDataFromInsur = "FetchSubClientDataFromInsur";
         public const string FetchSubClientDataFromRace = "FetchSubClientDataFromRace";
         public const string InsertOrUpdateContract = "InsertOrUpdateContract";
+        public const string RenewContract = "RenewContract";
+        public const string IsContractPresent = "IsContractPresent";
         public const string UpdateContractStatus = "UpdateContractStatus";
         public const string UpdateContract = "UpdateContract";
         public const string UpdateServiceCodeStatus = "UpdateServiceCodeStatus";
@@ -476,14 +478,16 @@ namespace RWDE
         public const string SpHccRecon = "sp_HCCRecon";
         public const string ManualUploadReport = "ManualUploadReport";
         public const string PieChartData = "PieChartData";
+
+        public const string IsContractRenewed = "IsContractRenewed";
         #endregion
 
         #region DatabaseQueries 
-        //
-        //DatabaseQueries
-        //
+        // 
+        // DatabaseQueries
+        // 
 
-        //XML Queries
+        // XML Queries
         public const string XmlStructureServiceValues = "SELECT TOP (1000) [xmlGeneratorID]\r\n      ,[FileID]\r\n      ,[TagNumber]\r\n      ,[Tag]\r\n      ,[Table]\r\n      ,[Field]\r\n      ,[PresetValue]\r\n      ,[Default]\r\n      ,[Empty]\r\n      ,[HasChild]\r\n      ,[DelimiterxmlGeneratorID]\r\n      ,[DataTransformerType]\r\n      ,[CreatedBy]\r\n      ,[CreatedOn]\r\n  FROM [RWDE].[dbo].[xmlGeneratorRules] where FileID = 1";
         public const string XmlStructureClientValues = "SELECT TOP (1000) [xmlGeneratorID]\r\n      ,[FileID]\r\n      ,[TagNumber]\r\n      ,[Tag]\r\n      ,[Table]\r\n      ,[Field]\r\n      ,[PresetValue]\r\n      ,[Default]\r\n      ,[Empty]\r\n      ,[HasChild]\r\n      ,[DelimiterxmlGeneratorID]\r\n      ,[DataTransformerType]\r\n      ,[CreatedBy]\r\n      ,[CreatedOn]\r\n  FROM [RWDE].[dbo].[xmlGeneratorRules] where FileID = 2";
 
@@ -566,9 +570,9 @@ namespace RWDE
         #endregion
 
         #region SPparametersConstants 
-        //
-        //SPparametersConstants
-        //
+        // 
+        // SPparametersConstants
+        // 
         public const string AtBatchid = "@Batchid";
         public const string AtClientId = "@ClientId";
 
@@ -850,12 +854,16 @@ namespace RWDE
         public const string AtStartDateCaps = "@StartDate";
         public const string AtYear = "@Year";
         public const string AtMonth = "@Month";
+
+        public const string AtIsRenewed = "@IsRenewed";
+        public const string AtIsPresent = "@IsPresent";
+
         #endregion
 
         #region DbHelper 
-        //
-        //DbHelper
-        //
+        // 
+        // DbHelper
+        // 
 
         public const string AgencyCode = "246_";
         public const string Sakkusmall = "sakku";
@@ -877,8 +885,8 @@ namespace RWDE
         public const string DlFinancials = "DlFinancials";
         public const string InvalidDecimalValue = "Invalid decimal value: ";
         public const string InvalidIntegerValue = "Invalid integer value: ";
-        public const string BkslashClient = "//Client";
-        public const string BkslashServiceLineItem = "//ServiceLineItem";
+        public const string BkslashClient = "// Client";
+        public const string BkslashServiceLineItem = "// ServiceLineItem";
         public const string ClientAriesId = "_clientAriesID";
 
         public const string AriesId = "ariesID";
@@ -892,7 +900,7 @@ namespace RWDE
         public const string Source = "source";
         public const string Notes = "notes";
         public const string ErrorInsertingEligibilityDocuments = "Error inserting eligibility documents: ";
-        public const string ClientariesIdEligibilityDocument = "//Client[@ariesID='{0}']/EligibilityDocument";
+        public const string ClientariesIdEligibilityDocument = "// Client[@ariesID='{0}']/EligibilityDocument";
 
         public const string ClientUrnExt = "_clientURNExt";
         public const string SiteName = "_siteName";
@@ -934,9 +942,9 @@ namespace RWDE
         #endregion
 
         #region FrmConvertToCsv
-        //
-        //FrmConvertToCsv
-        //
+        // 
+        // FrmConvertToCsv
+        // 
         public const string Clients = "Client_";
         public const string ServiceSample = "Service_Sample_";
         public const string Testfiletxt = "testfile.txt";
@@ -946,17 +954,17 @@ namespace RWDE
         #endregion FrmConvertToCsv
 
         #region FrmConvertToHCC 
-        //
-        //FrmConvertToHCC
-        //
+        // 
+        // FrmConvertToHCC
+        // 
         public const string FileName = "FileName";
         public const string FileNamesp = "File Name";
         #endregion
 
         #region frmDownloadHccErrors 
-        //
-        //frmDownloadHccErrors
-        //
+        // 
+        // frmDownloadHccErrors
+        // 
         public const string Nodataavailableforthissourcefilename = "NO Records or Check the file name";
         public const string Nodatatoinsertintotable = "Please Select an Error File";
         public const string HccTable = "HccTable";
@@ -975,9 +983,9 @@ namespace RWDE
         #endregion frmDownloadHccErrors
 
         #region frmGenerateXml 
-        //
-        //frmGenerateXml
-        //
+        // 
+        // frmGenerateXml
+        // 
 
         public const int Hccxmlstatusf = 20;
         public const int Xmlabort = 22;
@@ -1002,9 +1010,9 @@ namespace RWDE
         #endregion
 
         #region frmUploadHCCCsv 
-        //
-        //frmUploadHCCCsv
-        //
+        // 
+        // frmUploadHCCCsv
+        // 
 
         public const string AllCsvExtention = "*.csv";
         public const int HccCode = 25;
@@ -1024,9 +1032,9 @@ namespace RWDE
         #endregion frmUploadHCCCsv
 
         #region frmUploadOchinCsv 
-        //
-        //frmUploadOchinCsv
-        //
+        // 
+        // frmUploadOchinCsv
+        // 
 
         public const int Fileaborted = 12;
         public const int OchinCode = 23;
@@ -1046,33 +1054,33 @@ namespace RWDE
         #endregion frmUploadOchinCsv
 
         #region OCHIN To RWDE Conversion
-        //
-        //OCHIN To RWDE Conversion
-        //
+        // 
+        // OCHIN To RWDE Conversion
+        // 
         public const string CtServices = "CTServices";
         public const string Ochintorwdeconversion = "OCHIN to RWDE Conversion";
         public const string Pleaseselectavalidrowtoproceed = "Please select a valid row to proceed(It seems selected row is an empty row)";
         #endregion
 
         #region frmUploadXMLFile 
-        //
-        //frmUploadXMLFile
-        //
+        // 
+        // frmUploadXMLFile
+        // 
         public const string ClientTrackUploadOnAt = "ClientTrack Upload on {date} at {time}";
 
         public const string LastFolderPathTxt = "LastFolderPath.txt";
         public const string Batch = "Batch";
-        public const string BkslhClient = "//Client";
-        public const string BkslhEligibilityDocument = "//EligibilityDocument";
-        public const string BkslhServiceLineItem = "//ServiceLineItem";
+        public const string BkslhClient = "// Client";
+        public const string BkslhEligibilityDocument = "// EligibilityDocument";
+        public const string BkslhServiceLineItem = "// ServiceLineItem";
         public const string Xmlfileuploads = "XML file Uploads";
 
         #endregion frmUploadXMLFile
 
         #region MonthlyReport 
-        //
-        //MonthlyReport
-        //
+        // 
+        // MonthlyReport
+        // 
         public const string PreviousWeek = "Previous Week";
         public const string CurrentWeek = "Current Week";
         public const string PreviousMonth = "Previous Month";
@@ -1090,9 +1098,9 @@ namespace RWDE
         #endregion
 
         #region ServiceCodeSetup 
-        //
-        //ServiceCodeSetup
-        //
+        // 
+        // ServiceCodeSetup
+        // 
         public const string ServiceCodeId = "ServiceCodeID";
         public const string HccExportToAries = "HCC_ExportToAries";
         public const string MapToHcc = "Map to HCC";
@@ -1121,9 +1129,9 @@ namespace RWDE
         #endregion
 
         #region ServiceReconciliationReport 
-        //
-        //ServiceReconciliationReport
-        //
+        // 
+        // ServiceReconciliationReport
+        // 
         public const string SlNo = "Sl No";
         public const string Staff = "Staff";
         public const string HccConsentExpiryDate = "HCCConsentExpiryDate";
@@ -1159,16 +1167,16 @@ namespace RWDE
         #endregion ServiceReconciliationReport
 
         #region Client Demographic Report
-        //
-        //Client Demographic Report
-        //
+        // 
+        // Client Demographic Report
+        // 
 
         #endregion
 
         #region DatabaseTables 
-        //
-        //DatabaseTables
-        //
+        // 
+        // DatabaseTables
+        // 
         public const string ClntDemo = "T_CLNT_DEMO";
         public const string ClntEthnDtl = "T_CLNT_ETHN_DTL";
         public const string Hccclients = "HCCCLIENTS";
@@ -1190,9 +1198,9 @@ namespace RWDE
         #endregion
 
         #region Status 
-        //
-        //Status
-        //
+        // 
+        // Status
+        // 
         public const string ZeroPercent = "0%";
         public const string ProgressUpdate = "ProgressUpdate";
         public const string InitialProgress = "0/0 (0%)";
@@ -1202,9 +1210,9 @@ namespace RWDE
 
     public static class ContractIdList
     {
-        //Property Text
+        // Property Text
 
-        //Header Text
+        // Header Text
         public const string ErrorLogReport = "Error_Log_Report";
 
         public const string MonthlyReports = "Monthly_Reports";
@@ -1226,7 +1234,7 @@ namespace RWDE
         public const string Nochangesdetectedintheselectedrow = "No changes detected in the selected row.";
         public const string MustbeaDataGridViewCalendarCell = "Must be a DataGridViewCalendarCell";
 
-        //Header Text
+        // Header Text
 
         public const string ContractNames = "Contract Name";
 

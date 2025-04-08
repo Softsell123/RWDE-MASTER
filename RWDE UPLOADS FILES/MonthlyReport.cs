@@ -9,7 +9,7 @@ namespace RWDE
 {
     public partial class MonthlyReport : Form
     {
-        public MonthlyReport()//initialize data
+        public MonthlyReport()// initialize data
         {
             InitializeComponent();
             ControlBox = false;
@@ -34,7 +34,7 @@ namespace RWDE
               });
 
             // Attach SelectedIndexChanged event handler
-            cbDateFilter.SelectedIndexChanged += cbDateFilter_SelectedIndexChanged;//filter data accordingly
+            cbDateFilter.SelectedIndexChanged += cbDateFilter_SelectedIndexChanged;// filter data accordingly
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
             dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
@@ -52,10 +52,10 @@ namespace RWDE
                 // Handle exceptions, such as logging the error
                 MessageBox.Show(ex.Message);
             }
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
 
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -66,7 +66,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -77,7 +77,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -91,7 +91,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to all child Controls
+                        // Assigning events to all child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -101,7 +101,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void SetPreviousWeekDates(out DateTime startDate, out DateTime endDate)//date filter
+        private void SetPreviousWeekDates(out DateTime startDate, out DateTime endDate)// date filter
         {
             try
             {
@@ -123,7 +123,7 @@ namespace RWDE
                 endDate = DateTime.MinValue;
             }
         }
-        private void btnDownload_Click(object sender, EventArgs e)//to export report to selected folder
+        private void btnDownload_Click(object sender, EventArgs e)// to export report to selected folder
         {
             try
             {
@@ -197,7 +197,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void btnClose_Click(object sender, EventArgs e)// to close the form
         {
             try
             {
@@ -210,7 +210,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }    
-        private void btnReport_Click(object sender, EventArgs e)//to get filtered data in the grid
+        private void btnReport_Click(object sender, EventArgs e)// to get filtered data in the grid
         {
             try
             {
@@ -232,7 +232,7 @@ namespace RWDE
 
                     dataGridView.ForeColor = Color.Black;
 
-                    DataTable result = dbHelper.LoadDatafilter(startDate, endDate);//to load filtered data for monthly reports
+                    DataTable result = dbHelper.LoadDatafilter(startDate, endDate);// to load filtered data for monthly reports
                     if (dbHelper.ErrorOccurred)
                     {
                         MessageBox.Show(Constants.ErrorOccurred);
@@ -255,7 +255,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClr_Click(object sender, EventArgs e)//to clear data in the grid
+        private void btnClr_Click(object sender, EventArgs e)// to clear data in the grid
         {
             try { 
                  // Reset DateTimePickers to one year back from the current date
@@ -276,7 +276,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }     
-        private void cbDateFilter_SelectedIndexChanged(object sender, EventArgs e)//to filter date accordingly
+        private void cbDateFilter_SelectedIndexChanged(object sender, EventArgs e)// to filter date accordingly
         {
             try
             {
@@ -289,59 +289,59 @@ namespace RWDE
             switch (selectedFilter)
             {
                 case Constants.PreviousWeek:
-                    SetPreviousWeekDates(out startDate, out endDate);//filter weekly
+                    SetPreviousWeekDates(out startDate, out endDate);// filter weekly
                     break;
 
                 case Constants.CurrentWeek:
-                    SetCurrentWeekDates(out startDate, out endDate);//filter weekly
+                    SetCurrentWeekDates(out startDate, out endDate);// filter weekly
                     break;
 
                 case Constants.PreviousMonth:
-                    SetPreviousMonthDates(out startDate, out endDate);//filter weekly
+                    SetPreviousMonthDates(out startDate, out endDate);// filter weekly
                     break;
 
                 case Constants.CurrentMonth:
-                    SetCurrentMonthDates(out startDate, out endDate);//filter weekly
+                    SetCurrentMonthDates(out startDate, out endDate);// filter weekly
                     break;
 
                 case Constants.SinceOneMonthAgo:
-                    SetSinceOneMonthAgoDates(out startDate, out endDate);//filter monthly
+                    SetSinceOneMonthAgoDates(out startDate, out endDate);// filter monthly
                     break;
 
                 case Constants.FirstQuarter:
-                    SetQuarterDates(1, out startDate, out endDate);//filter quarterly
+                    SetQuarterDates(1, out startDate, out endDate);// filter quarterly
                     break;
 
                 case Constants.SecondQuarter:
-                    SetQuarterDates(2, out startDate, out endDate);//filter second quarterly
+                    SetQuarterDates(2, out startDate, out endDate);// filter second quarterly
                     break;
 
                 case Constants.ThirdQuarter:
-                    SetQuarterDates(3, out startDate, out endDate);//filter quarterly
+                    SetQuarterDates(3, out startDate, out endDate);// filter quarterly
                     break;
 
                 case Constants.FourthQuarter:
-                    SetQuarterDates(4, out startDate, out endDate);//filter quarterly
+                    SetQuarterDates(4, out startDate, out endDate);// filter quarterly
                     break;
 
                 case Constants.PreviousQuarter:
-                    SetPreviousQuarterDates(out startDate, out endDate);//filter quarterly
+                    SetPreviousQuarterDates(out startDate, out endDate);// filter quarterly
                     break;
 
                 case Constants.CurrentQuarter:
-                    SetCurrentQuarterDates(out startDate, out endDate);//filter quarterly
+                    SetCurrentQuarterDates(out startDate, out endDate);// filter quarterly
                     break;
 
                 case Constants.ThisYear:
-                    SetThisYearDates(out startDate, out endDate);//filter yearly
+                    SetThisYearDates(out startDate, out endDate);// filter yearly
                     break;
 
                 case Constants.LastYear:
-                    SetLastYearDates(out startDate, out endDate);//filter yearly
+                    SetLastYearDates(out startDate, out endDate);// filter yearly
                     break;
 
                 case Constants.SinceThisDateLastYear:
-                    SetSinceThisDateLastYear(out startDate, out endDate);//filter yearly
+                    SetSinceThisDateLastYear(out startDate, out endDate);// filter yearly
                     break;
 
                 default:
@@ -356,7 +356,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void SetCurrentWeekDates(out DateTime startDate, out DateTime endDate)//filter data on weekly basis
+        private void SetCurrentWeekDates(out DateTime startDate, out DateTime endDate)// filter data on weekly basis
         {
             try
             {
@@ -372,7 +372,7 @@ namespace RWDE
                 endDate = DateTime.MinValue;
             }
         }
-        private void SetPreviousMonthDates(out DateTime startDate, out DateTime endDate)//filter data on monthly basis
+        private void SetPreviousMonthDates(out DateTime startDate, out DateTime endDate)// filter data on monthly basis
         {
             try
             {
@@ -388,7 +388,7 @@ namespace RWDE
                 endDate = DateTime.MinValue;
             }
         }
-        private void SetCurrentMonthDates(out DateTime startDate, out DateTime endDate)//filter data on current month 
+        private void SetCurrentMonthDates(out DateTime startDate, out DateTime endDate)// filter data on current month 
         {
             try
             {
@@ -403,7 +403,7 @@ namespace RWDE
                 endDate = DateTime.MinValue;
             }
         }
-        private void SetSinceOneMonthAgoDates(out DateTime startDate, out DateTime endDate)//filter data on one month ago
+        private void SetSinceOneMonthAgoDates(out DateTime startDate, out DateTime endDate)// filter data on one month ago
         {
             try
             {
@@ -417,7 +417,7 @@ namespace RWDE
                 endDate = DateTime.MinValue;
             }
         }
-        private void SetQuarterDates(int quarter, out DateTime startDate, out DateTime endDate)//to modify start and end date on particular selection
+        private void SetQuarterDates(int quarter, out DateTime startDate, out DateTime endDate)// to modify start and end date on particular selection
         {
             try
             {
@@ -452,7 +452,7 @@ namespace RWDE
                 endDate = DateTime.MinValue;
             }
         }
-        private void SetPreviousQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quarterly basis
+        private void SetPreviousQuarterDates(out DateTime startDate, out DateTime endDate)// filter data on Quarterly basis
         {
             try
             {
@@ -471,7 +471,7 @@ namespace RWDE
                 endDate = DateTime.MinValue;
             }
         }
-        private void SetCurrentQuarterDates(out DateTime startDate, out DateTime endDate)//filter data on Quarterly basis
+        private void SetCurrentQuarterDates(out DateTime startDate, out DateTime endDate)// filter data on Quarterly basis
         {
             try
             {
@@ -486,7 +486,7 @@ namespace RWDE
                 endDate = DateTime.MinValue;
             }
         }
-        private void SetThisYearDates(out DateTime startDate, out DateTime endDate)//filter data on yearly basis
+        private void SetThisYearDates(out DateTime startDate, out DateTime endDate)// filter data on yearly basis
         {
             try
             {
@@ -501,7 +501,7 @@ namespace RWDE
                 endDate = DateTime.MinValue;
             }
         }
-        private void SetLastYearDates(out DateTime startDate, out DateTime endDate)//filter data on yearly basis
+        private void SetLastYearDates(out DateTime startDate, out DateTime endDate)// filter data on yearly basis
         {
             try
             {
@@ -517,7 +517,7 @@ namespace RWDE
             }
 
         }
-        private void SetSinceThisDateLastYear(out DateTime startDate, out DateTime endDate)//filter data on yearly basis
+        private void SetSinceThisDateLastYear(out DateTime startDate, out DateTime endDate)// filter data on yearly basis
         {
             try
             {

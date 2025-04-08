@@ -8,14 +8,14 @@ namespace RWDE
     {
         private readonly DbHelper dbHelper;
 
-        public CsvFileConversion()//to initialize data
+        public CsvFileConversion()// to initialize data
         {
             InitializeComponent();
             dbHelper = new DbHelper();
 
             ControlBox = false;
             WindowState = FormWindowState.Maximized;
-            RegisterEvents(this); //Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
 
             if (File.Exists(Constants.LastFolderPathhcc))
             {
@@ -31,7 +31,7 @@ namespace RWDE
                 }
             }
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -42,7 +42,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -53,7 +53,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -67,7 +67,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to child Controls
+                        // Assigning events to child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -77,7 +77,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnReport_Click(object sender, EventArgs e)//to generate and save the Csv files
+        private void btnReport_Click(object sender, EventArgs e)// to generate and save the Csv files
         {
             string ClientfilePath = Path.Combine(txtPath.Text, $"{Constants.Clients}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
             string ServicesfilePath = Path.Combine(txtPath.Text, $"{Constants.ServiceSample}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
@@ -90,7 +90,7 @@ namespace RWDE
                     return;
                 }
 
-                //to Write the CSV data of Clients
+                // to Write the CSV data of Clients
                 dbHelper.WriteClientCsvData(ClientfilePath);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -98,7 +98,7 @@ namespace RWDE
                     return;
                 }
 
-                //to Write the CSV data of Services
+                // to Write the CSV data of Services
                 dbHelper.WriteServicesCsvData(ServicesfilePath);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -116,7 +116,7 @@ namespace RWDE
                 MessageBox.Show(Constants.Errorsp + ex.Message);
             }
         }
-        private void btnBrowse_Click(object sender, EventArgs e)//to select the folder to save the csv files
+        private void btnBrowse_Click(object sender, EventArgs e)// to select the folder to save the csv files
         {
             try
             {

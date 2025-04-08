@@ -5,15 +5,15 @@ namespace RWDE
 {
     partial class FrmConvertToHcc
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -25,10 +25,10 @@ namespace RWDE
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
@@ -88,9 +88,9 @@ namespace RWDE
             this.pnlProgress.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rwdeDataSet1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pnlHCCConversion
-            // 
+            //
+            //pnlHCCConversion
+            //
             this.pnlHCCConversion.BackColor = System.Drawing.Color.White;
             this.pnlHCCConversion.Controls.Add(this.lblTitle);
             this.pnlHCCConversion.Controls.Add(this.pnl);
@@ -105,18 +105,18 @@ namespace RWDE
             this.pnlHCCConversion.Name = "pnlHCCConversion";
             this.pnlHCCConversion.Size = new System.Drawing.Size(5004, 1059);
             this.pnlHCCConversion.TabIndex = 20;
-            // 
-            // lblTitle
-            // 
+            //
+            //lblTitle
+            //
             this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.Location = new System.Drawing.Point(872, 23);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(276, 34);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "CT to HCC Conversion";
-            // 
-            // pnl
-            // 
+            //
+            //pnl
+            //
             this.pnl.BackColor = System.Drawing.Color.White;
             this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnl.Controls.Add(this.txtBatchtype);
@@ -135,9 +135,9 @@ namespace RWDE
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1720, 462);
             this.pnl.TabIndex = 26;
-            // 
-            // txtBatchtype
-            // 
+            //
+            //txtBatchtype
+            //
             this.txtBatchtype.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBatchtype.ForeColor = System.Drawing.Color.Black;
             this.txtBatchtype.Location = new System.Drawing.Point(185, 86);
@@ -145,9 +145,9 @@ namespace RWDE
             this.txtBatchtype.Size = new System.Drawing.Size(249, 40);
             this.txtBatchtype.TabIndex = 27;
             this.txtBatchtype.Text = "Client Track";
-            // 
-            // dataGridView
-            // 
+            //
+            //dataGridView
+            //
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -191,9 +191,9 @@ namespace RWDE
             this.dataGridView.Size = new System.Drawing.Size(1681, 287);
             this.dataGridView.TabIndex = 21;
             this.dataGridView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView_Scroll);
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
+            //
+            //dataGridViewTextBoxColumn1
+            //
             this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle2;
@@ -203,54 +203,54 @@ namespace RWDE
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
             this.dataGridViewTextBoxColumn1.Width = 150;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
+            //
+            //dataGridViewTextBoxColumn2
+            //
             this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dataGridViewTextBoxColumn2.HeaderText = Constants.BatchTypeHeader;
             this.dataGridViewTextBoxColumn2.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
             this.dataGridViewTextBoxColumn2.Width = 150;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
+            //
+            //dataGridViewTextBoxColumn3
+            //
             this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dataGridViewTextBoxColumn3.HeaderText = Constants.Description;
             this.dataGridViewTextBoxColumn3.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.ReadOnly = true;
             this.dataGridViewTextBoxColumn3.Width = 120;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
+            //
+            //dataGridViewTextBoxColumn4
+            //
             this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dataGridViewTextBoxColumn4.HeaderText = "Start Time";
             this.dataGridViewTextBoxColumn4.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.ReadOnly = true;
             this.dataGridViewTextBoxColumn4.Width = 120;
-            // 
-            // dataGridViewTextBoxColumn5
-            // 
+            //
+            //dataGridViewTextBoxColumn5
+            //
             this.dataGridViewTextBoxColumn5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dataGridViewTextBoxColumn5.HeaderText = "End Time";
             this.dataGridViewTextBoxColumn5.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             this.dataGridViewTextBoxColumn5.ReadOnly = true;
             this.dataGridViewTextBoxColumn5.Width = 120;
-            // 
-            // dataGridViewTextBoxColumn6
-            // 
+            //
+            //dataGridViewTextBoxColumn6
+            //
             this.dataGridViewTextBoxColumn6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dataGridViewTextBoxColumn6.HeaderText = Constants.Status;
             this.dataGridViewTextBoxColumn6.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
             this.dataGridViewTextBoxColumn6.ReadOnly = true;
             this.dataGridViewTextBoxColumn6.Width = 120;
-            // 
-            // dataGridViewTextBoxColumn7
-            // 
+            //
+            //dataGridViewTextBoxColumn7
+            //
             this.dataGridViewTextBoxColumn7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dataGridViewTextBoxColumn7.DataPropertyName = Constants.BatchIdHeader;
             this.dataGridViewTextBoxColumn7.HeaderText = "Select";
@@ -258,18 +258,18 @@ namespace RWDE
             this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
             this.dataGridViewTextBoxColumn7.ReadOnly = true;
             this.dataGridViewTextBoxColumn7.Width = 120;
-            // 
-            // dataGridViewTextBoxColumn8
-            // 
+            //
+            //dataGridViewTextBoxColumn8
+            //
             this.dataGridViewTextBoxColumn8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.dataGridViewTextBoxColumn8.HeaderText = Constants.ConversionStartedAtHeader;
             this.dataGridViewTextBoxColumn8.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
             this.dataGridViewTextBoxColumn8.ReadOnly = true;
             this.dataGridViewTextBoxColumn8.Width = 220;
-            // 
-            // dtpStartDate
-            // 
+            //
+            //dtpStartDate
+            //
             this.dtpStartDate.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpStartDate.Location = new System.Drawing.Point(601, 86);
@@ -278,9 +278,9 @@ namespace RWDE
             this.dtpStartDate.Size = new System.Drawing.Size(204, 36);
             this.dtpStartDate.TabIndex = 24;
             this.dtpStartDate.ValueChanged += new System.EventHandler(this.dtpStartDate_ValueChanged);
-            // 
-            // lblStartFrom
-            // 
+            //
+            //lblStartFrom
+            //
             this.lblStartFrom.AutoSize = true;
             this.lblStartFrom.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStartFrom.ForeColor = System.Drawing.Color.Black;
@@ -290,9 +290,9 @@ namespace RWDE
             this.lblStartFrom.Size = new System.Drawing.Size(152, 35);
             this.lblStartFrom.TabIndex = 23;
             this.lblStartFrom.Text = "From Date :";
-            // 
-            // btnClear
-            // 
+            //
+            //btnClear
+            //
             this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClear.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClear.ForeColor = System.Drawing.Color.Black;
@@ -304,9 +304,9 @@ namespace RWDE
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = false;
             this.btnClear.Click += new System.EventHandler(this.bnClear_Click);
-            // 
-            // btnSubmit
-            // 
+            //
+            //btnSubmit
+            //
             this.btnSubmit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnSubmit.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSubmit.ForeColor = System.Drawing.Color.Black;
@@ -318,9 +318,9 @@ namespace RWDE
             this.btnSubmit.Text = "Filter";
             this.btnSubmit.UseVisualStyleBackColor = false;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
-            // 
-            // dtpEndDate
-            // 
+            //
+            //dtpEndDate
+            //
             this.dtpEndDate.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpEndDate.Location = new System.Drawing.Point(968, 85);
@@ -329,9 +329,9 @@ namespace RWDE
             this.dtpEndDate.Size = new System.Drawing.Size(211, 36);
             this.dtpEndDate.TabIndex = 20;
             this.dtpEndDate.ValueChanged += new System.EventHandler(this.dtpEndDate_ValueChanged);
-            // 
-            // lblEndTo
-            // 
+            //
+            //lblEndTo
+            //
             this.lblEndTo.AutoSize = true;
             this.lblEndTo.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEndTo.ForeColor = System.Drawing.Color.Black;
@@ -341,9 +341,9 @@ namespace RWDE
             this.lblEndTo.Size = new System.Drawing.Size(118, 35);
             this.lblEndTo.TabIndex = 19;
             this.lblEndTo.Text = "To Date :";
-            // 
-            // lblBatchType
-            // 
+            //
+            //lblBatchType
+            //
             this.lblBatchType.AutoSize = true;
             this.lblBatchType.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBatchType.ForeColor = System.Drawing.Color.Black;
@@ -353,9 +353,9 @@ namespace RWDE
             this.lblBatchType.Size = new System.Drawing.Size(157, 35);
             this.lblBatchType.TabIndex = 18;
             this.lblBatchType.Text = "Batch Type :";
-            // 
-            // lblHeader
-            // 
+            //
+            //lblHeader
+            //
             this.lblHeader.AutoSize = true;
             this.lblHeader.BackColor = System.Drawing.Color.White;
             this.lblHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -365,9 +365,9 @@ namespace RWDE
             this.lblHeader.Size = new System.Drawing.Size(754, 35);
             this.lblHeader.TabIndex = 4;
             this.lblHeader.Text = "Choose a batch from the grid to convert from CT to HCC format.";
-            // 
-            // pnlProgress
-            // 
+            //
+            //pnlProgress
+            //
             this.pnlProgress.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlProgress.Controls.Add(this.txtTotaltime);
             this.pnlProgress.Controls.Add(this.txtUploadEnded);
@@ -390,9 +390,9 @@ namespace RWDE
             this.pnlProgress.Name = "pnlProgress";
             this.pnlProgress.Size = new System.Drawing.Size(1720, 267);
             this.pnlProgress.TabIndex = 25;
-            // 
-            // txtTotaltime
-            // 
+            //
+            //txtTotaltime
+            //
             this.txtTotaltime.BackColor = System.Drawing.Color.White;
             this.txtTotaltime.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTotaltime.ForeColor = System.Drawing.Color.Black;
@@ -402,9 +402,9 @@ namespace RWDE
             this.txtTotaltime.ReadOnly = true;
             this.txtTotaltime.Size = new System.Drawing.Size(348, 40);
             this.txtTotaltime.TabIndex = 36;
-            // 
-            // txtUploadEnded
-            // 
+            //
+            //txtUploadEnded
+            //
             this.txtUploadEnded.BackColor = System.Drawing.Color.White;
             this.txtUploadEnded.Font = new System.Drawing.Font("Calibri", 17.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUploadEnded.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -414,9 +414,9 @@ namespace RWDE
             this.txtUploadEnded.ReadOnly = true;
             this.txtUploadEnded.Size = new System.Drawing.Size(348, 43);
             this.txtUploadEnded.TabIndex = 35;
-            // 
-            // txtUploadStarted
-            // 
+            //
+            //txtUploadStarted
+            //
             this.txtUploadStarted.BackColor = System.Drawing.Color.White;
             this.txtUploadStarted.Font = new System.Drawing.Font("Calibri", 17.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUploadStarted.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -426,9 +426,9 @@ namespace RWDE
             this.txtUploadStarted.ReadOnly = true;
             this.txtUploadStarted.Size = new System.Drawing.Size(348, 43);
             this.txtUploadStarted.TabIndex = 34;
-            // 
-            // txtBatchid
-            // 
+            //
+            //txtBatchid
+            //
             this.txtBatchid.BackColor = System.Drawing.Color.White;
             this.txtBatchid.Font = new System.Drawing.Font("Calibri", 17.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBatchid.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -438,9 +438,9 @@ namespace RWDE
             this.txtBatchid.ReadOnly = true;
             this.txtBatchid.Size = new System.Drawing.Size(348, 43);
             this.txtBatchid.TabIndex = 33;
-            // 
-            // lblTotaltime
-            // 
+            //
+            //lblTotaltime
+            //
             this.lblTotaltime.AutoSize = true;
             this.lblTotaltime.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotaltime.ForeColor = System.Drawing.Color.Black;
@@ -449,9 +449,9 @@ namespace RWDE
             this.lblTotaltime.Size = new System.Drawing.Size(212, 35);
             this.lblTotaltime.TabIndex = 32;
             this.lblTotaltime.Text = "Total Time Taken:";
-            // 
-            // lblUploadEnded
-            // 
+            //
+            //lblUploadEnded
+            //
             this.lblUploadEnded.AutoSize = true;
             this.lblUploadEnded.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUploadEnded.ForeColor = System.Drawing.Color.Black;
@@ -460,9 +460,9 @@ namespace RWDE
             this.lblUploadEnded.Size = new System.Drawing.Size(261, 35);
             this.lblUploadEnded.TabIndex = 31;
             this.lblUploadEnded.Text = "Conversion Ended At:";
-            // 
-            // lblUploadStarts
-            // 
+            //
+            //lblUploadStarts
+            //
             this.lblUploadStarts.AutoSize = true;
             this.lblUploadStarts.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUploadStarts.ForeColor = System.Drawing.Color.Black;
@@ -471,9 +471,9 @@ namespace RWDE
             this.lblUploadStarts.Size = new System.Drawing.Size(271, 35);
             this.lblUploadStarts.TabIndex = 30;
             this.lblUploadStarts.Text = "Conversion Started At:";
-            // 
-            // lblBatch
-            // 
+            //
+            //lblBatch
+            //
             this.lblBatch.AutoSize = true;
             this.lblBatch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBatch.ForeColor = System.Drawing.Color.Black;
@@ -482,9 +482,9 @@ namespace RWDE
             this.lblBatch.Size = new System.Drawing.Size(117, 35);
             this.lblBatch.TabIndex = 29;
             this.lblBatch.Text = "Batch ID:";
-            // 
-            // lblFileInformation
-            // 
+            //
+            //lblFileInformation
+            //
             this.lblFileInformation.AutoSize = true;
             this.lblFileInformation.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFileInformation.ForeColor = System.Drawing.Color.Black;
@@ -493,9 +493,9 @@ namespace RWDE
             this.lblFileInformation.Size = new System.Drawing.Size(290, 35);
             this.lblFileInformation.TabIndex = 28;
             this.lblFileInformation.Text = "Conversion Information";
-            // 
-            // lblServices
-            // 
+            //
+            //lblServices
+            //
             this.lblServices.AutoSize = true;
             this.lblServices.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblServices.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -505,17 +505,17 @@ namespace RWDE
             this.lblServices.Size = new System.Drawing.Size(130, 35);
             this.lblServices.TabIndex = 25;
             this.lblServices.Text = "#Services:";
-            // 
-            // progressBarServices
-            // 
+            //
+            //progressBarServices
+            //
             this.progressBarServices.Location = new System.Drawing.Point(240, 139);
             this.progressBarServices.Margin = new System.Windows.Forms.Padding(4);
             this.progressBarServices.Name = "progressBarServices";
             this.progressBarServices.Size = new System.Drawing.Size(240, 39);
             this.progressBarServices.TabIndex = 24;
-            // 
-            // txtProgressServices
-            // 
+            //
+            //txtProgressServices
+            //
             this.txtProgressServices.BackColor = System.Drawing.Color.White;
             this.txtProgressServices.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtProgressServices.Location = new System.Drawing.Point(500, 139);
@@ -525,9 +525,9 @@ namespace RWDE
             this.txtProgressServices.Size = new System.Drawing.Size(240, 40);
             this.txtProgressServices.TabIndex = 23;
             this.txtProgressServices.Text = Constants.ZeroPercent;
-            // 
-            // lblprgHeader
-            // 
+            //
+            //lblprgHeader
+            //
             this.lblprgHeader.AutoSize = true;
             this.lblprgHeader.BackColor = System.Drawing.Color.White;
             this.lblprgHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -537,9 +537,9 @@ namespace RWDE
             this.lblprgHeader.Size = new System.Drawing.Size(114, 35);
             this.lblprgHeader.TabIndex = 15;
             this.lblprgHeader.Text = "Progress";
-            // 
-            // lblClient
-            // 
+            //
+            //lblClient
+            //
             this.lblClient.AutoSize = true;
             this.lblClient.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblClient.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -548,17 +548,17 @@ namespace RWDE
             this.lblClient.Size = new System.Drawing.Size(102, 35);
             this.lblClient.TabIndex = 3;
             this.lblClient.Text = "#Client:";
-            // 
-            // progressBarClients
-            // 
+            //
+            //progressBarClients
+            //
             this.progressBarClients.Location = new System.Drawing.Point(240, 65);
             this.progressBarClients.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.progressBarClients.Name = "progressBarClients";
             this.progressBarClients.Size = new System.Drawing.Size(240, 39);
             this.progressBarClients.TabIndex = 2;
-            // 
-            // txtProgresshcc
-            // 
+            //
+            //txtProgresshcc
+            //
             this.txtProgresshcc.BackColor = System.Drawing.Color.White;
             this.txtProgresshcc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtProgresshcc.Location = new System.Drawing.Point(500, 63);
@@ -568,17 +568,17 @@ namespace RWDE
             this.txtProgresshcc.Size = new System.Drawing.Size(240, 40);
             this.txtProgresshcc.TabIndex = 14;
             this.txtProgresshcc.Text = Constants.ZeroPercent;
-            // 
-            // lblStatus
-            // 
+            //
+            //lblStatus
+            //
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(148, 640);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 35);
             this.lblStatus.TabIndex = 23;
-            // 
-            // btncloseHCC
-            // 
+            //
+            //btncloseHCC
+            //
             this.btncloseHCC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btncloseHCC.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btncloseHCC.ForeColor = System.Drawing.Color.Black;
@@ -590,9 +590,9 @@ namespace RWDE
             this.btncloseHCC.Text = Constants.Close;
             this.btncloseHCC.UseVisualStyleBackColor = false;
             this.btncloseHCC.Click += new System.EventHandler(this.btncloseHCC_Click);
-            // 
-            // btncthcc
-            // 
+            //
+            //btncthcc
+            //
             this.btncthcc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btncthcc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btncthcc.ForeColor = System.Drawing.Color.Black;
@@ -604,36 +604,36 @@ namespace RWDE
             this.btncthcc.Text = "Start Conversion";
             this.btncthcc.UseVisualStyleBackColor = false;
             this.btncthcc.Click += new System.EventHandler(this.btnCTtoHCC_Click);
-            // 
-            // imageList1
-            // 
+            //
+            //imageList1
+            //
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // imageList2
-            // 
+            //
+            //imageList2
+            //
             this.imageList2.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageList2.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList2.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // imageList3
-            // 
+            //
+            //imageList3
+            //
             this.imageList3.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageList3.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList3.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // dummyServiceLineItemsTableAdapter1
-            // 
+            //
+            //dummyServiceLineItemsTableAdapter1
+            //
             this.dummyServiceLineItemsTableAdapter1.ClearBeforeFill = true;
-            // 
-            // rwdeDataSet1
-            // 
+            //
+            //rwdeDataSet1
+            //
             this.rwdeDataSet1.DataSetName = "RWDEDataSet";
             this.rwdeDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // frmConvertToHCC
-            // 
+            //
+            //frmConvertToHCC
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1924, 1055);

@@ -5,15 +5,15 @@ namespace RWDE
 {
     partial class ContractIdLists
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -25,10 +25,10 @@ namespace RWDE
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
 
         {
@@ -62,6 +62,7 @@ namespace RWDE
             // 
             this.pnlGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlGrid.AutoScroll = true;
             this.pnlGrid.AutoSize = true;
             this.pnlGrid.BackColor = System.Drawing.Color.White;
             this.pnlGrid.Controls.Add(this.btnAdd);
@@ -73,7 +74,7 @@ namespace RWDE
             this.pnlGrid.Location = new System.Drawing.Point(1, 0);
             this.pnlGrid.Margin = new System.Windows.Forms.Padding(4);
             this.pnlGrid.Name = "pnlGrid";
-            this.pnlGrid.Size = new System.Drawing.Size(1922, 1080);
+            this.pnlGrid.Size = new System.Drawing.Size(1890, 1080);
             this.pnlGrid.TabIndex = 0;
             // 
             // btnAdd
@@ -114,7 +115,7 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(200, 51);
             this.btnClose.TabIndex = 6;
-            this.btnClose.Text = Constants.Close;
+            this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -187,7 +188,7 @@ namespace RWDE
             this.ContractName.FillWeight = 100.1664F;
             this.ContractName.HeaderText = "Contract Names";
             this.ContractName.MinimumWidth = 6;
-            this.ContractName.Name = Constants.ContractName;
+            this.ContractName.Name = "ContractName";
             this.ContractName.ReadOnly = true;
             this.ContractName.Width = 301;
             // 
@@ -201,7 +202,7 @@ namespace RWDE
             // 
             // Column3
             // 
-            this.Column3.HeaderText = Constants.Status;
+            this.Column3.HeaderText = "Status";
             this.Column3.MinimumWidth = 6;
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;
@@ -250,7 +251,7 @@ namespace RWDE
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1924, 922);
             this.ControlBox = false;
             this.Controls.Add(this.pnlGrid);

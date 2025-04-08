@@ -12,7 +12,7 @@ namespace RWDE
     public partial class ViewAllBatchesForm : Form
     {
         private readonly DbHelper dbHelper;
-        public ViewAllBatchesForm()//INITIALIZATION OF FORM
+        public ViewAllBatchesForm()// INITIALIZATION OF FORM
         {
             InitializeComponent();
             dbHelper = new DbHelper();
@@ -27,21 +27,21 @@ namespace RWDE
                 dtpEndDate.Value = DateTime.Now;
                 // Populate the DataGridView with data from the Batch table
                 PopulateDataGridViewLoad();
-                dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;//to adjust the column width
+                dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;// to adjust the column width
                 dataGridView.CellClick += DataGridView_CellClick;
-                //Handle the Batch Type Names
+                // Handle the Batch Type Names
                 GetAllBatchTypeNames();
                 dtpStartDate.Value = DateTime.Today.AddDays(-1);
                 dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
-                RegisterEvents(this); //Assigning events to all Controls
+                RegisterEvents(this); // Assigning events to all Controls
             }
             catch (Exception ex)
             {
                 MessageBox.Show($@"{Constants.ErrorInitializingForm}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -52,7 +52,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -63,7 +63,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -77,7 +77,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to all child Controls
+                        // Assigning events to all child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -92,7 +92,7 @@ namespace RWDE
         {
             try
             {
-                //Get all Values from Batch Table
+                // Get all Values from Batch Table
                 DataTable dataTable = dbHelper.GetAllBatches();
                 if (dbHelper.ErrorOccurred)
                 {
@@ -131,7 +131,7 @@ namespace RWDE
                 dataGridView.Columns.Add(deleteButtonColumn);
 
                 // Attach the CellPainting event handler
-                dataGridView.CellPainting += dataGridView_CellPainting;//Apply styles to a button by adjusting its background color, border radius, and font size
+                dataGridView.CellPainting += dataGridView_CellPainting;// Apply styles to a button by adjusting its background color, border radius, and font size
 
                 // Clear selection after populating DataGridView
                 dataGridView.ClearSelection();
@@ -185,7 +185,7 @@ namespace RWDE
                 dataGridView.Columns.Add(deleteButtonColumn);
 
                 // Attach the CellPainting event handler
-                dataGridView.CellPainting += dataGridView_CellPainting;//Apply styles to a button by adjusting its background color, border radius, and font size
+                dataGridView.CellPainting += dataGridView_CellPainting;// Apply styles to a button by adjusting its background color, border radius, and font size
 
                 // Clear selection after populating DataGridView
                 dataGridView.ClearSelection();
@@ -200,7 +200,7 @@ namespace RWDE
         {
             try
             {
-                //Get all Values from Batch Table
+                // Get all Values from Batch Table
                 DataTable dataTable = dbHelper.GetAllBatcheshcc();
                 if (dbHelper.ErrorOccurred)
                 {
@@ -240,7 +240,7 @@ namespace RWDE
                 dataGridView.Columns.Add(deleteButtonColumn);
 
                 // Attach the CellPainting event handler
-                dataGridView.CellPainting += dataGridView_CellPainting;//Apply styles to a button by adjusting its background color, border radius, and font size
+                dataGridView.CellPainting += dataGridView_CellPainting;// Apply styles to a button by adjusting its background color, border radius, and font size
 
                 // Clear selection after populating DataGridView
                 dataGridView.ClearSelection();
@@ -251,7 +251,7 @@ namespace RWDE
                 MessageBox.Show($@"{Constants.ErrorLoadingData}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void dataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)//to create the Delete buttons
+        private void dataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)// to create the Delete buttons
         {
             try
             {
@@ -325,7 +325,7 @@ namespace RWDE
             }
         }
 
-        //Checking the Rows Values 
+        // Checking the Rows Values 
         private bool IsRowEmpty(int rowIndex)
         {
             try
@@ -386,11 +386,11 @@ namespace RWDE
         }
 
         // Adjusts the column widths after data binding is complete
-        private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)//to adjust the column width
+        private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)// to adjust the column width
         {
             try
             {
-                //to give styles for created button
+                // to give styles for created button
                 AdjustAllColumnWidths();
                 // Sets the Delete button to read-only for rows with null BatchID
                 SetDeleteButtonReadOnly();
@@ -402,7 +402,7 @@ namespace RWDE
         }
 
         // Adjusts the width of specific columns
-        private void AdjustAllColumnWidths()//to give styles for created button
+        private void AdjustAllColumnWidths()// to give styles for created button
         {
             try
             {
@@ -468,7 +468,7 @@ namespace RWDE
             {
                 if (e.ColumnIndex >= 0 && dataGridView.Columns[e.ColumnIndex].Name == Constants.DeleteColumnName && e.RowIndex >= 0)
                 {
-                    //to handle the Delete button click
+                    // to handle the Delete button click
                     HandleDeleteButtonClick(e.RowIndex);
                 }
             }
@@ -511,7 +511,7 @@ namespace RWDE
                                 return;
                             }
                             PopulateDataGridView();// Populates the DataGridView with data from the Batch table while deleting
-                            AdjustAllColumnWidths();//to give styles for created button
+                            AdjustAllColumnWidths();// to give styles for created button
                             SetDeleteButtonReadOnly();// Sets the Delete button to read-only for rows with null BatchID
                         }
                     }
@@ -558,7 +558,7 @@ namespace RWDE
                     return;
                 }
 
-                //extraction of particular batch from data
+                // extraction of particular batch from data
                 DataTable result = dbHelper.GetParticularDataFromBatchTable(batchType, fromDate, endDate);
                 if (dbHelper.ErrorOccurred)
                 {
@@ -580,17 +580,17 @@ namespace RWDE
             }
         }
 
-        //clear All Data
+        // clear All Data
         private void bnClear_Click(object sender, EventArgs e)
         {
             try
             {
                 cbBatchType.Items.Clear();
-                //Handle the Batch type Names
+                // Handle the Batch type Names
                 GetAllBatchTypeNames();
-                //populate the data into grid
+                // populate the data into grid
                 PopulateDataGridViewLoad();
-                //Handle the Width For Grid Columns
+                // Handle the Width For Grid Columns
                 AdjustAllColumnWidths();
             }
             catch (Exception ex)
@@ -598,11 +598,11 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void GetAllBatchTypeNames() //Handle the Batch Type Names
+        private void GetAllBatchTypeNames() // Handle the Batch Type Names
         {
             try
             {
-                //get all batches type
+                // get all batches type
                 List<string> batchTypes = dbHelper.GetAllBatchTypesview();
                 if (dbHelper.ErrorOccurred)
                 {

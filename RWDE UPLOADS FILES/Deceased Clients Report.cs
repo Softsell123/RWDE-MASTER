@@ -11,7 +11,7 @@ namespace RWDE
     {
         private readonly DbHelper dbHelper;
 
-        public DeceasedClients() //initialize data
+        public DeceasedClients() // initialize data
         {
             dbHelper = new DbHelper(); // Initialize the dbHelper object
             InitializeComponent();
@@ -22,11 +22,11 @@ namespace RWDE
             dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
-            //Assigning events to all Controls
-            RegisterEvents(this); //Assigning events to all Controls
+            // Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
         }
 
-        private void Control_MouseHover(object sender, EventArgs e)//Changing Cursor as Hand on hover
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
@@ -38,7 +38,7 @@ namespace RWDE
             }
         }
 
-        private void Control_MouseLeave(object sender, EventArgs e)//Changing back default Cursor on Leave
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
             try
             {
@@ -51,7 +51,7 @@ namespace RWDE
 
         }
 
-        private void RegisterEvents(Control parent)//Assigning events to all Controls
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
             try
             {
@@ -67,7 +67,7 @@ namespace RWDE
                     // Check for child controls in containers
                     if (control.HasChildren)
                     {
-                        //Assigning events to child Controls
+                        // Assigning events to child Controls
                         RegisterEvents(control);
                     }
                 }
@@ -78,7 +78,7 @@ namespace RWDE
             }
         }
 
-        public void PopulateDataGridView(DataTable dataTable) //populate data
+        public void PopulateDataGridView(DataTable dataTable) // populate data
         {
             try
             {
@@ -151,8 +151,7 @@ namespace RWDE
                         row[Constants.CmsMatchsp],
                         row[Constants.CmsMatchDatesp],
                         row[Constants.ServiceCountAfterDeath],
-                        row[Constants.CreatedOnsp]
-                    );
+                        row[Constants.CreatedOnsp]);
                 }
             }
             catch (Exception ex)
@@ -161,7 +160,7 @@ namespace RWDE
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e) //to close the form
+        private void btnClose_Click(object sender, EventArgs e) // to close the form
         {
             try
             {
@@ -175,7 +174,7 @@ namespace RWDE
             }
         }
 
-        private void btnDownload_Click(object sender, EventArgs e) //to show the filtered data in the grid
+        private void btnDownload_Click(object sender, EventArgs e) // to show the filtered data in the grid
         {
             try
             {
@@ -253,7 +252,7 @@ namespace RWDE
             }
         }
 
-        private void btnReport_Click(object sender, EventArgs e) //to show data in the grid
+        private void btnReport_Click(object sender, EventArgs e) // to show data in the grid
         {
             try
             {
@@ -285,7 +284,7 @@ namespace RWDE
             }
         }
 
-        private void btnClr_Click(object sender, EventArgs e) //to clear data
+        private void btnClr_Click(object sender, EventArgs e) // to clear data
         {
             try
             {
@@ -295,7 +294,7 @@ namespace RWDE
                 dtpEndDate.Value = DateTime.Now;
                 // Clear only the rows in the DataGridView
                 dataGridView.Rows.Clear();
-                //reset the DataGridView's current selection or focus
+                // reset the DataGridView's current selection or focus
                 dataGridView.ClearSelection();
             }
             catch (Exception ex)
