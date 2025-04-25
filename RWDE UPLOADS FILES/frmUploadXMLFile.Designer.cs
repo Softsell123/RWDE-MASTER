@@ -74,9 +74,9 @@ namespace RWDE
             this.pnlProggress.SuspendLayout();
             this.pnlCsvXml.SuspendLayout();
             this.SuspendLayout();
-            //
-            //btnClose
-            //
+            // 
+            // btnClose
+            // 
             this.btnClose.AutoSize = true;
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClose.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -86,12 +86,12 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(240, 45);
             this.btnClose.TabIndex = 1;
-            this.btnClose.Text = Constants.Close;
+            this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            //
-            //btnUploadXML
-            //
+            // 
+            // btnUploadXML
+            // 
             this.btnUploadXML.AutoSize = true;
             this.btnUploadXML.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnUploadXML.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -104,9 +104,9 @@ namespace RWDE
             this.btnUploadXML.Text = "Upload XML";
             this.btnUploadXML.UseVisualStyleBackColor = false;
             this.btnUploadXML.Click += new System.EventHandler(this.btnUploadXML_Click);
-            //
-            //pnl
-            //
+            // 
+            // pnl
+            // 
             this.pnl.AutoSize = true;
             this.pnl.BackColor = System.Drawing.Color.White;
             this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -126,12 +126,10 @@ namespace RWDE
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1722, 353);
             this.pnl.TabIndex = 16;
-            //
-            //chkPHI
-            //
+            // 
+            // chkPHI
+            // 
             this.chkPHI.AutoSize = true;
-            this.chkPHI.Checked = true;
-            this.chkPHI.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkPHI.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkPHI.Location = new System.Drawing.Point(1256, 134);
             this.chkPHI.Name = "chkPHI";
@@ -141,9 +139,9 @@ namespace RWDE
             this.chkPHI.UseVisualStyleBackColor = true;
             this.chkPHI.MouseLeave += new System.EventHandler(this.cbMask_MouseLeave);
             this.chkPHI.MouseHover += new System.EventHandler(this.cbMask_MouseHover);
-            //
-            //lblBatchtype
-            //
+            // 
+            // lblBatchtype
+            // 
             this.lblBatchtype.AutoSize = true;
             this.lblBatchtype.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBatchtype.ForeColor = System.Drawing.Color.Black;
@@ -152,9 +150,9 @@ namespace RWDE
             this.lblBatchtype.Size = new System.Drawing.Size(148, 35);
             this.lblBatchtype.TabIndex = 19;
             this.lblBatchtype.Text = "Batch Type:";
-            //
-            //txtBatchType
-            //
+            // 
+            // txtBatchType
+            // 
             this.txtBatchType.BackColor = System.Drawing.Color.White;
             this.txtBatchType.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBatchType.ForeColor = System.Drawing.Color.Black;
@@ -165,9 +163,9 @@ namespace RWDE
             this.txtBatchType.Size = new System.Drawing.Size(240, 40);
             this.txtBatchType.TabIndex = 5;
             this.txtBatchType.Text = "ClientTrack";
-            //
-            //txtDesc
-            //
+            // 
+            // txtDesc
+            // 
             this.txtDesc.BackColor = System.Drawing.Color.White;
             this.txtDesc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDesc.ForeColor = System.Drawing.Color.Black;
@@ -176,9 +174,9 @@ namespace RWDE
             this.txtDesc.Name = "txtDesc";
             this.txtDesc.Size = new System.Drawing.Size(609, 40);
             this.txtDesc.TabIndex = 6;
-            //
-            //lblHeading
-            //
+            // 
+            // lblHeading
+            // 
             this.lblHeading.AutoSize = true;
             this.lblHeading.BackColor = System.Drawing.Color.White;
             this.lblHeading.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -191,9 +189,9 @@ namespace RWDE
             this.lblHeading.Text = "Enter the path below to download XML file. Ensure clients and services files are " +
     "placed in the same folder.A default folder has been set \r\nand this can be change" +
     "d by clicking on \"Browse\".";
-            //
-            //lblDesc
-            //
+            // 
+            // lblDesc
+            // 
             this.lblDesc.AutoSize = true;
             this.lblDesc.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDesc.ForeColor = System.Drawing.Color.Black;
@@ -203,9 +201,9 @@ namespace RWDE
             this.lblDesc.Size = new System.Drawing.Size(224, 35);
             this.lblDesc.TabIndex = 10;
             this.lblDesc.Text = "Batch Description:";
-            //
-            //lblPath
-            //
+            // 
+            // lblPath
+            // 
             this.lblPath.AutoSize = true;
             this.lblPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPath.ForeColor = System.Drawing.Color.Black;
@@ -215,9 +213,9 @@ namespace RWDE
             this.lblPath.Size = new System.Drawing.Size(118, 35);
             this.lblPath.TabIndex = 9;
             this.lblPath.Text = "File Path:";
-            //
-            //txtPath
-            //
+            // 
+            // txtPath
+            // 
             this.txtPath.BackColor = System.Drawing.Color.White;
             this.txtPath.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPath.ForeColor = System.Drawing.Color.Black;
@@ -227,9 +225,9 @@ namespace RWDE
             this.txtPath.ReadOnly = true;
             this.txtPath.Size = new System.Drawing.Size(735, 40);
             this.txtPath.TabIndex = 3;
-            //
-            //btnBrowse
-            //
+            // 
+            // btnBrowse
+            // 
             this.btnBrowse.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBrowse.ForeColor = System.Drawing.Color.Black;
             this.btnBrowse.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowse.Image")));
@@ -242,18 +240,18 @@ namespace RWDE
             this.btnBrowse.Text = "Browse";
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
-            //
-            //lblStatus
-            //
+            // 
+            // lblStatus
+            // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.Location = new System.Drawing.Point(245, 631);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 20);
             this.lblStatus.TabIndex = 18;
-            //
-            //pnlProggress
-            //
+            // 
+            // pnlProggress
+            // 
             this.pnlProggress.AutoSize = true;
             this.pnlProggress.BackColor = System.Drawing.Color.White;
             this.pnlProggress.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -283,9 +281,9 @@ namespace RWDE
             this.pnlProggress.Name = "pnlProggress";
             this.pnlProggress.Size = new System.Drawing.Size(1722, 353);
             this.pnlProggress.TabIndex = 19;
-            //
-            //txtFileName
-            //
+            // 
+            // txtFileName
+            // 
             this.txtFileName.BackColor = System.Drawing.Color.White;
             this.txtFileName.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFileName.Location = new System.Drawing.Point(309, 209);
@@ -295,9 +293,9 @@ namespace RWDE
             this.txtFileName.Size = new System.Drawing.Size(488, 40);
             this.txtFileName.TabIndex = 30;
             this.txtFileName.TabStop = false;
-            //
-            //lblFilename
-            //
+            // 
+            // lblFilename
+            // 
             this.lblFilename.AutoEllipsis = true;
             this.lblFilename.AutoSize = true;
             this.lblFilename.Font = new System.Drawing.Font("Calibri", 17.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -308,9 +306,9 @@ namespace RWDE
             this.lblFilename.Size = new System.Drawing.Size(148, 36);
             this.lblFilename.TabIndex = 29;
             this.lblFilename.Text = "File Name :";
-            //
-            //txtTotaltime
-            //
+            // 
+            // txtTotaltime
+            // 
             this.txtTotaltime.BackColor = System.Drawing.Color.White;
             this.txtTotaltime.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTotaltime.Location = new System.Drawing.Point(1173, 207);
@@ -320,9 +318,9 @@ namespace RWDE
             this.txtTotaltime.Size = new System.Drawing.Size(348, 40);
             this.txtTotaltime.TabIndex = 27;
             this.txtTotaltime.TabStop = false;
-            //
-            //txtUploadEnded
-            //
+            // 
+            // txtUploadEnded
+            // 
             this.txtUploadEnded.BackColor = System.Drawing.Color.White;
             this.txtUploadEnded.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUploadEnded.Location = new System.Drawing.Point(1173, 151);
@@ -332,9 +330,9 @@ namespace RWDE
             this.txtUploadEnded.Size = new System.Drawing.Size(348, 40);
             this.txtUploadEnded.TabIndex = 26;
             this.txtUploadEnded.TabStop = false;
-            //
-            //txtUploadStarted
-            //
+            // 
+            // txtUploadStarted
+            // 
             this.txtUploadStarted.BackColor = System.Drawing.Color.White;
             this.txtUploadStarted.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUploadStarted.Location = new System.Drawing.Point(1173, 101);
@@ -344,9 +342,9 @@ namespace RWDE
             this.txtUploadStarted.Size = new System.Drawing.Size(348, 40);
             this.txtUploadStarted.TabIndex = 25;
             this.txtUploadStarted.TabStop = false;
-            //
-            //txtBatchid
-            //
+            // 
+            // txtBatchid
+            // 
             this.txtBatchid.BackColor = System.Drawing.Color.White;
             this.txtBatchid.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBatchid.Location = new System.Drawing.Point(1173, 53);
@@ -356,9 +354,9 @@ namespace RWDE
             this.txtBatchid.Size = new System.Drawing.Size(348, 40);
             this.txtBatchid.TabIndex = 24;
             this.txtBatchid.TabStop = false;
-            //
-            //lblTotaltime
-            //
+            // 
+            // lblTotaltime
+            // 
             this.lblTotaltime.AutoSize = true;
             this.lblTotaltime.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotaltime.ForeColor = System.Drawing.Color.Black;
@@ -367,9 +365,9 @@ namespace RWDE
             this.lblTotaltime.Size = new System.Drawing.Size(212, 35);
             this.lblTotaltime.TabIndex = 23;
             this.lblTotaltime.Text = "Total Time Taken:";
-            //
-            //lblUploadEnded
-            //
+            // 
+            // lblUploadEnded
+            // 
             this.lblUploadEnded.AutoSize = true;
             this.lblUploadEnded.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUploadEnded.ForeColor = System.Drawing.Color.Black;
@@ -378,9 +376,9 @@ namespace RWDE
             this.lblUploadEnded.Size = new System.Drawing.Size(214, 35);
             this.lblUploadEnded.TabIndex = 22;
             this.lblUploadEnded.Text = "Upload Ended At:";
-            //
-            //lblUploadStarts
-            //
+            // 
+            // lblUploadStarts
+            // 
             this.lblUploadStarts.AutoSize = true;
             this.lblUploadStarts.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUploadStarts.ForeColor = System.Drawing.Color.Black;
@@ -389,9 +387,9 @@ namespace RWDE
             this.lblUploadStarts.Size = new System.Drawing.Size(224, 35);
             this.lblUploadStarts.TabIndex = 21;
             this.lblUploadStarts.Text = "Upload Started At:";
-            //
-            //lblBatch
-            //
+            // 
+            // lblBatch
+            // 
             this.lblBatch.AutoSize = true;
             this.lblBatch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBatch.ForeColor = System.Drawing.Color.Black;
@@ -400,9 +398,9 @@ namespace RWDE
             this.lblBatch.Size = new System.Drawing.Size(117, 35);
             this.lblBatch.TabIndex = 20;
             this.lblBatch.Text = "Batch ID:";
-            //
-            //lblFileInformation
-            //
+            // 
+            // lblFileInformation
+            // 
             this.lblFileInformation.AutoSize = true;
             this.lblFileInformation.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFileInformation.ForeColor = System.Drawing.Color.Black;
@@ -411,9 +409,9 @@ namespace RWDE
             this.lblFileInformation.Size = new System.Drawing.Size(244, 35);
             this.lblFileInformation.TabIndex = 19;
             this.lblFileInformation.Text = "Upload Information";
-            //
-            //lblMsg
-            //
+            // 
+            // lblMsg
+            // 
             this.lblMsg.AutoSize = true;
             this.lblMsg.ForeColor = System.Drawing.Color.Black;
             this.lblMsg.Location = new System.Drawing.Point(1000, 119);
@@ -421,25 +419,25 @@ namespace RWDE
             this.lblMsg.Size = new System.Drawing.Size(10, 16);
             this.lblMsg.TabIndex = 18;
             this.lblMsg.Text = ".";
-            //
-            //lblMessage
-            //
+            // 
+            // lblMessage
+            // 
             this.lblMessage.AutoSize = true;
             this.lblMessage.Location = new System.Drawing.Point(1165, 82);
             this.lblMessage.Name = "lblMessage";
             this.lblMessage.Size = new System.Drawing.Size(0, 16);
             this.lblMessage.TabIndex = 17;
-            //
-            //lbl
-            //
+            // 
+            // lbl
+            // 
             this.lbl.AutoSize = true;
             this.lbl.Location = new System.Drawing.Point(1045, 119);
             this.lbl.Name = "lbl";
             this.lbl.Size = new System.Drawing.Size(0, 16);
             this.lbl.TabIndex = 16;
-            //
-            //lblprogress
-            //
+            // 
+            // lblprogress
+            // 
             this.lblprogress.AutoSize = true;
             this.lblprogress.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblprogress.ForeColor = System.Drawing.Color.Black;
@@ -448,9 +446,9 @@ namespace RWDE
             this.lblprogress.Size = new System.Drawing.Size(114, 35);
             this.lblprogress.TabIndex = 14;
             this.lblprogress.Text = "Progress";
-            //
-            //lblLines
-            //
+            // 
+            // lblLines
+            // 
             this.lblLines.AutoSize = true;
             this.lblLines.Font = new System.Drawing.Font("Calibri", 17.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLines.ForeColor = System.Drawing.Color.Black;
@@ -460,17 +458,17 @@ namespace RWDE
             this.lblLines.Size = new System.Drawing.Size(103, 36);
             this.lblLines.TabIndex = 8;
             this.lblLines.Text = "# Lines:";
-            //
-            //progressBarLines
-            //
+            // 
+            // progressBarLines
+            // 
             this.progressBarLines.Location = new System.Drawing.Point(309, 69);
             this.progressBarLines.Margin = new System.Windows.Forms.Padding(4);
             this.progressBarLines.Name = "progressBarLines";
             this.progressBarLines.Size = new System.Drawing.Size(240, 39);
             this.progressBarLines.TabIndex = 7;
-            //
-            //txtProgressLines
-            //
+            // 
+            // txtProgressLines
+            // 
             this.txtProgressLines.BackColor = System.Drawing.Color.White;
             this.txtProgressLines.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtProgressLines.Location = new System.Drawing.Point(557, 68);
@@ -481,9 +479,9 @@ namespace RWDE
             this.txtProgressLines.TabIndex = 10;
             this.txtProgressLines.TabStop = false;
             this.txtProgressLines.Text = "0";
-            //
-            //txtProgressfile
-            //
+            // 
+            // txtProgressfile
+            // 
             this.txtProgressfile.BackColor = System.Drawing.Color.White;
             this.txtProgressfile.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtProgressfile.Location = new System.Drawing.Point(557, 142);
@@ -494,9 +492,9 @@ namespace RWDE
             this.txtProgressfile.TabIndex = 13;
             this.txtProgressfile.TabStop = false;
             this.txtProgressfile.Text = "0/0";
-            //
-            //lblFiles
-            //
+            // 
+            // lblFiles
+            // 
             this.lblFiles.AutoSize = true;
             this.lblFiles.Font = new System.Drawing.Font("Calibri", 17.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFiles.ForeColor = System.Drawing.Color.Black;
@@ -506,17 +504,17 @@ namespace RWDE
             this.lblFiles.Size = new System.Drawing.Size(96, 36);
             this.lblFiles.TabIndex = 12;
             this.lblFiles.Text = "# Files:";
-            //
-            //progressBarfile
-            //
+            // 
+            // progressBarfile
+            // 
             this.progressBarfile.Location = new System.Drawing.Point(309, 144);
             this.progressBarfile.Margin = new System.Windows.Forms.Padding(4);
             this.progressBarfile.Name = "progressBarfile";
             this.progressBarfile.Size = new System.Drawing.Size(240, 39);
             this.progressBarfile.TabIndex = 11;
-            //
-            //pnlCsvXml
-            //
+            // 
+            // pnlCsvXml
+            // 
             this.pnlCsvXml.BackColor = System.Drawing.Color.White;
             this.pnlCsvXml.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlCsvXml.Controls.Add(this.lblTitle);
@@ -531,9 +529,9 @@ namespace RWDE
             this.pnlCsvXml.Name = "pnlCsvXml";
             this.pnlCsvXml.Size = new System.Drawing.Size(5000, 1071);
             this.pnlCsvXml.TabIndex = 19;
-            //
-            //lblTitle
-            //
+            // 
+            // lblTitle
+            // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.Black;
@@ -542,9 +540,9 @@ namespace RWDE
             this.lblTitle.Size = new System.Drawing.Size(209, 35);
             this.lblTitle.TabIndex = 20;
             this.lblTitle.Text = "Upload XML File ";
-            //
-            //FrmUploadXmlFile
-            //
+            // 
+            // FrmUploadXmlFile
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;

@@ -215,26 +215,27 @@ namespace RWDE
 
                             SqlConnection conn = dbHelper.GetConnection();
 
-                                // to get the total number of rows in the given XmlDocument.
-                                int TotalRows = await GetTotalRowsInXml(xmlDoc);
-                                DateTime uploadStartedAt = DateTime.Now;
+                            // to get the total number of rows in the given XmlDocument.
+                            int TotalRows = await GetTotalRowsInXml(xmlDoc);
+                            DateTime uploadStartedAt = DateTime.Now;
 
-                                // to insert data from an XmlDocument into a database table asynchronously.
-                                await InsertXmlDataIntoTable(xmlDoc, batchId, xmlFilePath, TotalRows, conn, values, FileName);
+                            // to insert data from an XmlDocument into a database table asynchronously.
+                            await InsertXmlDataIntoTable(xmlDoc, batchId, xmlFilePath, TotalRows, conn, values, FileName);
 
-                                int successfulRows = TotalRows;
-                                string description = $"{Constants.Batch} {batchId} - {FileName}";
+                            int successfulRows = TotalRows;
+                            string description = $"{Constants.Batch} {batchId} - {FileName}";
 
-                                // update batch status in database
-                                dbHelper.InsertBatch(batchId, FileName, xmlFilePath, Constants.ClientTrackCode, description, uploadStartedAt, TotalRows, successfulRows, Constants.StatusCode);
-                                if (dbHelper.ErrorOccurred)
-                                {
-                                    MessageBox.Show(Constants.ErrorOccurred);
-                                    return;
-                                }
-                                processedXmlFiles++;
-                                UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);// to update the file progress
-                            
+                            // update batch status in database
+                            dbHelper.InsertBatch(batchId, FileName, xmlFilePath, Constants.ClientTrackCode, description, uploadStartedAt, TotalRows, successfulRows, Constants.StatusCode);
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+
+                            processedXmlFiles++;
+                            UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);// to update the file progress
+
                             DateTime endTime = DateTime.Now;
                             TimeSpan totalTime = endTime - startTime;
                             double totalSeconds = totalTime.TotalSeconds;

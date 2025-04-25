@@ -184,13 +184,15 @@ namespace RWDE
                                     else
                                     {
                                         // Handle unexpected cases or set a default value
-                                        hccTable = "";
+                                        hccTable = string.Empty;
                                     }
+
                                     break;
                             }
+
                             // Insert the Errors into database
-                                dbHelper.InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
-                                if (dbHelper.ErrorOccurred)
+                            dbHelper.InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
+                            if (dbHelper.ErrorOccurred)
                                 {
                                     MessageBox.Show(Constants.ErrorOccurred);
                                     return;
