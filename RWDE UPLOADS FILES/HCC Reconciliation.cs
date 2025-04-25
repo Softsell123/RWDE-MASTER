@@ -11,34 +11,46 @@ namespace RWDE
 {
     public partial class HccReconciliation : Form
     {
-        private DBHelper DBHelper;
-        private DataTable dataTable;
-        private readonly DBHelper dbHelper;
-        public HccReconciliation()//initialize data
+        public HccReconciliation()// initialize data
         {
             InitializeComponent();
-            dbHelper = new DBHelper();
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             dtpEndDate.Value = DateTime.Now;
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
-            RegisterEvents(this);
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
-        }
-        private void Control_MouseLeave(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
-        private void RegisterEvents(Control parent)
-        {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
+        {
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
+        {
+            try
+            {
+                foreach (Control control in parent.Controls)
+            {
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -47,73 +59,10 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    // Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
-        }
-        public void PopulateDataGridView()//populate data
-        {
-            try {
-                DataTable dt = new DataTable();
-
-                // Add columns to the DataTable
-                dt.Columns.Add("Month", typeof(string));
-                dt.Columns.Add("TotalServiceEntries", typeof(int));
-                dt.Columns.Add("ServiceEntriesNotMappedToHCC", typeof(int));
-                dt.Columns.Add("ServiceEntriesSuccessfullyExportedToHCC", typeof(int));
-                dt.Columns.Add("ServiceEntriesNotExportedToHCC", typeof(int));
-                dt.Columns.Add("ServiceEntriesForMHServicesOnlyClients", typeof(int));
-                dt.Columns.Add("ServiceEntriesPostTimeboxPeriod", typeof(int));
-                dt.Columns.Add("ServiceEntriesForExpiredMissingHCCConsent", typeof(int));
-                dt.Columns.Add("ServiceEntriesForHCCIDMissing", typeof(int));
-                dt.Columns.Add("ServiceEntriesNotEnrolledInProgram", typeof(int));
-                dt.Columns.Add("ServiceEntriesForPreRegClients", typeof(int));
-                dt.Columns.Add("ServiceEntriesForRWEligibilityExpired", typeof(int));
-                dt.Columns.Add("ServiceEntriesForMissingHCCStaffLogin", typeof(int));
-                dt.Columns.Add("ServiceEntriesWithZeroUnitOfService", typeof(int));
-                dt.Columns.Add("ServiceEntriesForWaiver", typeof(int));
-                dt.Columns.Add("ServiceEntriesFor3DayDelayInHCCUpload", typeof(int));
-                dt.Columns.Add("ServiceEntriesForITDrops", typeof(int));
-                dt.Columns.Add("%Drop", typeof(decimal));  // Percentage fields are often decimal
-
-                // Fetch data from the database
-                DataRow dr = dt.NewRow();
-                dr["Month"] = DateTime.Now.ToString("MMMM");
-
-                dr["TotalServiceEntries"] = dbHelper.GetTotalServiceEntries();
-                dr["ServiceEntriesNotMappedToHCC"] = dbHelper.GetServiceEntriesNotMappedToHCC();
-                dr["ServiceEntriesSuccessfullyExportedToHCC"] = dbHelper.GetServiceEntriesSuccessfullyExportedToHCC();
-                dr["ServiceEntriesNotExportedToHCC"] = dbHelper.GetServiceEntriesNotExportedToHCC();
-                dr["ServiceEntriesForMHServicesOnlyClients"] = dbHelper.GetServiceEntriesForMHServicesOnlyClients();
-                // dr["ServiceEntriesPostTimeboxPeriod"] = dbHelper.GetServiceEntriesPostTimeboxPeriod();
-                //dr["ServiceEntriesForExpiredMissingHCCConsent"] = dbHelper.GetServiceEntriesForExpiredMissingHCCConsent();
-                dr["ServiceEntriesForHCCIDMissing"] = dbHelper.GetServiceEntriesForHCCIDMissing();
-                dr["ServiceEntriesNotEnrolledInProgram"] = dbHelper.GetServiceEntriesNotEnrolledInProgram();
-                //dr["ServiceEntriesForPreRegClients"] = dbHelper.GetServiceEntriesForPreRegClients();
-                dr["ServiceEntriesForRWEligibilityExpired"] = dbHelper.GetServiceEntriesForRWEligibilityExpired();
-                dr["ServiceEntriesForMissingHCCStaffLogin"] = dbHelper.GetServiceEntriesForMissingHCCStaffLogin();
-                // dr["ServiceEntriesWithZeroUnitOfService"] = dbHelper.GetServiceEntriesWithZeroUnitOfService();
-                dr["ServiceEntriesForWaiver"] = dbHelper.GetServiceEntriesForWaiver();
-                //dr["ServiceEntriesFor//3DayDelayInHCCUpload"] = dbHelper.GetServiceEntriesFor3DayDelayInHCCUpload();
-                dr["ServiceEntriesForITDrops"] = dbHelper.GetServiceEntriesForITDrops();
-
-                // Calculate % Drop
-                int expiredMissingHCCConsent = dbHelper.GetServiceEntriesForExpiredMissingHCCConsent();
-                int totalNotMappedToHCC = dbHelper.GetTotalServiceEntries() - dbHelper.GetServiceEntriesNotMappedToHCC();
-                dr["%Drop"] = totalNotMappedToHCC == 0 ? 0 : (decimal)expiredMissingHCCConsent / totalNotMappedToHCC;
-
-                dt.Rows.Add(dr);
-
-                // Clear existing columns and rows
-
-
-                dataGridView.DataSource = dt;
-
-                // Set additional properties like row height, style, etc.
-                this.dataGridView.RowTemplate.Height = 40;
-                this.dataGridView.ForeColor = Color.Black;
-                this.dataGridView.DefaultCellStyle.ForeColor = Color.Black;
-                this.dataGridView.DefaultCellStyle.Font = new Font("Calibre", 14, FontStyle.Regular);
             }
             catch (Exception ex)
             {
@@ -122,12 +71,12 @@ namespace RWDE
         }
 
         // Define methods to fetch data from the database
-        private void btnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
+        private void btnDownload_Click(object sender, EventArgs e)// to export the report to selected folder
         {
             try {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.NoDataAvailableToDownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
                 DataTable dataTable = new DataTable();
@@ -151,11 +100,10 @@ namespace RWDE
                         dataTable.Rows.Add(dataRow);
                     }
                 }
-                   
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
-                    var worksheet = workbook.Worksheets.Add("Sheet1");
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
 
                     // Load the DataTable into the worksheet
                     worksheet.Cell(1, 1).InsertTable(dataTable);
@@ -163,14 +111,14 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selectthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
                             // Base file name and directory
-                            string baseFileName = Constants.HCC_Reconciliation;
+                            string baseFileName = Constants.HccReconciliation;
                             string directoryPath = folderBrowserDialog.SelectedPath;
-                            string fileExtension = ".xlsx";
+                            string fileExtension = Constants.XlsxExtention;
 
                             // Construct the initial file path
                             string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
@@ -182,10 +130,9 @@ namespace RWDE
                                 fileSuffix++;
                                 filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
                             }
-
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}",Constants.HCC_Reconciliation, MessageBoxButtons.OK, MessageBoxIcon.Information);                   
+                            MessageBox.Show($@"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}",Constants.HccReconciliation, MessageBoxButtons.OK, MessageBoxIcon.Information);                   
                         }
                     }
                 }
@@ -194,21 +141,20 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void btnClose_Click(object sender, EventArgs e)// to close the form
         {
             try
             {
                 // Close the current form (dispose it)
-                this.Close();
+                Close();
                 Application.Restart();
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnReport_Click(object sender, EventArgs e)//to get the filtered data in the grid
+        private void btnReport_Click(object sender, EventArgs e)// to get the filtered data in the grid
         {
             try
             {
@@ -224,57 +170,65 @@ namespace RWDE
                 }
 
                 // Create instance of DBHelper
-                DBHelper dbHelper = new DBHelper();
+                DbHelper dbHelper = new DbHelper();
                 dataGridView.ForeColor = Color.Black;
                 string filterType = string.Empty;
-                int[] Batchids = null;
-
+                int[] batchids = null;
 
                 if ((!string.IsNullOrWhiteSpace(txtbatchs.Text) && int.TryParse(txtbatchs.Text, out int batchid))||(!string.IsNullOrWhiteSpace(txtbatchs.Text) && txtbatchs.Text.Contains(","))||(!string.IsNullOrWhiteSpace(txtbatchs.Text)))
                 {
-                    filterType = "BatchID";
-                    Batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();
+                    filterType = Constants.BatchId;
+                    batchids= txtbatchs.Text.Split(',').Select(int.Parse).Distinct().ToArray();
                 }
                 else if (dtpDateFilter.SelectedItem != null)
                 {
                     switch (dtpDateFilter.SelectedItem.ToString())
                     {
-                        case Constants.servicedate:
-                            filterType = "ServiceDate";
+                        case Constants.ServiceDateSp:
+                            filterType = Constants.ServiceDate;
                             break;
-                        case Constants.CreatedDate:
-                            filterType = "CreatedDate";
+                        case Constants.CreatedDatesp:
+                            filterType = Constants.CreatedDate;
                             break;
                         default:
-                            MessageBox.Show("Please select a valid filter type from the dropdown.", "Filter Selection Required");
+                            MessageBox.Show(Constants.PleaseSelectAValidFilterTypeFromTheDropdown, Constants.FilterSelectionRequired);
                             return;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a valid Batch ID or select a filter type.", "Input Error");
+                    MessageBox.Show(Constants.PleaseEnterAValidBatchIdOrSelectAFilterType, Constants.InputError);
                     return;
                 }
                 DataTable result = null;
                 try
                 {
-                    if (filterType == "BatchID")
+                    if (filterType == Constants.BatchId)
                     {
                         List<DataTable> allidtables;
-                        allidtables = dbHelper.LoadDatafilterhccreconBatchid(startDate, endDate, Batchids, filterType);
+                        // to load the HCCRecon for Batch ID filter
+                        allidtables = dbHelper.LoadDatafilterhccreconBatchid(startDate, endDate, batchids, filterType);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+
+                        // to combine all the data for different BatchID
                         result = dbHelper.CombineAllResults(allidtables);
+                        
                     }
                     else
                     {
+                        // to load the HCCRecon for created and service date filter
                         result = dbHelper.LoadDatafilterhccrecon(startDate, endDate, filterType);
-                    }
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
 
-                    // Validate results
-                    //if (result == null || result.Rows.Count == 0)
-                    //{
-                    //    MessageBox.Show("No data found for the specified parameters.", "Data Not Found");
-                    //    return;
-                    //}
+                    }
 
                     // Bind data to the DataGridView
                     dataGridView.AutoGenerateColumns = true;
@@ -283,13 +237,13 @@ namespace RWDE
                 catch (Exception ex)
                 {
                     // Handle exceptions related to DateTimePicker values or other issues
-                    MessageBox.Show($"An error occurred: {ex.Message}");
+                    MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
                 }
-                if(filterType == "BatchID")
+                if(filterType == Constants.BatchId)
                 {
                     return;
                 }
-                else if (result.Rows.Count < 1) 
+                else if (result != null && result.Rows.Count < 1) 
                 {
                     MessageBox.Show(Constants.Nodatafoundbetweenselecteddates);
                     return;
@@ -298,18 +252,17 @@ namespace RWDE
             catch (Exception ex)
             {
                 // Handle exceptions related to DateTimePicker values or other issues
-                MessageBox.Show($"An error occurred: {ex.Message}");
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
             }
         }
-        private void btnClr_Click(object sender, EventArgs e)//clear the data in the grid
+        private void btnClr_Click(object sender, EventArgs e)// clear the data in the grid
         {
             try { 
-
                 // Reset DateTimePickers to one year back from the current date
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpDateFilter.Text = Constants.CreatedDate;
                 txtbatchs.Text = null;
 
@@ -318,27 +271,11 @@ namespace RWDE
                 {
                     dt.Clear();  // Clears all rows from the DataTable
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dtpStartDate_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
     }
-    }
+}

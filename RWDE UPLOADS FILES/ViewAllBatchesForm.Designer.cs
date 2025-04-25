@@ -5,9 +5,9 @@ namespace RWDE
 {
     partial class ViewAllBatchesForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern IntPtr GetDC(IntPtr hWnd);
@@ -15,12 +15,10 @@ namespace RWDE
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
-        private Button deleteButton;
-        private Button closeButton;
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -32,10 +30,10 @@ namespace RWDE
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
@@ -58,7 +56,7 @@ namespace RWDE
             this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
             this.lblEndTo = new System.Windows.Forms.Label();
             this.lblBatchType = new System.Windows.Forms.Label();
-            this.lblHeader = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.BatchID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -92,23 +90,23 @@ namespace RWDE
             this.pnl2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
-            // 
-            // batchBindingSource
-            // 
+            //
+            //batchBindingSource
+            //
             this.batchBindingSource.DataMember = "Batch";
             this.batchBindingSource.DataSource = this.rWDEDataSet;
-            // 
-            // rWDEDataSet
-            // 
+            //
+            //rWDEDataSet
+            //
             this.rWDEDataSet.DataSetName = "RWDEDataSet";
             this.rWDEDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // batchTableAdapter
-            // 
+            //
+            //batchTableAdapter
+            //
             this.batchTableAdapter.ClearBeforeFill = true;
-            // 
-            // panel1
-            // 
+            //
+            //panel1
+            //
             this.panel1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.panel1.Controls.Add(this.pnl);
             this.panel1.Location = new System.Drawing.Point(3, 1);
@@ -116,13 +114,12 @@ namespace RWDE
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(5000, 900);
             this.panel1.TabIndex = 1;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            // 
-            // pnl
-            // 
+            //
+            //pnl
+            //
             this.pnl.AutoSize = true;
             this.pnl.Controls.Add(this.pnl2);
-            this.pnl.Controls.Add(this.lblHeader);
+            this.pnl.Controls.Add(this.lblTitle);
             this.pnl.Controls.Add(this.dataGridView);
             this.pnl.Controls.Add(this.btnClose);
             this.pnl.Location = new System.Drawing.Point(0, 0);
@@ -131,9 +128,9 @@ namespace RWDE
             this.pnl.Size = new System.Drawing.Size(1993, 950);
             this.pnl.TabIndex = 3;
             this.pnl.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_Paint);
-            // 
-            // pnl2
-            // 
+            //
+            //pnl2
+            //
             this.pnl2.AutoSize = true;
             this.pnl2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnl2.Controls.Add(this.cbBatchType);
@@ -150,9 +147,9 @@ namespace RWDE
             this.pnl2.Name = "pnl2";
             this.pnl2.Size = new System.Drawing.Size(1783, 103);
             this.pnl2.TabIndex = 4;
-            // 
-            // cbBatchType
-            // 
+            //
+            //cbBatchType
+            //
             this.cbBatchType.BackColor = System.Drawing.Color.White;
             this.cbBatchType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBatchType.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -167,9 +164,9 @@ namespace RWDE
             this.cbBatchType.Size = new System.Drawing.Size(247, 37);
             this.cbBatchType.TabIndex = 17;
             this.cbBatchType.SelectedIndexChanged += new System.EventHandler(this.cbBatchType_SelectedIndexChanged);
-            // 
-            // dtpStartDate
-            // 
+            //
+            //dtpStartDate
+            //
             this.dtpStartDate.CalendarForeColor = System.Drawing.Color.Black;
             this.dtpStartDate.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
@@ -180,9 +177,9 @@ namespace RWDE
             this.dtpStartDate.Size = new System.Drawing.Size(204, 36);
             this.dtpStartDate.TabIndex = 16;
             this.dtpStartDate.Value = new System.DateTime(2024, 6, 21, 14, 13, 9, 0);
-            // 
-            // lblStartFrom
-            // 
+            //
+            //lblStartFrom
+            //
             this.lblStartFrom.AutoSize = true;
             this.lblStartFrom.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStartFrom.ForeColor = System.Drawing.Color.Black;
@@ -192,9 +189,9 @@ namespace RWDE
             this.lblStartFrom.Size = new System.Drawing.Size(130, 29);
             this.lblStartFrom.TabIndex = 15;
             this.lblStartFrom.Text = "From Date :";
-            // 
-            // bnClear
-            // 
+            //
+            //bnClear
+            //
             this.bnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.bnClear.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bnClear.ForeColor = System.Drawing.Color.Black;
@@ -206,9 +203,9 @@ namespace RWDE
             this.bnClear.Text = "Clear";
             this.bnClear.UseVisualStyleBackColor = false;
             this.bnClear.Click += new System.EventHandler(this.bnClear_Click);
-            // 
-            // lblHeading
-            // 
+            //
+            //lblHeading
+            //
             this.lblHeading.AutoSize = true;
             this.lblHeading.BackColor = System.Drawing.Color.White;
             this.lblHeading.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -219,10 +216,9 @@ namespace RWDE
             this.lblHeading.TabIndex = 1;
             this.lblHeading.Text = " All batches in RWDE are displayed below.\r\n";
             this.lblHeading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblHeading.Click += new System.EventHandler(this.pnlLabel_Click);
-            // 
-            // btnSubmit
-            // 
+            //
+            //btnSubmit
+            //
             this.btnSubmit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnSubmit.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSubmit.ForeColor = System.Drawing.Color.Black;
@@ -234,9 +230,9 @@ namespace RWDE
             this.btnSubmit.Text = "Filter";
             this.btnSubmit.UseVisualStyleBackColor = false;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
-            // 
-            // dtpEndDate
-            // 
+            //
+            //dtpEndDate
+            //
             this.dtpEndDate.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpEndDate.Location = new System.Drawing.Point(961, 52);
@@ -244,9 +240,9 @@ namespace RWDE
             this.dtpEndDate.Name = "dtpEndDate";
             this.dtpEndDate.Size = new System.Drawing.Size(211, 36);
             this.dtpEndDate.TabIndex = 12;
-            // 
-            // lblEndTo
-            // 
+            //
+            //lblEndTo
+            //
             this.lblEndTo.AutoSize = true;
             this.lblEndTo.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEndTo.ForeColor = System.Drawing.Color.Black;
@@ -256,9 +252,9 @@ namespace RWDE
             this.lblEndTo.Size = new System.Drawing.Size(100, 29);
             this.lblEndTo.TabIndex = 11;
             this.lblEndTo.Text = "To Date :";
-            // 
-            // lblBatchType
-            // 
+            //
+            //lblBatchType
+            //
             this.lblBatchType.AutoSize = true;
             this.lblBatchType.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBatchType.ForeColor = System.Drawing.Color.Black;
@@ -268,20 +264,20 @@ namespace RWDE
             this.lblBatchType.Size = new System.Drawing.Size(133, 29);
             this.lblBatchType.TabIndex = 9;
             this.lblBatchType.Text = "Batch Type :";
-            // 
-            // lblHeader
-            // 
-            this.lblHeader.AutoSize = true;
-            this.lblHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHeader.ForeColor = System.Drawing.Color.Black;
-            this.lblHeader.Location = new System.Drawing.Point(904, 52);
-            this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(207, 35);
-            this.lblHeader.TabIndex = 3;
-            this.lblHeader.Text = "Manage Batches";
-            // 
-            // dataGridView
-            // 
+            //
+            //lblTitle
+            //
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.Black;
+            this.lblTitle.Location = new System.Drawing.Point(904, 52);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(207, 35);
+            this.lblTitle.TabIndex = 3;
+            this.lblTitle.Text = "Manage Batches";
+            //
+            //dataGridView
+            //
             this.dataGridView.AutoGenerateColumns = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
@@ -348,214 +344,214 @@ namespace RWDE
             this.dataGridView.RowTemplate.Height = 30;
             this.dataGridView.Size = new System.Drawing.Size(1783, 557);
             this.dataGridView.TabIndex = 0;
-            // 
-            // BatchID
-            // 
-            this.BatchID.DataPropertyName = "BatchID";
-            this.BatchID.HeaderText = "BatchID";
+            //
+            //BatchID
+            //
+            this.BatchID.DataPropertyName = Constants.BatchId;
+            this.BatchID.HeaderText = Constants.BatchId;
             this.BatchID.MinimumWidth = 6;
-            this.BatchID.Name = "BatchID";
+            this.BatchID.Name = Constants.BatchId;
             this.BatchID.ReadOnly = true;
             this.BatchID.Width = 119;
-            // 
-            // Description
-            // 
-            this.Description.DataPropertyName = "Description";
-            this.Description.HeaderText = "Description";
+            //
+            //Description
+            //
+            this.Description.DataPropertyName = Constants.Description;
+            this.Description.HeaderText = Constants.Description;
             this.Description.MinimumWidth = 6;
-            this.Description.Name = "Description";
+            this.Description.Name = Constants.Description;
             this.Description.ReadOnly = true;
             this.Description.Width = 157;
-            // 
-            // TotalRows
-            // 
+            //
+            //TotalRows
+            //
             this.TotalRows.DataPropertyName = "TotalRows";
             this.TotalRows.HeaderText = "TotalRows";
             this.TotalRows.MinimumWidth = 6;
             this.TotalRows.Name = "TotalRows";
             this.TotalRows.ReadOnly = true;
             this.TotalRows.Width = 146;
-            // 
-            // SuccessfulRows
-            // 
+            //
+            //SuccessfulRows
+            //
             this.SuccessfulRows.DataPropertyName = "SuccessfulRows";
             this.SuccessfulRows.HeaderText = "SuccessfulRows";
             this.SuccessfulRows.MinimumWidth = 6;
             this.SuccessfulRows.Name = "SuccessfulRows";
             this.SuccessfulRows.ReadOnly = true;
             this.SuccessfulRows.Width = 200;
-            // 
-            // Status
-            // 
-            this.Status.DataPropertyName = "Status";
-            this.Status.HeaderText = "Status";
+            //
+            //Status
+            //
+            this.Status.DataPropertyName = Constants.Status;
+            this.Status.HeaderText = Constants.Status;
             this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
+            this.Status.Name = Constants.Status;
             this.Status.ReadOnly = true;
             this.Status.Width = 104;
-            // 
-            // batchIDDataGridViewTextBoxColumn
-            // 
-            this.batchIDDataGridViewTextBoxColumn.DataPropertyName = "BatchID";
-            this.batchIDDataGridViewTextBoxColumn.HeaderText = "BatchID";
+            //
+            //batchIDDataGridViewTextBoxColumn
+            //
+            this.batchIDDataGridViewTextBoxColumn.DataPropertyName = Constants.BatchId;
+            this.batchIDDataGridViewTextBoxColumn.HeaderText = Constants.BatchId;
             this.batchIDDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.batchIDDataGridViewTextBoxColumn.Name = "batchIDDataGridViewTextBoxColumn";
             this.batchIDDataGridViewTextBoxColumn.ReadOnly = true;
             this.batchIDDataGridViewTextBoxColumn.Width = 119;
-            // 
-            // fileNameDataGridViewTextBoxColumn
-            // 
-            this.fileNameDataGridViewTextBoxColumn.DataPropertyName = "FileName";
-            this.fileNameDataGridViewTextBoxColumn.HeaderText = "FileName";
+            //
+            //fileNameDataGridViewTextBoxColumn
+            //
+            this.fileNameDataGridViewTextBoxColumn.DataPropertyName = Constants.FileName;
+            this.fileNameDataGridViewTextBoxColumn.HeaderText = Constants.FileName;
             this.fileNameDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.fileNameDataGridViewTextBoxColumn.Name = "fileNameDataGridViewTextBoxColumn";
             this.fileNameDataGridViewTextBoxColumn.ReadOnly = true;
             this.fileNameDataGridViewTextBoxColumn.Width = 137;
-            // 
-            // descriptionDataGridViewTextBoxColumn
-            // 
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
+            //
+            //descriptionDataGridViewTextBoxColumn
+            //
+            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = Constants.Description;
+            this.descriptionDataGridViewTextBoxColumn.HeaderText = Constants.Description;
             this.descriptionDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
             this.descriptionDataGridViewTextBoxColumn.ReadOnly = true;
             this.descriptionDataGridViewTextBoxColumn.Width = 157;
-            // 
-            // pathDataGridViewTextBoxColumn
-            // 
+            //
+            //pathDataGridViewTextBoxColumn
+            //
             this.pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
             this.pathDataGridViewTextBoxColumn.HeaderText = "Path";
             this.pathDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
             this.pathDataGridViewTextBoxColumn.ReadOnly = true;
             this.pathDataGridViewTextBoxColumn.Width = 88;
-            // 
-            // startedAtDataGridViewTextBoxColumn
-            // 
+            //
+            //startedAtDataGridViewTextBoxColumn
+            //
             this.startedAtDataGridViewTextBoxColumn.DataPropertyName = "StartedAt";
             this.startedAtDataGridViewTextBoxColumn.HeaderText = "StartedAt";
             this.startedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.startedAtDataGridViewTextBoxColumn.Name = "startedAtDataGridViewTextBoxColumn";
             this.startedAtDataGridViewTextBoxColumn.ReadOnly = true;
             this.startedAtDataGridViewTextBoxColumn.Width = 137;
-            // 
-            // endedAtDataGridViewTextBoxColumn
-            // 
+            //
+            //endedAtDataGridViewTextBoxColumn
+            //
             this.endedAtDataGridViewTextBoxColumn.DataPropertyName = "EndedAt";
             this.endedAtDataGridViewTextBoxColumn.HeaderText = "EndedAt";
             this.endedAtDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.endedAtDataGridViewTextBoxColumn.Name = "endedAtDataGridViewTextBoxColumn";
             this.endedAtDataGridViewTextBoxColumn.ReadOnly = true;
             this.endedAtDataGridViewTextBoxColumn.Width = 127;
-            // 
-            // totalRowsDataGridViewTextBoxColumn
-            // 
+            //
+            //totalRowsDataGridViewTextBoxColumn
+            //
             this.totalRowsDataGridViewTextBoxColumn.DataPropertyName = "TotalRows";
             this.totalRowsDataGridViewTextBoxColumn.HeaderText = "TotalRows";
             this.totalRowsDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.totalRowsDataGridViewTextBoxColumn.Name = "totalRowsDataGridViewTextBoxColumn";
             this.totalRowsDataGridViewTextBoxColumn.ReadOnly = true;
             this.totalRowsDataGridViewTextBoxColumn.Width = 146;
-            // 
-            // successfulRowsDataGridViewTextBoxColumn
-            // 
+            //
+            //successfulRowsDataGridViewTextBoxColumn
+            //
             this.successfulRowsDataGridViewTextBoxColumn.DataPropertyName = "SuccessfulRows";
             this.successfulRowsDataGridViewTextBoxColumn.HeaderText = "SuccessfulRows";
             this.successfulRowsDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.successfulRowsDataGridViewTextBoxColumn.Name = "successfulRowsDataGridViewTextBoxColumn";
             this.successfulRowsDataGridViewTextBoxColumn.ReadOnly = true;
             this.successfulRowsDataGridViewTextBoxColumn.Width = 200;
-            // 
-            // failedRowsDataGridViewTextBoxColumn
-            // 
+            //
+            //failedRowsDataGridViewTextBoxColumn
+            //
             this.failedRowsDataGridViewTextBoxColumn.DataPropertyName = "FailedRows";
             this.failedRowsDataGridViewTextBoxColumn.HeaderText = "FailedRows";
             this.failedRowsDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.failedRowsDataGridViewTextBoxColumn.Name = "failedRowsDataGridViewTextBoxColumn";
             this.failedRowsDataGridViewTextBoxColumn.ReadOnly = true;
             this.failedRowsDataGridViewTextBoxColumn.Width = 156;
-            // 
-            // statusDataGridViewTextBoxColumn
-            // 
-            this.statusDataGridViewTextBoxColumn.DataPropertyName = "Status";
-            this.statusDataGridViewTextBoxColumn.HeaderText = "Status";
+            //
+            //statusDataGridViewTextBoxColumn
+            //
+            this.statusDataGridViewTextBoxColumn.DataPropertyName = Constants.Status;
+            this.statusDataGridViewTextBoxColumn.HeaderText = Constants.Status;
             this.statusDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
             this.statusDataGridViewTextBoxColumn.ReadOnly = true;
             this.statusDataGridViewTextBoxColumn.Width = 104;
-            // 
-            // messageDataGridViewTextBoxColumn
-            // 
+            //
+            //messageDataGridViewTextBoxColumn
+            //
             this.messageDataGridViewTextBoxColumn.DataPropertyName = "Message";
             this.messageDataGridViewTextBoxColumn.HeaderText = "Message";
             this.messageDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.messageDataGridViewTextBoxColumn.Name = "messageDataGridViewTextBoxColumn";
             this.messageDataGridViewTextBoxColumn.ReadOnly = true;
             this.messageDataGridViewTextBoxColumn.Width = 130;
-            // 
-            // commentsDataGridViewTextBoxColumn
-            // 
+            //
+            //commentsDataGridViewTextBoxColumn
+            //
             this.commentsDataGridViewTextBoxColumn.DataPropertyName = "Comments";
             this.commentsDataGridViewTextBoxColumn.HeaderText = "Comments";
             this.commentsDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.commentsDataGridViewTextBoxColumn.Name = "commentsDataGridViewTextBoxColumn";
             this.commentsDataGridViewTextBoxColumn.ReadOnly = true;
             this.commentsDataGridViewTextBoxColumn.Width = 151;
-            // 
-            // createdByDataGridViewTextBoxColumn
-            // 
+            //
+            //createdByDataGridViewTextBoxColumn
+            //
             this.createdByDataGridViewTextBoxColumn.DataPropertyName = "CreatedBy";
             this.createdByDataGridViewTextBoxColumn.HeaderText = "CreatedBy";
             this.createdByDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.createdByDataGridViewTextBoxColumn.Name = "createdByDataGridViewTextBoxColumn";
             this.createdByDataGridViewTextBoxColumn.ReadOnly = true;
             this.createdByDataGridViewTextBoxColumn.Width = 145;
-            // 
-            // createdOnDataGridViewTextBoxColumn
-            // 
+            //
+            //createdOnDataGridViewTextBoxColumn
+            //
             this.createdOnDataGridViewTextBoxColumn.DataPropertyName = "CreatedOn";
             this.createdOnDataGridViewTextBoxColumn.HeaderText = "CreatedOn";
             this.createdOnDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.createdOnDataGridViewTextBoxColumn.Name = "createdOnDataGridViewTextBoxColumn";
             this.createdOnDataGridViewTextBoxColumn.ReadOnly = true;
             this.createdOnDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // Batchtype
-            // 
-            this.Batchtype.HeaderText = "Batch Type";
+            //
+            //Batchtype
+            //
+            this.Batchtype.HeaderText = Constants.BatchTypeHeader;
             this.Batchtype.MinimumWidth = 6;
             this.Batchtype.Name = "Batchtype";
             this.Batchtype.ReadOnly = true;
             this.Batchtype.Width = 137;
-            // 
-            // StartedAt
-            // 
-            this.StartedAt.DataPropertyName = "UploadStartedAt";
+            //
+            //StartedAt
+            //
+            this.StartedAt.DataPropertyName = Constants.UploadStartedAt;
             this.StartedAt.HeaderText = "Upload StartedAt";
             this.StartedAt.MinimumWidth = 6;
             this.StartedAt.Name = "StartedAt";
             this.StartedAt.ReadOnly = true;
             this.StartedAt.Width = 196;
-            // 
-            // EndedAt
-            // 
-            this.EndedAt.DataPropertyName = "UploadEndedAt";
+            //
+            //EndedAt
+            //
+            this.EndedAt.DataPropertyName = Constants.UploadEndedAt;
             this.EndedAt.HeaderText = "Upload EndedAt";
             this.EndedAt.MinimumWidth = 6;
             this.EndedAt.Name = "EndedAt";
             this.EndedAt.ReadOnly = true;
             this.EndedAt.Width = 187;
-            // 
-            // buttonDelete
-            // 
-            this.buttonDelete.HeaderText = "Delete";
+            //
+            //buttonDelete
+            //
+            this.buttonDelete.HeaderText = Constants.DeleteColumnName;
             this.buttonDelete.MinimumWidth = 6;
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.ReadOnly = true;
             this.buttonDelete.Width = 107;
-            // 
-            // btnClose
-            // 
+            //
+            //btnClose
+            //
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnClose.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -565,16 +561,16 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(240, 48);
             this.btnClose.TabIndex = 2;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // batchTableAdapter1
-            // 
+            //
+            //batchTableAdapter1
+            //
             this.batchTableAdapter1.ClearBeforeFill = true;
-            // 
-            // ViewAllBatchesForm
-            // 
+            //
+            //ViewAllBatchesForm
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1924, 884);
@@ -595,25 +591,10 @@ namespace RWDE
             this.ResumeLayout(false);
 
         }
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void pnlLabel_Click(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
         private void pnl_Paint(object sender, PaintEventArgs e)
         {
             IntPtr hDC = GetDC(this.Handle);
             ReleaseDC(this.Handle, hDC);
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         #endregion
@@ -648,7 +629,7 @@ namespace RWDE
         private DataGridViewTextBoxColumn commentsDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn createdByDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn createdOnDataGridViewTextBoxColumn;
-        private Label lblHeader;
+        private Label lblTitle;
         private Panel pnl2;
         private Button btnSubmit;
         private DateTimePicker dtpEndDate;

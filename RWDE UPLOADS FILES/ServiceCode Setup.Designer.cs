@@ -3,17 +3,17 @@ using System.Windows.Forms;
 
 namespace RWDE
 {
-    partial class ServiceCodeSetup
+    sealed partial class ServiceCodeSetup
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -25,10 +25,10 @@ namespace RWDE
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -55,13 +55,12 @@ namespace RWDE
             this.UnitofMesurement = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Rate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            //this.button1 = new System.Windows.Forms.Button();
             this.lblTilte.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnSave
-            // 
+            //
+            //btnSave
+            //
             this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnSave.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSave.ForeColor = System.Drawing.Color.Black;
@@ -73,9 +72,9 @@ namespace RWDE
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // lblHeading
-            // 
+            //
+            //lblHeading
+            //
             this.lblHeading.AutoSize = true;
             this.lblHeading.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHeading.ForeColor = System.Drawing.Color.Black;
@@ -85,10 +84,8 @@ namespace RWDE
             this.lblHeading.Size = new System.Drawing.Size(444, 33);
             this.lblHeading.TabIndex = 1;
             this.lblHeading.Text = "All ServiceCodes  are displayed below.";
-            this.lblHeading.Click += new System.EventHandler(this.lblHeading_Click);
-            // 
-            // btnAdd
-            // 
+            //btnAdd
+            //
             this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnAdd.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAdd.Location = new System.Drawing.Point(1555, 141);
@@ -98,10 +95,10 @@ namespace RWDE
             this.btnAdd.TabIndex = 14;
             this.btnAdd.Text = "Add New Service";
             this.btnAdd.UseVisualStyleBackColor = false;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click_1);
-            // 
-            // btnClose
-            // 
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            //
+            //btnClose
+            //
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClose.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.Location = new System.Drawing.Point(1709, 838);
@@ -109,27 +106,25 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(200, 50);
             this.btnClose.TabIndex = 9;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click_1);
-            // 
-            // lblTitle
-            // 
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            //
+            //lblTitle
+            //
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.Black;
             this.lblTitle.Location = new System.Drawing.Point(865, 68);
             this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(234, 33);
+            this.lblTitle.Size = new System.Drawing.Size(239, 35);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Service Code SetUp";
-            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
-            // 
-            // lblTilte
-            // 
+            //
+            //lblTilte
+            //
             this.lblTilte.BackColor = System.Drawing.Color.White;
-            //this.lblTilte.Controls.Add(this.button1);
             this.lblTilte.Controls.Add(this.dataGridView);
             this.lblTilte.Controls.Add(this.btnSave);
             this.lblTilte.Controls.Add(this.btnClose);
@@ -142,10 +137,9 @@ namespace RWDE
             this.lblTilte.Name = "lblTilte";
             this.lblTilte.Size = new System.Drawing.Size(2900, 1365);
             this.lblTilte.TabIndex = 12;
-            this.lblTilte.Paint += new System.Windows.Forms.PaintEventHandler(this.lblTilte_Paint);
-            // 
-            // dataGridView
-            // 
+            //
+            //dataGridView
+            //
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
@@ -197,25 +191,25 @@ namespace RWDE
             this.dataGridView.Size = new System.Drawing.Size(1792, 603);
             this.dataGridView.TabIndex = 3;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
-            // 
-            // ServiceCodeID
-            // 
+            //
+            //ServiceCodeID
+            //
             this.ServiceCodeID.HeaderText = "ServiceCode ID";
             this.ServiceCodeID.MinimumWidth = 6;
-            this.ServiceCodeID.Name = "ServiceCodeID";
+            this.ServiceCodeID.Name = Constants.ServiceCodeId;
             this.ServiceCodeID.ReadOnly = true;
             this.ServiceCodeID.Width = 150;
-            // 
-            // ServiceName
-            // 
+            //
+            //ServiceName
+            //
             this.ServiceName.HeaderText = "Service Name";
             this.ServiceName.MinimumWidth = 6;
             this.ServiceName.Name = "ServiceName";
             this.ServiceName.ReadOnly = true;
             this.ServiceName.Width = 150;
-            // 
-            // MaptoHcc
-            // 
+            //
+            //MaptoHcc
+            //
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
             this.MaptoHcc.DefaultCellStyle = dataGridViewCellStyle2;
@@ -224,9 +218,9 @@ namespace RWDE
             this.MaptoHcc.Name = "MaptoHcc";
             this.MaptoHcc.ReadOnly = true;
             this.MaptoHcc.Width = 150;
-            // 
-            // ContractName
-            // 
+            //
+            //ContractName
+            //
             this.ContractName.DataPropertyName = "drop";
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
@@ -234,67 +228,63 @@ namespace RWDE
             this.ContractName.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
             this.ContractName.HeaderText = "Contract Name";
             this.ContractName.MinimumWidth = 6;
-            this.ContractName.Name = "ContractName";
+            this.ContractName.Name = Constants.ContractName;
             this.ContractName.ReadOnly = true;
             this.ContractName.Width = 180;
-            // 
-            // PrimaryServices
-            // 
+            //
+            //PrimaryServices
+            //
             this.PrimaryServices.HeaderText = "Primary Services";
             this.PrimaryServices.MinimumWidth = 6;
             this.PrimaryServices.Name = "PrimaryServices";
             this.PrimaryServices.ReadOnly = true;
             this.PrimaryServices.Width = 180;
-            // 
-            // SecondaryServices
-            // 
-            this.SecondaryServices.HeaderText = "Secondary Services";
+            //
+            //SecondaryServices
+            //
+            this.SecondaryServices.HeaderText = Constants.SecondaryService;
             this.SecondaryServices.MinimumWidth = 6;
             this.SecondaryServices.Name = "SecondaryServices";
             this.SecondaryServices.ReadOnly = true;
             this.SecondaryServices.Width = 210;
-            // 
-            // Subservice
-            // 
+            //
+            //Subservice
+            //
             this.Subservice.HeaderText = "SubService";
             this.Subservice.MinimumWidth = 6;
             this.Subservice.Name = "Subservice";
             this.Subservice.ReadOnly = true;
             this.Subservice.Width = 120;
-            // 
-            // UnitofMesurement
-            // 
+            //
+            //UnitofMesurement
+            //
             this.UnitofMesurement.HeaderText = "Unit of Mesurement";
             this.UnitofMesurement.MinimumWidth = 6;
             this.UnitofMesurement.Name = "UnitofMesurement";
             this.UnitofMesurement.ReadOnly = true;
             this.UnitofMesurement.Width = 210;
-            // 
-            // Rate
-            // 
+            //
+            //Rate
+            //
             this.Rate.HeaderText = "Rate";
             this.Rate.MinimumWidth = 6;
             this.Rate.Name = "Rate";
             this.Rate.ReadOnly = true;
             this.Rate.Width = 120;
-            // 
-            // Status
-            // 
+            //
+            //Status
+            //
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
             this.Status.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Status.HeaderText = "Status";
+            this.Status.HeaderText = Constants.Status;
             this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
+            this.Status.Name = Constants.Status;
             this.Status.ReadOnly = true;
             this.Status.Width = 120;
-            // 
-            // button1
-            // 
-
-            // 
-            // ServiceCodeSetup
-            // 
+            //
+            //ServiceCodeSetup
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
@@ -314,41 +304,17 @@ namespace RWDE
             this.ResumeLayout(false);
 
         }
-        private void lblTilte_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void ServiceCodeSetup_Load(object sender, EventArgs e)
         {
-            // Set the form to be maximized on load
+            //Set the form to be maximized on load
             this.WindowState = FormWindowState.Maximized;
 
-            // Optional: Adjust the form to the screen size
+            //Optional: Adjust the form to the screen size
             this.Width = Screen.PrimaryScreen.WorkingArea.Width;
             this.Height = Screen.PrimaryScreen.WorkingArea.Height;
 
-            // Optional: Center the form on the screen
+            //Optional: Center the form on the screen
             this.StartPosition = FormStartPosition.CenterScreen;
-        }
-        private void lblTitle_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblHeading_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void flowLayoutPanel_Paint(object sender, PaintEventArgs e)
-        {
-
         }
         #endregion
 

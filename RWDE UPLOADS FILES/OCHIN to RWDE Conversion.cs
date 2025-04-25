@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Application = System.Windows.Forms.Application;
@@ -12,27 +12,35 @@ namespace RWDE
 {
     public partial class OchinToRwdeConversion : Form
     {
-        private readonly string connectionString;
-        private readonly DBHelper dbHelper;
-        private List<int> removedBatchIDs = new List<int>();
-        public Panel PanelToReplace
-        {
+        private readonly DbHelper dbHelper;
 
-            get
-            {
-                return pnlOCHINConversion;
-            }
-        }
-        public OchinToRwdeConversion()
+        // Import Mouse Click Functions
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, IntPtr dwExtraInfo);
+
+        private const uint MOUSEEVENTFLEFTDOWN = 0x02;
+        private const uint MOUSEEVENTFLEFTUP = 0x04;
+
+        public OchinToRwdeConversion() // to initialize the data
         {
             InitializeComponent();
-            dbHelper = new DBHelper();
-            connectionString = dbHelper.GetConnectionString();
-            this.ControlBox = false;
+            dbHelper = new DbHelper();
+            ControlBox = false;
+
+            // load data in the grid
             PopulateDataGridView();
             PopulateDataGridViewHcc();
-            this.WindowState = FormWindowState.Maximized;
-            List<string> batchTypes = dbHelper.GetAllBatchTypesHCC();
+
+            WindowState = FormWindowState.Maximized;
+
+            // get all batches type except Client Track
+            List<string> batchTypes = dbHelper.GetAllBatchTypesHcc();
+            if (dbHelper.ErrorOccurred)
+            {
+                MessageBox.Show(Constants.ErrorOccurred);
+                return;
+            }
+
             cbBatchType.Items.Clear();  // Clear existing items
             foreach (string batchType in batchTypes)
             {
@@ -42,72 +50,77 @@ namespace RWDE
             dataGridViewHCC.CellFormatting += dataGridView_CellFormatting;
             dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
             // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this);
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Hand;
-        }
-        private void Control_MouseLeave(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
-        private void dataGridView_Scroll(object sender, ScrollEventArgs e)
-        {
-            Cursor = Cursors.Hand;
-        }
-        private void dataGridViewHCC_Scroll(object sender, ScrollEventArgs e)
-        {
-            Cursor = Cursors.Hand;
-        }
-        private void RegisterEvents(Control parent)
-        {
-            foreach (Control control in parent.Controls)
-            {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker ||control is ComboBox || control is ScrollBar || control is ScrollBar)
-                {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
-                }
 
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    RegisterEvents(control);
-                }
-            }
-        }
-        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)// Formats the cell value for the "Status" column based on the corresponding value in the database.
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
             try
             {
-                if (dataGridViewHCC.Columns[e.ColumnIndex].Name == Constants.StatusHeader)
-                {
-                    string statusValue = e.Value?.ToString();
-                    if (!string.IsNullOrEmpty(statusValue))
-                    {
-                        string valueSelectQuery = "listconversion";
-                        using (SqlConnection sql = new SqlConnection(connectionString))
-                        {
-                            using (SqlCommand com = new SqlCommand(valueSelectQuery, sql))
-                            {
-                                com.CommandType = CommandType.StoredProcedure;
-                                com.Parameters.AddWithValue("@ListsID", statusValue);
-                                sql.Open();
-                                var result = com.ExecuteScalar();
-                                sql.Close();
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
-                                if (result != null)
-                                {
-                                    e.Value = result.ToString();
-                                    e.FormattingApplied = true;
-                                }
-                            }
-                        }
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
+        {
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dataGridView_Scroll(object sender, ScrollEventArgs e)// Changing Cursor as Hand on hover
+        {
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dataGridViewHCC_Scroll(object sender, ScrollEventArgs e)// Changing Cursor as Hand on hover
+        {
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
+        {
+            try
+            {
+                foreach (Control control in parent.Controls)
+                {
+                    if (control is Button || control is CheckBox || control is DateTimePicker || control is ComboBox || control is ScrollBar || control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        // Assigning events to all child Controls
+                        RegisterEvents(control);
                     }
                 }
             }
@@ -116,866 +129,646 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)// Formats the cell value for the Constants.Status column based on the corresponding value in the database.
+        {
+            try
+            {
+                if (dataGridViewHCC.Columns[e.ColumnIndex].Name == Constants.Status)
+                {
+                    string statusValue = e.Value?.ToString();
+
+                    // to get the value of the status
+                    var result = dbHelper.GetListValue(statusValue);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+
+                    if (result != null)
+                    {
+                        e.Value = result.ToString();
+                        e.FormattingApplied = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)// Sets the width of specific columns in the DataGridView after data binding is complete.
         {
             try
-            {            // Check if the "BatchID" column exists before setting its width
-                if (dataGridView.Columns.Contains("BatchID"))
+            {            // Check if the Constants.BatchId column exists before setting its width
+                if (dataGridView.Columns.Contains(Constants.BatchId))
                 {
-                    dataGridView.Columns["BatchID"].Width = 205;
+                    dataGridView.Columns[Constants.BatchId].Width = 205;
                     // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("Type"))
+                if (dataGridView.Columns.Contains(Constants.Type))
                 {
-                    dataGridView.Columns["Type"].Width = 160; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.Type].Width = 160; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("FileName"))
+                if (dataGridView.Columns.Contains(Constants.FileName))
                 {
-                    dataGridView.Columns["FileName"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.FileName].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("Description"))
+                if (dataGridView.Columns.Contains(Constants.Description))
                 {
-                    dataGridView.Columns["Description"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.Description].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("UploadStartedAt"))
+                if (dataGridView.Columns.Contains(Constants.UploadStartedAt))
                 {
-                    dataGridView.Columns["UploadStartedAt"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.UploadStartedAt].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("UploadEndedAt"))
+                if (dataGridView.Columns.Contains(Constants.UploadEndedAt))
                 {
-                    dataGridView.Columns["UploadEndedAt"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.UploadEndedAt].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("ConversionStartedAt"))
+                if (dataGridView.Columns.Contains(Constants.ConversionStartedAt))
                 {
-                    dataGridView.Columns["ConversionStartedAt"].Width = 250; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.ConversionStartedAt].Width = 250; // Set the width to 200 pixels
                 }
-                if (dataGridView.Columns.Contains("ConversionEndedAt"))
+                if (dataGridView.Columns.Contains(Constants.ConversionEndedAt))
                 {
-                    dataGridView.Columns["ConversionEndedAt"].Width = 250; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.ConversionEndedAt].Width = 250; // Set the width to 200 pixels
                 }
 
-                if (dataGridView.Columns.Contains("Status"))
+                if (dataGridView.Columns.Contains(Constants.Status))
                 {
-                    dataGridView.Columns["Status"].Width = 205; // Set the width to 200 pixels
+                    dataGridView.Columns[Constants.Status].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("BatchID"))
+                if (dataGridViewHCC.Columns.Contains(Constants.BatchId))
                 {
-                    dataGridViewHCC.Columns["BatchID"].Width = 205;
+                    dataGridViewHCC.Columns[Constants.BatchId].Width = 205;
                     // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("Type"))
+                if (dataGridViewHCC.Columns.Contains(Constants.Type))
                 {
-                    dataGridViewHCC.Columns["Type"].Width = 160; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.Type].Width = 160; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("FileName"))
+                if (dataGridViewHCC.Columns.Contains(Constants.FileName))
                 {
-                    dataGridViewHCC.Columns["FileName"].Width = 205; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.FileName].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("Description"))
+                if (dataGridViewHCC.Columns.Contains(Constants.Description))
                 {
-                    dataGridViewHCC.Columns["Description"].Width = 205; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.Description].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("UploadStartedAt"))
+                if (dataGridViewHCC.Columns.Contains(Constants.UploadStartedAt))
                 {
-                    dataGridViewHCC.Columns["UploadStartedAt"].Width = 205; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.UploadStartedAt].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("UploadEndedAt"))
+                if (dataGridViewHCC.Columns.Contains(Constants.UploadEndedAt))
                 {
-                    dataGridViewHCC.Columns["UploadEndedAt"].Width = 205; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.UploadEndedAt].Width = 205; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("ConversionStartedAt"))
+                if (dataGridViewHCC.Columns.Contains(Constants.ConversionStartedAt))
                 {
-                    dataGridViewHCC.Columns["ConversionStartedAt"].Width = 250; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.ConversionStartedAt].Width = 250; // Set the width to 200 pixels
                 }
-                if (dataGridViewHCC.Columns.Contains("ConversionEndedAt"))
+                if (dataGridViewHCC.Columns.Contains(Constants.ConversionEndedAt))
                 {
-                    dataGridViewHCC.Columns["ConversionEndedAt"].Width = 250; // Set the width to 200 pixels
+                    dataGridViewHCC.Columns[Constants.ConversionEndedAt].Width = 250; // Set the width to 200 pixels
                 }
-
-                if (dataGridViewHCC.Columns.Contains("Status"))
+                if (dataGridViewHCC.Columns.Contains(Constants.Status))
                 {
-                    dataGridViewHCC.Columns["Status"].Width = 205; // Set the width to 200 pixels
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-        private void btncloseHCC_Click_1(object sender, EventArgs e)
-        {
-            try
-            {
-                if (btncloseHCC.Text == "Close")
-                {
-                    this.Close();
-                    Application.Restart();
-                    return;
-                }
-                // int batchId = dbHelper.GetNextBatchID();
-                int selectedRowIndex = dataGridView.SelectedRows[0].Index;
-                int batchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
-                string fileName = dataGridView.Rows[selectedRowIndex].Cells["fileName"].Value.ToString();
-
-                if (btncloseHCC.Text == Constants.abort)
-                {
-                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, "Abort Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (result == DialogResult.Yes)
-                    {                           // Prompt the user with a confirmation message
-
-                        progressbarHcc.Value = 0;
-                        progressBarServices.Value = 0;
-                        txtProgresshcc.Text = "0%";
-                        txtProgressServices.Text = "0%";
-                        foreach (DataGridViewRow row in dataGridView.Rows)
-                        {
-                            row.Cells["Status"].Value = Constants.xmlabort;
-                            break; // Abort after updating the first row
-                        }
-
-                        // Show a message box indicating successful abort
-                        MessageBox.Show(Constants.Abortedsuccessfully, Constants.GenerateXML);
-
-                        // Update the status of the selected batch to Status "19" (Abort)
-                        UpdateBatchStatusabort(batchId, 19, fileName);
-                        this.Close();
-                    }
-
-                    this.Close();
-                }
-                this.Close();
-                System.Windows.Forms.Application.Restart();
-            }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        private void UpdateBatchStatusabort(int batchId, int status,String filename)//for abort status 
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    // Construct the SQL UPDATE statement
-                    string query = "countxmlrows"; 
-                    dbHelper.DeleteHCCABORTED(batchId);
-                    // Create and execute the SqlCommand
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        // Add parameters to the command
-                        command.Parameters.AddWithValue("@Status", status);
-                        command.Parameters.AddWithValue("@BatchID", batchId);
-                        command.Parameters.AddWithValue("@Filename", filename);
-
-                        // Execute the update query
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        // Check if any rows were affected (optional)
-                        if (rowsAffected > 0)
-                        {
-                            Console.WriteLine(Constants.Batchstatusupdatedsuccessfully);
-                        }
-                        else
-                        {
-                            Console.WriteLine(Constants.NobatchwasfoundwiththegivenID);
-                        }
-                    }
-                }
-                // Delete XML files in the specified directory
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(Constants.Errorupdatingbatchstatus, ex.Message);
-                // Log or handle the exception appropriately
-            }
-        }
-
-        // System.Windows.Forms.Application.Restart();
-
-        public void PopulateDataGridView(DataTable dt)///Populate values in the database
-        {
-            try
-            {
-                //string query = "Conversion";
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand command = new SqlCommand("Conversionochin", connection);
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
-
-                    adapter.Fill(dataTable);
-
-                    //Bind the DataTable to the DataGridView
-                    dataGridView.AutoGenerateColumns = false; // Prevent auto-generation of columns
-                    dataGridView.Columns.Clear(); // Clear existing columns
-
-                    // Define DataGridView columns and map them to DataTable columns
-                    dataGridView.Columns.Add("BatchID", "Batch ID");
-                    dataGridView.Columns["BatchID"].DataPropertyName = "BatchID";
-                    dataGridView.Columns.Add("Type", "Batch Type");
-                    dataGridView.Columns["Type"].DataPropertyName = "Type";
-                    dataGridView.Columns.Add("Description", "Description");
-                    dataGridView.Columns["Description"].DataPropertyName = "Description";
-                    dataGridView.Columns.Add("FileName", "File Name");
-                    dataGridView.Columns["FileName"].DataPropertyName = "FileName";
-                    AddDateTime("UploadStartedAt", "Upload Started At", dataGridView);
-                    AddDateTime("UploadEndedAt", "Upload Ended At", dataGridView);
-                    AddDateTime("ConversionStartedAt", "Conversion Started At", dataGridView);
-                    AddDateTime("ConversionEndedAt", "Conversion Ended At", dataGridView);
-                    dataGridView.Columns.Add("Status", "Status");
-                    dataGridView.Columns["Status"].DataPropertyName = "Status";
-                    // Bind the DataTable to the DataGridView
-                    dataGridView.DataSource = dataTable;
-                    // Now, remove the rows corresponding to removed batch IDs from the DataGridView
-
+                    dataGridViewHCC.Columns[Constants.Status].Width = 205; // Set the width to 200 pixels
                 }
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Constants.Error, ex.Message);
+                MessageBox.Show(Constants.Errorsp + ex.Message);
             }
         }
-        private void AddDateTime(string name, string value, DataGridView dataGridView)//format datetime 
+
+        private void AddDateTime(string name, string value, DataGridView dataGridViews)// format datetime 
         {
-            try { 
+            try
+            {
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn
-            {
-                Name = name,
-                DataPropertyName = name,
-                HeaderText = value,
-                DefaultCellStyle = new DataGridViewCellStyle { Format = "MM-dd-yyyy HH:mm:ss" }
-            };
-            dataGridView.Columns.Add(column);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                
-            }
-        }
-        private void UpdateBatchStatus(int batchId, int status, DateTime timestamp)//update date information
-        {
-            try { 
-                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("updatestatus", connection))//UPDATE STATUS
-                    {
-                        command.Parameters.AddWithValue("@Status", status);
-                        command.Parameters.AddWithValue("@Timestamp", timestamp);
-                        command.Parameters.AddWithValue("@BatchID", batchId);
-                        command.ExecuteNonQuery();
-                        ClearTables(selectedBatchId);//to clear data
-                    }
-                }
+                    Name = name,
+                    DataPropertyName = name,
+                    HeaderText = value,
+                    DefaultCellStyle = new DataGridViewCellStyle { Format = Constants.MMddyyyyHHmmss }
+                };
+                dataGridViews.Columns.Add(column);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-               
             }
         }
-        public Panel GetPanelToReplace()
+
+        private void btncthcc_Click(object sender, EventArgs e)// Insertion of Client and Eligibility into HCC tables
         {
-            // Return the panel you want to replace
-            return pnlOCHINConversion;//
-        }
-        private async void btncthcc_Click_1(object sender, EventArgs e)//Insertion of Client and Eligibility into HCC tables
-        {
-            try {
-                    if (dataGridView.SelectedRows.Count == 0)
-                    {
-                        MessageBox.Show(Constants.PleaseselectarowwithaBatchIDtoproceed,Constants.ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return; // Exit the method early if no row is selected
-                    }
-                    int selectedRowCount = dataGridView.SelectedRows.Count;
-                    int hccselectedRowCount = dataGridViewHCC.SelectedRows.Count;
-                if (selectedRowCount != 1 || (hccselectedRowCount>0 && selectedRowCount>0))
-                    {
-                        MessageBox.Show(Constants.Pleaseselectonlyonebatchatatime, Constants.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return; // Exit the method early
-                    }
-                    int selectedRowIndex = dataGridView.SelectedRows[0].Index;
-                if (dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value == null ||!int.TryParse(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString(), out int batchId) || batchId == 0)
-                {
-                    MessageBox.Show(Constants.Pleaseselectavalidrowtoproceed, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
-                    string fileName = dataGridView.Rows[selectedRowIndex].Cells["fileName"].Value.ToString();
-
-                    if (fileName.Contains("Client"))
-                    {
-                
-                        _ = GetclientssAsync(selectedBatchId);//to get client data mapping
-                    }
-
-                    if (fileName.Contains("Service"))
-                    {
-                        _ = GetservicesAsync(selectedBatchId);//to get service data mapping
-        
-                    }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-               
-            }
-        }
-        public async Task GetclientssAsync(int selectedBatchId)//Insertion of Client and Eligibility into HCC tables
-        {
-
-            progressBarServices.Value = 0; 
-            var batchDetails = await dbHelper.GetBatchDetailsFromSPAsyncclients(selectedBatchId);//to check whether the conversion completed or not
-
-            if (batchDetails == null)
-            {
-                Console.WriteLine(Constants.Batchnotfound);
-                return;
-            }
-
-            // Check if ConversionStartedAt and ConversionEndedAt are not null
-            if (batchDetails.ConversionStartedAt != null && batchDetails.ConversionEndedAt != null)
-            {
-                MessageBox.Show(Constants.Conversionhasalreadybeencompletedforthisbatch,Constants.ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtProgresshcc.Text = "0%";
-                txtProgressServices.Text = "0%";
-                txtBatchid.Text = null;
-                txtUploadStarted.Text = null;
-                txtUploadEnded.Text = null;
-                txtTotaltime.Text = null;
-                   
-                return;
-            }
-            btncloseHCC.Text = Constants.abort;
-            btnochintorwde.Enabled = false;
-            txtUploadEnded.Text = null;
-            txtTotaltime.Text = null;
-            //int batchid = dbHelper.GetNextBatchID();
-            RefreshValues();
             try
             {
-                int selectedRowCount = dataGridView.SelectedRows.Count;
-                // Check if no batch is selected
-                if (selectedRowCount == 0)
+                if (dataGridView.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show(Constants.Pleaseselectabatchbeforestartingtheconversion, Constants.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    btncloseHCC.Text = Constants.close;
-                    btnochintorwde.Enabled = true;
+                    MessageBox.Show(Constants.PleaseselectarowwithaBatchIDtoproceed, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return; // Exit the method early if no row is selected
+                }
+                int selectedRowCount = dataGridView.SelectedRows.Count;
+                int hccselectedRowCount = dataGridViewHCC.SelectedRows.Count;
+                if (selectedRowCount != 1 || (hccselectedRowCount > 0 && selectedRowCount > 0))
+                {
+                    MessageBox.Show(Constants.Pleaseselectonlyonebatchatatime, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return; // Exit the method early
                 }
-
-                // Check if more than one batch is selected
-                if (selectedRowCount != 1)
-                {
-                    MessageBox.Show(Constants.Pleaseselectonlyonebatchatatime, Constants.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return; // Exit the method earl iy
-                }
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
-               // int selectedBatchID = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
-                bool batchExists = false;
-                DateTime? conversionStartedAt = null;
-                DateTime? conversionEndedAt = null;
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                if (dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value == null || !int.TryParse(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString(), out int batchId) || batchId == 0)
                 {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand("SELECT ConversionStartedAt, ConversionEndedAt FROM Batch WHERE BatchID = @BatchID", connection))
-                    {
-                        command.Parameters.AddWithValue("@BatchID", selectedBatchId);
-
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                conversionStartedAt = reader.IsDBNull(0) ? null : (DateTime?)reader.GetDateTime(0);
-                                conversionEndedAt = reader.IsDBNull(1) ? null : (DateTime?)reader.GetDateTime(1);
-                                batchExists = true;
-                            }
-                        }
-                    }
-                }
-                if (conversionStartedAt != null && conversionEndedAt != null)
-                {
-                    DialogResult result = MessageBox.Show($"Batch ID {selectedBatchId} has already completed the conversion.", "OCHIN To HCC Conversion", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    btnochintorwde.Enabled = true;
-                    //btncloseHCC.Text = "Close";
+                    MessageBox.Show(Constants.Pleaseselectavalidrowtoproceed, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                UpdateGridStatus(selectedBatchId, Constants.HCCSTARTCON);//update the Status label in Status Column
-                dataGridView.Refresh();
-                string baseFilename = Constants.ServiceCTTOHCC;
-                dbHelper.Log(Constants.ConverttoHCCforbatchIDStarted, Constants.ClientTrack, baseFilename, Constants.uploadct);
+                int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
+                string fileName = dataGridView.Rows[selectedRowIndex].Cells[Constants.SmallFileName].Value.ToString();
 
-                DateTime startTime = DateTime.Now;
-                dataGridView.Rows[selectedRowIndex].Cells["Status"].Value = 17;
-                dataGridView.Rows[selectedRowIndex].Cells["ConversionStartedAt"].Value = startTime;
-              
-                txtBatchid.Text = selectedBatchId.ToString();
-                txtUploadStarted.Text = startTime.ToString("MM/dd/yyyy HH:mm:ss");// Record the start time
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                if (fileName.Contains(Constants.Client))
                 {
-                    connection.Open();
+                    _ = GetclientssAsync(selectedBatchId);// to get client data mapping
+                }
 
-                    using (SqlCommand command = new SqlCommand("MapCMSClients", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-
-                        // Pass the selected BatchID to the stored procedure
-                        command.Parameters.AddWithValue("@BatchID", selectedBatchId);
-
-                        // Get the total number of rows to be inserted
-                        int totalRows = GetTotalRowsForBatch(selectedBatchId);
-
-                        // Initialize progress variables
-                        int insertedRows = 0;
-                        //string baseFilename = Path.GetFileNameWithout
-                        int batchId = dbHelper.GetNextBatchID();
-
-
-                        // Update progress textbox with initial progress information
-                        await UpdateProgressAsync(insertedRows, totalRows);
-
-                        // Set up progress bar
-                        progressbarHcc.Maximum = totalRows;
-
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (insertedRows < totalRows)
-                            {
-                                // Process each row
-                                insertedRows++;
-
-                                // Update progress bar and text box
-                                await UpdateProgressAsync(insertedRows, totalRows);
-
-                                // You may want to do additional processing here if needed
-                            }
-                        }
-                        DateTime endedTime = DateTime.Now;
-                        TimeSpan totalTime = endedTime - startTime;
-                        string eTime = endedTime.ToString("MM/dd/yyyy HH:mm:ss");
-                        double totalSeconds = totalTime.TotalSeconds;
-                        txtUploadEnded.Text = eTime;
-                        txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
-                        
-                        UpdateGridStatus(selectedBatchId, Constants.HCCENDCON);//Update Status label in Status Column 
-                        dataGridView.Refresh();
-                       
-                        dbHelper.UpdateBatchclient(selectedBatchId, startTime, endedTime, totalRows);//to insert batch client
-                        
-                        PopulateDataGridView();//populate data
-                        dbHelper.Log(Constants.ConverttoHCCforbatchIDStarted, Constants.ClientTrack, baseFilename, Constants.uploadct);
-                        btncloseHCC.Text = Constants.close;
-                        btnochintorwde.Enabled = true;
-
-                    }
+                if (fileName.Contains(Constants.Service))
+                {
+                    _ = GetservicesAsync(selectedBatchId);// to get service data mapping
                 }
             }
-
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
-
+                MessageBox.Show(ex.Message);
             }
         }
-        public OchinToRwdeConversion(string message, int displayDuration)//Automation process 
+
+        public async Task GetclientssAsync(int selectedBatchId)// Insertion o Client and Eligibility into HCC tables
         {
-            // Set up form properties
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.ShowInTaskbar = false;
-            this.Size = new Size(500, 200);
-            this.Text = "";
-            this.BackColor = Color.White;
-
-            // Create and configure message label
-            Label label = new Label();
-            label.Text = message;
-            label.AutoSize = false;
-            label.Size = new Size(this.ClientSize.Width - 10, this.ClientSize.Height - 10); // Adjust size for padding
-            label.Location = new Point(5, 5); // Adjust location for padding
-            label.TextAlign = ContentAlignment.MiddleCenter;
-            label.Font = new Font("Arial", 12, FontStyle.Regular); // Set font and size
-
-            // Add label to form
-            this.Controls.Add(label);
-
-            // Set up timer to close the form after displayDuration milliseconds
-            Timer timer = new Timer();
-            timer.Interval = displayDuration;
-            timer.Tick += (sender, e) => this.Close();
-            timer.Start();
-        }
-        private async Task GetservicesAsync(int selectedBatchId)//Mapping from CTServices to HCCServices
-        {
-            //btncloseHCC.Text = "Abort";
             try
             {
-                //progressbarHcc.Visible = false;
-                progressbarHcc.Value = 0;
-
-                // Call the stored procedure to get the ConversionStartedAt and ConversionEndedAt values
-                var batchDetails = await dbHelper.GetBatchDetailsFromSPAsync(selectedBatchId);//to check whether the conversion completed or not
-
+                progressBarServices.Value = 0;
+                var batchDetails = await dbHelper.GetBatchDetailsFromSpAsyncclients(selectedBatchId);// to check whether the conversion completed or not
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 if (batchDetails == null)
                 {
-                        Console.WriteLine(Constants.Batchnotfound);
-                        return;
+                    MessageBox.Show(Constants.BatchNotfound);
+                    return;
                 }
-                    // Check if ConversionStartedAt and ConversionEndedAt are not null
-                    if (batchDetails.ConversionStartedAt!= null && batchDetails.ConversionEndedAt != null)
-                    {
-                       MessageBox.Show(Constants.Conversionhasalreadybeencompletedforthisbatch,Constants.ochintorwdeconversion,MessageBoxButtons.OK,MessageBoxIcon.Information);
-                        txtProgresshcc.Text = "0%";
-                        txtProgressServices.Text = "0%";
-                        txtBatchid.Text = null;
-                        txtUploadStarted.Text = null;
-                        txtUploadEnded.Text = null;
-                        txtTotaltime.Text = null;
-                        return;
-                    }
-                    btncloseHCC.Text = Constants.abort;
-                    txtBatchid.Text = selectedBatchId.ToString();
-                    DateTime starttime = DateTime.Now;
+                // Check if ConversionStartedAt and ConversionEndedAt are not null
+                if (batchDetails.ConversionStartedAt != null && batchDetails.ConversionEndedAt != null)
+                {
+                    MessageBox.Show(Constants.Conversionhasalreadybeencompletedforthisbatch, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtProgressClients.Text = Constants.ZeroPercent;
+                    txtProgressServices.Text = Constants.ZeroPercent;
+                    txtBatchid.Text = null;
+                    txtUploadStarted.Text = null;
                     txtUploadEnded.Text = null;
                     txtTotaltime.Text = null;
-                    btnochintorwde.Enabled = false;
-                    txtUploadStarted.Text = starttime.ToString("MM/dd/yyyy HH:mm:ss");
-                    // Check if a batch has been selected
-                    if (selectedBatchId >= 0)
+                    return;
+                }
+
+                btnClose.Text = Constants.Abort;
+                btnConversion.Enabled = false;
+                btnNext.Enabled = false;
+                txtUploadEnded.Text = null;
+                txtTotaltime.Text = null;
+                RefreshValues();
+                try
+                {
+                    int selectedRowCount = dataGridView.SelectedRows.Count;
+                    // Check if no batch is selected
+                    if (selectedRowCount == 0)
                     {
-                        int selectedRowIndex = dataGridView.SelectedRows[0].Index;
-                        selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells["BatchID"].Value.ToString());
-                        //int AllTotalRows = GetTotalForBatch(selectedBatchID);
-                        using (SqlConnection connection = new SqlConnection(connectionString))
-                        {
-                            connection.Open();
+                        MessageBox.Show(Constants.PleaseSelectABatchBeforeStartingTheConversion, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        btnClose.Text = Constants.Close;
+                        btnConversion.Enabled = true;
+                        return; // Exit the method early
+                    }
+                    // Check if more than one batch is selected
+                    if (selectedRowCount != 1)
+                    {
+                        MessageBox.Show(Constants.Pleaseselectonlyonebatchatatime, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return; // Exit the method earl iy
+                    }
+                    int selectedRowIndex = dataGridView.SelectedRows[0].Index;
 
-                            using (SqlCommand command = new SqlCommand("MapCMSServicesToHCCServices", connection))
-                            {
-                                command.CommandType = CommandType.StoredProcedure;
+                    DateTime? conversionStartedAt = null;
+                    DateTime? conversionEndedAt = null;
 
-                                // Pass the selected BatchID to the stored procedure
-                                command.Parameters.AddWithValue("@BatchID", selectedBatchId);
+                    // to get the conversion time of the Batch
+                    (conversionStartedAt, conversionEndedAt) = dbHelper.GetCoversionTime(selectedBatchId);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
 
-                                // Get the total number of rows to be inserted
-                                int totalRows = GetTotalRowsForBatchservices(selectedBatchId);//to get total rows
+                    if (conversionStartedAt != null && conversionEndedAt != null)
+                    {
+                        DialogResult result = MessageBox.Show($@"{Constants.BatchIdHeader} {selectedBatchId} {Constants.Hasalreadycompletedtheconversion}", Constants.OchinToHccConversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        btnConversion.Enabled = true;
+                        btnNext.Enabled = true;
+                        return;
+                    }
 
-                                // Initialize progress variables
-                                int insertedRows = 0;
+                    dbHelper.UpdateGridStatus(selectedBatchId, Constants.Hccstartcon);// update the Status label in Status Column
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
 
-                                string baseFilename = Constants.CTServices;
-                                dbHelper.Log($"Convert to HCC  for batch ID Started.", Constants.HCC, baseFilename, Constants.uploadhcc);
+                    dataGridView.Refresh();
+                    string baseFilename = Constants.ServiceCttohcc;
+                    dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
 
-                                DateTime startTime = DateTime.Now;
-                                txtUploadStarted.Text = startTime.ToString("MM/dd/yyyy HH:mm:ss");
-                                // Update progress textbox with initial progress information
-                                if (totalRows != 0)
-                                {
-                                    await UpdateProgressAsyncservices(insertedRows, totalRows);
-                                }
-                                else
-                                {
-                                    MessageBox.Show(Constants.Nodataexistsforthisbatchid,Constants.ochintorwdeconversion,MessageBoxButtons.OK,MessageBoxIcon.Information);
-                                }
+                    DateTime startTime = DateTime.Now;
+                    dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = 17;
+                    dataGridView.Rows[selectedRowIndex].Cells[Constants.ConversionStartedAt].Value = startTime;
 
-                            // Set up progress bar
-                            progressBarServices.Maximum = totalRows;
+                    txtBatchid.Text = selectedBatchId.ToString();
+                    txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);// Record the start time
 
-                                using (SqlDataReader reader = command.ExecuteReader())
-                                {
-                                    if (totalRows != 0)
-                                    {
-                                        while (insertedRows < totalRows)
-                                        {
-                                            // Process each row
-                                            insertedRows++;
+                    // Get the total number of rows to be inserted
+                    int totalRows = dbHelper.GetTotalRowsOfCmsClients(selectedBatchId);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
 
-                                            // Update progress bar and text box
-                                            await UpdateProgressAsyncservices(insertedRows, totalRows);
+                    // Set up progress bar
+                    progressbarClients.Maximum = totalRows;
 
-                                            // You may want to do additional processing here if needed
-                                        }
-                                    }
-                                }
-                                DateTime endTime = DateTime.Now;
-                                UpdateGridStatus(selectedBatchId, Constants.HCCENDCON);//Update the Status label in batch table
+                    // to Map the Cms  clients to HCC tables
+                    dbHelper.MapCmsClients(selectedBatchId);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
 
-                                dbHelper.Log($"Convert to HCC format completed successfully.", Constants.ClientTrack, baseFilename, Constants.uploadct);
-                                //Record the end time
-                                
-                                Console.WriteLine("Mapping completed successfully for BatchID: " + selectedBatchId);
-                                RemoveSelectedRow(selectedBatchId, "");
-                                // int batchId = dbHelper.GetNextBatchID();//Getting next batchid from Batch table
-                                dbHelper.UpdateBatchServices(selectedBatchId, startTime, endTime, totalRows);
-                                dataGridView.Rows[selectedRowIndex].Cells["Status"].Value = 18;
-                                dataGridView.Rows[selectedRowIndex].Cells["ConversionEndedAt"].Value = endTime;
-                                DateTime endedTime = DateTime.Now;
-                                TimeSpan totalTime = endTime - startTime; // Calculate total time taken
-                                string eTime = endedTime.ToString("MM/dd/yyyy HH:mm:ss");
-                                double totalSeconds = totalTime.TotalSeconds;
-                                txtUploadEnded.Text = eTime;
-                                txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
-                                btncloseHCC.Text = Constants.close;
-                                PopulateDataGridView();
-                                dataGridView.Refresh();
-                                btnochintorwde.Enabled = true;
-                            }
-                        }
+                    int i = 0;
+                    while (i < totalRows)
+                    {
+                        i++;
+
+                        // Update progress bar and text box
+                        await UpdateProgressAsync(i, totalRows);
+                    }
+
+                    DateTime endedTime = DateTime.Now;
+                    TimeSpan totalTime = endedTime - startTime;
+                    string eTime = endedTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+                    double totalSeconds = totalTime.TotalSeconds;
+                    txtUploadEnded.Text = eTime;
+                    txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
+
+                    dbHelper.UpdateGridStatus(selectedBatchId, Constants.Hccendcon);// Update Status label in Status Column 
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+
+                    dataGridView.Refresh();
+
+                    dbHelper.UpdateBatchclient(selectedBatchId, startTime, endedTime, totalRows);// to insert batch client
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+
+                    PopulateDataGridView(); // populate data
+                    dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+
+                    btnClose.Text = Constants.Close;
+                    btnConversion.Enabled = true;
+                    btnNext.Enabled = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(Constants.Errorsp + ex.Message);
+                    MessageBox.Show(ex.Message);
+                    btnNext.Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                btnNext.Enabled = true;
+            }
+        }
+
+        public OchinToRwdeConversion(string message, int displayDuration) // Automation process
+        {
+            // Set up form properties
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            ShowInTaskbar = false;
+            Size = new Size(500, 200);
+            Text = "";
+            BackColor = Color.White;
+
+            // Create and configure message label
+            Label label = new Label
+            {
+                Text = message,
+                AutoSize = false,
+                Size = new Size(ClientSize.Width - 10, ClientSize.Height - 10), // Adjust size for padding
+                Location = new Point(5, 5), // Adjust location for padding
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font(Constants.FntfmlyArial, 12, FontStyle.Regular) // Set font and size
+            };
+
+            // Add label to form
+            Controls.Add(label);
+
+            // Set up timer to close the form after displayDuration milliseconds
+            using (Timer timer = new Timer())
+            {
+                timer.Interval = displayDuration;
+
+                timer.Tick += (sender, e) => Close();
+                timer.Start();
+            }
+        }
+
+        public sealed override Color BackColor
+        {
+            get { return base.BackColor; }
+            set { base.BackColor = value; }
+        }
+
+        public sealed override string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
+        }
+
+        private async Task GetservicesAsync(int selectedBatchId)// Mapping from CTServices to HCCServices
+        {
+            try
+            {
+                progressbarClients.Value = 0;
+
+                // to get the ConversionStartedAt and ConversionEndedAt values
+                var batchDetails = await dbHelper.GetBatchDetailsFromSpAsync(selectedBatchId);// to check whether the conversion completed or not
+                if (dbHelper.ErrorOccurred == true)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+                if (batchDetails == null)
+                {
+                    MessageBox.Show(Constants.BatchNotfound);
+                    return;
+                }
+                // Check if ConversionStartedAt and ConversionEndedAt are not null
+                if (batchDetails.ConversionStartedAt != null && batchDetails.ConversionEndedAt != null)
+                {
+                    MessageBox.Show(Constants.Conversionhasalreadybeencompletedforthisbatch, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    txtProgressClients.Text = Constants.ZeroPercent;
+                    txtProgressServices.Text = Constants.ZeroPercent;
+                    txtBatchid.Text = null;
+                    txtUploadStarted.Text = null;
+                    txtUploadEnded.Text = null;
+                    txtTotaltime.Text = null;
+                    return;
+                }
+                btnClose.Text = Constants.Abort;
+                txtBatchid.Text = selectedBatchId.ToString();
+                DateTime starttime = DateTime.Now;
+                txtUploadEnded.Text = null;
+                txtTotaltime.Text = null;
+                btnConversion.Enabled = false;
+                txtUploadStarted.Text = starttime.ToString(Constants.MMddyyyyHHmmssbkslash);
+
+                // Get the total number of rows to be inserted
+                int totalRows = dbHelper.GetTotalRowsForBatchservicesOchin(selectedBatchId);// to get total rows
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
+                // Initialize progress variables
+                int insertedRows = 0;
+
+                string baseFilename = Constants.CtServices;
+                dbHelper.Log(Constants.ConverttoHcCforbatchIdStarted, Constants.HccCode, baseFilename, Constants.Uploadhcc);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
+                DateTime startTime = DateTime.Now;
+                txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+                // Update progress textbox with initial progress information
+                    if (totalRows != 0)
+                    {
+                        await UpdateProgressAsyncservices(insertedRows, totalRows);// to update the progress Bar for Services
                     }
                     else
-
                     {
-                        Console.WriteLine(Constants.Pleaseselectabatchbeforestartingtheconversion);
+                        MessageBox.Show(Constants.Nodataexistsforthisbatchid, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-            
-        private void PopulateDataGridView()//load data in the grid
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+               
+                // Check if a batch has been selected
+                if (selectedBatchId >= 0)
                 {
-                    SqlCommand command = new SqlCommand("Conversionochin", connection);
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
+                    int selectedRowIndex = dataGridView.SelectedRows[0].Index;
+                    selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
 
-                    adapter.Fill(dataTable);
-
-                    //Bind the DataTable to the DataGridView
-                    dataGridView.AutoGenerateColumns = false; // Prevent auto-generation of columns
-                    dataGridView.Columns.Clear(); // Clear existing columns
-
-                    // Define DataGridView columns and map them to DataTable columns
-                    dataGridView.Columns.Add("BatchID", "Batch ID");
-                    dataGridView.Columns["BatchID"].DataPropertyName = "BatchID";
-                    dataGridView.Columns.Add("Type", "Batch Type");
-                    dataGridView.Columns["Type"].DataPropertyName = "Type";
-                    dataGridView.Columns.Add("Description", "Description");
-                    dataGridView.Columns["Description"].DataPropertyName = "Description";
-                    dataGridView.Columns.Add("FileName", "File Name");
-                    dataGridView.Columns["FileName"].DataPropertyName = "FileName";
-                    AddDateTime("UploadStartedAt", "Upload Started At", dataGridView);
-                    AddDateTime("UploadEndedAt", "Upload Ended At", dataGridView);
-                    AddDateTime("ConversionStartedAt", "Conversion Started At", dataGridView);
-                    AddDateTime("ConversionEndedAt", "Conversion Ended At", dataGridView);
-                    dataGridView.Columns.Add("Status", "Status");
-                    dataGridView.Columns["Status"].DataPropertyName = "Status";
-                    // Bind the DataTable to the DataGridView
-                    dataGridView.DataSource = dataTable;
-
-                    // Now, remove the rows corresponding to removed batch IDs from the DataGridView
-                    foreach (int batchId in removedBatchIDs)
+                    // to map Cms Service To Hcc Services
+                    dbHelper.MapCmsServicesToHccServices(selectedBatchId);
+                    if (dbHelper.ErrorOccurred)
                     {
-                        DataGridViewRow row = dataGridView.Rows
-                            .Cast<DataGridViewRow>()
-                            .Where(r => r.Cells["BatchID"].Value != null && (int)r.Cells["BatchID"].Value == batchId)
-                            .FirstOrDefault();
-                        if (row != null)
-                        {
-                            dataGridView.Rows.Remove(row);
-                        }
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
                     }
+
+                    for (int i = 1; i <= totalRows; i++)
+                    {
+                        // Update progress bar and text box
+                        await UpdateProgressAsyncservices(i, totalRows);
+                    }
+
+                    DateTime endTime = DateTime.Now;
+                    dbHelper.UpdateGridStatus(selectedBatchId, Constants.Hccendcon);// Update the Status label in batch table
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+                    // insertion into log table
+                    dbHelper.Log(Constants.ConverttoHcCformatcompletedsuccessfully, Constants.ClientTrackCode, baseFilename, Constants.Uploadct);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+                    // update batch Services data
+                    dbHelper.UpdateBatchServices(selectedBatchId, startTime, endTime, totalRows);
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+                    dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = 18;
+                    dataGridView.Rows[selectedRowIndex].Cells[Constants.ConversionEndedAt].Value = endTime;
+                    DateTime endedTime = DateTime.Now;
+                    TimeSpan totalTime = endTime - startTime; // Calculate total time taken
+                    string eTime = endedTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+                    double totalSeconds = totalTime.TotalSeconds;
+                    txtUploadEnded.Text = eTime;
+                    txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
+                    btnClose.Text = Constants.Close;
+
+                    // load data in the grid
+                    PopulateDataGridView();
+                    dataGridView.Refresh();
+                    btnConversion.Enabled = true;
+                }
+                else
+                {
+                    MessageBox.Show(Constants.PleaseSelectABatchBeforeStartingTheConversion);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Constants.Error, ex.Message);
+                MessageBox.Show(Constants.Errorsp + ex.Message);
+            }
+            finally
+            {
+                btnClose.Text = Constants.Close;
+                btnConversion.Enabled = true;
             }
         }
 
-        private void PopulateDataGridViewHcc()//load data in the grid
+        private void PopulateDataGridView() // load data in the grid
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                string query = Constants.ConversionOchin;
+                DataTable dataTable = dbHelper.FillTheGrid(query);// to fill the Gird 
+                if (dbHelper.ErrorOccurred)
                 {
-                    SqlCommand command = new SqlCommand("ConversionHCC", connection);
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
-
-                    adapter.Fill(dataTable);
-
-                    //Bind the DataTable to the DataGridView
-                    dataGridViewHCC.AutoGenerateColumns = false; // Prevent auto-generation of columns
-                    dataGridViewHCC.Columns.Clear(); // Clear existing columns
-
-                    // Define DataGridView columns and map them to DataTable columns
-                    dataGridViewHCC.Columns.Add("BatchID", "Batch ID");
-                    dataGridViewHCC.Columns["BatchID"].DataPropertyName = "BatchID";
-                    dataGridViewHCC.Columns.Add("Type", "Batch Type");
-                    dataGridViewHCC.Columns["Type"].DataPropertyName = "Type";
-                    dataGridViewHCC.Columns.Add("Description", "Description");
-                    dataGridViewHCC.Columns["Description"].DataPropertyName = "Description";
-                    dataGridViewHCC.Columns.Add("FileName", "File Name");
-                    dataGridViewHCC.Columns["FileName"].DataPropertyName = "FileName";
-                    AddDateTime("UploadStartedAt", "Upload Started At", dataGridViewHCC);
-                    AddDateTime("UploadEndedAt", "Upload Ended At", dataGridViewHCC);
-                    AddDateTime("ConversionStartedAt", "Conversion Started At", dataGridViewHCC);
-                    AddDateTime("ConversionEndedAt", "Conversion Ended At", dataGridViewHCC);
-                    dataGridViewHCC.Columns.Add("Status", "Status");
-                    dataGridViewHCC.Columns["Status"].DataPropertyName = "Status";
-                    // Bind the DataTable to the DataGridView
-                    dataGridViewHCC.DataSource = dataTable;
-
-                    // Now, remove the rows corresponding to removed batch IDs from the DataGridView
-                    foreach (int batchId in removedBatchIDs)
-                    {
-                        DataGridViewRow row = dataGridViewHCC.Rows
-                            .Cast<DataGridViewRow>()
-                            .Where(r => r.Cells["BatchID"].Value != null && (int)r.Cells["BatchID"].Value == batchId)
-                            .FirstOrDefault();
-                        if (row != null)
-                        {
-                            dataGridViewHCC.Rows.Remove(row);
-                        }
-                    }
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
                 }
+
+                // Bind the DataTable to the DataGridView
+                dataGridView.AutoGenerateColumns = false; // Prevent auto-generation of columns
+                dataGridView.Columns.Clear(); // Clear existing columns
+
+                // Define DataGridView columns and map them to DataTable columns
+                dataGridView.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
+                dataGridView.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
+                dataGridView.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
+                dataGridView.Columns[Constants.Type].DataPropertyName = Constants.Type;
+                dataGridView.Columns.Add(Constants.Description, Constants.Description);
+                dataGridView.Columns[Constants.Description].DataPropertyName = Constants.Description;
+                dataGridView.Columns.Add(Constants.FileName, Constants.FileNamesp);
+                dataGridView.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
+                AddDateTime(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridView);
+                AddDateTime(Constants.UploadEndedAt, Constants.UploadEndedAtHeader, dataGridView);
+                AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridView);
+                AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridView);
+                dataGridView.Columns.Add(Constants.Status, Constants.Status);
+                dataGridView.Columns[Constants.Status].DataPropertyName = Constants.Status;
+                // Bind the DataTable to the DataGridView
+                dataGridView.DataSource = dataTable;
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Constants.Error, ex.Message);
+                MessageBox.Show(Constants.ErrorCode, ex.Message);
             }
         }
-
-        private async Task UpdateProgressAsyncservices(int insertedRows, int totalRows)//Services Progress bar
+        private void PopulateDataGridViewHcc()// load data in the grid
         {
             try
             {
-                // Calculate progress percentage
-                int progressPercentage = (int)((double)insertedRows / totalRows * 100);
-
-                // Construct the progress information string in the desired format
-                string progressInfo = $"{insertedRows}/{totalRows} ({progressPercentage}%)";
-
-                // Update the progress information in the textbox without appending new line
-                txtProgressServices.Text = progressInfo;
-
-                // Update the progress bar
-                progressBarServices.Value = insertedRows;
-
-                // Introduce a delay to slow down the progress display
-                await Task.Delay(1); // Adjust the delay time as needed
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-        private int GetTotalRowsForBatchservices(int batchId)//Getting total rows from required table
-        {
-            int totalRows = 0;
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                string query = Constants.ConversionHcc;
+                DataTable dataTable = dbHelper.FillTheGrid(query);// to fill the Gird 
+                if (dbHelper.ErrorOccurred)
                 {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand("countcmsservices", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchID", batchId);
-                        totalRows = (int)command.ExecuteScalar();
-                    }
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
                 }
+
+                // Bind the DataTable to the DataGridView
+                dataGridViewHCC.AutoGenerateColumns = false; // Prevent auto-generation of columns
+                dataGridViewHCC.Columns.Clear(); // Clear existing columns
+
+                // Define DataGridView columns and map them to DataTable columns
+                dataGridViewHCC.Columns.Add(Constants.BatchId, Constants.BatchIdHeader);
+                dataGridViewHCC.Columns[Constants.BatchId].DataPropertyName = Constants.BatchId;
+                dataGridViewHCC.Columns.Add(Constants.Type, Constants.BatchTypeHeader);
+                dataGridViewHCC.Columns[Constants.Type].DataPropertyName = Constants.Type;
+                dataGridViewHCC.Columns.Add(Constants.Description, Constants.Description);
+                dataGridViewHCC.Columns[Constants.Description].DataPropertyName = Constants.Description;
+                dataGridViewHCC.Columns.Add(Constants.FileName, Constants.FileNamesp);
+                dataGridViewHCC.Columns[Constants.FileName].DataPropertyName = Constants.FileName;
+                AddDateTime(Constants.UploadStartedAt, Constants.UploadStartedAtHeader, dataGridViewHCC);
+                AddDateTime(Constants.UploadEndedAt, Constants.UploadEndedAtHeader, dataGridViewHCC);
+                AddDateTime(Constants.ConversionStartedAt, Constants.ConversionStartedAtHeader, dataGridViewHCC);
+                AddDateTime(Constants.ConversionEndedAt, Constants.ConversionEndedAtHeader, dataGridViewHCC);
+                dataGridViewHCC.Columns.Add(Constants.Status, Constants.Status);
+                dataGridViewHCC.Columns[Constants.Status].DataPropertyName = Constants.Status;
+                // Bind the DataTable to the DataGridView
+                dataGridViewHCC.DataSource = dataTable;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                MessageBox.Show(Constants.ErrorCode, ex.Message);
             }
-
-            return totalRows;
         }
-        private void RemoveSelectedRow(int batchId, string status) // Method to remove a selected row and store the removed batch ID in the database table
+        // to update the progress bar of services
+        public async Task UpdateProgressAsyncservices(int insertedRows, int totalRows)
         {
             try
             {
-                // Find and remove the row corresponding to the selected batch ID in the DataGridView
-                foreach (DataGridViewRow row in dataGridView.Rows)
-                {
-                    if (row.Cells["BatchID"].Value != null && Convert.ToInt32(row.Cells["BatchID"].Value) == batchId)
-                    {
-                        dataGridView.Rows.Remove(row);
-                        btncloseHCC.Text = status;
-                        break;
-                    }
-                }
-                // Add the removed batch ID to the database table
-                AddRemovedBatchIdToDatabase(batchId);//remove selected data
+                    // Calculate progress percentage
+                    int progressPercentage = (int)((double)insertedRows / totalRows * 100);
+
+                    // Update UI controls directly (assume running on the UI thread)
+                    txtProgressServices.Text = $"{insertedRows}/{totalRows} ({progressPercentage}%)";
+                    progressBarServices.Value = progressPercentage;
+                    await Task.Delay(10);
+                
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                MessageBox.Show(ex.Message);
             }
+            return;
         }
-        private void AddRemovedBatchIdToDatabase(int batchId)// // Method to add a removed batch ID to the database table
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO RemovedBatchIDs (BatchID) VALUES (@BatchID)", conn);
-                    cmd.Parameters.AddWithValue("@BatchID", batchId);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error adding removed batch ID to database: {ex.Message}");
-            }
-        }     
-        private void UpdateGridStatus(int batchId, int status)// Updates the status label on the form based on a given status code retrieved from the database.
-        {
-            try
-            {
-                string valueSelectQuery = "updategrid";
 
-                using (SqlConnection sql = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand com = new SqlCommand(valueSelectQuery, sql))
-                    {
-                        com.Parameters.AddWithValue("@ListsID", status);
-
-                        sql.Open();
-
-                        var result = com.ExecuteScalar();
-
-                        if (result != null)
-                        {
-                            //btncloseHCC.Text = result.ToString();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception appropriately
-                Console.WriteLine($"Error updating grid status: {ex.Message}");
-            }
-        }
-        private async Task UpdateProgressAsync(int insertedRows, int totalRows)//progress of rows
+        public async Task UpdateProgressAsync(int insertedRows, int totalRows)// progress of rows
         {
             try
             {
@@ -986,173 +779,100 @@ namespace RWDE
                 string progressInfo = $"{insertedRows}/{totalRows} ({progressPercentage}%)";
 
                 // Update the progress information in the textbox without appending new lines
-                txtProgresshcc.Text = progressInfo;
+                txtProgressClients.Text = progressInfo;
 
                 // Update the progress bar
-                progressbarHcc.Value = insertedRows;
-
-                // Introduce a delay to slow down the progress display
-                await Task.Delay(1); // Adjust the delay time as needed
+                progressbarClients.Value = insertedRows;
+                await Task.Delay(15);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                MessageBox.Show(Constants.Errorsp + ex.Message);
             }
-
         }
-        private int GetTotalRowsForBatch(int batchId)//getting total rows from particular tables
-        {
-            int totalRows = 0;
 
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    using (SqlCommand command = new SqlCommand("COUNTCMSCLIENTS", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchID", batchId);
-                        totalRows = (int)command.ExecuteScalar();
-                        int successfulRows = totalRows; // Assuming all rows are successfully processed
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return totalRows;
-        }
-        private int selectedBatchId = 0;
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)//to select particular batch
+        private void btncloseHCC_Click(object sender, EventArgs e)// Closing form
         {
             try
             {
-                // Check if the click is on a valid row
-                if (e.RowIndex >= 0)
+                
+                if (btnClose.Text == Constants.Abort)
                 {
-                    // Get the BatchID of the selected row
-                    selectedBatchId = Convert.ToInt32(dataGridView.Rows[e.RowIndex].Cells["BatchID"].Value);
-                    Console.WriteLine("Selected BatchID: " + selectedBatchId); // Check the selected BatchID value
+                    int selectedRowIndex = dataGridView.SelectedRows[0].Index;
+                    int batchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
+                    string filename = dataGridView.Rows[selectedRowIndex].Cells[Constants.FileName].Value.ToString();
 
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-        private void btncloseHCC_Click(object sender, EventArgs e)//Closing form
-        {
-
-            int batchId = dbHelper.GetNextBatchID();
-
-
-            try
-            {
-
-
-                if (btncloseHCC.Text == "Abort")
-                {
-                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort,Constants.Ochin, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, Constants.Ochin, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     // Check if the user clicked "Yes"
+                    if (result == DialogResult.Yes)
+                    {
+                        dataGridView.Rows[selectedRowIndex].Cells[Constants.Status].Value = Constants.Hccabort;
+
+                        // Update the status of the selected batch to Status "19" (Abort)
+                        dbHelper.UpdateBatchStatusOchin(batchId, Constants.Hccabort, filename);
+                        if (dbHelper.ErrorOccurred)
+                        {
+                            MessageBox.Show(Constants.ErrorOccurred);
+                            return;
+                        }
+                        if (filename.Contains(Constants.Service))
+                        {
+                            dbHelper.AbortServiceConversion(batchId);// to clear the data in table
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+                        }
+                        else if (filename.Contains(Constants.Client))
+                        {
+                            dbHelper.AbortClientConversion(batchId);// to clear the data in table
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+                        }
+                    }
 
                     // Show a message box indicating successful abort
-                    MessageBox.Show(Constants.Abortedsuccessfully);
-                    foreach (DataGridViewRow row in dataGridView.Rows)
-                    {
-                        row.Cells["Status"].Value = Constants.HCCABORT;
-
-                        break;
-                    }
-                    // Update the status of the selected batch to Status "19" (Abort)
-                    UpdateBatchStatus(batchId, Constants.HCCABORT);
-                    // Application.Exit();
+                    MessageBox.Show(Constants.AbortedSuccessfully);
+                    Close();
+                    Application.Restart();
                 }
-
-                this.Close();
-                //System.Windows.Forms.Application.Restart();
-
+                else
+                {
+                    Close();
+                    Application.Restart();
+                }
 
             }
             catch (Exception ex)
             {
                 // Display or log the exception message
-                MessageBox.Show(Constants.Error, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Constants.ErrorCode, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void UpdateBatchStatus(int selectedBatchId, int status)//Updating Batch Status calling batchid here 
+        private void RefreshValues()// constant values
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    ClearTables(selectedBatchId);//to clear the data in table
-                    // Construct the SQL UPDATE statement
-                    string query = "Updatebatch";
-                    // Create and execute the SqlCommand
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        // Add parameters to the command
-                        command.Parameters.AddWithValue("@Status", status);
-                        command.Parameters.AddWithValue("@BatchID", selectedBatchId);
-
-                        // Execute the update query
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        // Check if any rows were affected
-
-                    }
-                }
+                txtBatchid.Clear();
+                txtTotaltime.Clear();
+                txtUploadStarted.Clear();
+                txtUploadEnded.Clear();
+                txtProgressClients.Text = Constants.ZeroPercent;
+                progressbarClients.Value = 0;
+                txtProgressServices.Text = Constants.ZeroPercent;
+                progressBarServices.Value = 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Constants.Errorupdatingbatchstatus, ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
-        private void ClearTables(int batchId)//clear tables
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("abortconversiondelete", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchId", batchId);
-
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                // Log or handle the exception appropriately
-                throw; // Re-throw if you want to handle it in the calling method
-            }
-        }
-        private void RefreshValues()//constant values
-        {
-            txtBatchid.Clear();
-            txtTotaltime.Clear();
-            txtUploadStarted.Clear();
-            txtUploadEnded.Clear();
-            txtProgresshcc.Text = "0%";
-            progressbarHcc.Value = 0;
-            txtProgressServices.Text = "0%";
-            progressBarServices.Value = 0;
-
-        }
-
-        private void btnSubmit_Click(object sender, EventArgs e)//to load data insertion into rwde
+        private void btnSubmit_Click(object sender, EventArgs e)// to insert data
         {
             try
             {
@@ -1173,93 +893,54 @@ namespace RWDE
                     return;
                 }
 
-                // Retrieve and bind data
-                DataTable result = dbHelper.GetParticularConversionDatas(batchType, fromDate, endDate);
-                dataGridView.DataSource = result;
-
-                if (result == null || result.Rows.Count == 0)
-                {
-                    MessageBox.Show(Constants.NoFilterDatas, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or display an error message
-                MessageBox.Show($"An error occurred: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnClear_Click(object sender, EventArgs e)//to clear existing items
-        {
-            try
-            {
-                cbBatchType.Items.Clear();
-                PopulateDataGridView();
-                List<string> batchTypes = dbHelper.GetAllBatchTypesHCC();
-                cbBatchType.Items.Clear();  // Clear existing items
-                foreach (string batchType in batchTypes)
-                {
-                    cbBatchType.Items.Add(batchType);
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }    
-        private void btnSubmit_Click_1(object sender, EventArgs e)//to insert data
-        {
-            try
-            {
-                string batchType = cbBatchType.Text;
-                DateTime fromDate = dtpStartDate.Value.Date;
-                DateTime endDate = dtpEndDate.Value.Date;
-
-                // Validate inputs
-                if (string.IsNullOrEmpty(batchType))
-                {
-                    MessageBox.Show(Constants.EmptyvalueMessage, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (endDate < fromDate)
-                {
-                    MessageBox.Show(Constants.DateShouldBeGreaterThen, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                
-
-                // Retrieve and bind data
+                // get generation data according to start and end time
                 DataTable result = dbHelper.GetParticularnGenerationDatasconversion(batchType, fromDate, endDate);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 dataGridView.DataSource = result;
-                DataTable resultHcc = dbHelper.GetParticularnGenerationDatasHCC(batchType, fromDate, endDate);
+
+                // get generation data of HCC according to start and end time
+                DataTable resultHcc = dbHelper.GetParticularGenerationDatasHcc(batchType, fromDate, endDate);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 dataGridViewHCC.DataSource = resultHcc;
 
                 if (result == null || result.Rows.Count == 0)
                 {
-                    MessageBox.Show(Constants.NoFilterDatas, Constants.FilterTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.NoFilterDatas, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-               
             }
             catch (Exception ex)
             {
                 // Log the exception or display an error message
-                MessageBox.Show($"An error occurred: {ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void bnClear_Click(object sender, EventArgs e)//to clear existing data
+        private void btnClear_Click(object sender, EventArgs e)// to clear existing data
         {
             try
             {
                 cbBatchType.Items.Clear();
+                // load data in the grid
                 PopulateDataGridView();
-                //PopulateDataGridViewHCC();
-                dtpEndDate.CustomFormat = " ";
+                dtpEndDate.CustomFormat = Constants.Space;
                 dtpEndDate.Format = DateTimePickerFormat.Custom;
                 // Do the same for dtpStartDate or any other DateTimePicker if needed
-                dtpStartDate.CustomFormat = " ";
+                dtpStartDate.CustomFormat = Constants.Space;
                 dtpStartDate.Format = DateTimePickerFormat.Custom;
-                List<string> batchTypes = dbHelper.GetAllBatchTypesHCC();
+                List<string> batchTypes = dbHelper.GetAllBatchTypesHcc();
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 cbBatchType.Items.Clear();  // Clear existing items
                 foreach (string batchType in batchTypes)
                 {
@@ -1268,50 +949,77 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void dtpStartDate_ValueChanged_1(object sender, EventArgs e)//to format dateY
+
+        private void dtpStartDate_ValueChanged_1(object sender, EventArgs e) // to format date when the Start date is changed
         {
-            try { 
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
+            try
+            {
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpStartDate.Format = DateTimePickerFormat.Custom;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-              
             }
         }
 
-        private void dtpEndDate_ValueChanged_1(object sender, EventArgs e)//to format date
+        private void dtpEndDate_ValueChanged_1(object sender, EventArgs e) // to format date
         {
-            try { 
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+            try
+            {
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Format = DateTimePickerFormat.Custom;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-             
             }
         }
 
-        private void btnNext_Click_1(object sender, EventArgs e)//navigate to next page for next process
+        private void btnNext_Click(object sender, EventArgs e) // navigate to next page for next process
         {
-            try {
+            try
+            {
                 FrmMain mainForm = Application.OpenForms.OfType<FrmMain>().FirstOrDefault();
 
                 if (mainForm != null)
                 {
-                    mainForm.ShowOCHINToHCCScreenGENERATE();//to navigate to next page
+                    mainForm.ShowOchinToHccScreenGenerate(); // to navigate to Xml Generation Page
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-              
+            }
+        }
+
+        private void dataGridView_KeyUp(object sender, KeyEventArgs e) // to Read the Key events
+        {
+            if (e.KeyCode == Keys.S) // Ctrl + Space to select row
+            {
+                SelectCurrentRow(); // to select the current row
+            }
+        }
+
+        private void SelectCurrentRow()
+        {
+            if (dataGridView.CurrentCell != null) // Ensure a cell is selected
+            {
+                int rowIndex = dataGridView.CurrentCell.RowIndex; // Get current row index
+                dataGridView.ClearSelection(); // Clear previous selection
+
+                // Simulate user clicking the row header
+                dataGridView.Rows[rowIndex].Selected = true;
+                dataGridView.CurrentCell = dataGridView.Rows[rowIndex].Cells[0]; // Move focus to first cell of the row
+
+                // Optional: Simulate a Mouse Click on Row Header (-1 Column)
+                Rectangle headerCellRect = dataGridView.GetCellDisplayRectangle(-1, rowIndex, true);
+                Point clickPoint = dataGridView.PointToScreen(new Point(headerCellRect.X + 5, headerCellRect.Y + 5));
+                Cursor.Position = clickPoint;
+                mouse_event(MOUSEEVENTFLEFTDOWN | MOUSEEVENTFLEFTUP, 0, 0, 0, IntPtr.Zero);
             }
         }
     }

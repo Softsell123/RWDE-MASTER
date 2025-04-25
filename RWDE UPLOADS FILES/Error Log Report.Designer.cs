@@ -5,15 +5,15 @@ namespace RWDE
 {
     partial class ErrorLogReport
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -25,10 +25,10 @@ namespace RWDE
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -58,9 +58,9 @@ namespace RWDE
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnDownload
-            // 
+            //
+            //btnDownload
+            //
             this.btnDownload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnDownload.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDownload.ForeColor = System.Drawing.Color.Black;
@@ -71,9 +71,9 @@ namespace RWDE
             this.btnDownload.Text = "Export";
             this.btnDownload.UseVisualStyleBackColor = false;
             this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
-            // 
-            // lblTitle
-            // 
+            //
+            //lblTitle
+            //
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.Black;
@@ -82,10 +82,9 @@ namespace RWDE
             this.lblTitle.Size = new System.Drawing.Size(206, 35);
             this.lblTitle.TabIndex = 19;
             this.lblTitle.Text = "Error Log Report";
-            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
-            // 
-            // btnClose
-            // 
+            //
+            //btnClose
+            //
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClose.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.Color.Black;
@@ -94,12 +93,12 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 18;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // dataGridView
-            // 
+            //
+            //dataGridView
+            //
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
@@ -146,82 +145,81 @@ namespace RWDE
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1600, 407);
             this.dataGridView.TabIndex = 17;
-            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "Type";
+            //
+            //Column5
+            //
+            this.Column5.HeaderText = Constants.Type;
             this.Column5.MinimumWidth = 6;
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
             this.Column5.Width = 99;
-            // 
-            // FileName
-            // 
+            //
+            //FileName
+            //
             this.FileName.HeaderText = "Module";
             this.FileName.MinimumWidth = 6;
-            this.FileName.Name = "FileName";
+            this.FileName.Name = Constants.FileName;
             this.FileName.ReadOnly = true;
             this.FileName.Width = 134;
-            // 
-            // Message
-            // 
+            //
+            //Message
+            //
             this.Message.HeaderText = "Stack";
             this.Message.MinimumWidth = 6;
             this.Message.Name = "Message";
             this.Message.ReadOnly = true;
             this.Message.Width = 106;
-            // 
-            // CreatedOn
-            // 
-            this.CreatedOn.HeaderText = "File Name";
+            //
+            //CreatedOn
+            //
+            this.CreatedOn.HeaderText = Constants.FileNamesp;
             this.CreatedOn.MinimumWidth = 6;
             this.CreatedOn.Name = "CreatedOn";
             this.CreatedOn.ReadOnly = true;
             this.CreatedOn.Width = 160;
-            // 
-            // ErrorLine
-            // 
-            this.ErrorLine.HeaderText = "Error";
+            //
+            //ErrorLine
+            //
+            this.ErrorLine.HeaderText = Constants.ErrorTitle;
             this.ErrorLine.MinimumWidth = 6;
             this.ErrorLine.Name = "ErrorLine";
             this.ErrorLine.ReadOnly = true;
             this.ErrorLine.Width = 103;
-            // 
-            // Column1
-            // 
+            //
+            //Column1
+            //
             this.Column1.HeaderText = "Error Line ";
             this.Column1.MinimumWidth = 6;
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
             this.Column1.Width = 163;
-            // 
-            // Column2
-            // 
+            //
+            //Column2
+            //
             this.Column2.HeaderText = "Function Name";
             this.Column2.MinimumWidth = 6;
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
             this.Column2.Width = 220;
-            // 
-            // Column3
-            // 
+            //
+            //Column3
+            //
             this.Column3.HeaderText = "Comments";
             this.Column3.MinimumWidth = 6;
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;
             this.Column3.Width = 170;
-            // 
-            // Column4
-            // 
+            //
+            //Column4
+            //
             this.Column4.HeaderText = "Date ";
             this.Column4.MinimumWidth = 6;
             this.Column4.Name = "Column4";
             this.Column4.ReadOnly = true;
             this.Column4.Width = 106;
-            // 
-            // pnl
-            // 
+            //
+            //pnl
+            //
             this.pnl.AutoSize = true;
             this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnl.Controls.Add(this.btnClr);
@@ -236,10 +234,9 @@ namespace RWDE
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1600, 157);
             this.pnl.TabIndex = 16;
-            this.pnl.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_Paint);
-            // 
-            // btnClr
-            // 
+            //
+            //btnClr
+            //
             this.btnClr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClr.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClr.ForeColor = System.Drawing.Color.Black;
@@ -250,9 +247,9 @@ namespace RWDE
             this.btnClr.Text = "Clear";
             this.btnClr.UseVisualStyleBackColor = false;
             this.btnClr.Click += new System.EventHandler(this.btnClr_Click);
-            // 
-            // btnReport
-            // 
+            //
+            //btnReport
+            //
             this.btnReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnReport.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReport.ForeColor = System.Drawing.Color.Black;
@@ -264,9 +261,9 @@ namespace RWDE
             this.btnReport.Text = "Submit";
             this.btnReport.UseVisualStyleBackColor = false;
             this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
-            // 
-            // lblHeader
-            // 
+            //
+            //lblHeader
+            //
             this.lblHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblHeader.AutoSize = true;
             this.lblHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -276,9 +273,9 @@ namespace RWDE
             this.lblHeader.Size = new System.Drawing.Size(577, 35);
             this.lblHeader.TabIndex = 4;
             this.lblHeader.Text = "This report displays all errors in file  with details.";
-            // 
-            // dtpEndDate
-            // 
+            //
+            //dtpEndDate
+            //
             this.dtpEndDate.CalendarFont = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
@@ -287,9 +284,9 @@ namespace RWDE
             this.dtpEndDate.Name = "dtpEndDate";
             this.dtpEndDate.Size = new System.Drawing.Size(172, 40);
             this.dtpEndDate.TabIndex = 1;
-            // 
-            // lblEndDate
-            // 
+            //
+            //lblEndDate
+            //
             this.lblEndDate.AutoSize = true;
             this.lblEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEndDate.ForeColor = System.Drawing.Color.Black;
@@ -299,9 +296,9 @@ namespace RWDE
             this.lblEndDate.Size = new System.Drawing.Size(129, 35);
             this.lblEndDate.TabIndex = 3;
             this.lblEndDate.Text = "End Date:";
-            // 
-            // dtpStartDate
-            // 
+            //
+            //dtpStartDate
+            //
             this.dtpStartDate.CustomFormat = "";
             this.dtpStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
@@ -311,9 +308,9 @@ namespace RWDE
             this.dtpStartDate.Size = new System.Drawing.Size(172, 40);
             this.dtpStartDate.TabIndex = 0;
             this.dtpStartDate.Value = new System.DateTime(2024, 6, 5, 15, 21, 59, 0);
-            // 
-            // lblStartDate
-            // 
+            //
+            //lblStartDate
+            //
             this.lblStartDate.AutoSize = true;
             this.lblStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStartDate.ForeColor = System.Drawing.Color.Black;
@@ -323,9 +320,9 @@ namespace RWDE
             this.lblStartDate.Size = new System.Drawing.Size(142, 35);
             this.lblStartDate.TabIndex = 1;
             this.lblStartDate.Text = "Start Date:";
-            // 
-            // Error_Log_Report
-            // 
+            //
+            //Error_Log_Report
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
@@ -368,20 +365,6 @@ namespace RWDE
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private void lblTitle_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pnl_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
+       
     }
 }

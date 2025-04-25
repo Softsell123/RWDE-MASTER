@@ -4,15 +4,15 @@ namespace RWDE
 {
     partial class MonthlyReport
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -24,10 +24,10 @@ namespace RWDE
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -57,9 +57,9 @@ namespace RWDE
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnDownload
-            // 
+            //
+            //btnDownload
+            //
             this.btnDownload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnDownload.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDownload.ForeColor = System.Drawing.Color.Black;
@@ -70,9 +70,9 @@ namespace RWDE
             this.btnDownload.Text = "Export";
             this.btnDownload.UseVisualStyleBackColor = false;
             this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
-            // 
-            // lblTitle
-            // 
+            //
+            //lblTitle
+            //
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.Black;
@@ -81,9 +81,9 @@ namespace RWDE
             this.lblTitle.Size = new System.Drawing.Size(200, 35);
             this.lblTitle.TabIndex = 14;
             this.lblTitle.Text = "Monthly Report";
-            // 
-            // btnClose
-            // 
+            //
+            //btnClose
+            //
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClose.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.Color.Black;
@@ -92,12 +92,12 @@ namespace RWDE
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(244, 50);
             this.btnClose.TabIndex = 13;
-            this.btnClose.Text = "Close";
+            this.btnClose.Text = Constants.Close;
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // dataGridView
-            // 
+            //
+            //dataGridView
+            //
             this.dataGridView.AllowUserToOrderColumns = true;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
@@ -143,10 +143,10 @@ namespace RWDE
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1784, 562);
             this.dataGridView.TabIndex = 12;
-           // this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
-            // 
-            // pnl
-            // 
+           //this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
+            //
+            //pnl
+            //
             this.pnl.AutoSize = true;
             this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnl.Controls.Add(this.lblDateRange);
@@ -163,9 +163,9 @@ namespace RWDE
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1786, 164);
             this.pnl.TabIndex = 11;
-            // 
-            // lblDateRange
-            // 
+            //
+            //lblDateRange
+            //
             this.lblDateRange.AutoSize = true;
             this.lblDateRange.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDateRange.ForeColor = System.Drawing.Color.Black;
@@ -174,9 +174,9 @@ namespace RWDE
             this.lblDateRange.Size = new System.Drawing.Size(297, 35);
             this.lblDateRange.TabIndex = 10;
             this.lblDateRange.Text = " Predefined Date Range:";
-            // 
-            // cbDateFilter
-            // 
+            //
+            //cbDateFilter
+            //
             this.cbDateFilter.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbDateFilter.ForeColor = System.Drawing.Color.Black;
             this.cbDateFilter.FormattingEnabled = true;
@@ -186,9 +186,9 @@ namespace RWDE
             this.cbDateFilter.Size = new System.Drawing.Size(313, 41);
             this.cbDateFilter.TabIndex = 9;
             this.cbDateFilter.SelectedIndexChanged += new System.EventHandler(this.cbDateFilter_SelectedIndexChanged);
-            // 
-            // btnClr
-            // 
+            //
+            //btnClr
+            //
             this.btnClr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClr.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClr.ForeColor = System.Drawing.Color.Black;
@@ -199,9 +199,9 @@ namespace RWDE
             this.btnClr.Text = "Clear";
             this.btnClr.UseVisualStyleBackColor = false;
             this.btnClr.Click += new System.EventHandler(this.btnClr_Click);
-            // 
-            // btnReport
-            // 
+            //
+            //btnReport
+            //
             this.btnReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnReport.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReport.ForeColor = System.Drawing.Color.Black;
@@ -213,9 +213,9 @@ namespace RWDE
             this.btnReport.Text = "Submit";
             this.btnReport.UseVisualStyleBackColor = false;
             this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
-            // 
-            // lblHeader
-            // 
+            //
+            //lblHeader
+            //
             this.lblHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblHeader.AutoSize = true;
             this.lblHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -225,9 +225,9 @@ namespace RWDE
             this.lblHeader.Size = new System.Drawing.Size(775, 35);
             this.lblHeader.TabIndex = 4;
             this.lblHeader.Text = "This report displays services dashboard that are uploaded to HCC.";
-            // 
-            // dtpEndDate
-            // 
+            //
+            //dtpEndDate
+            //
             this.dtpEndDate.CalendarFont = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
@@ -236,9 +236,9 @@ namespace RWDE
             this.dtpEndDate.Name = "dtpEndDate";
             this.dtpEndDate.Size = new System.Drawing.Size(172, 40);
             this.dtpEndDate.TabIndex = 1;
-            // 
-            // lblEndDate
-            // 
+            //
+            //lblEndDate
+            //
             this.lblEndDate.AutoSize = true;
             this.lblEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEndDate.ForeColor = System.Drawing.Color.Black;
@@ -248,9 +248,9 @@ namespace RWDE
             this.lblEndDate.Size = new System.Drawing.Size(129, 35);
             this.lblEndDate.TabIndex = 3;
             this.lblEndDate.Text = "End Date:";
-            // 
-            // dtpStartDate
-            // 
+            //
+            //dtpStartDate
+            //
             this.dtpStartDate.CustomFormat = "";
             this.dtpStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
@@ -260,9 +260,9 @@ namespace RWDE
             this.dtpStartDate.Size = new System.Drawing.Size(172, 40);
             this.dtpStartDate.TabIndex = 0;
             this.dtpStartDate.Value = new System.DateTime(2024, 6, 5, 15, 21, 59, 0);
-            // 
-            // lblStartDate
-            // 
+            //
+            //lblStartDate
+            //
             this.lblStartDate.AutoSize = true;
             this.lblStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStartDate.ForeColor = System.Drawing.Color.Black;
@@ -272,65 +272,65 @@ namespace RWDE
             this.lblStartDate.Size = new System.Drawing.Size(142, 35);
             this.lblStartDate.TabIndex = 1;
             this.lblStartDate.Text = "Start Date:";
-            // 
-            // Monthyear
-            // 
+            //
+            //Monthyear
+            //
             this.Monthyear.HeaderText = "MMM-YYYY";
             this.Monthyear.MinimumWidth = 6;
             this.Monthyear.Name = "Monthyear";
             this.Monthyear.ReadOnly = true;
             this.Monthyear.Width = 184;
-            // 
-            // ServiceEntriesUploaded
-            // 
+            //
+            //ServiceEntriesUploaded
+            //
             this.ServiceEntriesUploaded.HeaderText = "Service Entries Uploaded";
             this.ServiceEntriesUploaded.MinimumWidth = 6;
             this.ServiceEntriesUploaded.Name = "ServiceEntriesUploaded";
             this.ServiceEntriesUploaded.ReadOnly = true;
             this.ServiceEntriesUploaded.Width = 333;
-            // 
-            // UnitsOfServiceUploaded
-            // 
+            //
+            //UnitsOfServiceUploaded
+            //
             this.UnitsOfServiceUploaded.HeaderText = "Units Of Service Uploaded";
             this.UnitsOfServiceUploaded.MinimumWidth = 6;
             this.UnitsOfServiceUploaded.Name = "UnitsOfServiceUploaded";
             this.UnitsOfServiceUploaded.ReadOnly = true;
             this.UnitsOfServiceUploaded.Width = 347;
-            // 
-            // CostOfServicesUploaded
-            // 
+            //
+            //CostOfServicesUploaded
+            //
             this.CostOfServicesUploaded.HeaderText = "Cost Of Services Uploaded";
             this.CostOfServicesUploaded.MinimumWidth = 6;
             this.CostOfServicesUploaded.Name = "CostOfServicesUploaded";
             this.CostOfServicesUploaded.ReadOnly = true;
             this.CostOfServicesUploaded.Width = 348;
-            // 
-            // ServiceEntriesFailed
-            // 
+            //
+            //ServiceEntriesFailed
+            //
             this.ServiceEntriesFailed.HeaderText = "Service Entries Failed";
             this.ServiceEntriesFailed.MinimumWidth = 6;
             this.ServiceEntriesFailed.Name = "ServiceEntriesFailed";
             this.ServiceEntriesFailed.ReadOnly = true;
             this.ServiceEntriesFailed.Width = 289;
-            // 
-            // UnitsOfServiceFailed
-            // 
+            //
+            //UnitsOfServiceFailed
+            //
             this.UnitsOfServiceFailed.HeaderText = "Units Of Service Failed";
             this.UnitsOfServiceFailed.MinimumWidth = 6;
             this.UnitsOfServiceFailed.Name = "UnitsOfServiceFailed";
             this.UnitsOfServiceFailed.ReadOnly = true;
             this.UnitsOfServiceFailed.Width = 303;
-            // 
-            // CostOfServicesFailed
-            // 
+            //
+            //CostOfServicesFailed
+            //
             this.CostOfServicesFailed.HeaderText = "Cost Of Services Failed";
             this.CostOfServicesFailed.MinimumWidth = 6;
             this.CostOfServicesFailed.Name = "CostOfServicesFailed";
             this.CostOfServicesFailed.ReadOnly = true;
             this.CostOfServicesFailed.Width = 304;
-            // 
-            // Upload_dashboard
-            // 
+            //
+            //Upload_dashboard
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
@@ -366,11 +366,7 @@ namespace RWDE
         private System.Windows.Forms.Button btnClr;
         private System.Windows.Forms.ComboBox cbDateFilter;
         private System.Windows.Forms.Label lblDateRange;
-        private void txtBoxFilter_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
+     
         private System.Windows.Forms.DataGridViewTextBoxColumn Monthyear;
         private System.Windows.Forms.DataGridViewTextBoxColumn ServiceEntriesUploaded;
         private System.Windows.Forms.DataGridViewTextBoxColumn UnitsOfServiceUploaded;

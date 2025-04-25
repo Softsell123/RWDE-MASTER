@@ -5,15 +5,15 @@ namespace RWDE
 {
     partial class ContractIdLists
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -25,10 +25,10 @@ namespace RWDE
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
 
         {
@@ -48,7 +48,7 @@ namespace RWDE
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblHeading = new System.Windows.Forms.Label();
-            this.lblContract = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.rWDEDataSet2 = new RWDE.RWDEDataSet2();
             this.contractsSetupBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.contractsSetupTableAdapter = new RWDE.RWDEDataSet2TableAdapters.ContractsSetupTableAdapter();
@@ -60,8 +60,9 @@ namespace RWDE
             // 
             // pnlGrid
             // 
-            this.pnlGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.pnlGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlGrid.AutoScroll = true;
             this.pnlGrid.AutoSize = true;
             this.pnlGrid.BackColor = System.Drawing.Color.White;
             this.pnlGrid.Controls.Add(this.btnAdd);
@@ -69,13 +70,12 @@ namespace RWDE
             this.pnlGrid.Controls.Add(this.btnClose);
             this.pnlGrid.Controls.Add(this.dataGridView);
             this.pnlGrid.Controls.Add(this.lblHeading);
-            this.pnlGrid.Controls.Add(this.lblContract);
+            this.pnlGrid.Controls.Add(this.lblTitle);
             this.pnlGrid.Location = new System.Drawing.Point(1, 0);
             this.pnlGrid.Margin = new System.Windows.Forms.Padding(4);
             this.pnlGrid.Name = "pnlGrid";
-            this.pnlGrid.Size = new System.Drawing.Size(1922, 1080);
+            this.pnlGrid.Size = new System.Drawing.Size(1890, 1080);
             this.pnlGrid.TabIndex = 0;
-            this.pnlGrid.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlGrid_Paint);
             // 
             // btnAdd
             // 
@@ -220,19 +220,18 @@ namespace RWDE
             this.lblHeading.TabIndex = 4;
             this.lblHeading.Text = "All contracts are displayed below.";
             // 
-            // lblContract
+            // lblTitle
             // 
-            this.lblContract.AutoSize = true;
-            this.lblContract.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblContract.ForeColor = System.Drawing.Color.Black;
-            this.lblContract.Location = new System.Drawing.Point(889, 39);
-            this.lblContract.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblContract.Name = "lblContract";
-            this.lblContract.Size = new System.Drawing.Size(199, 35);
-            this.lblContract.TabIndex = 3;
-            this.lblContract.Text = "Contracts Setup";
-            this.lblContract.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.lblContract.Click += new System.EventHandler(this.lblContract_Click);
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.Black;
+            this.lblTitle.Location = new System.Drawing.Point(889, 39);
+            this.lblTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(199, 35);
+            this.lblTitle.TabIndex = 3;
+            this.lblTitle.Text = "Contracts Setup";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // rWDEDataSet2
             // 
@@ -248,11 +247,11 @@ namespace RWDE
             // 
             this.contractsSetupTableAdapter.ClearBeforeFill = true;
             // 
-            // ContractIDLists
+            // ContractIdLists
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1924, 922);
             this.ControlBox = false;
             this.Controls.Add(this.pnlGrid);
@@ -260,7 +259,6 @@ namespace RWDE
             this.Name = "ContractIdLists";
             this.Text = "Contracts Setup";
             this.TransparencyKey = System.Drawing.Color.White;
-            this.Load += new System.EventHandler(this.ContractIDLists_Load);
             this.pnlGrid.ResumeLayout(false);
             this.pnlGrid.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
@@ -271,19 +269,10 @@ namespace RWDE
 
         }
 
-        private void ContractIDLists_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pnlGrid_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
         #endregion
 
         private System.Windows.Forms.Panel pnlGrid;
-        private System.Windows.Forms.Label lblContract;
+        private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Button btnClose;
         private Button btnSave;
         private Button btnAdd;
@@ -297,9 +286,6 @@ namespace RWDE
         private DataGridViewTextBoxColumn Column1;
 
         private DataGridViewTextBoxColumn Column3;
-        private void lblContract_Click(object sender, EventArgs e)
-        {
-
-        }
+       
     }
 }

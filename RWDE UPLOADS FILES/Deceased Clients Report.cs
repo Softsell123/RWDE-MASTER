@@ -9,118 +9,67 @@ namespace RWDE
 {
     public partial class DeceasedClients : Form
     {
-        private readonly string connectionString;
-        private readonly DBHelper dbHelper;
+        private readonly DbHelper dbHelper;
 
-        public DeceasedClients()//initialize data
+        public DeceasedClients() // initialize data
         {
-            dbHelper = new DBHelper(); // Initialize the dbHelper object
-            connectionString = dbHelper.GetConnectionString(); // Now this will work because dbHelper is initialized
+            dbHelper = new DbHelper(); // Initialize the dbHelper object
             InitializeComponent();
-            this.ControlBox = false;
-             this.WindowState = FormWindowState.Maximized;
-            //PopulateDataGridView();
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddYears(-1);
-            dtpStartDate.CustomFormat = "MM-dd-yyyy";
-            dtpEndDate.CustomFormat = "MM-dd-yyyy";
-           // Assuming you have another DateTimePicker for the End Date
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            // Assuming you have another DateTimePicker for the End Date
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this);
+            // Assigning events to all Controls
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Hand;
-        }
-        private void Control_MouseLeave(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
-        private void RegisterEvents(Control parent)
-        {
-            foreach (Control control in parent.Controls)
-            {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
-                {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
-                }
 
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    RegisterEvents(control);
-                }
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
+        {
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
-        public void PopulateDataGridView()//populate data
+
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
-            try { 
-                // Clear existing columns
-                dataGridView.AutoGenerateColumns = false;
-                this.dataGridView.Columns.Clear();
-                // Add columns to the DataGridView
-                this.dataGridView.Columns.Add("HCCID", "HCC ID");
-                this.dataGridView.Columns.Add("ClientName", "Client Name");//NEW//
-                this.dataGridView.Columns.Add("Status", "Status");
-                this.dataGridView.Columns.Add("DateOfDeath", "Date of Death");
-                this.dataGridView.Columns.Add("LastServiceDate", "Last Service Date");     
-                this.dataGridView.Columns.Add("DownloadDate", "Download Date");
-                this.dataGridView.Columns.Add("Extracted", "Extracted Y/N");
-                this.dataGridView.Columns.Add("ExtractionDate", "Extraction Date");
-                this.dataGridView.Columns.Add("CMSMatch", "CMS Match");
-                this.dataGridView.Columns.Add("CMSMatchDate", "CMS Match Date");
-                this.dataGridView.Columns.Add("ServiceCountAfterDeath", "ServiceCountAfterDeath");
-                this.dataGridView.Columns.Add("CreatedOn", "Created On");
-                // Set column widths (adjust as needed)
-                this.dataGridView.Columns["HCCID"].Width = 100;
-                this.dataGridView.Columns["ClientName"].Width = 200;
-                this.dataGridView.Columns["Status"].Width = 120;
-                this.dataGridView.Columns["DateOfDeath"].Width = 120;
-                this.dataGridView.Columns["LastServiceDate"].Width = 120;         
-                this.dataGridView.Columns["DownloadDate"].Width = 120;
-                this.dataGridView.Columns["Extracted"].Width = 100;
-                this.dataGridView.Columns["ExtractionDate"].Width = 120;
-                this.dataGridView.Columns["CMSMatch"].Width = 100;
-                this.dataGridView.Columns["CMSMatchDate"].Width = 120;
-                this.dataGridView.Columns["ServiceCountAfterDeath"].Width = 120;
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
-                this.dataGridView.Columns["CreatedOn"].Width = 120;
-           
-                // Set row height
-                this.dataGridView.RowTemplate.Height = 40;
+        }
 
-                // Set default cell style
-                this.dataGridView.ForeColor = Color.Black;
-                this.dataGridView.DefaultCellStyle.ForeColor = Color.Black; // Text color
-                this.dataGridView.DefaultCellStyle.Font = new Font("Calibre", 14, FontStyle.Regular); // Font size 14 and regular
-                DataTable dataTable = dbHelper.GetDataFromDatabase();
-                // Set header style
-                foreach (DataGridViewColumn column in this.dataGridView.Columns)
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
+        {
+            try
+            {
+                foreach (Control control in parent.Controls)
                 {
-                    column.HeaderCell.Style.ForeColor = Color.Black; // Set header text color to black
-                }
+                    if (control is Button || control is CheckBox || control is DateTimePicker ||
+                        control is ScrollBar)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
 
-                // Clear existing rows
-                this.dataGridView.Rows.Clear();
-
-                // Populate DataGridView with data
-                foreach (DataRow row in dataTable.Rows)
-                {
-                    this.dataGridView.Rows.Add(
-                        row["HCC ID"],
-                        row["Client Name"],
-                        row["Status"],
-                        row["Date of Death"],
-                        row["Last Service Date"],
-                        row["Download Date"],
-                        row["Extracted Y/N"],
-                        row["Extraction Date"],
-                        row["CMS Match"],
-                        row["CMS Match Date"],
-                        row["ServiceCountAfterDeath"],
-                        row["Created On"]
-                  
-                    );
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        // Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
                 }
             }
             catch (Exception ex)
@@ -128,87 +77,95 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        public void PopulateDataGridView(DataTable dataTable)//populate data
+
+        public void PopulateDataGridView(DataTable dataTable) // populate data
         {
-          try{  // Clear existing columns
-            dataGridView.AutoGenerateColumns = false;
-            this.dataGridView.Columns.Clear();
-
-            // Add columns to the DataGridView
-            this.dataGridView.Columns.Add("HCCID", "HCC ID");
-            this.dataGridView.Columns.Add("ClientName", "Client Name");
-            this.dataGridView.Columns.Add("Status", "Status");
-            this.dataGridView.Columns.Add("DateOfDeath", "Date of Death");
-            this.dataGridView.Columns.Add("LastServiceDate", "Last Service Date");
-            this.dataGridView.Columns.Add("DownloadDate", "Download Date");
-            this.dataGridView.Columns.Add("Extracted", "Extracted Y/N");
-            this.dataGridView.Columns.Add("ExtractionDate", "Extraction Date");
-            this.dataGridView.Columns.Add("CMSMatch", "CMS Match");
-            this.dataGridView.Columns.Add("CMSMatchDate", "CMS Match Date");
-            this.dataGridView.Columns.Add("Service Count After Death", "Service Count After Death");
-
-            this.dataGridView.Columns.Add("CreatedOn", "Created On");
-          
-            // Set column widths (adjust as needed)
-            this.dataGridView.Columns["HCCID"].Width = 100;
-            this.dataGridView.Columns["ClientName"].Width = 200;
-            this.dataGridView.Columns["Status"].Width = 120;
-            this.dataGridView.Columns["DateOfDeath"].Width = 120;
-            this.dataGridView.Columns["LastServiceDate"].Width = 120;
-            this.dataGridView.Columns["DownloadDate"].Width = 120;
-            this.dataGridView.Columns["Extracted"].Width = 100;
-            this.dataGridView.Columns["ExtractionDate"].Width = 120;
-            this.dataGridView.Columns["CMSMatch"].Width = 100;
-            this.dataGridView.Columns["CMSMatchDate"].Width = 120;
-            this.dataGridView.Columns["Service Count After Death"].Width = 120;
-
-            this.dataGridView.Columns["CreatedOn"].Width = 120;
-         
-            // Set row height
-            this.dataGridView.RowTemplate.Height = 40;
-
-            // Set default cell style
-            this.dataGridView.ForeColor = Color.Black;
-            this.dataGridView.DefaultCellStyle.ForeColor = Color.Black; // Text color
-            this.dataGridView.DefaultCellStyle.Font = new Font("Calibre", 14, FontStyle.Regular); // Font size 14 and regular
-
-            // Set header style
-            foreach (DataGridViewColumn column in this.dataGridView.Columns)
+            try
             {
-                column.HeaderCell.Style.ForeColor = Color.Black; // Set header text color to black
+                // Clear existing columns
+                dataGridView.AutoGenerateColumns = false;
+                dataGridView.Columns.Clear();
+
+                // Add columns to the DataGridView
+                dataGridView.Columns.Add(Constants.SiNo, Constants.SiNo);
+                dataGridView.Columns.Add(Constants.HccId, Constants.HccIdsp);
+                dataGridView.Columns.Add(Constants.ClientName, Constants.ClientNamesp);
+                dataGridView.Columns.Add(Constants.Status, Constants.Status);
+                dataGridView.Columns.Add(Constants.DateOfDeath, Constants.DateOfDeathsp);
+                dataGridView.Columns.Add(Constants.LastServiceDate, Constants.LastServiceDatesp);
+                dataGridView.Columns.Add(Constants.DownloadDate, Constants.DownloadDatesp);
+                dataGridView.Columns.Add(Constants.Extracted, Constants.Extractedsp);
+                dataGridView.Columns.Add(Constants.ExtractionDate, Constants.ExtractionDatesp);
+                dataGridView.Columns.Add(Constants.CmsMatch, Constants.CmsMatchsp);
+                dataGridView.Columns.Add(Constants.CmsMatchDate, Constants.CmsMatchDatesp);
+                dataGridView.Columns.Add(Constants.ServiceCountAfterDeath, Constants.ServiceCountAfterDeath);
+
+                dataGridView.Columns.Add(Constants.CreatedOn, Constants.CreatedOnsp);
+
+                // Set column widths (adjust as needed)
+                dataGridView.Columns[Constants.SiNo].Width = 50;
+                dataGridView.Columns[Constants.HccId].Width = 100;
+                dataGridView.Columns[Constants.ClientName].Width = 200;
+                dataGridView.Columns[Constants.Status].Width = 120;
+                dataGridView.Columns[Constants.DateOfDeath].Width = 120;
+                dataGridView.Columns[Constants.LastServiceDate].Width = 120;
+                dataGridView.Columns[Constants.DownloadDate].Width = 120;
+                dataGridView.Columns[Constants.Extracted].Width = 100;
+                dataGridView.Columns[Constants.ExtractionDate].Width = 120;
+                dataGridView.Columns[Constants.CmsMatch].Width = 100;
+                dataGridView.Columns[Constants.CmsMatchDate].Width = 120;
+                dataGridView.Columns[Constants.ServiceCountAfterDeath].Width = 120;
+                dataGridView.Columns[Constants.CreatedOn].Width = 120;
+
+                // Set row height
+                dataGridView.RowTemplate.Height = 40;
+
+                // Set default cell style
+                dataGridView.ForeColor = Color.Black;
+                dataGridView.DefaultCellStyle.ForeColor = Color.Black; // Text color
+                dataGridView.DefaultCellStyle.Font =
+                    new Font(Constants.FntfmlyCalibre, 14, FontStyle.Regular); // Font size 14 and regular
+
+                // Set header style
+                foreach (DataGridViewColumn column in dataGridView.Columns)
+                {
+                    column.HeaderCell.Style.ForeColor = Color.Black; // Set header text color to black
+                }
+
+                // Clear existing rows
+                dataGridView.Rows.Clear();
+
+                // Populate DataGridView with data
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    dataGridView.Rows.Add(
+                        row[Constants.SiNo],
+                        row[Constants.HccIdsp],
+                        row[Constants.ClientNamesp],
+                        row[Constants.Status],
+                        row[Constants.DateOfDeathsp],
+                        row[Constants.LastServiceDatesp],
+                        row[Constants.DownloadDatesp],
+                        row[Constants.Extractedsp],
+                        row[Constants.ExtractionDatesp],
+                        row[Constants.CmsMatchsp],
+                        row[Constants.CmsMatchDatesp],
+                        row[Constants.ServiceCountAfterDeath],
+                        row[Constants.CreatedOnsp]);
+                }
             }
-
-            // Clear existing rows
-            this.dataGridView.Rows.Clear();
-
-            // Populate DataGridView with data
-            foreach (DataRow row in dataTable.Rows)
+            catch (Exception ex)
             {
-                this.dataGridView.Rows.Add(
-                    row["HCC ID"],
-                    row["Client Name"],
-                    row["Status"],
-                    row["Date of Death"],
-                    row["Last Service Date"],
-                    row["Download Date"],
-                    row["Extracted Y/N"],
-                    row["Extraction Date"],
-                    row["CMS Match"],
-                    row["CMS Match Date"],                 
-                     row["Service Count After Death"],
-                      row["Created On"]
-                );
+                MessageBox.Show(ex.Message);
             }
-          }
-          catch (Exception ex)
-          {
-              MessageBox.Show(ex.Message);
-          }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+
+        private void btnClose_Click(object sender, EventArgs e) // to close the form
         {
-            try{// Close the current form (dispose it)
-                this.Close();
+            try
+            {
+                // Close the current form (dispose it)
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)
@@ -216,73 +173,78 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnDownload_Click(object sender, EventArgs e)//to show the filtered data in the grid
+
+        private void btnDownload_Click(object sender, EventArgs e) // to show the filtered data in the grid
         {
-            try {
+            try
+            {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show("No data available to download.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.NoDataAvailableToDownload, Constants.Warning, MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
                     return; // Exit the method if there is no data
                 }
+
                 DataTable dataTable = new DataTable();
 
-            // Add columns to the DataTable
-            foreach (DataGridViewColumn column in dataGridView.Columns)
-            {
-                dataTable.Columns.Add(column.HeaderText);
-            }
-
-            // Add rows to the DataTable
-            foreach (DataGridViewRow row in dataGridView.Rows)
-            {
-                if (!row.IsNewRow)
+                // Add columns to the DataTable
+                foreach (DataGridViewColumn column in dataGridView.Columns)
                 {
-                    DataRow dataRow = dataTable.NewRow();
-                    foreach (DataGridViewCell cell in row.Cells)
-                    {
-                        dataRow[cell.ColumnIndex] = cell.Value ?? DBNull.Value;
-                    }
-                    dataTable.Rows.Add(dataRow);
+                    dataTable.Columns.Add(column.HeaderText);
                 }
-            }
 
-            // Create a new Excel workbook and worksheet
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.Worksheets.Add("Sheet1");
-
-                // Load the DataTable into the worksheet
-                worksheet.Cell(1, 1).InsertTable(dataTable);
-
-                // Prompt the user to select a folder to save the file
-                using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+                // Add rows to the DataTable
+                foreach (DataGridViewRow row in dataGridView.Rows)
                 {
-                    folderBrowserDialog.Description =Constants.selecrthefoldertosave;
-
-                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    if (!row.IsNewRow)
                     {
-                        // Base file name and directory
-                        string baseFileName = Constants.Deceased_Clients;
-                        string directoryPath = folderBrowserDialog.SelectedPath;
-                        string fileExtension = ".xlsx";
-
-                        // Construct the initial file path
-                        string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
-
-                        // Check if the file already exists, and if so, append a suffix
-                        int fileSuffix = 1;
-                        while (File.Exists(filePath))
+                        DataRow dataRow = dataTable.NewRow();
+                        foreach (DataGridViewCell cell in row.Cells)
                         {
-                            fileSuffix++;
-                            filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
+                            dataRow[cell.ColumnIndex] = cell.Value ?? DBNull.Value;
                         }
-
-                        // Save the workbook to the file path
-                        workbook.SaveAs(filePath);
-                        MessageBox.Show($"{Constants.datasuccessfullysaved}{Path.GetFileName(filePath)}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        dataTable.Rows.Add(dataRow);
                     }
                 }
-            }
+
+                // Create a new Excel workbook and worksheet
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
+
+                    // Load the DataTable into the worksheet
+                    worksheet.Cell(1, 1).InsertTable(dataTable);
+
+                    // Prompt the user to select a folder to save the file
+                    using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+                    {
+                        folderBrowserDialog.Description = Constants.Selectthefoldertosave;
+
+                        if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            // Base file name and directory
+                            string baseFileName = Constants.DeceasedClients;
+                            string directoryPath = folderBrowserDialog.SelectedPath;
+                            string fileExtension = Constants.XlsxExtention;
+
+                            // Construct the initial file path
+                            string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
+
+                            // Check if the file already exists, and if so, append a suffix
+                            int fileSuffix = 1;
+                            while (File.Exists(filePath))
+                            {
+                                fileSuffix++;
+                                filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
+                            }
+
+                            // Save the workbook to the file path
+                            workbook.SaveAs(filePath);
+                            MessageBox.Show($@"{Constants.Datasuccessfullysaved}{Path.GetFileName(filePath)}", Constants.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -290,21 +252,28 @@ namespace RWDE
             }
         }
 
-        private void btnReport_Click(object sender, EventArgs e)//to show data in the grid
+        private void btnReport_Click(object sender, EventArgs e) // to show data in the grid
         {
-            try { 
+            try
+            {
                 // Assuming you have DateTimePicker controls named dtpStartDate and dtpEndDate
                 DateTime startDate = dtpStartDate.Value.Date;
                 DateTime endDate = dtpEndDate.Value.Date;
                 if (startDate > endDate)
                 {
                     // Show an error message if the start date is later than the end date
-                    MessageBox.Show(Constants.StartdatemustbeearlierthanEnddate, "Deceased Clients", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.StartdatemustbeearlierthanEnddate, Constants.DeceasedClientsp,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return; // Exit the method to prevent further processing
                 }
 
                 // Fetch filtered data from the database
                 DataTable dataTable = dbHelper.GetFilteredDataFromDatabase(startDate, endDate);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
 
                 // Populate DataGridView with the fetched data
                 PopulateDataGridView(dataTable);
@@ -314,17 +283,18 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnClr_Click(object sender, EventArgs e)//to clear data
+
+        private void btnClr_Click(object sender, EventArgs e) // to clear data
         {
-            try { 
+            try
+            {
                 dtpStartDate.Value = DateTime.Now.AddYears(-1);
-                dtpStartDate.CustomFormat = "MM-dd-yyyy";
-                dtpEndDate.CustomFormat = "MM-dd-yyyy";
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
                 // Clear only the rows in the DataGridView
                 dataGridView.Rows.Clear();
-
-                // Optionally, reset the DataGridView's current selection or focus
+                // reset the DataGridView's current selection or focus
                 dataGridView.ClearSelection();
             }
             catch (Exception ex)
@@ -332,7 +302,6 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-
     }
 }
        

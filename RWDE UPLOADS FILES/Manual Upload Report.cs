@@ -9,31 +9,47 @@ namespace RWDE
 {
     public partial class FrmManualUpload : Form
     {
-        public FrmManualUpload()//initialize data
+        public FrmManualUpload()// initialize data
         {
             InitializeComponent();
-            this.WindowState = FormWindowState.Maximized;
+            WindowState = FormWindowState.Maximized;
             dtpStartDate.Value = DateTime.Now.AddMonths(-1);
-            dtpStartDate.CustomFormat = ManualUploadConstants.DateCustomFormat;
-            dtpEndDate.CustomFormat = ManualUploadConstants.DateCustomFormat;
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
+            dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
             dtpEndDate.Value = DateTime.Now;
-            RegisterEvents(this);
+            RegisterEvents(this); // Assigning events to all Controls
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
-        }
-        private void Control_MouseLeave(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
-        private void RegisterEvents(Control parent)
-        {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
+        {
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
+        {
+            try
+            {
+                foreach (Control control in parent.Controls)
+            {
+                if (control is Button || control is CheckBox || control is DateTimePicker || control is ScrollBar)
                 {
                     control.MouseHover += Control_MouseHover;
                     control.MouseLeave += Control_MouseLeave;
@@ -42,15 +58,21 @@ namespace RWDE
                 // Check for child controls in containers
                 if (control.HasChildren)
                 {
+                    // Assigning events to all child Controls
                     RegisterEvents(control);
                 }
             }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-        private void btnClose_Click(object sender, EventArgs e)//to close the form
+        private void btnClose_Click(object sender, EventArgs e)// to close the form
         {
             try {
                 // Close the current form (dispose it)
-                this.Close();
+                Close();
                 Application.Restart();
             }
             catch (Exception ex)
@@ -58,11 +80,11 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnReport_Click(object sender, EventArgs e)//to get filtered data in the grid
+        private void btnReport_Click(object sender, EventArgs e)// to get filtered data in the grid
         {
             try
             {
-                DBHelper dbHelper = new DBHelper();
+                DbHelper dbHelper = new DbHelper();
                 dataGridView.AutoGenerateColumns = true;
                 dataGridView.Columns.Clear();
                 // Ensure the date pickers are properly set
@@ -70,15 +92,23 @@ namespace RWDE
                 DateTime endDate = dtpEndDate.Value;
                 if (startDate >=endDate)
                 {
-                    MessageBox.Show($"{Constants.StartdatemustbeearlierthanEnddate}");
+                    MessageBox.Show($@"{Constants.StartdatemustbeearlierthanEnddate}");
                 }
                 // Call the LoadData method to fetch the data
                 dataGridView.ForeColor = Color.Black;
-                DataTable result = dbHelper.LoadManualUploadReport(startDate, endDate);//to get data in the grid
+
+                // to get details of clients applied for services
+                DataTable result = dbHelper.LoadManualUploadReport(startDate, endDate);// to get data in the grid
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 // Now you can use the result, e.g., bind it to a DataGridView or process it
                 if (result.Rows.Count == 0)
                 {
-                    MessageBox.Show(ManualUploadConstants.NoManualUploadsbetweenselecteddates, ManualUploadConstants.Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Constants.NoManualUploadsbetweenselecteddates, Constants.Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 dataGridView.DataSource = result;
@@ -89,14 +119,14 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void Clear_Click(object sender, EventArgs e)//to clear data in the grid
+        private void Clear_Click(object sender, EventArgs e)// to clear data in the grid
         {
             try 
             { 
                 dtpStartDate.Value = DateTime.Now.AddMonths(-1);
-                dtpStartDate.CustomFormat = ManualUploadConstants.DateCustomFormat;
+                dtpStartDate.CustomFormat = Constants.DateFormatMMddyyyy;
                 dtpEndDate.Value = DateTime.Now;
-                dtpEndDate.CustomFormat = ManualUploadConstants.DateCustomFormat;
+                dtpEndDate.CustomFormat = Constants.DateFormatMMddyyyy;
 
                 // Clear the DataTable bound to the DataGridView
                 if (dataGridView.DataSource is DataTable dt)
@@ -109,13 +139,13 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnDownload_Click(object sender, EventArgs e)//to export the report to selected folder
+        private void btnDownload_Click(object sender, EventArgs e)// to export the report to selected folder
         {
             try
             {
                 if (dataGridView.Rows.Count == 0 || (dataGridView.Rows.Count == 1 && dataGridView.Rows[0].IsNewRow))
                 {
-                    MessageBox.Show(ManualUploadConstants.Nodataavailabletodownload, ManualUploadConstants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(Constants.NoDataAvailableToDownload, Constants.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return; // Exit the method if there is no data
                 }
                 DataTable dataTable = new DataTable();
@@ -141,7 +171,7 @@ namespace RWDE
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
-                    var worksheet = workbook.Worksheets.Add(ManualUploadConstants.Sheet1);
+                    var worksheet = workbook.Worksheets.Add(Constants.Sheet1);
 
                     // Load the DataTable into the worksheet
                     worksheet.Cell(1, 1).InsertTable(dataTable);
@@ -149,14 +179,14 @@ namespace RWDE
                     // Prompt the user to select a folder to save the file
                     using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                     {
-                        folderBrowserDialog.Description = Constants.selecrthefoldertosave;
+                        folderBrowserDialog.Description = Constants.Selectthefoldertosave;
 
                         if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                         {
                             // Base file name and directory
-                            string baseFileName = ManualUploadConstants.ManualUploadClientsReport;
+                            string baseFileName = Constants.ManualUploadClientsReport;
                             string directoryPath = folderBrowserDialog.SelectedPath;
-                            string fileExtension = ManualUploadConstants.xlsx_extention;
+                            string fileExtension =Constants.XlsxExtention;
 
                             // Construct the initial file path
                             string filePath = Path.Combine(directoryPath, baseFileName + fileExtension);
@@ -168,10 +198,9 @@ namespace RWDE
                                 fileSuffix++;
                                 filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");
                             }
-
                             // Save the workbook to the file path
                             workbook.SaveAs(filePath);
-                            MessageBox.Show($"{Constants.datasuccessfullysaved} {Path.GetFileName(filePath)}", ManualUploadConstants.ManualUploadClientsReport, MessageBoxButtons.OK,MessageBoxIcon.Information);
+                            MessageBox.Show($@"{Constants.Datasuccessfullysaved} {Path.GetFileName(filePath)}", Constants.ManualUploadClientsReport, MessageBoxButtons.OK,MessageBoxIcon.Information);
                         }
                     }
                 }

@@ -1,34 +1,29 @@
 ﻿using System;
-using System.Data;
-using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace RWDE
 {
-
-    public partial class CsvFile_Conversion : Form
+    public partial class CsvFileConversion : Form
     {
-        private readonly string connectionString;
-        private readonly DBHelper dbHelper;
+        private readonly DbHelper dbHelper;
 
-        public CsvFile_Conversion()//to initialize data
+        public CsvFileConversion()// to initialize data
         {
             InitializeComponent();
-            dbHelper = new DBHelper();
-            connectionString = dbHelper.GetConnectionString();
-            this.ControlBox = false;
-            this.WindowState = FormWindowState.Maximized;
-            RegisterEvents(this);
+            dbHelper = new DbHelper();
+
+            ControlBox = false;
+            WindowState = FormWindowState.Maximized;
+            RegisterEvents(this); // Assigning events to all Controls
 
             if (File.Exists(Constants.LastFolderPathhcc))
             {
-                string LastFolderPathhcc = File.ReadAllText(Constants.LastFolderPathhcc).Trim();  // Trim to remove any extra spaces or newlines
+                string lastFolderPathhcc = File.ReadAllText(Constants.LastFolderPathhcc).Trim();  // Trim to remove any extra spaces or newlines
                 // Check if the file content is not empty and the directory exists
-                if (!string.IsNullOrEmpty(LastFolderPathhcc) && Directory.Exists(LastFolderPathhcc))
+                if (!string.IsNullOrEmpty(lastFolderPathhcc) && Directory.Exists(lastFolderPathhcc))
                 {
-                    txtPath.Text = LastFolderPathhcc;
+                    txtPath.Text = lastFolderPathhcc;
                 }
                 else
                 {
@@ -36,197 +31,128 @@ namespace RWDE
                 }
             }
         }
-        private void Control_MouseHover(object sender, EventArgs e)
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
-            Cursor = Cursors.Hand;
-        }
-        private void Control_MouseLeave(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
-        private void RegisterEvents(Control parent)
-        {
-            foreach (Control control in parent.Controls)
+            try
             {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
-                {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
-                }
-
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    RegisterEvents(control);
-                }
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
-        private void lblStartDate_Click(object sender, EventArgs e)
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
         {
-
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-
-        private void btnReport_Click(object sender, EventArgs e)
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
         {
-            string filePath = Path.Combine(txtPath.Text, $"Client_{DateTime.Now.ToString("yyyyMMdd")}.csv"); // Ensure the full file path includes a filename
+            try
+            {
+                foreach (Control control in parent.Controls)
+                {
+                    if (control is Button || control is CheckBox || control is DateTimePicker)
+                    {
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
+                    }
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        // Assigning events to child Controls
+                        RegisterEvents(control);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void btnReport_Click(object sender, EventArgs e)// to generate and save the Csv files
+        {
+            string ClientfilePath = Path.Combine(txtPath.Text, $"{Constants.Clients}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
+            string ServicesfilePath = Path.Combine(txtPath.Text, $"{Constants.ServiceSample}{DateTime.Now.ToString(Constants.YyyyMMdd)}{Constants.CsvExtention}"); // Ensure the full file path includes a filename
 
             try
             {
                 if (!Directory.Exists(txtPath.Text))
                 {
-                    MessageBox.Show("The selected folder does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Constants.Theselectedfolderdoesnotexist, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // SQL query to execute the stored procedure
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                // to Write the CSV data of Clients
+                dbHelper.WriteClientCsvData(ClientfilePath);
+                if (dbHelper.ErrorOccurred)
                 {
-                    conn.Open();
-                    int batchid = dbHelper.GetMaxXMLBatchID();
-                    // Call the stored procedure
-                    using (SqlCommand cmd = new SqlCommand("ctclientsmapping", conn))
-                    {
-
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Batchid", batchid);
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            // Create a StreamWriter to write to the CSV file
-                            using (StreamWriter writer = new StreamWriter(filePath))
-
-                            {
-                                // Write the header (column names)
-                                var columnNames = Enumerable.Range(0, reader.FieldCount)
-                                                            .Select(reader.GetName)
-                                                            .ToArray();
-                                writer.WriteLine(string.Join("|", columnNames));  // Use pipe (|) as the separator
-
-                                // Write each row
-                                while (reader.Read())
-                                {
-                                    var rowValues = new string[reader.FieldCount];
-                                    for (int i = 0; i < reader.FieldCount; i++)
-                                    {
-                                        rowValues[i] = reader[i]?.ToString();
-                                    }
-                                    writer.WriteLine(string.Join("|", rowValues));  // Use pipe (|) as the separator
-                                }
-                                GetServicedataCSV(batchid);
-                            }
-
-                        }
-                    }
-                    MessageBox.Show("CSV file has been created successfully at " + filePath);//
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
                 }
+
+                // to Write the CSV data of Services
+                dbHelper.WriteServicesCsvData(ServicesfilePath);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("Access to the path is denied. Please choose a different folder or run the application as an administrator.", "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Constants.Accessdeniedtothefolder, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show(Constants.Errorsp + ex.Message);
             }
         }
-        public void GetServicedataCSV(int batchid)
+        private void btnBrowse_Click(object sender, EventArgs e)// to select the folder to save the csv files
         {
-            
-            string filePath = Path.Combine(txtPath.Text, $"Service_Sample_{DateTime.Now.ToString("yyyyMMdd")}.csv"); // Ensure the full file path includes a filename
-
             try
             {
-                if (!Directory.Exists(txtPath.Text))
+                using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
                 {
-                    MessageBox.Show("The selected folder does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                    folderDialog.Description = Constants.Selectafoldertosavethefile;
+                    folderDialog.ShowNewFolderButton = true;
 
-                // SQL query to execute the stored procedure
-                using (SqlConnection conn = new SqlConnection(connectionString))//
-                {
-                    conn.Open();
-
-                    // Call the stored procedure
-                    using (SqlCommand cmd = new SqlCommand("GetCTServicesForCSV", conn))
+                    if (folderDialog.ShowDialog() == DialogResult.OK)
                     {
-                      
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Batchid", batchid);
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        string selectedPath = "";
+                        try
                         {
-                            // Create a StreamWriter to write to the CSV file
-                            using (StreamWriter writer = new StreamWriter(filePath))
-                            {
-                                // Write the header (column names)
-                                var columnNames = Enumerable.Range(0, reader.FieldCount)
-                                                            .Select(reader.GetName)
-                                                            .ToArray();
-                                writer.WriteLine(string.Join("|", columnNames));  // Use pipe (|) as the separator
+                            selectedPath = folderDialog.SelectedPath;
+                            txtPath.Text = selectedPath;
 
-                                // Write each row
-                                while (reader.Read())
-                                {
-                                    var rowValues = new string[reader.FieldCount];
-                                    for (int i = 0; i < reader.FieldCount; i++)
-                                    {
-                                        rowValues[i] = reader[i]?.ToString();
-                                    }
-                                    writer.WriteLine(string.Join("|", rowValues));  // Use pipe (|) as the separator
-                                }
-                            }
-                            
+                            // Test writing permission by creating a temporary file
+                            string testFilePath = Path.Combine(selectedPath, Constants.Testfiletxt);
+                            File.WriteAllText(testFilePath, Constants.Testingpermissions);
+                            File.Delete(testFilePath); // Clean up after test
+
+                            MessageBox.Show(Constants.Selectedfolder + selectedPath);
                         }
+                        catch (UnauthorizedAccessException ex)
+                        {
+                            MessageBox.Show(Constants.Accessdeniedtothefolder + ex.Message, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        // Save the folder path (you only need to save it once)
+                        File.WriteAllText(Constants.LastFolderPathhcc, selectedPath);
                     }
-
-                    MessageBox.Show("CSV file has been created successfully at " + filePath);
-
                 }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show("Access to the path is denied. Please choose a different folder or run the application as an administrator.", "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
-        private void GetService(int batchid)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void btnBrowse_Click(object sender, EventArgs e)
-        {
-            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
-            {
-                folderDialog.Description = "Select a folder to save the file";
-                folderDialog.ShowNewFolderButton = true;
-
-                if (folderDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string selectedPath="";
-                    try
-                    {
-                        selectedPath = folderDialog.SelectedPath;
-                        txtPath.Text = selectedPath;
-
-                        // Test writing permission by creating a temporary file
-                        string testFilePath = Path.Combine(selectedPath, "testfile.txt");
-                        File.WriteAllText(testFilePath, "Testing permissions.");
-                        File.Delete(testFilePath); // Clean up after test
-
-                        MessageBox.Show("Selected folder: " + selectedPath);
-                    }
-                    catch (UnauthorizedAccessException ex)
-                    {
-                        MessageBox.Show("Access to the selected folder is denied. Please choose a different folder.", "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    // Save the folder path (you only need to save it once)
-                    File.WriteAllText(Constants.LastFolderPathhcc, selectedPath);
-                }
-            }
-        }
-
     }
 }

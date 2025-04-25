@@ -1,50 +1,35 @@
 ﻿using System;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Xml;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
 namespace RWDE
 {
     public partial class FrmUploadXmlFile : Form
     {
-        private readonly string connectionString;
-        private readonly DBHelper dbHelper;
-        private readonly DataGridView dataGridView;
-        public Panel PanelToReplace
-        {
-            get
-            {
-                return pnlCsvXml;//
-            }
-        }
+        private readonly DbHelper dbHelper;
+       
         public FrmUploadXmlFile()
         {
             try
             {
                 InitializeComponent();
-                LoadDefaultPath();
-                dbHelper = new DBHelper();
-                connectionString = dbHelper.GetConnectionString();
-               // this.Text = String.Empty;
+                dbHelper = new DbHelper();
+
                 this.ControlBox = false;
-                //this.DoubleBuffered = true;
-                //this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
                 this.WindowState = FormWindowState.Maximized;
                 DateTime currenttime = DateTime.Now;
-                string date = currenttime.ToString("MM/dd/yyyy");
-                string time = currenttime.ToString("HH:mm:ss");
-                txtDesc.Text = $"ClientTrack Upload on {date} at {time}";
-                txtProgressbar.Text = "0%";
-                txtProgressfile.Text = "0/0 (0%)";
-                string pathFile = "LastFolderPath.txt";
-                RegisterEvents(this);
+                string date = currenttime.ToString(Constants.MMddyyyybkslash);
+                string time = currenttime.ToString(Constants.HHmmss);
+                txtDesc.Text = $@"{Constants.ClientTrackUploadOnAt.Replace("{date}", date).Replace("{time}", time)}";
+                txtProgressLines.Text = Constants.ZeroPercent;
+                txtProgressfile.Text = Constants.InitialProgress;
+                string pathFile = Constants.LastFolderPathTxt;
+                RegisterEvents(this); // Assigning events to all Controls
 
                 // Check if the file exists
                 if (File.Exists(pathFile))
@@ -68,481 +53,476 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public string fileName;
-        public string path;
-        public int batchId;
-        public int totalRows;
-        // Define a class-level variable to store the default path.
-        private string defaultPath = null;
-
-        private async void btnUploadXML_Click(object sender, EventArgs e)
+        private void cbMask_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
         {
-            if (txtPath.Text == "" || txtPath == null)
-            {
-                MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles,Constants.xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-
-            }
-
-            string[] files = Directory.GetFiles(txtPath.Text);
-
-            bool allFilesAreXml = files.All(file => Path.GetExtension(file).Equals(".xml", StringComparison.OrdinalIgnoreCase));
-
-            if (files == null || files.Length == 0)
-            {
-                MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles, Constants.xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (files.Length >1)
-            {
-                MessageBox.Show(Constants.Thefolderhasmorethanonefileorduplicatefiles, Constants.xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            // Check if all files have the .xml extension
-            if (!allFilesAreXml)
-            {
-                MessageBox.Show(Constants.ThefoldercontainsnonXMLfilesorfolderisemptyUploadisallowedonlyforXMLfiles, Constants.xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // Continue with the upload process if all files are XML
-            btnClose.Text = Constants.abort;
-     
-            if (string.IsNullOrWhiteSpace(txtPath.Text))
-            {
-                MessageBox.Show("Select a file before uploading.");
-                return; // Exit the method if the path is empty
-            }
-
-            btnUploadXML.Enabled = false;
-
-            string folderPath = txtPath.Text.Trim();
-            var values = cbMask.Checked ? true : false;
-            if (string.IsNullOrEmpty(folderPath))
-            {
-                MessageBox.Show("Please select a folder to upload XML files.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                btnUploadXML.Enabled = true;
-                return;
-            }
             try
             {
-                if (string.IsNullOrEmpty(txtBatchid.Text) && string.IsNullOrEmpty(txtUploadStarted.Text))
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void cbMask_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
+        {
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void Control_MouseHover(object sender, EventArgs e)// Changing Cursor as Hand on hover
+        {
+            try
+            {
+                Cursor = Cursors.Hand;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void Control_MouseLeave(object sender, EventArgs e)// Changing back default Cursor on Leave
+        {
+            try
+            {
+                Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void RegisterEvents(Control parent)// Assigning events to all Controls
+        {
+            try
+            {
+                foreach (Control control in parent.Controls)
                 {
-                    btnClose.Text = "Abort";
-                    string[] xmlFiles = Directory.GetFiles(folderPath, "*.xml");
-                    int totalXmlFiles = xmlFiles.Length;
-                    int processedXmlFiles = 0;
-                    DateTime startTime = DateTime.Now;
-
-                    progressBarfile.Minimum = 0;
-                    progressBarfile.Maximum = totalXmlFiles;
-                    progressBarfile.Value = 0;
-
-                    foreach (string xmlFilePath in xmlFiles)
+                    if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
                     {
-                        // Update the progress display to show the current processed XML file index out of the total number of XML files.
-                        UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);
-                        
-                        XmlDocument xmlDoc = new XmlDocument();
-                        xmlDoc.Load(xmlFilePath);
-
-                        int batchId = dbHelper.GetNextBatchID();
-                        path = xmlFilePath;
-                        fileName = Path.GetFileName(xmlFilePath);
-                        txtFName.Text = fileName;
-                        txtBatchid.Text = batchId.ToString();
-                        string date = startTime.ToString("MM/dd/yyyy");
-                        string time = startTime.ToString("HH:mm:ss");
-                        txtDesc.Text = $"ClientTrack Upload on {date} At {time}";
-                        string Time = startTime.ToString("MM/dd/yyyy HH:mm:ss");
-                        txtUploadStarted.Text = Time;
-
-                        using (SqlConnection conn = new SqlConnection(connectionString))
-                        {
-                            conn.Open();
-
-                            totalRows = await GetTotalRowsInXml(xmlDoc);
-                            DateTime uploadStartedAt = DateTime.Now;
-                            await InsertXmlDataIntoTable(xmlDoc, batchId, xmlFilePath, totalRows, conn, values);
-
-                            int successfulRows = totalRows;
-                            string description = $"Batch {batchId} - {fileName}";
-                            dbHelper.InsertBatch(batchId, fileName, xmlFilePath, Constants.ClientTrack, description, uploadStartedAt, totalRows, successfulRows, Constants.Status);
-
-                            processedXmlFiles++;
-                            UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);
-                        }
-                        DateTime endTime = DateTime.Now;
-                        TimeSpan totalTime = endTime - startTime;
-                        double totalSeconds = totalTime.TotalSeconds;
-                        string ETime = endTime.ToString("MM/dd/yyyy HH:mm:ss");
-                        txtUploadEnded.Text = ETime;
-                        txtTotaltime.Text = $"{totalSeconds:F2} Seconds";
-                        btnClose.Text = Constants.close;
+                        control.MouseHover += Control_MouseHover;
+                        control.MouseLeave += Control_MouseLeave;
                     }
-                    btnUploadXML.Enabled = true;
-                    btnClose.Text = Constants.close;
-                }
-                else
-                {
-                    MessageBox.Show($"This {fileName} File is already uploaded.click On Browse to Choose another file to upload.", "XML File Upload", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    btnUploadXML.Enabled = true;
+
+                    // Check for child controls in containers
+                    if (control.HasChildren)
+                    {
+                        // Assigning events to all child Controls
+                        RegisterEvents(control);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                btnUploadXML.Enabled = true;
-                btnClose.Text = "Close";
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private async void btnUploadXML_Click(object sender, EventArgs e)// to read and Store the Xml File
+        {
+            try
+            {
+                if (txtPath.Text == "" || txtPath == null)
+                {
+                    MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles, Constants.Xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+
+                }
+                string[] files = Directory.GetFiles(txtPath.Text);
+
+                bool allFilesAreXml = files.All(file => System.IO.Path.GetExtension(file).Equals(Constants.XmlExtention, StringComparison.OrdinalIgnoreCase));
+
+                if (files == null || files.Length == 0)
+                {
+                    MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles, Constants.Xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (files.Length > 1)
+                {
+                    MessageBox.Show(Constants.Thefolderhasmorethanonefileorduplicatefiles, Constants.Xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                // Check if all files have the .xml extension
+                if (!allFilesAreXml)
+                {
+                    MessageBox.Show(Constants.ThefoldercontainsnonXmLfilesorfolderisemptyUploadisallowedonlyforXmLfiles, Constants.Xmlfileuploads, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Continue with the upload process if all files are XML
+                btnClose.Text = Constants.Abort;
+
+                if (string.IsNullOrWhiteSpace(txtPath.Text))
+                {
+                    MessageBox.Show(Constants.SelectAFolderBeforeUploading);
+                    return; // Exit the method if the path is empty
+                }
+
+                btnUploadXML.Enabled = false;
+
+                string folderPath = txtPath.Text.Trim();
+                var values = chkPHI.Checked ? true : false;
+                if (string.IsNullOrEmpty(folderPath))
+                {
+                    MessageBox.Show(Constants.PleaseSelectAFolderToUploadXmlFiles, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    btnUploadXML.Enabled = true;
+                    return;
+                }
+                try
+                {
+                    if (string.IsNullOrEmpty(txtBatchid.Text) && string.IsNullOrEmpty(txtUploadStarted.Text))
+                    {
+                        btnClose.Text = Constants.Abort;
+                        string[] xmlFiles = Directory.GetFiles(folderPath, Constants.AllXmlExtention);
+                        int totalXmlFiles = xmlFiles.Length;
+                        int processedXmlFiles = 0;
+                        DateTime startTime = DateTime.Now;
+
+                        progressBarfile.Minimum = 0;
+                        progressBarfile.Maximum = totalXmlFiles;
+                        progressBarfile.Value = 0;
+
+                        foreach (string xmlFilePath in xmlFiles)
+                        {
+                            // Update the progress display to show the current processed XML file index out of the total number of XML files.
+                            UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);
+
+                            XmlDocument xmlDoc = new XmlDocument();
+                            xmlDoc.Load(xmlFilePath);
+
+                            int batchId = dbHelper.GetNextBatchId();// to get next BatchId for Insertion
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+                            string FileName = Path.GetFileName(xmlFilePath);
+                            txtFileName.Text = FileName;
+                            txtBatchid.Text = batchId.ToString();
+                            string date = startTime.ToString(Constants.MMddyyyybkslash);
+                            string time = startTime.ToString(Constants.HHmmss);
+                            txtDesc.Text = Constants.ClientTrackUploadOnAt.Replace("{date}", date).Replace("{time}", time);
+                            string formattime = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+                            txtUploadStarted.Text = formattime;
+
+                            SqlConnection conn = dbHelper.GetConnection();
+
+                            // to get the total number of rows in the given XmlDocument.
+                            int TotalRows = await GetTotalRowsInXml(xmlDoc);
+                            DateTime uploadStartedAt = DateTime.Now;
+
+                            // to insert data from an XmlDocument into a database table asynchronously.
+                            await InsertXmlDataIntoTable(xmlDoc, batchId, xmlFilePath, TotalRows, conn, values, FileName);
+
+                            int successfulRows = TotalRows;
+                            string description = $"{Constants.Batch} {batchId} - {FileName}";
+
+                            // update batch status in database
+                            dbHelper.InsertBatch(batchId, FileName, xmlFilePath, Constants.ClientTrackCode, description, uploadStartedAt, TotalRows, successfulRows, Constants.StatusCode);
+                            if (dbHelper.ErrorOccurred)
+                            {
+                                MessageBox.Show(Constants.ErrorOccurred);
+                                return;
+                            }
+
+                            processedXmlFiles++;
+                            UpdateFileProgressTotal(processedXmlFiles, totalXmlFiles);// to update the file progress
+
+                            DateTime endTime = DateTime.Now;
+                            TimeSpan totalTime = endTime - startTime;
+                            double totalSeconds = totalTime.TotalSeconds;
+                            string eTime = endTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+                            txtUploadEnded.Text = eTime;
+                            txtTotaltime.Text = $@"{totalSeconds:F2} {Constants.Seconds}";
+                            btnClose.Text = Constants.Close;
+                        }
+                        btnUploadXML.Enabled = true;
+                        btnClose.Text = Constants.Close;
+                    }
+                    else
+                    {
+                        MessageBox.Show($@"{Constants.TheFileIsAlreadyUploaded}", Constants.XmlFileUpload, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        btnUploadXML.Enabled = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}", Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    btnUploadXML.Enabled = true;
+                    btnClose.Text = Constants.Close;
+                }
+                finally
+                {
+                    btnUploadXML.Enabled = true;
+                    btnClose.Text = Constants.Close;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private async Task<int> GetTotalRowsInXml(XmlDocument xmlDoc)// This method asynchronously returns the total number of rows in the given XmlDocument.
         {
-            int totalClients = CountNodes(xmlDoc, "//Client");
-            int totalEligibilityDocs = CountNodes(xmlDoc, "//EligibilityDocument");
-            int totalServiceLineItems = CountNodes(xmlDoc, "//ServiceLineItem");
+            try
+            {
+                // to count the number of nodes in the XmlDocument that match the specified XPath expression.
+                int totalClients = CountNodes(xmlDoc, Constants.BkslhClient);
+                int totalEligibilityDocs = CountNodes(xmlDoc, Constants.BkslhEligibilityDocument);
+                int totalServiceLineItems = CountNodes(xmlDoc, Constants.BkslhServiceLineItem);
 
-            return totalClients + totalEligibilityDocs + totalServiceLineItems;
+                return totalClients + totalEligibilityDocs + totalServiceLineItems;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return -1;
+            }
         }
-        private async Task InsertXmlDataIntoTable(XmlDocument xmlDoc, int batchId, string xmlFilePath, int totalRows, SqlConnection conn, bool value)// This method inserts data from an XmlDocument into a database table asynchronously.
+        private async Task InsertXmlDataIntoTable(XmlDocument xmlDoc, int batchId, string xmlFilePath, int totalRows, SqlConnection conn, bool value,string fileName)// This method inserts data from an XmlDocument into a database table asynchronously.
         {
             int totalInsertedRows = 0;
             string baseFilename = Path.GetFileNameWithoutExtension(xmlFilePath);
             try
             {
-
-                dbHelper.Log($"Upload for {baseFilename} has started", Constants.ClientTrack, baseFilename, Constants.uploadct);// Log the start of the upload process for the given base filename
-
+                // insertion into log table
+                dbHelper.Log($"{Constants.UploadForBaseFileNameHasStarted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrackCode, baseFilename, Constants.Uploadct);// Log the start of the upload process for the given base filename
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+                // insert clients into database from Xml
                 int insertedClients = dbHelper.InsertClients(xmlDoc, batchId, conn, fileName, value);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 totalInsertedRows += insertedClients;
 
+                // insertion of eligibility document from xml file
                 int insertedEligibilityDocs = dbHelper.InsertEligibilityDocuments(xmlDoc, batchId, conn, fileName);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 totalInsertedRows += insertedEligibilityDocs;
 
+                // insertion of service table from xml file
                 int insertedServiceLineItems = dbHelper.InsertServiceLineItems(xmlDoc, batchId, conn, fileName);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 totalInsertedRows += insertedServiceLineItems;
 
-                //trans.Commit();
-                await UpdateProgressBar(totalRows);/// Update the progress bar to reflect the total number of rows being processed.
-                dbHelper.Log($"Upload for {baseFilename} has completed Successfully", Constants.ClientTrack, baseFilename, Constants.uploadct);// Log the end of the upload process for the given base filename
+                await UpdateProgressBar(totalRows);// Update the progress bar to reflect the total number of rows being processed.
+                dbHelper.Log($"{Constants.UploadForBaseFileNameHasCompleted.Replace("{baseFilename}", baseFilename)}", Constants.ClientTrackCode, baseFilename, Constants.Uploadct);// Log the end of the upload process for the given base filename
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
             }
             catch (Exception ex)
             {
                 var st = new StackTrace(ex, true);
-                var frame = st.GetFrames().FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
-                int lineNumber = frame != null ? frame.GetFileLineNumber() : 0;
-                dbHelper.LogError(ex.Message, GetCurrentFilePath(), ex.StackTrace, nameof(InsertXmlDataIntoTable), fileName, lineNumber);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                dbHelper.LogError(ex.Message, ex.StackTrace, nameof(InsertXmlDataIntoTable), fileName, lineNumber, Constants.ClientTrackCode);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
                 throw;
             }
-
         }
-        private async Task Updatetotal(int totalRows)// This method updates the total count of rows being processed asynchronously.
+        private async Task UpdateProgressBar(int totalCount)
         {
             try
             {
-                int totalInsertedRows = 0;
+                progressBarLines.Minimum = 0;
+                progressBarLines.Maximum = totalCount;
+                txtProgressLines.Text = Constants.ZeroPercent;
+                progressBarLines.Value = 0; // Immediate feedback
+                int currentCount = 0;
+                int updateInterval = Math.Max(1, totalCount / 100); // Update every 1% or more frequently
 
-                while (totalInsertedRows <= totalRows)
+                // Start showing progress immediately
+                while (currentCount <= totalCount)
                 {
-                    int progressPercentage = (int)((double)totalInsertedRows / totalRows * 100);
-                    string progressInfo = $"{totalInsertedRows}/{totalRows} ({progressPercentage}%)";
-                    txtProgressbar.Text = progressInfo;
-                    progressBarfile.Value = totalInsertedRows;
+                    if (currentCount % updateInterval == 0 || currentCount == totalCount)
+                    {
+                        int progressPercentage = (int)((double)currentCount / totalCount * 100);
+                        string progressInfo = $"{currentCount}/{totalCount} ({progressPercentage}%)";
+                        txtProgressLines.Text = progressInfo;
+                        progressBarLines.Value = currentCount;
+                    }
 
-                    totalInsertedRows++;
+                    currentCount++;
+                    // Minimal delay to allow the UI to update, no need for a fraction like 0.25
                     await Task.Delay(1);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Invalid");
+                MessageBox.Show(ex.Message);
             }
         }
-
-        private async Task UpdateProgressBar(int totalCount)
+        private void UpdateFileProgressTotal(int currentFilesIndex, int totalFiles)// This method updates the file progress to reflect the current file index out of the total number of files.
         {
-            progressBar.Minimum = 0;
-            progressBar.Maximum = totalCount;
-            txtProgressbar.Text = "0%";
-            progressBar.Value = 0; // Immediate feedback
-            int currentCount = 0;
-            int updateInterval = Math.Max(1, totalCount / 100); // Update every 1% or more frequently
-
-            // Start showing progress immediately
-            while (currentCount <= totalCount)
+            try
             {
-                if (currentCount % updateInterval == 0 || currentCount == totalCount)
+                if (progressBarfile.InvokeRequired)
                 {
-                    int progressPercentage = (int)((double)currentCount / totalCount * 100);
-                    string progressInfo = $"{currentCount}/{totalCount} ({progressPercentage}%)";
-                    txtProgressbar.Text = progressInfo;
-                    progressBar.Value = currentCount;
+                    progressBarfile.Invoke((MethodInvoker)delegate
+                    {
+                        int fileProgressPercentage = (int)((double)currentFilesIndex / totalFiles * 100);
+                        progressBarfile.Value = currentFilesIndex;
+                        txtProgressfile.Text = $@"{currentFilesIndex}/{totalFiles} ({fileProgressPercentage}%)";
+                    });
                 }
-
-                currentCount++;
-
-                // Minimal delay to allow the UI to update, no need for a fraction like 0.25
-                await Task.Delay(1);
-            }
-        }
-
-
-        //private async Task UpdateProgressBar(int totalCount)//This method updates the progress bar to reflect the progress of the operation asynchronously.
-        //{
-        //    progressBar.Minimum = 0;
-        //    progressBar.Maximum = totalCount;
-        //    txtProgressbar.Text = "0%";
-        //    int currentCount = 0;
-        //    while (currentCount <= totalCount)
-        //    {
-        //        int progressPercentage = (int)((double)currentCount / totalCount * 100);
-        //        string progressInfo = $"{currentCount}/{totalCount} ({progressPercentage}%)";
-        //        txtProgressbar.Text = progressInfo;
-        //        progressBar.Value = currentCount;
-
-        //        await Task.Delay(1);
-        //        currentCount++;
-        //    }
-        //}
-        private void UpdateFileProgressTotal(int currentFileIndex, int totalFiles)// This method updates the file progress to reflect the current file index out of the total number of files.
-        {
-            if (progressBarfile.InvokeRequired)
-            {
-                progressBarfile.Invoke((MethodInvoker)delegate
+                else
                 {
-                    int FileProgressPercentage = (int)((double)currentFileIndex / totalFiles * 100);
-                    progressBarfile.Value = currentFileIndex;
-                    txtProgressfile.Text = $"{currentFileIndex}/{totalFiles} ({FileProgressPercentage}%)";
-                });
+                    int fileProgressPercentage = (int)((double)currentFilesIndex / totalFiles * 100);
+                    progressBarfile.Value = currentFilesIndex;
+                    txtProgressfile.Text = $@"{currentFilesIndex}/{totalFiles} ({fileProgressPercentage}%)";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                int FileProgressPercentage = (int)((double)currentFileIndex / totalFiles * 100);
-                progressBarfile.Value = currentFileIndex;
-                txtProgressfile.Text = $"{currentFileIndex}/{totalFiles} ({FileProgressPercentage}%)";
+                MessageBox.Show(ex.Message);
             }
         }
         private int CountNodes(XmlDocument xmlDoc, string xpath)// This method counts the number of nodes in the XmlDocument that match the specified XPath expression.
         {
-            XmlNodeList nodes = xmlDoc.SelectNodes(xpath);
-            return nodes.Count;
+            try
+            {
+                XmlNodeList nodes = xmlDoc.SelectNodes(xpath);
+                return nodes.Count;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return 0;
+            }
         }
-        private void btnGeneratexml_Click(object sender, EventArgs e)
-        {
-            pnlCsvXml.Visible = false;
-        }
-        
-
         // Event handler for the Browse button click event.
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             try
             {
-             
-                    using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+                using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+                {
+                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
-                        if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                        string selectedFolderPath = folderBrowserDialog.SelectedPath;
+                        txtPath.Text = selectedFolderPath;
+
+                        // Check if the folder contains only XML files
+                        string[] files = Directory.GetFiles(selectedFolderPath);
+
+                        // Check if all files have the .xml extension
+                        bool allFilesAreXml = files.All(file => System.IO.Path.GetExtension(file).Equals(Constants.XmlExtention, StringComparison.OrdinalIgnoreCase));
+
+                        if (!allFilesAreXml)
                         {
-                            string selectedFolderPath = folderBrowserDialog.SelectedPath;
-                            txtPath.Text = selectedFolderPath;
-
-                            // Check if the folder contains only XML files
-                            string[] files = Directory.GetFiles(selectedFolderPath);
-
-                            // Check if all files have the .xml extension
-                            bool allFilesAreXml = files.All(file => Path.GetExtension(file).Equals(".xml", StringComparison.OrdinalIgnoreCase));
-
-                            if (!allFilesAreXml)
-                            {
-                                MessageBox.Show("The folder contains non-XML files or folder is empty. Upload is allowed only for XML files.", "Invalid File Type", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                            }
-
-                            // Save the path to the file
-                            File.WriteAllText("LastFolderPath.txt", selectedFolderPath);
+                            MessageBox.Show(Constants.TheFolderContainsNonXmlFiles, Constants.InvalidFileType, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                         }
+                        // Save the path to the file
+                        File.WriteAllText(Constants.LastFolderPathTxt, selectedFolderPath);
                     }
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-            
-            
 
-        // Method to save the default path to application settings or configuration.
-        private void SaveDefaultPathToSettings(string path)
-        {
-            // Example of saving to application settings (adjust according to your actual settings mechanism).
-            //Properties.Settings.Default.DefaultPath = path;
-            //Properties.Settings.Default.Save();
-        }
-
-        // Method to load the default path when the form is initialized.
-        private void LoadDefaultPath()
-        {
-            // Load the default path from settings if it exists.
-            //defaultPath = Properties.Settings.Default.DefaultPath;
-
-            // Optionally, set the TextBox to the default path.
-            txtPath.Text = defaultPath;
-        }
-
-        // Call LoadDefaultPath in your form's constructor or Load event handler.
-        private void btnClose_Click(object sender, EventArgs e)
+        private async void btnClose_Click(object sender, EventArgs e)
         {
             try
             {
-                if (btnClose.Text == "Close")
+                if (btnClose.Text == Constants.Close)
                 {
-                    this.Close();
+                    Close();
                     Application.Restart();
                     return;
                 }
                 int batchId = Convert.ToInt32(txtBatchid.Text);
-                if (btnClose.Text == "Abort")
+                if (btnClose.Text == Constants.Abort)
                 {
-                    DialogResult result = MessageBox.Show("Are you sure you want to abort?","XML File Upload", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult result = MessageBox.Show(Constants.Areyousureyouwanttoabort, Constants.XmlFileUpload, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                    // Check if the user clicked "Yes"
-                    UpdateBatch(batchId, fileName, path);
-                    DialogResult result2 = MessageBox.Show("Aborted Successfully","XML File Upload");
+                    if (result == DialogResult.Yes) // Check if the user clicked "Yes"
+                    {
+                        string folderPath = txtPath.Text.Trim();
+                        string[] xmlFiles = Directory.GetFiles(folderPath, Constants.AllXmlExtention);
+                        string FileName = txtFileName.Text;
 
-
+                        foreach (string xmlFilePath in xmlFiles)
+                        {
+                            XmlDocument xmlDoc = new XmlDocument();
+                            xmlDoc.Load(xmlFilePath);
+                            int TotalRows = await GetTotalRowsInXml(xmlDoc);
+                            // to update the batch record in the database
+                            UpdateBatch(batchId, FileName, xmlFilePath, TotalRows);
+                        }
+                        MessageBox.Show(Constants.AbortedSuccessfully, Constants.XmlFileUpload);
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                this.WindowState = FormWindowState.Maximized;
+                WindowState = FormWindowState.Maximized;
                 Application.Restart();
-
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private void UpdateBatch(int batchId, string fileName, string path)// This method updates the batch record in the database with the specified batch ID, file name, and path.
+        private void UpdateBatch(int batchId, string fileName, string path,int TotalRows)// This method updates the batch record in the database with the specified batch ID, file name, and path.
         {
             try
             {
-
                 DateTime currentTime = DateTime.Now;
                 int successfulRows = 0;
+                string description = Constants.Abortedfile;
                 // Insert batch details into the database, including batch ID, file name, path, timestamps, row counts, and status.
-                dbHelper.InsertBatch(batchId+1, fileName, path, Constants.ClientTrack, null, currentTime, totalRows, successfulRows, Constants.fileaborted);
-                ClearTables(batchId+1);
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error updating batch: {ex.Message}");
-            }
-        }
-        private void ClearTables(int batchId)// This method clears or resets tables associated with the specified batch ID.
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                dbHelper.InsertBatch(batchId, fileName, path, Constants.ClientTrackCode, description, currentTime, TotalRows, successfulRows, Constants.Fileaborted);
+                if (dbHelper.ErrorOccurred)
                 {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("abortdelete", connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@BatchId", batchId);
-
-                        command.ExecuteNonQuery();
-                    }
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+                // to clear the tables associated with the specified batch ID.
+                dbHelper.ClearTables(batchId);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error clearing tables: {ex.Message}");
-                throw; // Re-throw if you want to handle it in the calling method
-            }
-        }
-        private void RefreshFormControls()// This method refreshes or updates all form controls to reflect the latest data or state changes.
-        {
-            txtBatchid.Clear();
-            txtUploadStarted.Clear();
-            txtUploadEnded.Clear();
-            txtTotaltime.Clear();
-            txtProgressbar.Text = "0%";
-            txtProgressfile.Text = "0/0 (0%)";
-            progressBarfile.Value = 0;
-            progressBar.Value = 0;
-            txtFName.Text = string.Empty;
-            btnUploadXML.Visible = true;
-            DateTime currenttime = DateTime.Now;
-            string date = currenttime.ToString("MM/dd/yyyy");
-            string time = currenttime.ToString("HH:mm:ss");
-
-            txtDesc.Text = $"ClientTrack Upload on {date} At {time}";
-        }
-        private void CustomCheckBox_Paint(object sender, PaintEventArgs e)// Handles the custom painting of the CheckBox control to allow for custom visual appearance.
-        {
-            CheckBox checkBox = sender as CheckBox;
-            if (checkBox != null)
-            {
-                // Define the size of the checkbox part
-                int checkBoxSize = 40;
-                // Calculate positions
-                int checkBoxTop = (checkBox.Height - checkBoxSize) / 2;
-                Rectangle rect = new Rectangle(0, checkBoxTop, checkBoxSize, checkBoxSize);
-
-                // Draw the checkbox manually
-                ControlPaint.DrawCheckBox(e.Graphics, rect, checkBox.Checked ? ButtonState.Checked : ButtonState.Normal);
-            }
-        }
-        // Returns the file path of the source file where the method is called, using the CallerFilePath attribute.
-        private string GetCurrentFilePath([CallerFilePath] string filePath = "") => filePath;
-        // Returns the line number of the source code where the method is called, using the CallerLineNumber attribute.
-        private int GetCurrentLineNumber([CallerLineNumber] int lineNumber = 0) => lineNumber;
-
-        // Returns the name of the calling member (method or property) using the CallerMemberName attribute.
-        private string GetCurrentMemberName([CallerMemberName] string memberName = "") => memberName;
-
-        private void cbMask_CheckedChanged_2(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cbMask_MouseHover(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Hand;
-        }
-        private void cbMask_MouseLeave(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
-        private void Control_MouseHover(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Hand;
-        }
-
-        private void Control_MouseLeave(object sender, EventArgs e)
-        {
-            Cursor = Cursors.Default;
-        }
-        private void RegisterEvents(Control parent)
-        {
-            foreach (Control control in parent.Controls)
-            {
-                if (control is System.Windows.Forms.Button || control is CheckBox || control is DateTimePicker)
-                {
-                    control.MouseHover += Control_MouseHover;
-                    control.MouseLeave += Control_MouseLeave;
-                }
-
-                // Check for child controls in containers
-                if (control.HasChildren)
-                {
-                    RegisterEvents(control);
-                }
+                MessageBox.Show($@"{Constants.Errorupdatingbatch}{ex.Message}");
             }
         }
     }

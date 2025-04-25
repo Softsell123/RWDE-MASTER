@@ -5,15 +5,15 @@ namespace RWDE
 {
     partial class FrmMain
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -25,13 +25,16 @@ namespace RWDE
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,18 +63,18 @@ namespace RWDE
             this.allBatchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.uploadOCHINCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.uploadCSVToOCHINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.xMLFileUploadsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.oCHINToHCCConversionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.oCHINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateHCCXmlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadHCCErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uploadCSVToOCHINToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xMLFileUploadsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oCHINToHCCConversionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVFILESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.serviceReconciliationReportDotNotUseToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.deceasedClientsReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.uploadDashboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hCCRECONToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uploadDashboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deceasedClientsReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientDemographicsReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.errorLogReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manualUploadReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,8 +93,17 @@ namespace RWDE
             this.btnOCHINHCCConversion = new System.Windows.Forms.ToolStripButton();
             this.btnConversion = new System.Windows.Forms.ToolStripButton();
             this.btnGenerator = new System.Windows.Forms.ToolStripButton();
+            this.pnlLeftImage = new System.Windows.Forms.Panel();
+            this.pnlRightChart = new System.Windows.Forms.Panel();
+            this.lblTo = new System.Windows.Forms.Label();
+            this.lblFrom = new System.Windows.Forms.Label();
+            this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
+            this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
+            this.chartServices = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
+            this.pnlRightChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartServices)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -104,14 +116,13 @@ namespace RWDE
             this.editMenu,
             this.viewMenu,
             this.toolsMenu,
-            this.reportsToolStripMenuItem});
+            this.reportsMenu});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip.Size = new System.Drawing.Size(1766, 28);
+            this.menuStrip.Size = new System.Drawing.Size(2048, 30);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
-            this.menuStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip_ItemClicked);
             // 
             // fileMenu
             // 
@@ -129,7 +140,7 @@ namespace RWDE
             this.exitToolStripMenuItem});
             this.fileMenu.ImageTransparentColor = System.Drawing.SystemColors.ActiveBorder;
             this.fileMenu.Name = "fileMenu";
-            this.fileMenu.Size = new System.Drawing.Size(46, 24);
+            this.fileMenu.Size = new System.Drawing.Size(46, 26);
             this.fileMenu.Text = "&File";
             // 
             // newToolStripMenuItem
@@ -138,7 +149,7 @@ namespace RWDE
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.ShowNewForm);
             // 
@@ -148,14 +159,14 @@ namespace RWDE
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenFile);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(178, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -163,20 +174,20 @@ namespace RWDE
             this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveToolStripMenuItem.Text = "&Save";
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveAsToolStripMenuItem.Text = "Save &As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(178, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -184,7 +195,7 @@ namespace RWDE
             this.printToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.printToolStripMenuItem.Name = "printToolStripMenuItem";
             this.printToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
@@ -192,24 +203,24 @@ namespace RWDE
             this.printPreviewToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("printPreviewToolStripMenuItem.Image")));
             this.printPreviewToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // printSetupToolStripMenuItem
             // 
             this.printSetupToolStripMenuItem.Name = "printSetupToolStripMenuItem";
-            this.printSetupToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.printSetupToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.printSetupToolStripMenuItem.Text = "Print Setup";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(178, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolsStripMenuItem_Click);
             // 
@@ -225,7 +236,7 @@ namespace RWDE
             this.toolStripSeparator7,
             this.selectAllToolStripMenuItem});
             this.editMenu.Name = "editMenu";
-            this.editMenu.Size = new System.Drawing.Size(49, 24);
+            this.editMenu.Size = new System.Drawing.Size(49, 26);
             this.editMenu.Text = "&Edit";
             // 
             // undoToolStripMenuItem
@@ -259,7 +270,6 @@ namespace RWDE
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
             this.cutToolStripMenuItem.Size = new System.Drawing.Size(206, 26);
             this.cutToolStripMenuItem.Text = "Cu&t";
-            this.cutToolStripMenuItem.Click += new System.EventHandler(this.CutToolStripMenuItem_Click);
             // 
             // copyToolStripMenuItem
             // 
@@ -269,7 +279,6 @@ namespace RWDE
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(206, 26);
             this.copyToolStripMenuItem.Text = "&Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItem_Click);
             // 
             // pasteToolStripMenuItem
             // 
@@ -279,7 +288,6 @@ namespace RWDE
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.pasteToolStripMenuItem.Size = new System.Drawing.Size(206, 26);
             this.pasteToolStripMenuItem.Text = "&Paste";
-            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
@@ -300,7 +308,7 @@ namespace RWDE
             this.statusBarToolStripMenuItem,
             this.allBatchesToolStripMenuItem});
             this.viewMenu.Name = "viewMenu";
-            this.viewMenu.Size = new System.Drawing.Size(97, 24);
+            this.viewMenu.Size = new System.Drawing.Size(97, 26);
             this.viewMenu.Text = "Data Setup";
             // 
             // toolBarToolStripMenuItem
@@ -337,134 +345,124 @@ namespace RWDE
             // 
             this.toolsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.uploadOCHINCSVToolStripMenuItem,
-            this.uploadCSVToOCHINToolStripMenuItem,
-            this.xMLFileUploadsToolStripMenuItem,
-            this.oCHINToHCCConversionToolStripMenuItem,
             this.oCHINToolStripMenuItem,
             this.generateHCCXmlFilesToolStripMenuItem,
             this.downloadHCCErrorsToolStripMenuItem,
+            this.uploadCSVToOCHINToolStripMenuItem,
+            this.xMLFileUploadsToolStripMenuItem,
+            this.oCHINToHCCConversionToolStripMenuItem,
             this.cSVFILESToolStripMenuItem});
             this.toolsMenu.Name = "toolsMenu";
-            this.toolsMenu.Size = new System.Drawing.Size(147, 24);
+            this.toolsMenu.Size = new System.Drawing.Size(147, 26);
             this.toolsMenu.Text = "Data Management";
-            this.toolsMenu.Click += new System.EventHandler(this.toolsMenu_Click);
             // 
             // uploadOCHINCSVToolStripMenuItem
             // 
-            this.uploadOCHINCSVToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("uploadOCHINCSVToolStripMenuItem.Image")));
             this.uploadOCHINCSVToolStripMenuItem.Name = "uploadOCHINCSVToolStripMenuItem";
-            this.uploadOCHINCSVToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.uploadOCHINCSVToolStripMenuItem.Text = "Upload OCHIN CS";
+            this.uploadOCHINCSVToolStripMenuItem.Size = new System.Drawing.Size(268, 26);
+            this.uploadOCHINCSVToolStripMenuItem.Text = "1.Upload OCHIN CSV";
             this.uploadOCHINCSVToolStripMenuItem.Click += new System.EventHandler(this.uploadOchinCSVToolStripMenuItem_Click);
+            // 
+            // oCHINToolStripMenuItem
+            // 
+            this.oCHINToolStripMenuItem.Name = "oCHINToolStripMenuItem";
+            this.oCHINToolStripMenuItem.Size = new System.Drawing.Size(268, 26);
+            this.oCHINToolStripMenuItem.Text = "2.Convert OCHIN to RWDE";
+            this.oCHINToolStripMenuItem.Click += new System.EventHandler(this.oCHINToolStripMenuItem_Click);
+            // 
+            // generateHCCXmlFilesToolStripMenuItem
+            // 
+            this.generateHCCXmlFilesToolStripMenuItem.Name = "generateHCCXmlFilesToolStripMenuItem";
+            this.generateHCCXmlFilesToolStripMenuItem.Size = new System.Drawing.Size(268, 26);
+            this.generateHCCXmlFilesToolStripMenuItem.Text = "3.Generate HCC XML files";
+            this.generateHCCXmlFilesToolStripMenuItem.Click += new System.EventHandler(this.generateHCCXmlFilesToolStripMenuItem_Click);
+            // 
+            // downloadHCCErrorsToolStripMenuItem
+            // 
+            this.downloadHCCErrorsToolStripMenuItem.Name = "downloadHCCErrorsToolStripMenuItem";
+            this.downloadHCCErrorsToolStripMenuItem.Size = new System.Drawing.Size(268, 26);
+            this.downloadHCCErrorsToolStripMenuItem.Text = "4.Download HCC Errors";
+            this.downloadHCCErrorsToolStripMenuItem.Click += new System.EventHandler(this.downloadHCCErrorsToolStripMenuItem_Click);
             // 
             // uploadCSVToOCHINToolStripMenuItem
             // 
-            this.uploadCSVToOCHINToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("uploadCSVToOCHINToolStripMenuItem.Image")));
             this.uploadCSVToOCHINToolStripMenuItem.Name = "uploadCSVToOCHINToolStripMenuItem";
-            this.uploadCSVToOCHINToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
+            this.uploadCSVToOCHINToolStripMenuItem.Size = new System.Drawing.Size(268, 26);
             this.uploadCSVToOCHINToolStripMenuItem.Text = "Upload HCC CSV";
             this.uploadCSVToOCHINToolStripMenuItem.Click += new System.EventHandler(this.uploadCSVToOCHINToolStripMenuItem_Click);
             // 
             // xMLFileUploadsToolStripMenuItem
             // 
-            this.xMLFileUploadsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("xMLFileUploadsToolStripMenuItem.Image")));
             this.xMLFileUploadsToolStripMenuItem.Name = "xMLFileUploadsToolStripMenuItem";
-            this.xMLFileUploadsToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.xMLFileUploadsToolStripMenuItem.Text = "XML File Uploads";
+            this.xMLFileUploadsToolStripMenuItem.Size = new System.Drawing.Size(268, 26);
+            this.xMLFileUploadsToolStripMenuItem.Text = "Upload XML File";
             this.xMLFileUploadsToolStripMenuItem.Click += new System.EventHandler(this.xMLFileUploadsToolStripMenuItem_Click);
             // 
             // oCHINToHCCConversionToolStripMenuItem
             // 
-            this.oCHINToHCCConversionToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("oCHINToHCCConversionToolStripMenuItem.Image")));
             this.oCHINToHCCConversionToolStripMenuItem.Name = "oCHINToHCCConversionToolStripMenuItem";
-            this.oCHINToHCCConversionToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.oCHINToHCCConversionToolStripMenuItem.Text = "CT to HCC Conversion";
+            this.oCHINToHCCConversionToolStripMenuItem.Size = new System.Drawing.Size(268, 26);
+            this.oCHINToHCCConversionToolStripMenuItem.Text = "Convert CT to HCC";
             this.oCHINToHCCConversionToolStripMenuItem.Click += new System.EventHandler(this.oCHINToHCCConversionToolStripMenuItem_Click);
-            // 
-            // oCHINToolStripMenuItem
-            // 
-            this.oCHINToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("oCHINToolStripMenuItem.Image")));
-            this.oCHINToolStripMenuItem.Name = "oCHINToolStripMenuItem";
-            this.oCHINToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.oCHINToolStripMenuItem.Text = "OCHIN to RWDE Conversion";
-            this.oCHINToolStripMenuItem.Click += new System.EventHandler(this.oCHINToolStripMenuItem_Click);
-            // 
-            // generateHCCXmlFilesToolStripMenuItem
-            // 
-            this.generateHCCXmlFilesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("generateHCCXmlFilesToolStripMenuItem.Image")));
-            this.generateHCCXmlFilesToolStripMenuItem.Name = "generateHCCXmlFilesToolStripMenuItem";
-            this.generateHCCXmlFilesToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.generateHCCXmlFilesToolStripMenuItem.Text = "Generate HCC xml files";
-            this.generateHCCXmlFilesToolStripMenuItem.Click += new System.EventHandler(this.generateHCCXmlFilesToolStripMenuItem_Click);
-            // 
-            // downloadHCCErrorsToolStripMenuItem
-            // 
-            this.downloadHCCErrorsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("downloadHCCErrorsToolStripMenuItem.Image")));
-            this.downloadHCCErrorsToolStripMenuItem.Name = "downloadHCCErrorsToolStripMenuItem";
-            this.downloadHCCErrorsToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.downloadHCCErrorsToolStripMenuItem.Text = "Download HCC Errors";
-            this.downloadHCCErrorsToolStripMenuItem.Click += new System.EventHandler(this.downloadHCCErrorsToolStripMenuItem_Click);
             // 
             // cSVFILESToolStripMenuItem
             // 
-            this.cSVFILESToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("cSVFILESToolStripMenuItem.Image")));
             this.cSVFILESToolStripMenuItem.Name = "cSVFILESToolStripMenuItem";
-            this.cSVFILESToolStripMenuItem.Size = new System.Drawing.Size(279, 26);
-            this.cSVFILESToolStripMenuItem.Text = "CSV FILES";
+            this.cSVFILESToolStripMenuItem.Size = new System.Drawing.Size(268, 26);
+            this.cSVFILESToolStripMenuItem.Text = "Generate CSV";
             this.cSVFILESToolStripMenuItem.Click += new System.EventHandler(this.cSVFILESToolStripMenuItem_Click);
             // 
-            // reportsToolStripMenuItem
+            // reportsMenu
             // 
-            this.reportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reportsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.serviceReconciliationReportDotNotUseToolStripMenuItem1,
-            this.deceasedClientsReportToolStripMenuItem,
-            this.uploadDashboardToolStripMenuItem,
             this.hCCRECONToolStripMenuItem,
+            this.uploadDashboardToolStripMenuItem,
+            this.deceasedClientsReportToolStripMenuItem,
             this.clientDemographicsReportToolStripMenuItem,
             this.errorLogReportToolStripMenuItem,
             this.manualUploadReportToolStripMenuItem});
-            this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
-            this.reportsToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
-            this.reportsToolStripMenuItem.Text = "Reports";
-            this.reportsToolStripMenuItem.Click += new System.EventHandler(this.reportsToolStripMenuItem_Click);
+            this.reportsMenu.Name = "reportsMenu";
+            this.reportsMenu.Size = new System.Drawing.Size(74, 26);
+            this.reportsMenu.Text = "Reports";
             // 
             // serviceReconciliationReportDotNotUseToolStripMenuItem1
             // 
             this.serviceReconciliationReportDotNotUseToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("serviceReconciliationReportDotNotUseToolStripMenuItem1.Image")));
             this.serviceReconciliationReportDotNotUseToolStripMenuItem1.Name = "serviceReconciliationReportDotNotUseToolStripMenuItem1";
-            this.serviceReconciliationReportDotNotUseToolStripMenuItem1.Size = new System.Drawing.Size(290, 26);
-            this.serviceReconciliationReportDotNotUseToolStripMenuItem1.Text = "Service Reconciliation Report ";
+            this.serviceReconciliationReportDotNotUseToolStripMenuItem1.Size = new System.Drawing.Size(301, 26);
+            this.serviceReconciliationReportDotNotUseToolStripMenuItem1.Text = "1.Service Reconciliation Report ";
             this.serviceReconciliationReportDotNotUseToolStripMenuItem1.Click += new System.EventHandler(this.serviceReconciliationReportDotNotUseToolStripMenuItem1_Click);
-            // 
-            // deceasedClientsReportToolStripMenuItem
-            // 
-            this.deceasedClientsReportToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("deceasedClientsReportToolStripMenuItem.Image")));
-            this.deceasedClientsReportToolStripMenuItem.Name = "deceasedClientsReportToolStripMenuItem";
-            this.deceasedClientsReportToolStripMenuItem.Size = new System.Drawing.Size(290, 26);
-            this.deceasedClientsReportToolStripMenuItem.Text = "Deceased Clients Report";
-            this.deceasedClientsReportToolStripMenuItem.Click += new System.EventHandler(this.deceasedClientsReportToolStripMenuItem_Click);
-            // 
-            // uploadDashboardToolStripMenuItem
-            // 
-            this.uploadDashboardToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("uploadDashboardToolStripMenuItem.Image")));
-            this.uploadDashboardToolStripMenuItem.Name = "uploadDashboardToolStripMenuItem";
-            this.uploadDashboardToolStripMenuItem.Size = new System.Drawing.Size(290, 26);
-            this.uploadDashboardToolStripMenuItem.Text = "Monthly Reports";
-            this.uploadDashboardToolStripMenuItem.Click += new System.EventHandler(this.uploadDashboardToolStripMenuItem_Click);
             // 
             // hCCRECONToolStripMenuItem
             // 
             this.hCCRECONToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("hCCRECONToolStripMenuItem.Image")));
             this.hCCRECONToolStripMenuItem.Name = "hCCRECONToolStripMenuItem";
-            this.hCCRECONToolStripMenuItem.Size = new System.Drawing.Size(290, 26);
-            this.hCCRECONToolStripMenuItem.Text = "HCC Reconciliation Report";
+            this.hCCRECONToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
+            this.hCCRECONToolStripMenuItem.Text = "2.HCC Reconciliation Report";
             this.hCCRECONToolStripMenuItem.Click += new System.EventHandler(this.hCCRECONToolStripMenuItem_Click);
+            // 
+            // uploadDashboardToolStripMenuItem
+            // 
+            this.uploadDashboardToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("uploadDashboardToolStripMenuItem.Image")));
+            this.uploadDashboardToolStripMenuItem.Name = "uploadDashboardToolStripMenuItem";
+            this.uploadDashboardToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
+            this.uploadDashboardToolStripMenuItem.Text = "3.Monthly Reports";
+            this.uploadDashboardToolStripMenuItem.Click += new System.EventHandler(this.uploadDashboardToolStripMenuItem_Click);
+            // 
+            // deceasedClientsReportToolStripMenuItem
+            // 
+            this.deceasedClientsReportToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("deceasedClientsReportToolStripMenuItem.Image")));
+            this.deceasedClientsReportToolStripMenuItem.Name = "deceasedClientsReportToolStripMenuItem";
+            this.deceasedClientsReportToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
+            this.deceasedClientsReportToolStripMenuItem.Text = "Deceased Clients Report";
+            this.deceasedClientsReportToolStripMenuItem.Click += new System.EventHandler(this.deceasedClientsReportToolStripMenuItem_Click);
             // 
             // clientDemographicsReportToolStripMenuItem
             // 
             this.clientDemographicsReportToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("clientDemographicsReportToolStripMenuItem.Image")));
             this.clientDemographicsReportToolStripMenuItem.Name = "clientDemographicsReportToolStripMenuItem";
-            this.clientDemographicsReportToolStripMenuItem.Size = new System.Drawing.Size(290, 26);
+            this.clientDemographicsReportToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
             this.clientDemographicsReportToolStripMenuItem.Text = "Client Demographics Report";
             this.clientDemographicsReportToolStripMenuItem.Click += new System.EventHandler(this.clientDemographicsReportToolStripMenuItem_Click);
             // 
@@ -472,7 +470,7 @@ namespace RWDE
             // 
             this.errorLogReportToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("errorLogReportToolStripMenuItem.Image")));
             this.errorLogReportToolStripMenuItem.Name = "errorLogReportToolStripMenuItem";
-            this.errorLogReportToolStripMenuItem.Size = new System.Drawing.Size(290, 26);
+            this.errorLogReportToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
             this.errorLogReportToolStripMenuItem.Text = "Error Log Report";
             this.errorLogReportToolStripMenuItem.Click += new System.EventHandler(this.errorLogReportToolStripMenuItem_Click);
             // 
@@ -480,7 +478,7 @@ namespace RWDE
             // 
             this.manualUploadReportToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("manualUploadReportToolStripMenuItem.Image")));
             this.manualUploadReportToolStripMenuItem.Name = "manualUploadReportToolStripMenuItem";
-            this.manualUploadReportToolStripMenuItem.Size = new System.Drawing.Size(290, 26);
+            this.manualUploadReportToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
             this.manualUploadReportToolStripMenuItem.Text = "Manual Upload Report";
             this.manualUploadReportToolStripMenuItem.Click += new System.EventHandler(this.manualUploadReportToolStripMenuItem_Click);
             // 
@@ -502,12 +500,11 @@ namespace RWDE
             this.btnOCHINHCCConversion,
             this.btnConversion,
             this.btnGenerator});
-            this.toolStrip.Location = new System.Drawing.Point(0, 28);
+            this.toolStrip.Location = new System.Drawing.Point(0, 30);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(1766, 27);
+            this.toolStrip.Size = new System.Drawing.Size(2048, 31);
             this.toolStrip.TabIndex = 1;
             this.toolStrip.Text = "ToolStrip";
-            this.toolStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip_ItemClicked);
             // 
             // newToolStripButton
             // 
@@ -515,7 +512,7 @@ namespace RWDE
             this.newToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripButton.Image")));
             this.newToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.newToolStripButton.Name = "newToolStripButton";
-            this.newToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.newToolStripButton.Size = new System.Drawing.Size(29, 28);
             this.newToolStripButton.Text = "New";
             this.newToolStripButton.Click += new System.EventHandler(this.ShowNewForm);
             // 
@@ -525,7 +522,7 @@ namespace RWDE
             this.openToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripButton.Image")));
             this.openToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.openToolStripButton.Name = "openToolStripButton";
-            this.openToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.openToolStripButton.Size = new System.Drawing.Size(29, 28);
             this.openToolStripButton.Text = "Open";
             this.openToolStripButton.Click += new System.EventHandler(this.OpenFile);
             // 
@@ -535,13 +532,13 @@ namespace RWDE
             this.saveToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripButton.Image")));
             this.saveToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.saveToolStripButton.Name = "saveToolStripButton";
-            this.saveToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.saveToolStripButton.Size = new System.Drawing.Size(29, 28);
             this.saveToolStripButton.Text = "Save";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
             // printToolStripButton
             // 
@@ -549,7 +546,7 @@ namespace RWDE
             this.printToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("printToolStripButton.Image")));
             this.printToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.printToolStripButton.Name = "printToolStripButton";
-            this.printToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.printToolStripButton.Size = new System.Drawing.Size(29, 28);
             this.printToolStripButton.Text = "Print";
             // 
             // helpToolStripButton
@@ -558,7 +555,7 @@ namespace RWDE
             this.helpToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripButton.Image")));
             this.helpToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.helpToolStripButton.Name = "helpToolStripButton";
-            this.helpToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.helpToolStripButton.Size = new System.Drawing.Size(29, 28);
             this.helpToolStripButton.Text = "Help";
             // 
             // printPreviewToolStripButton
@@ -567,13 +564,13 @@ namespace RWDE
             this.printPreviewToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("printPreviewToolStripButton.Image")));
             this.printPreviewToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.printPreviewToolStripButton.Name = "printPreviewToolStripButton";
-            this.printPreviewToolStripButton.Size = new System.Drawing.Size(29, 24);
+            this.printPreviewToolStripButton.Size = new System.Drawing.Size(29, 28);
             this.printPreviewToolStripButton.Text = "Print Preview";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
             // 
             // btnochincCsv
             // 
@@ -581,7 +578,7 @@ namespace RWDE
             this.btnochincCsv.Image = ((System.Drawing.Image)(resources.GetObject("btnochincCsv.Image")));
             this.btnochincCsv.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnochincCsv.Name = "btnochincCsv";
-            this.btnochincCsv.Size = new System.Drawing.Size(29, 24);
+            this.btnochincCsv.Size = new System.Drawing.Size(29, 28);
             this.btnochincCsv.Text = "Upload OCHIN CSV";
             this.btnochincCsv.Click += new System.EventHandler(this.BtnochincCsv_Click);
             // 
@@ -591,7 +588,7 @@ namespace RWDE
             this.btnXml.Image = ((System.Drawing.Image)(resources.GetObject("btnXml.Image")));
             this.btnXml.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnXml.Name = "btnXml";
-            this.btnXml.Size = new System.Drawing.Size(29, 24);
+            this.btnXml.Size = new System.Drawing.Size(29, 28);
             this.btnXml.Text = "Upload HCC CSV";
             this.btnXml.Click += new System.EventHandler(this.btnXml_Click);
             // 
@@ -601,9 +598,9 @@ namespace RWDE
             this.btnHccCsv.Image = ((System.Drawing.Image)(resources.GetObject("btnHccCsv.Image")));
             this.btnHccCsv.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnHccCsv.Name = "btnHccCsv";
-            this.btnHccCsv.Size = new System.Drawing.Size(29, 24);
+            this.btnHccCsv.Size = new System.Drawing.Size(29, 28);
             this.btnHccCsv.Text = "Upload XML";
-            this.btnHccCsv.Click += new System.EventHandler(this.btnHccCsv_Click_1);
+            this.btnHccCsv.Click += new System.EventHandler(this.btnHccCsv_Click);
             // 
             // btnOCHINHCCConversion
             // 
@@ -611,7 +608,7 @@ namespace RWDE
             this.btnOCHINHCCConversion.Image = ((System.Drawing.Image)(resources.GetObject("btnOCHINHCCConversion.Image")));
             this.btnOCHINHCCConversion.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnOCHINHCCConversion.Name = "btnOCHINHCCConversion";
-            this.btnOCHINHCCConversion.Size = new System.Drawing.Size(29, 24);
+            this.btnOCHINHCCConversion.Size = new System.Drawing.Size(29, 28);
             this.btnOCHINHCCConversion.Text = "OCHIN to RWDE Conversion";
             this.btnOCHINHCCConversion.Click += new System.EventHandler(this.btnOCHINHCCConversion_Click);
             // 
@@ -621,7 +618,7 @@ namespace RWDE
             this.btnConversion.Image = ((System.Drawing.Image)(resources.GetObject("btnConversion.Image")));
             this.btnConversion.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnConversion.Name = "btnConversion";
-            this.btnConversion.Size = new System.Drawing.Size(29, 24);
+            this.btnConversion.Size = new System.Drawing.Size(29, 28);
             this.btnConversion.Text = "OCHIN tO HCC Conversion";
             this.btnConversion.Click += new System.EventHandler(this.btnHccConversion_Click);
             // 
@@ -631,66 +628,152 @@ namespace RWDE
             this.btnGenerator.Image = ((System.Drawing.Image)(resources.GetObject("btnGenerator.Image")));
             this.btnGenerator.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnGenerator.Name = "btnGenerator";
-            this.btnGenerator.Size = new System.Drawing.Size(29, 24);
+            this.btnGenerator.Size = new System.Drawing.Size(29, 28);
             this.btnGenerator.Text = "Generate HCC xml files";
             this.btnGenerator.Click += new System.EventHandler(this.btnGenerator_Click);
+            // 
+            // pnlLeftImage
+            // 
+            this.pnlLeftImage.AutoSize = true;
+            this.pnlLeftImage.BackColor = System.Drawing.Color.White;
+            this.pnlLeftImage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pnlLeftImage.BackgroundImage")));
+            this.pnlLeftImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pnlLeftImage.ForeColor = System.Drawing.Color.White;
+            this.pnlLeftImage.Location = new System.Drawing.Point(0, 66);
+            this.pnlLeftImage.Margin = new System.Windows.Forms.Padding(4);
+            this.pnlLeftImage.Name = "pnlLeftImage";
+            this.pnlLeftImage.Size = new System.Drawing.Size(1024, 968);
+            this.pnlLeftImage.TabIndex = 3;
+            this.pnlLeftImage.Text = "Ryan White Data Exchange";
+            // 
+            // pnlRightChart
+            // 
+            this.pnlRightChart.BackColor = System.Drawing.Color.White;
+            this.pnlRightChart.Controls.Add(this.lblTo);
+            this.pnlRightChart.Controls.Add(this.lblFrom);
+            this.pnlRightChart.Controls.Add(this.dtpEndDate);
+            this.pnlRightChart.Controls.Add(this.dtpStartDate);
+            this.pnlRightChart.Controls.Add(this.chartServices);
+            this.pnlRightChart.ForeColor = System.Drawing.Color.White;
+            this.pnlRightChart.Location = new System.Drawing.Point(1024, 66);
+            this.pnlRightChart.Name = "pnlRightChart";
+            this.pnlRightChart.Size = new System.Drawing.Size(1024, 968);
+            this.pnlRightChart.TabIndex = 5;
+            // 
+            // lblTo
+            // 
+            this.lblTo.AutoSize = true;
+            this.lblTo.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold);
+            this.lblTo.ForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.lblTo.Location = new System.Drawing.Point(546, 138);
+            this.lblTo.Name = "lblTo";
+            this.lblTo.Size = new System.Drawing.Size(56, 35);
+            this.lblTo.TabIndex = 5;
+            this.lblTo.Text = "To :";
+            // 
+            // lblFrom
+            // 
+            this.lblFrom.AutoSize = true;
+            this.lblFrom.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold);
+            this.lblFrom.ForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.lblFrom.Location = new System.Drawing.Point(200, 137);
+            this.lblFrom.Name = "lblFrom";
+            this.lblFrom.Size = new System.Drawing.Size(90, 35);
+            this.lblFrom.TabIndex = 4;
+            this.lblFrom.Text = "From :";
+            // 
+            // dtpEndDate
+            // 
+            this.dtpEndDate.Font = new System.Drawing.Font("Calibri", 16.2F);
+            this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpEndDate.Location = new System.Drawing.Point(616, 136);
+            this.dtpEndDate.MinDate = new System.DateTime(1950, 1, 1, 0, 0, 0, 0);
+            this.dtpEndDate.Name = "dtpEndDate";
+            this.dtpEndDate.Size = new System.Drawing.Size(172, 40);
+            this.dtpEndDate.TabIndex = 2;
+            this.dtpEndDate.ValueChanged += new System.EventHandler(this.dtpEndDate_ValueChanged);
+            // 
+            // dtpStartDate
+            // 
+            this.dtpStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpStartDate.Location = new System.Drawing.Point(306, 135);
+            this.dtpStartDate.MinDate = new System.DateTime(1950, 1, 1, 0, 0, 0, 0);
+            this.dtpStartDate.Name = "dtpStartDate";
+            this.dtpStartDate.Size = new System.Drawing.Size(172, 40);
+            this.dtpStartDate.TabIndex = 1;
+            this.dtpStartDate.ValueChanged += new System.EventHandler(this.dtpStartDate_ValueChanged);
+            // 
+            // chartServices
+            // 
+            chartArea1.Area3DStyle.Enable3D = true;
+            chartArea1.Area3DStyle.IsRightAngleAxes = false;
+            chartArea1.Area3DStyle.Rotation = 90;
+            chartArea1.Name = "chartServicesArea";
+            this.chartServices.ChartAreas.Add(chartArea1);
+            this.chartServices.Cursor = System.Windows.Forms.Cursors.Hand;
+            legend1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            legend1.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.HorizontalCenter;
+            legend1.BorderWidth = 2;
+            legend1.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Bottom;
+            legend1.Font = new System.Drawing.Font("Calibri", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            legend1.HeaderSeparator = System.Windows.Forms.DataVisualization.Charting.LegendSeparatorStyle.GradientLine;
+            legend1.InterlacedRowsColor = System.Drawing.Color.White;
+            legend1.IsTextAutoFit = false;
+            legend1.ItemColumnSpacing = 500;
+            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            legend1.MaximumAutoSize = 100F;
+            legend1.Name = "Legend1";
+            legend1.TextWrapThreshold = 0;
+            legend1.TitleFont = new System.Drawing.Font("Calibri", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chartServices.Legends.Add(legend1);
+            this.chartServices.Location = new System.Drawing.Point(173, 308);
+            this.chartServices.Name = "chartServices";
+            this.chartServices.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            series1.ChartArea = "chartServicesArea";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series1.Label = "#LEGENDTEXT";
+            series1.LabelToolTip = "#LEGENDTEXT";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartServices.Series.Add(series1);
+            this.chartServices.Size = new System.Drawing.Size(690, 515);
+            this.chartServices.TabIndex = 0;
+            this.chartServices.Text = "y";
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1766, 1055);
+            this.Controls.Add(this.pnlRightChart);
+            this.Controls.Add(this.pnlLeftImage);
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.menuStrip);
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.Color.White;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmMain";
             this.RightToLeftLayout = true;
             this.Text = "Ryan White Data Exchange";
             this.TransparencyKey = System.Drawing.Color.IndianRed;
-            this.Load += new System.EventHandler(this.frmMain_Load);
+            this.Resize += new System.EventHandler(this.FrmMain_Resize);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
+            this.pnlRightChart.ResumeLayout(false);
+            this.pnlRightChart.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartServices)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
-        }
-
-        
-
-        private void toolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            
-        }
-
-        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void menuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-           
         }
 
         private void StatusBarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -699,22 +782,15 @@ namespace RWDE
             {
                 this.ActiveMdiChild.Close();
             }
+            pnlLeftImage.Visible = false;
+            pnlRightChart.Visible = false;
 
             ServiceCodeSetup ServiceCodeSetup = new ServiceCodeSetup();
             ServiceCodeSetup.MdiParent = this;
            ServiceCodeSetup.Show();
           
         }
-
-        private void frmMain_Load(object sender, EventArgs e)
-        {
-            FrmMain frmMain = new FrmMain();
-            frmMain.BackColor = System.Drawing.Color.Blue;
-        }
-
-
         #endregion
-
 
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStrip toolStrip;
@@ -764,18 +840,23 @@ namespace RWDE
         private System.Windows.Forms.ToolStripMenuItem xMLFileUploadsToolStripMenuItem;
         private ToolStripButton btnOCHINHCCConversion;
         private ToolStripMenuItem oCHINToolStripMenuItem;
-        private ToolStripMenuItem reportsToolStripMenuItem;
-        private ToolStripMenuItem serviceReconciliationReportDotNotUseToolStripMenuItem1;
-        private ToolStripMenuItem deceasedClientsReportToolStripMenuItem;
-        private ToolStripMenuItem uploadDashboardToolStripMenuItem;
-        private ToolStripMenuItem hCCRECONToolStripMenuItem;
-        private ToolStripMenuItem clientDemographicsReportToolStripMenuItem;
-        private ToolStripMenuItem errorLogReportToolStripMenuItem;
         private ToolStripMenuItem downloadHCCErrorsToolStripMenuItem;
         private ToolStripMenuItem cSVFILESToolStripMenuItem;
+        private Panel pnlLeftImage;
+        private Panel pnlRightChart;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartServices;
+        private DateTimePicker dtpEndDate;
+        private DateTimePicker dtpStartDate;
+        private Label lblFrom;
+        private Label lblTo;
+        private ToolStripMenuItem reportsMenu;
+        private ToolStripMenuItem serviceReconciliationReportDotNotUseToolStripMenuItem1;
+        private ToolStripMenuItem hCCRECONToolStripMenuItem;
+        private ToolStripMenuItem uploadDashboardToolStripMenuItem;
+        private ToolStripMenuItem deceasedClientsReportToolStripMenuItem;
+        private ToolStripMenuItem clientDemographicsReportToolStripMenuItem;
+        private ToolStripMenuItem errorLogReportToolStripMenuItem;
         private ToolStripMenuItem manualUploadReportToolStripMenuItem;
     }
 }
-
-
 

@@ -2,15 +2,15 @@
 {
     partial class HccReconciliation
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        ///<summary>
+        ///Required designer variable.
+        ///</summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        ///<summary>
+        ///Clean up any resources being used.
+        ///</summary>
+        ///<param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        ///<summary>
+        ///Required method for Designer support - do not modify
+        ///the contents of this method with the code editor.
+        ///</summary>
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -62,9 +62,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.pnl.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnDownload
-            // 
+            //
+            //btnDownload
+            //
             this.btnDownload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnDownload.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDownload.ForeColor = System.Drawing.Color.Black;
@@ -75,9 +75,9 @@
             this.btnDownload.Text = "Export";
             this.btnDownload.UseVisualStyleBackColor = false;
             this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
-            // 
-            // lblTitle
-            // 
+            //
+            //lblTitle
+            //
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.Black;
@@ -86,9 +86,9 @@
             this.lblTitle.Size = new System.Drawing.Size(320, 35);
             this.lblTitle.TabIndex = 9;
             this.lblTitle.Text = "HCC Reconciliation Report";
-            // 
-            // btnClose
-            // 
+            //
+            //btnClose
+            //
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnClose.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.Color.Black;
@@ -100,9 +100,9 @@
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // dataGridView
-            // 
+            //
+            //dataGridView
+            //
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
@@ -149,10 +149,9 @@
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.Size = new System.Drawing.Size(1770, 500);
             this.dataGridView.TabIndex = 7;
-            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
-            // 
-            // pnl
-            // 
+            //
+            //pnl
+            //
             this.pnl.AutoSize = true;
             this.pnl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnl.Controls.Add(this.txtbatchs);
@@ -172,17 +171,17 @@
             this.pnl.Name = "pnl";
             this.pnl.Size = new System.Drawing.Size(1770, 157);
             this.pnl.TabIndex = 6;
-            // 
-            // txtbatchs
-            // 
+            //
+            //txtbatchs
+            //
             this.txtbatchs.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtbatchs.Location = new System.Drawing.Point(1176, 97);
             this.txtbatchs.Name = "txtbatchs";
             this.txtbatchs.Size = new System.Drawing.Size(189, 40);
             this.txtbatchs.TabIndex = 11;
-            // 
-            // lblbatchid
-            // 
+            //
+            //lblbatchid
+            //
             this.lblbatchid.AutoSize = true;
             this.lblbatchid.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblbatchid.ForeColor = System.Drawing.Color.Black;
@@ -191,10 +190,9 @@
             this.lblbatchid.Size = new System.Drawing.Size(127, 35);
             this.lblbatchid.TabIndex = 10;
             this.lblbatchid.Text = "Batch ID :";
-            this.lblbatchid.Click += new System.EventHandler(this.label3_Click);
-            // 
-            // btnClr
-            // 
+            //
+            //btnClr
+            //
             this.btnClr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(125)))), ((int)(((byte)(255)))));
             this.btnClr.Font = new System.Drawing.Font("Calibri", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClr.ForeColor = System.Drawing.Color.Black;
@@ -205,9 +203,9 @@
             this.btnClr.Text = "Clear";
             this.btnClr.UseVisualStyleBackColor = false;
             this.btnClr.Click += new System.EventHandler(this.btnClr_Click);
-            // 
-            // btnReport
-            // 
+            //
+            //btnReport
+            //
             this.btnReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnReport.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReport.ForeColor = System.Drawing.Color.Black;
@@ -219,22 +217,22 @@
             this.btnReport.Text = "Submit";
             this.btnReport.UseVisualStyleBackColor = false;
             this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
-            // 
-            // lblHeader
-            // 
+            //
+            //lblHeader
+            //
             this.lblHeader.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblHeader.AutoSize = true;
             this.lblHeader.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHeader.ForeColor = System.Drawing.Color.Black;
-            this.lblHeader.Location = new System.Drawing.Point(37, 40);
+            this.lblHeader.Location = new System.Drawing.Point(13, 30);
             this.lblHeader.Name = "lblHeader";
             this.lblHeader.Size = new System.Drawing.Size(1106, 35);
             this.lblHeader.TabIndex = 4;
             this.lblHeader.Text = "This report displays all services for a specified period, filtered by Created Dat" +
     "e or Service Date.";
-            // 
-            // dtpDateFilter
-            // 
+            //
+            //dtpDateFilter
+            //
             this.dtpDateFilter.Cursor = System.Windows.Forms.Cursors.Hand;
             this.dtpDateFilter.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpDateFilter.FormattingEnabled = true;
@@ -247,9 +245,9 @@
             this.dtpDateFilter.Size = new System.Drawing.Size(210, 41);
             this.dtpDateFilter.TabIndex = 5;
             this.dtpDateFilter.Text = "Created Date";
-            // 
-            // lblDateFilter
-            // 
+            //
+            //lblDateFilter
+            //
             this.lblDateFilter.AutoSize = true;
             this.lblDateFilter.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDateFilter.ForeColor = System.Drawing.Color.Black;
@@ -259,9 +257,9 @@
             this.lblDateFilter.Size = new System.Drawing.Size(152, 35);
             this.lblDateFilter.TabIndex = 4;
             this.lblDateFilter.Text = "Date Filter :";
-            // 
-            // dtpEndDate
-            // 
+            //
+            //dtpEndDate
+            //
             this.dtpEndDate.CalendarFont = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
@@ -270,9 +268,9 @@
             this.dtpEndDate.Name = "dtpEndDate";
             this.dtpEndDate.Size = new System.Drawing.Size(172, 40);
             this.dtpEndDate.TabIndex = 1;
-            // 
-            // lblEndDate
-            // 
+            //
+            //lblEndDate
+            //
             this.lblEndDate.AutoSize = true;
             this.lblEndDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEndDate.ForeColor = System.Drawing.Color.Black;
@@ -282,9 +280,9 @@
             this.lblEndDate.Size = new System.Drawing.Size(129, 35);
             this.lblEndDate.TabIndex = 3;
             this.lblEndDate.Text = "End Date:";
-            // 
-            // dtpStartDate
-            // 
+            //
+            //dtpStartDate
+            //
             this.dtpStartDate.CustomFormat = "";
             this.dtpStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
@@ -294,10 +292,9 @@
             this.dtpStartDate.Size = new System.Drawing.Size(172, 40);
             this.dtpStartDate.TabIndex = 0;
             this.dtpStartDate.Value = new System.DateTime(2024, 6, 5, 15, 21, 59, 0);
-            this.dtpStartDate.ValueChanged += new System.EventHandler(this.dtpStartDate_ValueChanged);
-            // 
-            // lblStartDate
-            // 
+            //
+            //lblStartDate
+            //
             this.lblStartDate.AutoSize = true;
             this.lblStartDate.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStartDate.ForeColor = System.Drawing.Color.Black;
@@ -307,9 +304,9 @@
             this.lblStartDate.Size = new System.Drawing.Size(142, 35);
             this.lblStartDate.TabIndex = 1;
             this.lblStartDate.Text = "Start Date:";
-            // 
-            // txtBatchID
-            // 
+            //
+            //txtBatchID
+            //
             this.txtBatchID.AutoCompleteCustomSource.AddRange(new string[] {
             "1",
             "2",
@@ -326,9 +323,9 @@
             this.txtBatchID.Name = "txtBatchID";
             this.txtBatchID.Size = new System.Drawing.Size(147, 40);
             this.txtBatchID.TabIndex = 11;
-            // 
-            // lblBatch
-            // 
+            //
+            //lblBatch
+            //
             this.lblBatch.AutoSize = true;
             this.lblBatch.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBatch.ForeColor = System.Drawing.Color.Black;
@@ -337,9 +334,9 @@
             this.lblBatch.Size = new System.Drawing.Size(107, 35);
             this.lblBatch.TabIndex = 10;
             this.lblBatch.Text = "BatchID";
-            // 
-            // Column1
-            // 
+            //
+            //Column1
+            //
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
             this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
             this.Column1.HeaderText = "MMM-YYYY";
@@ -347,9 +344,9 @@
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
             this.Column1.Width = 184;
-            // 
-            // Month
-            // 
+            //
+            //Month
+            //
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
             this.Month.DefaultCellStyle = dataGridViewCellStyle3;
             this.Month.HeaderText = "Total Service Entries";
@@ -357,51 +354,51 @@
             this.Month.Name = "Month";
             this.Month.ReadOnly = true;
             this.Month.Width = 278;
-            // 
-            // ServiceEntriesSuccessfullyExportedToHCC
-            // 
-            this.ServiceEntriesSuccessfullyExportedToHCC.HeaderText = "Service Entries Successfully Exported To HCC";
+            //
+            //ServiceEntriesSuccessfullyExportedToHCC
+            //
+            this.ServiceEntriesSuccessfullyExportedToHCC.HeaderText = "Service Entries Successfully Exported";
             this.ServiceEntriesSuccessfullyExportedToHCC.MinimumWidth = 6;
             this.ServiceEntriesSuccessfullyExportedToHCC.Name = "ServiceEntriesSuccessfullyExportedToHCC";
             this.ServiceEntriesSuccessfullyExportedToHCC.ReadOnly = true;
-            this.ServiceEntriesSuccessfullyExportedToHCC.Width = 558;
-            // 
-            // ServiceEntriesNotExportedToHCC
-            // 
+            this.ServiceEntriesSuccessfullyExportedToHCC.Width = 471;
+            //
+            //ServiceEntriesNotExportedToHCC
+            //
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
             this.ServiceEntriesNotExportedToHCC.DefaultCellStyle = dataGridViewCellStyle4;
-            this.ServiceEntriesNotExportedToHCC.HeaderText = "Service Entries Not Exported To HCC";
+            this.ServiceEntriesNotExportedToHCC.HeaderText = "Service Entries Not Exported";
             this.ServiceEntriesNotExportedToHCC.MinimumWidth = 6;
             this.ServiceEntriesNotExportedToHCC.Name = "ServiceEntriesNotExportedToHCC";
             this.ServiceEntriesNotExportedToHCC.ReadOnly = true;
-            this.ServiceEntriesNotExportedToHCC.Width = 462;
-            // 
-            // ServiceEntriesPostTimeboxPeriod
-            // 
+            this.ServiceEntriesNotExportedToHCC.Width = 375;
+            //
+            //ServiceEntriesPostTimeboxPeriod
+            //
             this.ServiceEntriesPostTimeboxPeriod.HeaderText = "Service Entries Post Timebox Period";
             this.ServiceEntriesPostTimeboxPeriod.MinimumWidth = 6;
             this.ServiceEntriesPostTimeboxPeriod.Name = "ServiceEntriesPostTimeboxPeriod";
             this.ServiceEntriesPostTimeboxPeriod.ReadOnly = true;
             this.ServiceEntriesPostTimeboxPeriod.Width = 459;
-            // 
-            // ServiceEntriesForHCCIDMissing
-            // 
+            //
+            //ServiceEntriesForHCCIDMissing
+            //
             this.ServiceEntriesForHCCIDMissing.HeaderText = "Service Entries For HCCID Missing";
             this.ServiceEntriesForHCCIDMissing.MinimumWidth = 6;
             this.ServiceEntriesForHCCIDMissing.Name = "ServiceEntriesForHCCIDMissing";
             this.ServiceEntriesForHCCIDMissing.ReadOnly = true;
             this.ServiceEntriesForHCCIDMissing.Width = 431;
-            // 
-            // Drop
-            // 
+            //
+            //Drop
+            //
             this.Drop.HeaderText = "%Drop";
             this.Drop.MinimumWidth = 6;
             this.Drop.Name = "Drop";
             this.Drop.ReadOnly = true;
             this.Drop.Width = 122;
-            // 
-            // HCC_Reconciliation
-            // 
+            //
+            //HccReconciliation
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;

@@ -24,34 +24,34 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.lblInfo = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // txtDataSource
-            // 
+            //
+            //txtDataSource
+            //
             this.txtDataSource.Location = new System.Drawing.Point(12, 47);
             this.txtDataSource.Name = "txtDataSource";
             this.txtDataSource.Size = new System.Drawing.Size(400, 22);
             this.txtDataSource.TabIndex = 0;
-            // 
-            // btnSave
-            // 
+            //
+            //btnSave
+            //
             this.btnSave.Location = new System.Drawing.Point(12, 82);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(100, 30);
             this.btnSave.TabIndex = 1;
             this.btnSave.Text = "Save";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // btnCancel
-            // 
+            //
+            //btnCancel
+            //
             this.btnCancel.Location = new System.Drawing.Point(130, 82);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(100, 30);
             this.btnCancel.TabIndex = 2;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // lblInfo
-            // 
+            //
+            //lblInfo
+            //
             this.lblInfo.AutoSize = true;
             this.lblInfo.Location = new System.Drawing.Point(12, 10);
             this.lblInfo.Name = "lblInfo";
@@ -59,9 +59,9 @@
             this.lblInfo.TabIndex = 3;
             this.lblInfo.Text = "Enter the SQL Server Address for the database connection \nand ensure that RWDE Da" +
     "tabase is Already Created.";
-            // 
-            // frmConnectionSetup
-            // 
+            //
+            //frmConnectionSetup
+            //
             this.ClientSize = new System.Drawing.Size(434, 123);
             this.Controls.Add(this.txtDataSource);
             this.Controls.Add(this.btnSave);
