@@ -3072,10 +3072,12 @@ namespace RWDE
                             {
                                 row[reader.GetName(i)] = reader[i].ToString();
                             }
+
                             results.Add(row);
                         }
                     }
                 }
+
                 return results;
             }
             catch (Exception ex)
