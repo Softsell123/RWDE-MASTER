@@ -12,6 +12,7 @@ using ComboBox = System.Windows.Forms.ComboBox;
 using ScrollBar = System.Windows.Forms.ScrollBar;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace RWDE
 {
@@ -389,7 +390,7 @@ namespace RWDE
             try
             {
                 // progressClient.Value = 0;
-                var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationservices(batchId);// to check whether the generation completed or not
+                var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationservices(batchId); // to check whether the generation completed or not
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -408,11 +409,12 @@ namespace RWDE
                     txtProgressBar.Text = Constants.ZeroPercent;
                     txtClient.Text = Constants.ZeroPercent;
                     txtBatchid.Text = null;
-                    txtUploadStarted.Text = null;// 
+                    txtUploadStarted.Text = null;
                     txtUploadEnded.Text = null;
                     txtTotaltime.Text = null;
                     return;
                 }
+
                 btnClose.Text = Constants.Abort;
                 txtBatchid.Text = batchId.ToString();
                 DateTime startTime = DateTime.Now;
@@ -423,8 +425,21 @@ namespace RWDE
 
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
+                string filename = Convert.ToString(dataGridView.Rows[selectedRowIndex].Cells[Constants.FileName].Value.ToString());
+                string formattedDate = string.Empty;
 
-                
+                Match match = Regex.Match(filename, @"\d{8}");
+                if (match.Success)
+                {
+                    string yyyymmdd = match.Value;
+
+                    // Parse to DateTime
+                    if (DateTime.TryParseExact(yyyymmdd, Constants.YyyyMMdd, null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                    {
+                        formattedDate = parsedDate.ToString(Constants.DdMMyyyy);
+                    }
+                }
+
                 // Getting total rows from particular table
                 int totalRows = dbHelper.GetTotalRowsForBatch(selectedBatchId);
                 if (dbHelper.ErrorOccurred)
@@ -471,7 +486,7 @@ namespace RWDE
                 XElement xml = await GenerateXmlService(data, xmlStructure);// generate services Xml
                 string folderPath = txtPath.Text;
                 Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
-                string baseFileName = $"{Constants.ServiceXmlHeader}{DateTime.Now.ToString(Constants.DdMMyyyy)}{Constants.XmlFooter}";
+                string baseFileName = $"{Constants.ServiceXmlHeader}{formattedDate}{Constants.XmlFooter}";
                 string servicesFilePath = Path.Combine(folderPath, baseFileName);
 
                 // Check if file exists and rename accordingly
@@ -1416,7 +1431,7 @@ namespace RWDE
             try
             {
                 // progressServices.Value = 0;
-                var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationlients(batchId);// to check whether the generation completed or not
+                var batchDetails = await dbHelper.GetBatchDetailsFromSpAgenearationlients(batchId); // to check whether the generation completed or not
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1445,8 +1460,22 @@ namespace RWDE
                 txtTotaltime.Text = null;
                 int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
+                string filename = Convert.ToString(dataGridView.Rows[selectedRowIndex].Cells[Constants.FileName].Value.ToString());
+                string formattedDate = string.Empty;
 
-                int totalRows = dbHelper.GetTotalRowsForBatchclient(batchId);// Getting total rows from particular table
+                Match match = Regex.Match(filename, @"\d{8}");
+                if (match.Success)
+                {
+                    string yyyymmdd = match.Value;
+
+                    // Parse to DateTime
+                    if (DateTime.TryParseExact(yyyymmdd, Constants.YyyyMMdd, null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                    {
+                         formattedDate = parsedDate.ToString(Constants.DdMMyyyy);
+                    }
+                }
+
+                int totalRows = dbHelper.GetTotalRowsForBatchclient(batchId); // Getting total rows from particular table
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1483,7 +1512,7 @@ namespace RWDE
                 Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
 
                 // Initial filename with the current date in the desired format (ddMMyyyy)
-                string baseFileName = $"{Constants.ClientXmlHeader}{DateTime.Now.ToString(Constants.DdMMyyyy)}{Constants.XmlFooter}";
+                string baseFileName = $"{Constants.ClientXmlHeader}{formattedDate}{Constants.XmlFooter}";
                 string servicesFilePath = Path.Combine(folderPath, baseFileName);
 
                 // Check if file exists and rename accordingly
