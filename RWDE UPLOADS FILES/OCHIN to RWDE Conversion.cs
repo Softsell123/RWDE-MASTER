@@ -276,6 +276,7 @@ namespace RWDE
                 }
                 int selectedRowCount = dataGridView.SelectedRows.Count;
                 int hccselectedRowCount = dataGridViewHCC.SelectedRows.Count;
+                bool isOchin = false;
                 if (selectedRowCount != 1 || (hccselectedRowCount > 0 && selectedRowCount > 0))
                 {
                     MessageBox.Show(Constants.Pleaseselectonlyonebatchatatime, Constants.ErrorCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -292,8 +293,17 @@ namespace RWDE
 
                 if (fileName.Contains(Constants.Client))
                 {
-                    _ = GetclientssAsync(selectedBatchId);// to get client data mapping
-                }
+                    if(fileName.Contains(Constants.Hcc))
+                    {
+                        isOchin = true;
+                        _ = GetclientssAsync(selectedBatchId, isOchin);// to get client data mapping
+                     }
+                    else
+                    {
+                        _ = GetclientssAsync(selectedBatchId, isOchin);// to get client data mapping
+                    }
+
+                    }
 
                 if (fileName.Contains(Constants.Service))
                 {
@@ -306,12 +316,12 @@ namespace RWDE
             }
         }
 
-        public async Task GetclientssAsync(int selectedBatchId)// Insertion o Client and Eligibility into HCC tables
+        public async Task GetclientssAsync(int selectedBatchId, bool isOchin) // Insertion o Client and Eligibility into HCC tables
         {
             try
             {
                 progressBarServices.Value = 0;
-                var batchDetails = await dbHelper.GetBatchDetailsFromSpAsyncclients(selectedBatchId);// to check whether the conversion completed or not
+                var batchDetails = await dbHelper.GetBatchDetailsFromSpAsyncclients(selectedBatchId); // to check whether the conversion completed or not
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -414,7 +424,8 @@ namespace RWDE
                     progressbarClients.Maximum = totalRows;
 
                     // to Map the Cms  clients to HCC tables
-                    dbHelper.MapCmsClients(selectedBatchId);
+                    dbHelper.MapCmsClients(selectedBatchId, isOchin);
+
                     if (dbHelper.ErrorOccurred)
                     {
                         MessageBox.Show(Constants.ErrorOccurred);
@@ -557,6 +568,14 @@ namespace RWDE
                     txtTotaltime.Text = null;
                     return;
                 }
+
+                dbHelper.UpadteHCCServicesWithErrors(); // to update the HCC Services with errors
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
                 btnClose.Text = Constants.Abort;
                 txtBatchid.Text = selectedBatchId.ToString();
                 DateTime starttime = DateTime.Now;
@@ -587,23 +606,37 @@ namespace RWDE
                 DateTime startTime = DateTime.Now;
                 txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
                 // Update progress textbox with initial progress information
-                    if (totalRows != 0)
+                if (totalRows != 0)
                     {
-                        await UpdateProgressAsyncservices(insertedRows, totalRows);// to update the progress Bar for Services
+                        await UpdateProgressAsyncservices(insertedRows, totalRows) ; // to update the progress Bar for Services
                     }
-                    else
+                else
                     {
                         MessageBox.Show(Constants.Nodataexistsforthisbatchid, Constants.Ochintorwdeconversion, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-               
+
                 // Check if a batch has been selected
                 if (selectedBatchId >= 0)
                 {
+                    bool isOchin = false;
                     int selectedRowIndex = dataGridView.SelectedRows[0].Index;
                     selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
+                    string fileName = dataGridView.Rows[selectedRowIndex].Cells[Constants.FileName].Value.ToString();
+
+                    if (fileName.Contains(Constants.Hcc))
+                    {
+                        isOchin = true;
+                    }
 
                     // to map Cms Service To Hcc Services
-                    dbHelper.MapCmsServicesToHccServices(selectedBatchId);
+                    dbHelper.MapCmsServicesToHccServices(selectedBatchId, isOchin);
+
+                    if (dbHelper.ErrorOccurred)
+                    {
+                        MessageBox.Show(Constants.ErrorOccurred);
+                        return;
+                    }
+                    dbHelper.UpdateSucessfullyExportedServices(selectedBatchId);
                     if (dbHelper.ErrorOccurred)
                     {
                         MessageBox.Show(Constants.ErrorOccurred);

@@ -130,6 +130,7 @@ namespace RWDE
             // chkPHI
             // 
             this.chkPHI.AutoSize = true;
+            this.chkPHI.Enabled = false;
             this.chkPHI.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkPHI.Location = new System.Drawing.Point(1256, 134);
             this.chkPHI.Name = "chkPHI";

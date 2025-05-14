@@ -7,10 +7,8 @@ namespace RWDE
     public static class Constants
     {
         #region General
-        // 
-        // General
-        // 
         public const string Sheet1 = "Sheet1";
+        public const string Dev = "dev";
         public const string XlsxExtention = ".xlsx";
 
         public const string CsvExtention = ".csv";
@@ -20,7 +18,7 @@ namespace RWDE
         public const string Abortedfile = "aborted file";
         public const int StatusCode = 11;
         public const int ClientTrackCode = 24;
-        public const int Hccstartcon = 17; 
+        public const int Hccstartcon = 17;
         public const int Uploadct = 26;
         public const int Error = 5;
 
@@ -67,6 +65,9 @@ namespace RWDE
         // 
 
         public const string MyConnection = "MyConnection";
+        public const string DevEnvironment = "Dev Environment";
+
+        public const string ProductionEnvironment = "Production Environment";
         public const string PlaceHolder = "PLACEHOLDER";
 
         public const string ConnectionStrings = "connectionStrings";
@@ -388,7 +389,10 @@ namespace RWDE
         public const string AbortDelete = "abortdelete";
         public const string ListConversion = "listconversion";
         public const string MapCmsClients = "MapCMSClients";
+        public const string MapCmsClientsOchin = "MapCMSClientsOchin";
         public const string MapCmsServicesToHccServices = "MapCMSServicesToHCCServices";
+        public const string MapCMSServicesToHCCServicesOchin = "MapCMSServicesToHCCServicesOchin";
+        public const string UpdateSucessfullyExportServices = "UPDATESUCCESSFULLYEXPORTSERVICES";
         public const string ConversionOchin = "Conversionochin";
         public const string ConversionHcc = "ConversionHCC";
         public const string CountCmsServices = "countcmsservices";
@@ -418,8 +422,11 @@ namespace RWDE
         public const string SpServiceReconBatchId = "sp_service_reconbatchid";
         public const string InsertBatchTable = "insertbatchtable";
         public const string InsertClientServices = "InsertClientServices";
+        public const string InsertClientServicesOchin = "InsertClientServicesOchin";
+
         public const string InsertClientServicesPhi = "InsertClientServicesPHI";
         public const string InsertClientInfoTest = "InsertClientInfotest";
+        public const string InsertClientInfoOchin = "InsertClientInfoOchin";
         public const string InsertClientInfoPhiWithUrn = "InsertClientInfoPHIWithURN";
         public const string InsertClientInfoPhi = "InsertClientInfoPHI";
         public const string InsertIntoDlClients = "InsertIntoDlClients";
@@ -607,6 +614,8 @@ namespace RWDE
         public const string AtContractIdsp = "@Contract_id";
         public const string AtStaffId = "@Staff_id";
         public const string AtPrimServDesc = "@Prim_serv_desc";
+        public const string AtSecServDesc = "@Sec_serv_desc";
+        public const string AtSubServDesc = "@Sub_serv_desc";
         public const string AtIdEqualTto = "Id=";
         public const string IdHyphen = "Id-";
         public const string IdColon = "Id:";
@@ -858,6 +867,22 @@ namespace RWDE
         public const string AtIsRenewed = "@IsRenewed";
         public const string AtIsPresent = "@IsPresent";
 
+        public const string AtPrflSrcID = "@Prfl_src_id";
+        public const string AtDemoSrcID = "@Demo_src_id";
+        public const string AtCnctInfoSrcID = "@CnctInfo_src_id";
+        public const string AtSiteSrcID = "@Site_src_id";
+        public const string AtAddrSrcID = "@Addr_src_id";
+        public const string AtIncmSrcID = "@Incm_src_id";
+        public const string AtHshldIncmSrcID = "@Hshld_Incm_src_id";
+        public const string AtRaceSrcID = "@Race_src_id";
+        public const string AtEthnSrcID = "@Ethn_src_id";
+        public const string AtHIVInfoSrcID = "@HIVinfo_src_id";
+        public const string AtHIVTestSrcID = "@HIVtest_src_id";
+        public const string AtInsrSrcID = "@Insr_src_id";
+        public const string AtMedOvrvwSrcID = "@Med_Ovrvw_src_id";
+        public const string AtHsngAsstncSrcID = "@Hsng_Asstnc_src_id";
+        public const string AtLvngSttnSrcID = "@Lvng_sttn_src_id";
+
         #endregion
 
         #region DbHelper 
@@ -1038,7 +1063,9 @@ namespace RWDE
 
         public const int Fileaborted = 12;
         public const int OchinCode = 23;
+        //public const int ClientTrackCode = 23;
         public const int Uploadochin = 27;
+        public const int UploadCT = 26;
         public const string Ochin = "OCHIN";
         public const string Services = "Service_";
         public const string OchinCsvUploadonAt = "OCHIN CSV Upload on {date} at {time}";
@@ -1049,6 +1076,7 @@ namespace RWDE
         public const string ErrorUpdatingFileProgress = "Error updating file progress: ";
         public const string UploadforOchincsVcompletedsuccessfull = "Upload for OCHIN CSV  completed successfull";
         public const string UploadforOchincsVstarted = "Upload for OCHIN  CSV started";
+        public const string UploadforClientTrackcsvstarted = "Upload for Client Track CSV started";
         public const string ErrorInsertingCsvDataFromFileIntoTheTable = "Error inserting CSV data from file '{csvFilePath}' into the table: {ex.Message}";
 
         #endregion frmUploadOchinCsv
