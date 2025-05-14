@@ -409,6 +409,7 @@ namespace RWDE
             // chckURN
             // 
             this.chckURN.AutoSize = true;
+            this.chckURN.Enabled = false;
             this.chckURN.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chckURN.Location = new System.Drawing.Point(1342, 143);
             this.chckURN.Name = "chckURN";
@@ -420,6 +421,7 @@ namespace RWDE
             // chckPHI
             // 
             this.chckPHI.AutoSize = true;
+            this.chckPHI.Enabled = false;
             this.chckPHI.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chckPHI.Location = new System.Drawing.Point(1092, 143);
             this.chckPHI.Name = "chckPHI";

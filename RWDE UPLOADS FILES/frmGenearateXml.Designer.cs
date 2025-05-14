@@ -145,8 +145,6 @@ namespace RWDE
             // chkError
             // 
             this.chkError.AutoSize = true;
-            this.chkError.Checked = true;
-            this.chkError.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkError.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkError.ForeColor = System.Drawing.Color.Black;
             this.chkError.Location = new System.Drawing.Point(891, 61);

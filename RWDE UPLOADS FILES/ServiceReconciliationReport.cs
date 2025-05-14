@@ -224,7 +224,6 @@ namespace RWDE
                         MessageBox.Show(Constants.ErrorOccurred);
                         return;
                     }
-
                 }
 
                 // Add a 'Sl No' column for serial number

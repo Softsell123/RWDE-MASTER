@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -7,14 +9,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RWDE// 
+namespace RWDE 
 {
     public partial class FrmUploadOchinCsv : Form
     {
         private readonly DbHelper dbHelper;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public FrmUploadOchinCsv()// to initialize data
+        public FrmUploadOchinCsv() // to initialize data
         {
             InitializeComponent();
             dbHelper = new DbHelper();
@@ -167,6 +169,23 @@ namespace RWDE//
         {
             try
             {
+                if (ConfigurationManager.ConnectionStrings[Constants.MyConnection].ConnectionString.Contains(Constants.Dev))
+                {
+                    DialogResult result = MessageBox.Show(Constants.DevEnvironment, Constants.UploadOchinCsv, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (result == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    DialogResult result = MessageBox.Show(Constants.ProductionEnvironment, Constants.UploadOchinCsv, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (result == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+
                 if (string.IsNullOrEmpty(txtPath.Text))
                 {
                     MessageBox.Show(Constants.TheFolderPathCannotBeEmpty, Constants.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -177,7 +196,6 @@ namespace RWDE//
                 string[] filesempty = Directory.GetFiles(txtPath.Text);
 
                 // Check if the folder is empty
-
                 if (txtPath.Text == "" || txtPath == null || filesempty.Length == 0)
                 {
                     MessageBox.Show(Constants.ThefolderisemptyPleaseuploadfiles, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -298,7 +316,7 @@ namespace RWDE//
                                         return;
                                     }
 
-                                    UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted);// no of files insertion progress
+                                    UpdateFileProgress(currentCsvFileIndex, totalCsvFiles, totalRowsInserted); // no of files insertion progress
                                 }
                             }
 
@@ -404,6 +422,7 @@ namespace RWDE//
             List<string[]> serviceData = new List<string[]>();
 
             bool isUploading = true;
+            bool isOchinFile = false;
             try
             {
                 using (StreamReader reader = new StreamReader(csvFilePath))
@@ -419,7 +438,6 @@ namespace RWDE//
                         if (cancellationToken.IsCancellationRequested)
                         {
                             break;
-
                             // Exit the loop if cancellation is requested
                         }
 
@@ -435,6 +453,7 @@ namespace RWDE//
                             continue;
                         }
 
+                        line = line.Trim('"');
                         string[] data = line.Split('|');
 
                         if (baseFilename.Contains(Constants.Clients))
@@ -443,7 +462,16 @@ namespace RWDE//
 
                             if (!hasLoggedClient)
                             {
-                                dbHelper.Log(Constants.UploadforOchincsVstarted, Constants.OchinCode, baseFilename + Constants.CsvExtention, Constants.Uploadochin);
+                                if (baseFilename.Contains(Constants.Hcc))
+                                {
+                                    dbHelper.Log(Constants.UploadforOchincsVstarted, Constants.OchinCode, baseFilename + Constants.CsvExtention, Constants.Uploadochin);
+                                    isOchinFile = true;
+                                }
+                                else
+                                {
+                                    dbHelper.Log(Constants.UploadforClientTrackcsvstarted, Constants.ClientTrackCode, baseFilename + Constants.CsvExtention, Constants.UploadCT);
+                                }
+
                                 if (dbHelper.ErrorOccurred)
                                 {
                                     MessageBox.Show(Constants.ErrorOccurred);
@@ -459,7 +487,16 @@ namespace RWDE//
 
                             if (!hasLoggedService)
                             {
-                                dbHelper.Log(Constants.UploadforOchincsVstarted, Constants.OchinCode, baseFilename + Constants.CsvExtention, Constants.Uploadochin);
+                                if (baseFilename.Contains(Constants.Hcc))
+                                {
+                                    dbHelper.Log(Constants.UploadforOchincsVstarted, Constants.OchinCode, baseFilename + Constants.CsvExtention, Constants.Uploadochin);
+                                    isOchinFile = true;
+                                }
+                                else
+                                {
+                                    dbHelper.Log(Constants.UploadforClientTrackcsvstarted, Constants.ClientTrackCode, baseFilename + Constants.CsvExtention, Constants.UploadCT);
+                                }
+
                                 if (dbHelper.ErrorOccurred)
                                 {
                                     MessageBox.Show(Constants.ErrorOccurred);
@@ -502,7 +539,15 @@ namespace RWDE//
                     }
                     else
                     {
-                        dbHelper.InsertClientInformation(connection, data, batchId, baseFilename);// insertion of the client file without PHI DATA MASKING CONDITION
+                        if (isOchinFile)
+                        {
+                            dbHelper.InsertClientInformationOchin(connection, data, batchId, baseFilename); // insertion of the client file without PHI DATA MASKING CONDITION
+                        }
+                        else
+                        {
+                            dbHelper.InsertClientInformationCt(connection, data, batchId, baseFilename); // insertion of the client file without PHI DATA MASKING CONDITION
+                        }
+
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
@@ -517,7 +562,7 @@ namespace RWDE//
                     }
                 }
 
-                if (serviceData.Count == 0&& baseFilename.Contains(Constants.Services))
+                if (serviceData.Count == 0 && baseFilename.Contains(Constants.Services))
                 {
                     MessageBox.Show(Constants.UploadingEmptyFile+baseFilename, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
@@ -525,7 +570,7 @@ namespace RWDE//
                 // Insert all service data next
                 foreach (var data in serviceData)
                 {
-                    if (chckPHI.Checked == true)// InsertClientServiceDataPHI
+                    if (chckPHI.Checked == true) // InsertClientServiceDataPHI
                     {
                         dbHelper.InsertClientServiceDataPhi(connection, data, batchId, baseFilename); // insertion of the services file with PHI DATA MASKING CONDITION
                         if (dbHelper.ErrorOccurred)
@@ -536,7 +581,15 @@ namespace RWDE//
                     }
                     else
                     {
-                        dbHelper.InsertClientServiceData(connection, data, batchId,baseFilename); // insertion of the services file with PHI DATA MASKING CONDITION
+                        if (isOchinFile)
+                        {
+                            dbHelper.InsertClientServiceDataOchin(connection, data, batchId, baseFilename); // insertion of the services file with PHI DATA MASKING CONDITION
+                        }
+                        else
+                        {
+                            dbHelper.InsertClientServiceDataCT(connection, data, batchId, baseFilename); // insertion of the services file with PHI DATA MASKING CONDITION                        }
+                        }
+
                         if (dbHelper.ErrorOccurred)
                         {
                             MessageBox.Show(Constants.ErrorOccurred);
