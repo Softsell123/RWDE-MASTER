@@ -3,12 +3,14 @@ using ClosedXML.Excel;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms; 
+using System.Windows.Forms;
 
 namespace RWDE
 {
     public partial class ClientDemographicsReport : Form
     {
+        private readonly object result;
+
         public ClientDemographicsReport()// initialize data
         {
             InitializeComponent();
@@ -67,42 +69,27 @@ namespace RWDE
             }
         }
 
-        private void BtnReport_Click(object sender, EventArgs e) // to get filtered data in the grid
+        private void btnReport_Click(object sender, EventArgs e)
         {
             try
             {
-                using (DbHelper dbHelper = new DbHelper()) // Ensures proper disposal
-                {
-                    dataGridView.AutoGenerateColumns = true;
-                    dataGridView.Columns.Clear();
-                    // Ensure the date pickers are properly set
-                    DateTime startDate = dtpStartDate.Value;
-                    DateTime endDate = dtpEndDate.Value;
-                    if (startDate >= endDate)
-                    {
-                        MessageBox.Show($@"{Constants.StartdatemustbeearlierthanEnddate}");
-                    }
-                    // Call the LoadData method to fetch the data
-                    dataGridView.ForeColor = Color.Black;
+                // ... your existing code for getting result DataTable ...
 
-                    // to get details of clients applied for services
-                    DataTable result = dbHelper.LoadConfigurationfilter(startDate, endDate);// to get data in the grid
-                    if (dbHelper.ErrorOccurred)
-                    {
-                        MessageBox.Show(Constants.ErrorOccurred);
-                        return;
-                    }
+                // Do NOT clear columns here
+                // dataGridView.Columns.Clear();
 
-                    // to bind the data in DataGridView
-                    dataGridView.DataSource = result;
-                }
+                // Set AutoGenerateColumns to false (if not already set in constructor)
+                dataGridView.AutoGenerateColumns = false;
+
+                // Bind data
+                dataGridView.DataSource = result;
             }
             catch (Exception ex)
             {
-                // Handle exceptions, such as logging the error
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
             }
         }
+
 
         private void Clear_Click(object sender, EventArgs e)// to clear data in the grid
         {
@@ -180,7 +167,7 @@ namespace RWDE
 
                             // Check if the file already exists, and if so, append a suffix
                             int fileSuffix = 1;
-                            while ( File.Exists(filePath))
+                            while (File.Exists(filePath))
                             {
                                 fileSuffix++;
                                 filePath = Path.Combine(directoryPath, $"{baseFileName}_{fileSuffix}{fileExtension}");

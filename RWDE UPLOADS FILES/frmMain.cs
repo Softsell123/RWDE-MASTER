@@ -939,5 +939,24 @@ namespace RWDE
                 this.IsMdiContainer = true;
             }
         }
+
+        private void activityLoggerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                pnlLeftImage.Visible = false;
+                pnlRightChart.Visible = false;
+
+                frmActivityLogger frmActivityLogger = new frmActivityLogger
+                {
+                    MdiParent = this
+                };
+                frmActivityLogger.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
