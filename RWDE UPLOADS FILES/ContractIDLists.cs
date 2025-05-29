@@ -802,13 +802,13 @@ namespace RWDE
                     // Validate Contract ID and Contract Name
                     if (string.IsNullOrWhiteSpace(currentContractId))
                     {
-                       // MessageBox.Show($@"{Constants.PleaseaddContractIDbeforesaving}.", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // MessageBox.Show($@"{Constants.PleaseaddContractIDbeforesaving}.", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
                     if (string.IsNullOrWhiteSpace(contractName))
                     {
-                       // MessageBox.Show($@"{Constants.PleasefillinContractNamebeforesaving}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // MessageBox.Show($@"{Constants.PleasefillinContractNamebeforesaving}", Constants.ContractsSetup, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 

@@ -578,6 +578,9 @@ namespace RWDE
         public const string GetWaiverServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE Service = 'Waiver'";
         public const string GetServiceDatesQuery = @"SELECT Service_date  FROM HCCServices";
         public const string GetItDropServicesQuery = "SELECT COUNT(ServiceID) FROM HCCServices WHERE DataTeamInvestigationforErrors = 'True'";
+        public const string InsertDuplicateCMSClientsQuery = "INSERT INTO DuplicateCMSClients (DateAdded, BatchID, FirstName, LastName, HCC_ID, OCHIN_ID) " +
+                    "VALUES (@DateAdded, @BatchID, @FirstName, @LastName, @HCC_ID, @OCHIN_ID)";
+        public const string FindDuplicateHccIdQurey = "SELECT COUNT(1) FROM CMSClients WHERE ClientID = @HCC_ID and [BatchID] = @BatchID ";
         #endregion
 
         #region SPparametersConstants 
@@ -587,7 +590,16 @@ namespace RWDE
         public const string AtBatchid = "@Batchid";
         public const string AtClientId = "@ClientId";
 
+        public const string AtDateAdded = "@DateAdded";
+        public const string AtBatchID = "@BatchID";
+        public const string AtFirstName = "@FirstName";
+        public const string AtLastName = "@LastName";
+        public const string AtHccId = "@HCC_ID";
+        public const string AtOchinId = "@OCHIN_ID";
+
+
         public const string AtFileName = "@Filename";
+        public const string AtFileNameCaps = "@Filename";
         public const string AtListsId = "@ListsID";
         public const string AtTimestamp = "@Timestamp";
         public const string AtStatus = "@Status";

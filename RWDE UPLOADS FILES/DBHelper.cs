@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Configuration;
 using ClosedXML.Report.Utils;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 
 namespace RWDE
 {
@@ -265,6 +266,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpadteHCCServicesWithErrors), null, lineNumber, Constants.ClientTrackCode);
             }
         }
 
@@ -286,6 +291,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateSucessfullyExportedServices), null, lineNumber, Constants.ClientTrackCode);
             }
         }
         public DataTable LoadDatafilterServiceReconbatchid(int[] batchids)// to display the data based on BatchId
@@ -347,6 +356,11 @@ namespace RWDE
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+                    errorOccurred = true;
+                    var st = new StackTrace(ex, true);
+                    var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                    int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                    LogError(ex.Message, ex.StackTrace, nameof(LoadDatafilterServiceReconbatchid), null, lineNumber, Constants.ClientTrackCode);
                 }
                 if (dy.Rows.Count == 0 && batchids.Length != 1 && batchids.Length == noDataIds.Count)
                 {
@@ -357,6 +371,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message));
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LoadDatafilterServiceReconbatchid), null, lineNumber, Constants.ClientTrackCode);
                 throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
             }
         }
@@ -413,6 +432,13 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                if (frame != null)
+                {
+                    int lineNumber = frame.GetFileLineNumber();
+                    LogError(ex.Message, ex.StackTrace, nameof(GetNextBatchId), null, lineNumber, Constants.ClientTrackCode);
+                }
                 errorOccurred = true;
                 return 0;
             }
@@ -434,6 +460,13 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                if (frame != null)
+                {
+                    int lineNumber = frame.GetFileLineNumber();
+                    LogError(ex.Message, ex.StackTrace, nameof(GetMaxXmlBatchId), null, lineNumber, Constants.ClientTrackCode);
+                }
                 errorOccurred = true;
                 return 0;
             }
@@ -476,13 +509,17 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format(Constants.ErrorInsertingBatch, ex.Message));
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertBatch), fileName, lineNumber, Constants.ClientTrackCode);
                 errorOccurred = true;
 
                 // Log or handle the exception appropriately
             }
         }
 
-        public void InsertClientServiceDataOchin(SqlConnection connection, string[] data, int batchId, string fileName) // insertion of client service data
+        public void InsertClientServiceDataOchin(SqlConnection connection, string[] data, int batchId, string fileName)
         {
             try
             {
@@ -510,7 +547,6 @@ namespace RWDE
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    // Add parameters with appropriate conversion and null handling
                     cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     cmd.Parameters.AddWithValue(Constants.AtClntId, data[1]);
                     cmd.Parameters.AddWithValue(Constants.AtServiceDate, DateTime.Parse(data[3]));
@@ -521,9 +557,27 @@ namespace RWDE
                     cmd.Parameters.AddWithValue(Constants.AtSubServDesc, data[8]);
                     cmd.Parameters.AddWithValue(Constants.AtQuantityServed, decimal.Parse(data[9]));
                     cmd.Parameters.AddWithValue(Constants.AtUnitCd, data[10]);
-                    cmd.Parameters.AddWithValue(Constants.AtActualMinutesSpent, string.IsNullOrWhiteSpace(data[4]) ? 0 : int.Parse(data[13]));
+
+                    decimal actualMinutesSpent = 0;
+                    if (IsMentalHealthService(data[6]))
+                    {
+                        // --- ActualMinutesSpent logic for mental health services ---
+                        actualMinutesSpent = CalculateActualMinutesSpent(
+                            subServNm: data[8],
+                            quantityServed: decimal.Parse(data[9])
+                        );
+                        cmd.Parameters.AddWithValue(Constants.AtActualMinutesSpent, actualMinutesSpent);
+
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue(Constants.AtActualMinutesSpent, actualMinutesSpent);
+                    }
+
+
+                    // ----------------------------------------------------------
+
                     cmd.Parameters.AddWithValue(Constants.AtServiceId, data[15]);
-                    // Construct AdditionalServiceInformation with the new format
                     string additionalServiceInformation = $"{Constants.AtIdEqualTto}{data[15]};";
                     cmd.Parameters.AddWithValue(Constants.AtAdditionalServiceInformation, additionalServiceInformation);
 
@@ -575,8 +629,14 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message));
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClientServiceDataOchin), fileName, lineNumber, Constants.OchinCode);
             }
         }
+
+
 
         public void InsertClientServiceDataCT(SqlConnection connection, string[] data, int batchId, string fileName) // insertion of client service data
         {
@@ -640,10 +700,14 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message));
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClientServiceDataCT), fileName, lineNumber, Constants.OchinCode);
             }
         }
 
-        public void InsertClientServiceDataPhi(SqlConnection connection, string[] data, int batchId,string fileName)// insertion client data phi masked
+        public void InsertClientServiceDataPhi(SqlConnection connection, string[] data, int batchId, string fileName)// insertion client data phi masked
         {
             try
             {
@@ -694,20 +758,50 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show($@"{Constants.SqlError}{sqlEx.Message}");
+                var st = new StackTrace(sqlEx, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(sqlEx.Message, sqlEx.StackTrace, nameof(InsertClientServiceDataPhi), fileName, lineNumber, Constants.OchinCode);
             }
             catch (Exception ex)
             {
                 errorOccurred = true;
                 MessageBox.Show(string.Format(Constants.ErrorMessagedynamic, ex.Message));
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClientServiceDataPhi), fileName, lineNumber, Constants.OchinCode);
             }
         }
 
-         //for OCHIN FILE
-        public void InsertClientInformationOchin(SqlConnection connection, string[] data, int batchid, string fileName) // cms client insertion
+        //for OCHIN FILE
+        public void InsertClientInformationOchin(SqlConnection connection, string[] data, int batchid, string fileName)
         {
             try
             {
                 errorOccurred = false;
+
+                // Extract OCHIN_ID, FirstName, LastName, HCC_ID from data array
+                string hccId = data[0];
+                string firstName = data[1];
+                string lastName = data[2];
+                string ochinId = data[35];
+
+                // Check for duplicate OCHIN_ID in the main client table
+                using (SqlCommand checkCmd = new SqlCommand(Constants.FindDuplicateHccIdQurey, GetConnection()))
+                {
+                    checkCmd.Parameters.AddWithValue("@HCC_ID", hccId);
+                    checkCmd.Parameters.AddWithValue("@BatchID", batchid);
+                    int count = (int)checkCmd.ExecuteScalar();
+                    if (count > 0)
+                    {
+                        // Duplicate found, log it and skip insert
+                        InsertDuplicateCMSClient(batchid, firstName, lastName, hccId, ochinId, fileName);
+
+                    }
+                }
+
+                // If not duplicate, proceed with normal insert
                 using (SqlCommand command = new SqlCommand(Constants.InsertClientInfoOchin, GetConnection()))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -732,7 +826,7 @@ namespace RWDE
                     command.Parameters.AddWithValue(Constants.AtMrtlStatCd, data[15] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtSexualOrntTypeCd, data[16] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtEduLvl, data[17] ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue(Constants.AtVeteran, ConvertTo(data[18]) ?? (object)DBNull.Value);// 17 MISSING
+                    command.Parameters.AddWithValue(Constants.AtVeteran, ConvertTo(data[18]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtEmail, data[20] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtAllowCntctEmailInd, ConvertToIntOrNull(data[21]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtPrsnMobilePhn, data[22] ?? (object)DBNull.Value);
@@ -860,8 +954,15 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClientInformationOchin), fileName, lineNumber, Constants.OchinCode);
+
             }
         }
+
+
 
         // for RWDE Generated CSV
         public void InsertClientInformationCt(SqlConnection connection, string[] data, int batchid, string fileName) // cms client insertion
@@ -1006,6 +1107,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClientInformationCt), fileName, lineNumber, Constants.OchinCode);
             }
         }
 
@@ -1151,6 +1256,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClientInformationphiurn), fileName, lineNumber, Constants.OchinCode);
             }
         }
 
@@ -1169,6 +1278,7 @@ namespace RWDE
             {
                 MessageBox.Show(ex.Message);
                 return null;
+
             }
         }
         private string ConvertTo(string input)// convert to int
@@ -1373,8 +1483,39 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClientInformationPhi), fileName, lineNumber, Constants.OchinCode);
             }
         }
+
+        public void InsertDuplicateCMSClient(int batchId, string firstName, string lastName, string hccId, string ochinId, string fileName)
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(Constants.InsertDuplicateCMSClientsQuery, GetConnection()))
+                {
+                    cmd.Parameters.AddWithValue(Constants.AtDateAdded, DateTime.Now.Date);
+                    cmd.Parameters.AddWithValue(Constants.AtBatchID, batchId);
+                    cmd.Parameters.AddWithValue(Constants.AtFirstName, firstName ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue(Constants.AtLastName, lastName ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue(Constants.AtHccId, hccId ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue(Constants.AtOchinId, ochinId ?? (object)DBNull.Value);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error inserting duplicate client: " + ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertDuplicateCMSClient), fileName, lineNumber, Constants.HccCode);
+            }
+        }
+
+
 
         public bool InsertClientData(SqlConnection connection, string[] data, int batchid, string fileName)// Client table insertion
         {
@@ -1535,11 +1676,11 @@ namespace RWDE
                     command.Parameters.AddWithValue(Constants.AtClientIdCaps, Convert.ToInt32(GetStringValue(data, 0)));
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue(Constants.AtClientLastFirstName, string.Join(GetStringValue(data, 1), GetStringValue(data, 2)));
-                    command.Parameters.AddWithValue(Constants.AtClientStatus,GetStringValue(data,3));
-            
+                    command.Parameters.AddWithValue(Constants.AtClientStatus, GetStringValue(data, 3));
+
                     command.Parameters.AddWithValue(Constants.AtStatusAsOfDate, ConvertToDateTime(GetStringValue(data, 4)));
                     command.Parameters.AddWithValue(Constants.AtLastServiceDate, ConvertToDateTime(GetStringValue(data, 5)));
-                   
+
                     command.Parameters.AddWithValue(Constants.AtDownloadDate, DateTime.Parse("2024-08-01")); // Assuming 2024-08-01 is the correct date
                     command.Parameters.AddWithValue(Constants.AtExtracted, Constants.ExtractedCode); // Assuming 3 is a valid value for Extracted
                     command.Parameters.AddWithValue(Constants.AtExtractionDate, DateTime.Parse("2024-02-06")); // Assuming 2024-02-06 is the correct date
@@ -1555,6 +1696,10 @@ namespace RWDE
                 errorOccurred = true;
                 error = ex.Message; // Log error message
                 Log($"{ex.Message}", Constants.Error, Constants.InsertClientData, Constants.Uploadct); // Assuming fileName is accessible herE
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertdeceasedData), null, lineNumber, Constants.HccCode);
                 if (ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1611,6 +1756,10 @@ namespace RWDE
                 errorOccurred = true;
                 error = ex.Message;
                 Log($"{ex.Message}", Constants.Error, Constants.ConsentData, Constants.Uploadct); // Assuming fileName is accessible here
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertConsentData), null, lineNumber, Constants.HccCode);
                 if (ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1665,6 +1814,11 @@ namespace RWDE
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
                 Log($"{ex.Message}", Constants.Error, Constants.AriesEligibility, Constants.Uploadct);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertDlEligibility), null, lineNumber, Constants.HccCode);
+
                 if (ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -1701,6 +1855,10 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(ParseDateTime), null, lineNumber, Constants.HccCode);
                 return null;
             }
         }
@@ -1714,6 +1872,10 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetStringValuedata), null, lineNumber, Constants.HccCode);
                 return null;
             }
         }
@@ -1729,7 +1891,7 @@ namespace RWDE
                     // Extract service ID from service notes
                     string serviceNotes = GetStringData(data, 2)?.Trim('"'); // Assuming service notes are at index 2
                     string serviceId = ExtractServiceId(serviceNotes);
-                    
+
                     // Add parameters to the stored procedure
                     command.Parameters.AddWithValue(Constants.AtServiceId, serviceId);
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
@@ -1775,7 +1937,7 @@ namespace RWDE
                     // Extract service ID from service notes
                     string serviceNotes = GetStringData(data, 2)?.Trim('"'); // Assuming service notes are at index 2
                     string serviceId = ExtractServiceId(serviceNotes);
-                    
+
                     // Add parameters to the stored procedure
                     command.Parameters.AddWithValue(Constants.AtServiceId, serviceId);
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
@@ -1845,6 +2007,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(ExtractServiceId), null, lineNumber, Constants.HccCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -1864,10 +2031,16 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetStringData), null, lineNumber, Constants.HccCode);
+                // Log the error and return null or an empty string
                 return null;
+
             }
         }
-        public void LogError(string message, string stackTrace, string functionName, string fileName, int? lineNumber,int Code) // Logger table insertion for errors and completion
+        public void LogError(string message, string stackTrace, string functionName, string fileName, int? lineNumber, int Code) // Logger table insertion for errors and completion
         {
             try
             {
@@ -1890,7 +2063,7 @@ namespace RWDE
                     cmd.Parameters.AddWithValue(Constants.AtModule, Code); // Module name
                     cmd.Parameters.AddWithValue(Constants.AtStack, stackTrace);
                     cmd.Parameters.AddWithValue(Constants.AtMessage, message);
-                    cmd.Parameters.AddWithValue(Constants.AtFilename, fileName);
+                    cmd.Parameters.AddWithValue(Constants.AtFileNameCaps, fileName);
                     cmd.Parameters.AddWithValue(Constants.AtLineNumber, lineNumber.HasValue ? (object)lineNumber.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue(Constants.AtFunctionName, functionName);
                     cmd.Parameters.AddWithValue(Constants.AtComments, DBNull.Value); // Assuming no comments
@@ -1904,6 +2077,10 @@ namespace RWDE
                     errorOccurred = true;
                     // Log an additional error if logging itself fails
                     MessageBox.Show(ex.Message);
+                    var st = new StackTrace(ex, true);
+                    var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                    int lineNo = frame?.GetFileLineNumber() ?? 0;
+                    LogError(ex.Message, ex.StackTrace, nameof(LogError), fileName, lineNo, Constants.ClientTrackCode);
                 }
 
                 errorLogged = true;
@@ -1912,6 +2089,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNo = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LogError), fileName, lineNo, Constants.HccCode);
+
 
             }// Set errorLogged flag to true after logging the first error
         }
@@ -1942,6 +2124,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show($@"{Constants.Errorupdatingbatch}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateBatchServices), null, lineNumber, Constants.HccCode);
                 // Log or handle the exception appropriately
             }
         }
@@ -1972,6 +2158,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show($@"{Constants.Errorupdatingbatch}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateBatchclient), null, lineNumber, Constants.HccCode);
                 // Log or handle the exception appropriately
             }
         }
@@ -2049,6 +2239,10 @@ namespace RWDE
                 error = $"{Constants.ErrorInsertingClientParametersIntoTheTable}{ex.Message}\n{ex.StackTrace}";
                 MessageBox.Show(error);
                 Log($"{ex.Message}", Constants.Error, Constants.DlFinancials, Constants.Uploadct); // Assuming fileName is accessible here
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertDlFinancials), null, lineNumber, Constants.HccCode);
                 if (ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -2082,6 +2276,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(AddDecimalParameter), null, lineNumber, Constants.HccCode);
+                // Log or handle the exception
             }
 
         }
@@ -2110,6 +2309,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(AddIntParameter), null, lineNumber, Constants.HccCode);
+                // Log or handle the exception
             }
 
         }
@@ -2127,6 +2331,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetStringValue), null, lineNumber, Constants.HccCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -2165,7 +2374,7 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                LogError(ex.Message, ex.StackTrace, nameof(InsertClients), fileName, lineNumber,Constants.ClientTrackCode);
+                LogError(ex.Message, ex.StackTrace, nameof(InsertClients), fileName, lineNumber, Constants.ClientTrackCode);
                 if (ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -2214,11 +2423,11 @@ namespace RWDE
                                     {
                                         string documentType = GetAttributeValue(eligibilityNode, Constants.DocumentType);
                                         DateTime? documentDate = GetNullableDateTimeAttributeValue(eligibilityNode, Constants.DocumentDate);
-                                       
+
                                         DateTime? obtainDate = GetNullableDateTimeAttributeValue(eligibilityNode, Constants.ObtainDate);
-                                        
+
                                         DateTime? expireDate = GetNullableDateTimeAttributeValue(eligibilityNode, Constants.ExpireDate);
-                                        
+
                                         string source = GetAttributeValue(eligibilityNode, Constants.Source);
                                         string notes = GetAttributeValue(eligibilityNode, Constants.Notes);
 
@@ -2256,6 +2465,10 @@ namespace RWDE
                 // Log error for the main insertion process
                 MessageBox.Show(Constants.ErrorInsertingEligibilityDocuments + ex.Message);
                 LogError($"{ex.Message}", fileName);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertEligibilityDocuments), fileName, lineNumber, Constants.ClientTrackCode);
                 if (ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -2281,6 +2494,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(ShouldInsertAgencyClient), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return false to indicate failure
                 return false;
             }
         }
@@ -2297,6 +2515,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAttributeValue), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null
+                // to indicate failure
                 return null;
             }
         }
@@ -2316,6 +2540,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetNullableDateTimeAttributeValue), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null to indicate failure
                 return null;
             }
         }
@@ -2385,6 +2614,10 @@ namespace RWDE
                 errorOccurred = true;
                 // Log error for the main insertion process
                 LogError($"{Constants.ErrorInsertingServiceLineItems}{ex.Message}", fileName);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertServiceLineItems), fileName, lineNumber, Constants.ClientTrackCode);
                 if (ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -2413,6 +2646,14 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAttributeValue), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return default value
+                // to indicate failure
+                errorOccurred = true;
+                MessageBox.Show(Constants.ErrorOccurred);
                 return default;
             }
         }
@@ -2436,6 +2677,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAttributeValueOrDefault), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return default value
                 return defaultValue;
             }
         }
@@ -2444,7 +2690,7 @@ namespace RWDE
             try
             {
                 string dateString = GetAttributeValue<string>(node, attributeName);
-               
+
                 if (!string.IsNullOrEmpty(dateString))
                 {
                     if (DateTime.TryParse(dateString, out DateTime result))
@@ -2457,6 +2703,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetDateTimeValue), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return a default value
                 return DateTime.MinValue;
             }
         }
@@ -2465,7 +2716,7 @@ namespace RWDE
             try
             {
                 string decimalString = GetAttributeValue<string>(node, attributeName);
-                
+
                 if (!string.IsNullOrEmpty(decimalString) && decimal.TryParse(decimalString, out decimal result))
                 {
                     return result;
@@ -2475,6 +2726,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetDecimalValue), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return a default value
                 return 0;
             }
         }
@@ -2513,6 +2769,10 @@ namespace RWDE
                     errorOccurred = true;
                     // Log an additional error if logging itself fails
                     MessageBox.Show(ex.Message);
+                    var st = new StackTrace(ex, true);
+                    var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                    int lineNo = frame?.GetFileLineNumber() ?? 0;
+                    LogError(ex.Message, ex.StackTrace, nameof(LogError), fileName, lineNo, Constants.ClientTrackCode);
                 }
 
                 errorLogged = true; // Set errorLogged flag to true after logging the first error
@@ -2521,6 +2781,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNo = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LogError), null, lineNo, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return;
             }
         }
@@ -2552,6 +2817,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(ExtractServiceId), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -2581,8 +2851,14 @@ namespace RWDE
             }
             catch (Exception ex)
             {
-                errorOccurred = true;
                 MessageBox.Show($@"{Constants.ErrorLoggingMessage}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(Log), baseFilename, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
+                // to indicate failure
+                errorLogged = true; // Set errorLogged flag to true after logging the first error
             }
         }
         public void DeleteBatchochin(string batchId)// Delete All Values form all Ochin tables 
@@ -2604,6 +2880,12 @@ namespace RWDE
                 errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(DeleteBatchochin), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
+                // to indicate failure
             }
         }
         public void DeleteBatch(string batchId, string type)// Delete All Values form all tables 
@@ -2612,7 +2894,7 @@ namespace RWDE
             {
                 errorOccurred = false;
                 string storedProcedure = GetStoredProcedureByType(type);
-               
+
                 using (SqlCommand command = new SqlCommand(storedProcedure, GetConnection()))
                 {
 
@@ -2624,6 +2906,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(DeleteBatch), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception($"{Constants.ErrorDeletingBatch}{batchId}", ex);
             }
@@ -2653,6 +2941,11 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetStoredProcedureByType), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -2675,6 +2968,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAllBatches), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2700,6 +2999,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAllBatchesLoad), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2725,6 +3030,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAllBatcheshcc), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2752,6 +3063,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetNextBatchId), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return 0;
             }
         }
@@ -2778,6 +3094,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetParticularDataFromBatchTable), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2806,8 +3128,13 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
-                // Optionally, log the exception
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAllBatchTypes), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
+                // Optionally, log the exception
             }
             return batchTypeValues;
         }
@@ -2837,6 +3164,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Optionally, log the exception
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAllBatchTypesHcc), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
 
             return batchTypeValues;
@@ -2868,6 +3200,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Optionally, log the exception
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAllBatchTypesview), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
 
             return batchTypeValues;
@@ -2895,6 +3232,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Handle exception (logging, rethrow, etc.)
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetParticularConversionDatas), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             return dataTable;
         }
@@ -2920,6 +3262,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetParticularnGenerationDatas), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2946,6 +3294,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetParticularnGenerationDatasconversion), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -2974,6 +3328,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetParticularGenerationDatasHcc), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 // Handle exception (logging, rethrow, etc.)
                 throw new Exception(Constants.ErrorRetrievingBatchData, ex);
             }
@@ -3010,6 +3370,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Catch any exceptions and write the error message to the console
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAllContractLists), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             // Return the populated DataTable
             return dataTable;
@@ -3038,6 +3403,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetAllServiceLists), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             return dataTable;
         }
@@ -3104,6 +3474,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetServices), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3170,6 +3545,19 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                if (frame != null)
+                {
+                    int lineNumber = frame.GetFileLineNumber();
+                    LogError(ex.Message, ex.StackTrace, nameof(GetServiceserror), null, lineNumber, Constants.ClientTrackCode);
+                }
+                else
+                {
+                    errorOccurred = false;
+                    LogError(ex.Message, ex.StackTrace, nameof(GetServiceserror), null, 0, Constants.ClientTrackCode);
+                }
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3202,6 +3590,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetXmlStructure), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3229,6 +3622,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(DeceasedClientsData), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             return dataTable;
         }
@@ -3262,6 +3660,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetClientFileXmlStructure), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3321,6 +3724,19 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                if (frame != null)
+                {
+                    int lineNumber = frame.GetFileLineNumber();
+                    LogError(ex.Message, ex.StackTrace, nameof(GetClients), null, lineNumber, Constants.ClientTrackCode);
+                }
+                else
+                {
+                    errorOccurred = false;
+                    LogError(ex.Message, ex.StackTrace, nameof(GetClients), null, 0, Constants.ClientTrackCode);
+                }
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3371,6 +3787,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FetchSubClientValues), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 throw new Exception(Constants.ErrorRetrievingData, ex);
             }
         }
@@ -3385,6 +3807,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FetchSubClientValuesFromMedC4), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3399,6 +3826,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FetchSubClientValuesFromMedVl), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3413,6 +3845,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FetchSubClientValuesFromHivTest), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3427,6 +3864,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FetchSubClientValuesFromInsur), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3441,6 +3883,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FetchSubClientValuesFromRace), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3479,6 +3926,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Log the exception or handle it as per your application's error handling strategy
                 MessageBox.Show($@"{Constants.ErrorInInsertOrUpdateContractMethod}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertOrUpdateContract), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 throw; // Re-throw the exception to propagate it to the caller
             }
             return operation;
@@ -3510,6 +3962,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Log the exception or handle it as per your application's error handling strategy
                 MessageBox.Show($@"{Constants.ErrorInInsertOrUpdateContractMethod}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(RenewContract), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 throw; // Re-throw the exception to propagate it to the caller
             }
         }
@@ -3543,6 +4000,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Show a message box with the error message
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(ContractIdUpdateStatus), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
         }
         public void ContractIdEdit(int contractId, String contractName, Object startedDateTime, Object endedDateTime, string status)// to modify particular contract id from contract list
@@ -3568,6 +4030,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(ContractIdEdit), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
         }
         public void ServiceCodeIdUpdateStatus(int serviceCodeId, string status)// updating service after editing in service code setup
@@ -3599,6 +4066,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Show a message box with the error message
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(ServiceCodeIdUpdateStatus), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
         }
         public void EditServiceCode(int serviceCodeId, string service, string hccExportToAries, string hccContractId, string hccPrimaryService, string hccSecondaryService, string hccSubservice, string unitsOfMeasure, decimal unitValue, string status)// edit service code data according to service id
@@ -3642,6 +4114,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(EditServiceCode), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
         }
         // To handle the Insertion or Deletion o Service Code 
@@ -3700,6 +4177,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Log or handle the error as needed
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertOrUpdateServiceCode), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null; // or return an appropriate error value
             }
         }
@@ -3731,6 +4213,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Log or handle the error as needed
                 MessageBox.Show($@"{Constants.AnErrorOccurred}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetActiveContracts), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
 
             // Return the populated DataTable
@@ -3764,6 +4251,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetClientIDs), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3796,6 +4288,19 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                if (lineNumber > 0)
+                {
+                    LogError(ex.Message, ex.StackTrace, nameof(GetServiceIDs), null, lineNumber, Constants.ClientTrackCode);
+                }
+                else
+                {
+                    errorOccurred = false;
+                    LogError(ex.Message, ex.StackTrace, nameof(GetServiceIDs), null, 0, Constants.ClientTrackCode);
+                }
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3822,6 +4327,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetFilteredDataFromDatabase), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -3853,6 +4363,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Handle exceptions (logging, rethrowing, etc.)// PUSH AGAIN
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LoadDatafilter), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
 
             return dt;
@@ -3908,6 +4423,12 @@ namespace RWDE
             catch (Exception ex)
             {
                 errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LoadDatafilterServiceRecon), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 throw new Exception(Constants.AnErrorOccurredWhileLoadingData, ex);
             }
             return dt;
@@ -3951,6 +4472,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LoadDatafilterhccreconBatchid), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             return result;
         }
@@ -3972,10 +4498,15 @@ namespace RWDE
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(CombineAllResults), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             return dt;
         }
-        public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate, String filterType)// to load the HCCRecon for created and service date filter
+        public DataTable LoadDatafilterhccrecon(DateTime startDate, DateTime endDate, String filterType) // to load the HCCRecon for created and service date filter
         {
             DataTable dt = new DataTable();
 
@@ -4004,6 +4535,44 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LoadDatafilterhccrecon), null, lineNumber, Constants.ClientTrackCode);
+            }
+
+            // Ensure a return value is provided in all code paths
+            return dt;
+        }
+        public DataTable LoadDatafilterhccreconBatchid(DateTime startDate, DateTime endDate, int batchid, String filterType)// to load the HCCRecon for Batch ID filter
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                errorOccurred = false;
+                // Choose stored procedure based on filterType
+                string query = Constants.SpHccRecon;
+                using (SqlCommand cmd = new SqlCommand(query, GetConnection()))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure; // Specify that it is a stored procedure
+                    // Add start and end date parameters directly as DateTime
+                    cmd.Parameters.AddWithValue(Constants.AtStartDateCaps, startDate);
+                    cmd.Parameters.AddWithValue(Constants.AtEndDateCaps, endDate);
+                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchid);
+                    cmd.Parameters.AddWithValue(Constants.AtType, filterType);
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    adapter.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LoadDatafilterhccreconBatchid), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             return dt;
         }
@@ -4031,6 +4600,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Handle exceptions (logging, rethrowing, etc.)
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LoadConfigurationfilter), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             return dt;
         }
@@ -4059,6 +4633,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Handle exceptions (logging, rethrowing, etc.)
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LoadManualUploadReport), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
 
                 return dt;
             }
@@ -4087,6 +4666,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Handle exceptions (logging, rethrowing, etc.)
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(LoadErrorlog), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             return dt;
         }
@@ -4108,6 +4692,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetHccServices), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -4127,6 +4716,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetHccClients), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
                 return null;
             }
         }
@@ -4159,6 +4753,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetPieChartData), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
             return dt;
         }
@@ -4180,6 +4779,12 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show($@"{Constants.ErrorClearingtables}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(ClearTables), null, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
+
                 throw; // Re-throw if you want to handle it in the calling method
             }
         }
@@ -4231,6 +4836,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(WriteClientCsvData), Filepath, lineNumber, Constants.ClientTrackCode);
+                // Log the error and return null or an empty string
             }
         }
         public void WriteServicesCsvData(string filePath)// to Write the CSV data of Services
@@ -4282,10 +4892,20 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(Constants.Accessdeniedtothefolder, Constants.PermissionError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Log the error and return null or an empty string
+                var st = new StackTrace();
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(Constants.Accessdeniedtothefolder, null, nameof(WriteServicesCsvData), filePath, lineNumber, Constants.ClientTrackCode);
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(Constants.Errorsp + ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(WriteServicesCsvData), filePath, lineNumber, Constants.ClientTrackCode);
             }
         }
 
@@ -4314,6 +4934,10 @@ namespace RWDE
                 errorOccurred = true;
                 // Handle SQL exceptions
                 MessageBox.Show($@"{Constants.SqlError}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertIntoDatabase), sourceFileName, lineNumber, Constants.ClientTrackCode);
                 transaction.Rollback(); // Rollback transaction if needed
             }
             catch (Exception ex)
@@ -4321,6 +4945,10 @@ namespace RWDE
                 errorOccurred = true;
                 // Handle any other exceptions
                 MessageBox.Show($@"{Constants.Errorsp}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(InsertIntoDatabase), sourceFileName, lineNumber, Constants.ClientTrackCode);
                 transaction.Rollback(); // Rollback transaction if needed
             }
         }
@@ -4350,6 +4978,11 @@ namespace RWDE
                             errorOccurred = true;
                             // Handle exceptions (e.g., logging)
                             MessageBox.Show(Constants.Errorsp + ex.Message);
+                            var st = new StackTrace(ex, true);
+                            var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                            int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                            LogError(ex.Message, ex.StackTrace, nameof(FilterHccErrors), sourceFileName, lineNumber, Constants.ClientTrackCode);
+                            // Log the error and return null or an empty string
                             return null;
                         }
                     }
@@ -4359,6 +4992,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FilterHccErrors), sourceFileName, lineNumber, Constants.ClientTrackCode);
                 return null;
             }
         }
@@ -4389,6 +5026,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FormatStatus), null, lineNumber, Constants.ClientTrackCode);
                 return null;
             }
         }
@@ -4411,6 +5052,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show($@"{Constants.ErrorGettingTotalRows}  {ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetTotalRowsForBatch), null, lineNumber, Constants.ClientTrackCode);
             }
             return totalRows;
         }
@@ -4458,6 +5103,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateStatus), null, lineNumber, Constants.ClientTrackCode);
             }
         }
         public void UpdateServiceStatus(int batchId, int listId, DateTime startTime, DateTime endTime)// to update the status of service file
@@ -4490,6 +5139,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateServiceStatus), null, lineNumber, Constants.ClientTrackCode);
             }
         }
         public int GetTotalRowsForBatchclient(int selectedBatchId)// Getting total rows from particular table
@@ -4513,6 +5166,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show($@"{Constants.ErrorGettingTotalRows}  {ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetTotalRowsForBatchclient), null, lineNumber, Constants.ClientTrackCode);
             }
             return 0;
         }
@@ -4544,6 +5201,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(Constants.Errorupdatingbatchstatus, ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateBatchStatusabort), filename, lineNumber, Constants.ClientTrackCode);
                 // Log or handle the exception appropriately
             }
         }
@@ -4573,6 +5234,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateBatchStatusTime), null, lineNumber, Constants.ClientTrackCode);
             }
         }
         public void ClearAbortedTables(int batchId)// to delete the Aborted Batch data
@@ -4592,6 +5257,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show($@"{Constants.ErrorClearingtables}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(ClearAbortedTables), null, lineNumber, Constants.ClientTrackCode);
                 throw; // Re-throw if you want to handle it in the calling method
             }
         }
@@ -4622,6 +5291,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetCoversionTime), null, lineNumber, Constants.ClientTrackCode);
                 return (null, null);
             }
         }
@@ -4642,6 +5315,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetTotalRows), null, lineNumber, Constants.ClientTrackCode);
             }
             return totalRows;
         }
@@ -4688,6 +5365,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(MapCmsClientsAsync), null, lineNumber, Constants.ClientTrackCode);
             }
         }
         public void UpdateBatch(int batchId, DateTime startTime, DateTime endTime, int allTotalRows)// Updating status and Time on Batch Table  
@@ -4716,6 +5397,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show($@"{Constants.Errorupdatingbatch}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateBatch), null, lineNumber, Constants.ClientTrackCode);
                 // Log or handle the exception appropriately
             }
         }
@@ -4742,6 +5427,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(Constants.Errorupdatingbatchstatus, ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateBatchStatus), null, lineNumber, Constants.ClientTrackCode);
             }
         }
         public async Task MapDlServicesAsync(int selectedBatchId)// to Map the DlServices to Hcc Tables
@@ -4788,6 +5477,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(MapDlServicesAsync), null, lineNumber, Constants.ClientTrackCode);
             }
         }
         public int GetTotalRowsForBatchservices(int batchId)// Getting total rows from required table
@@ -4809,6 +5502,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetTotalRowsForBatchservices), null, lineNumber, Constants.ClientTrackCode);
                 return 0;
             }
 
@@ -4831,6 +5528,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetTotalForBatch), null, lineNumber, Constants.ClientTrackCode);
                 return 0;
             }
 
@@ -4849,6 +5550,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show($@"{Constants.ErroraddingremovedbatchIDtodatabase} {ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(AddRemovedBatchIdToDatabase), null, lineNumber, Constants.ClientTrackCode);
             }
         }
         public object UpdateGridStatus(int status)// to upadte the Grid status 
@@ -4870,6 +5575,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateGridStatus), null, lineNumber, Constants.ClientTrackCode);
                 return null;
             }
         }
@@ -4899,6 +5608,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetListValue), null, lineNumber, Constants.ClientTrackCode);
+                // Handle the error as needed
                 return null;
             }
         }
@@ -4921,6 +5635,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetTotalRowsOfCmsClients), null, lineNumber, Constants.ClientTrackCode);
+                // Handle the error as needed
                 return 0;
             }
         }
@@ -4953,6 +5672,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(MapCmsClients), null, lineNumber, Constants.ClientTrackCode);
+                // Handle the error as needed
             }
         }
         public void AbortServiceConversion(int batchId)// clear tables while Aborting
@@ -4972,6 +5696,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(AbortServiceConversion), null, lineNumber, Constants.ClientTrackCode);
+                // Handle the error as needed
 
                 throw; // Re-throw if you want to handle it in the calling method
             }
@@ -4993,12 +5722,17 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(AbortClientConversion), null, lineNumber, Constants.ClientTrackCode);
+                // Handle the error as needed
 
                 throw; // Re-throw if you want to handle it in the calling method
             }
         }
 
-        public void UpdateBatchStatusOchin(int selectedBatchId, int status,string FileName)// Updating Batch Status calling batchid here 
+        public void UpdateBatchStatusOchin(int selectedBatchId, int status, string FileName)// Updating Batch Status calling batchid here 
         {
             try
             {
@@ -5024,6 +5758,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(Constants.Errorupdatingbatchstatus, ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateBatchStatusOchin), FileName, lineNumber, Constants.ClientTrackCode);
             }
         }
         public int GetTotalRowsForBatchservicesOchin(int batchId)// Getting total rows from required table
@@ -5045,6 +5783,11 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(GetTotalRowsForBatchservicesOchin), null, lineNumber, Constants.ClientTrackCode);
+                // Handle the error as needed
             }
             return 0;
         }
@@ -5092,6 +5835,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(MapCmsServicesToHccServices), null, lineNumber, Constants.ClientTrackCode);
             }
         }
         public void UpdateGridStatus(int batchId, int status)// Updates the status label on the form based on a given status code retrieved from the database.
@@ -5114,6 +5861,11 @@ namespace RWDE
                 errorOccurred = true;
                 // Log or handle the exception appropriately
                 MessageBox.Show($@"{Constants.ErrorUpdatingGridStatus}{ex.Message}");
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(UpdateGridStatus), null, lineNumber, Constants.ClientTrackCode);
+                // Handle the error as needed
             }
         }
         public DataTable FillTheGrid(string query)// to fill the Gird of Requested screen
@@ -5134,6 +5886,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FillTheGrid), query, lineNumber, Constants.ClientTrackCode);
                 return null;
             }
         }
@@ -5153,6 +5909,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(FillTheGridQuery), query, lineNumber, Constants.ClientTrackCode);
                 return null;
             }
         }
@@ -5184,6 +5944,10 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(IsContractRenewed), contractId, lineNumber, Constants.ClientTrackCode);
                 return false;
             }
         }
@@ -5215,9 +5979,14 @@ namespace RWDE
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);
+                var st = new StackTrace(ex, true);
+                var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
+                int lineNumber = frame?.GetFileLineNumber() ?? 0;
+                LogError(ex.Message, ex.StackTrace, nameof(IsContractPresent), contractId, lineNumber, Constants.ClientTrackCode);
                 return false;
             }
         }
+
 
         public List<int> GetNotUpdatedBatchIds(string fileType) // get all batches type except Client Track
         {
@@ -5274,5 +6043,33 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private bool IsMentalHealthService(string primServDesc)
+        {
+            return !string.IsNullOrEmpty(primServDesc) &&
+                   primServDesc.IndexOf("mental health", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private decimal CalculateActualMinutesSpent(string subServNm, decimal quantityServed)
+        {
+
+            if (!string.IsNullOrEmpty(subServNm))
+            {
+
+
+                var match = System.Text.RegularExpressions.Regex.Match(subServNm, @"\((\d{2})-min\)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (match.Success)
+                {
+                    int n = int.Parse(match.Groups[1].Value);
+
+                    return n * quantityServed;
+
+                }
+            }
+
+            // Fallback: just return quantityServed as int (or your previous logic)
+            return (int)quantityServed;
+        }
+
     }
 }

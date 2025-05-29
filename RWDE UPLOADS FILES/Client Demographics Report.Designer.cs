@@ -146,7 +146,7 @@ namespace RWDE
             this.btnReport.TabIndex = 6;
             this.btnReport.Text = "Submit";
             this.btnReport.UseVisualStyleBackColor = false;
-            this.btnReport.Click += new System.EventHandler(this.BtnReport_Click);
+            this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
             // 
             // lblHeader
             // 
