@@ -225,7 +225,7 @@ namespace RWDE
             }
         }
 
-        public void UpadteHCCServicesWithErrors()
+        public void UpadteHCCServicesWithErrors(int batchId)
         {
             try
             {
@@ -235,6 +235,29 @@ namespace RWDE
                 using (SqlCommand updateCmd = new SqlCommand(Constants.UpdateHccServicesWithErrors, GetConnection()))
                 {
                     updateCmd.CommandType = CommandType.StoredProcedure;
+                    updateCmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
+                    updateCmd.CommandTimeout = 120;
+                    updateCmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void UpadteHCCClientsWithErrors(int batchId)
+        {
+            try
+            {
+                errorOccurred = false;
+
+                // Call the stored procedure to update HCCServices
+                using (SqlCommand updateCmd = new SqlCommand(Constants.UpdateHCCClientswithErrors, GetConnection()))
+                {
+                    updateCmd.CommandType = CommandType.StoredProcedure;
+                    updateCmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     updateCmd.CommandTimeout = 120;
                     updateCmd.ExecuteNonQuery();
                 }
@@ -786,7 +809,7 @@ namespace RWDE
                     // Add parameters with appropriate conversion and null handling
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
-                    command.Parameters.AddWithValue(Constants.AtClntId, ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtClntId, data[0] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtFirstNm, data[1] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtLastNm, data[2] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtMi, data[3] ?? (object)DBNull.Value);
@@ -911,21 +934,21 @@ namespace RWDE
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                LogError(ex.Message, ex.StackTrace, nameof(InsertClientInformationOchin), fileName, lineNumber, Constants.OchinCode);
+                LogError(ex.Message + data[1] + data[2], ex.StackTrace, nameof(InsertClientInformationOchin), fileName, lineNumber, Constants.OchinCode);
             }
             catch (IndexOutOfRangeException ex)
             {
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                LogError(ex.Message, ex.StackTrace, nameof(InsertClientInformationOchin), fileName, lineNumber, Constants.OchinCode);
+                LogError(ex.Message + data[1] + data[2], ex.StackTrace, nameof(InsertClientInformationOchin), fileName, lineNumber, Constants.OchinCode);
             }
             catch (SqlException ex)
             {
                 var st = new StackTrace(ex, true);
                 var frame = (st.GetFrames() ?? throw new InvalidOperationException()).FirstOrDefault(f => !string.IsNullOrEmpty(f.GetFileName()));
                 int lineNumber = frame?.GetFileLineNumber() ?? 0;
-                LogError(ex.Message, ex.StackTrace, nameof(InsertClientInformationOchin), fileName, lineNumber, Constants.OchinCode);
+                LogError(ex.Message + data[1] + data[2], ex.StackTrace, nameof(InsertClientInformationOchin), fileName, lineNumber, Constants.OchinCode);
             }
             catch (Exception ex)
             {
@@ -3150,7 +3173,8 @@ namespace RWDE
 
             return batchTypeValues;
         }
-        public List<string> GetAllBatchTypesview()// get all batches type
+
+        public List<string> GetAllBatchTypesview() // get all batches type
         {
             List<string> batchTypeValues = new List<string>();
             try
@@ -3947,7 +3971,7 @@ namespace RWDE
             }
         }
 
-        public void ContractIdUpdateStatus(int contractId, string status)// to update the status of the particular ContractID 
+        public void ContractIdUpdateStatus(int contractId, string status) // to update the status of the particular ContractID 
         {
             try
             {
@@ -4885,13 +4909,14 @@ namespace RWDE
             }
         }
 
-        public void InsertIntoDatabase(SqlConnection connection, SqlTransaction transaction, string hccTable, string errorMessage, string clientId, string sourceFileName)// to insert the data into the database
+        public void InsertIntoDatabase(SqlConnection connection, SqlTransaction transaction, string hccTable, string errorMessage, string clientId, string sourceFileName, int batchId) // to insert the data into the database
         {
             try
             {
                 errorOccurred = false;
                 using (SqlCommand cmd = new SqlCommand(Constants.InsertIntoDatabaseQuery, connection, transaction))
                 {
+                    cmd.Parameters.AddWithValue(Constants.AtBatchid, batchId);
                     cmd.Parameters.AddWithValue(Constants.AtHccTable, hccTable);
                     cmd.Parameters.AddWithValue(Constants.AtErrorMessage, errorMessage);
 
@@ -5961,6 +5986,64 @@ namespace RWDE
                 return false;
             }
         }
+
+
+        public List<int> GetNotUpdatedBatchIds(string fileType) // get all batches type except Client Track
+        {
+            List<int> batchIds = new List<int>();
+            try
+            {
+                errorOccurred = false;
+                string query = string.Empty;
+                if (fileType==Constants.Clients)
+                {
+                    query = Constants.GetNotUpdatedClientBatchIds;
+                }
+                else if(fileType == Constants.Services)
+                {
+                    query = Constants.GetNotUpdatedServiceBatchIds;
+                }
+                else
+                {
+                    MessageBox.Show(Constants.InvalidFileType);
+                }
+                using (SqlCommand com = new SqlCommand(query, GetConnection()))
+                {
+
+                    using (SqlDataReader reader = com.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            batchIds.Add(Convert.ToInt32(reader[Constants.BatchId]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                errorOccurred = true;
+                // Optionally, log the exception
+                MessageBox.Show(ex.Message);
+            }
+
+            return batchIds;
+        }
+
+        public void UpdateServiceErrors()
+        {
+            try
+            {
+                errorOccurred = false;
+
+
+            }
+            catch(Exception ex)
+            {
+                errorOccurred = true;
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         private bool IsMentalHealthService(string primServDesc)
         {
             return !string.IsNullOrEmpty(primServDesc) &&
@@ -5987,9 +6070,6 @@ namespace RWDE
             // Fallback: just return quantityServed as int (or your previous logic)
             return (int)quantityServed;
         }
-
-
-
 
     }
 }
