@@ -1,9 +1,12 @@
 ﻿using ExcelDataReader;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace RWDE
@@ -18,6 +21,12 @@ namespace RWDE
             BackColor = Color.White;
             WindowState = FormWindowState.Maximized;
             dbHelper = new DbHelper();
+
+           
+
+            cbFileType.Items.Clear();
+            cbFileType.Items.Add(Constants.Clients);
+            cbFileType.Items.Add(Constants.Services);
 
             // to load the default gridView
             InitializeDataGridView();
@@ -123,30 +132,34 @@ namespace RWDE
                 return false;
             }
         }
-        private void ProcessExcelData(string sourceFileName)// to read  and store excel data in Database
+
+        private void ProcessExcelData(string sourceFileName, int batchId) // to read  and store excel data in Database
         {
             try
             {
                 DataTable excelData = ReadExcelFile(sourceFileName); // to read the excel
+                bool isClientfile = false;
 
                 // Ensure the required columns exist
-                    if (!excelData.Columns.Contains(Constants.HccTable) || !excelData.Columns.Contains(Constants.ErrorMessage))
+                if (!excelData.Columns.Contains(Constants.HccTable) || !excelData.Columns.Contains(Constants.ErrorMessage))
                 {
                     MessageBox.Show(Constants.TheRequiredColumnsAreMissing, Constants.DownloadHccErrors);
                     return;
                 }
-               SqlConnection conn = dbHelper.GetConnection();
+
+                SqlConnection conn = dbHelper.GetConnection();
                 using (SqlTransaction transaction = conn.BeginTransaction())
                 {
                     try
                     {
                         foreach (DataRow row in excelData.Rows)
                         {
+                            string batchID = batchId.ToString(); // Get the BatchID from the ComboBox
                             string sourceFileNameStr = row[Constants.SourceFileName].ToString();
                             string hccTable = row[Constants.HccTable].ToString();
                             string errorMessage = row[Constants.ErrorMessage].ToString();
-                                string clientId = row[Constants.SourceId].ToString();
-                            
+                            string clientId = row[Constants.SourceId].ToString();
+
                             // Replace values in HccTable based on specific cases
                             switch (hccTable)
                             {
@@ -191,7 +204,7 @@ namespace RWDE
                             }
 
                             // Insert the Errors into database
-                            dbHelper.InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr);
+                            dbHelper.InsertIntoDatabase(conn, transaction, hccTable, errorMessage, clientId, sourceFileNameStr, batchId);
                             if (dbHelper.ErrorOccurred)
                                 {
                                     MessageBox.Show(Constants.ErrorOccurred);
@@ -199,8 +212,29 @@ namespace RWDE
                                 }
 
                             AddRowToGrid(errorMessage, hccTable, clientId, sourceFileNameStr);
+
+                           if (sourceFileNameStr.Contains(Constants.Client))
+                            {
+                                isClientfile = true;
+                            }
+                            else
+                            {
+                                isClientfile = false;
+                            }
                         }
+
                         transaction.Commit();
+
+                        if (isClientfile)
+                        {
+                            dbHelper.UpadteHCCClientsWithErrors(batchId);
+                        }
+                        else
+                        {
+                            // Update the HCCServices table with errors
+                            dbHelper.UpadteHCCServicesWithErrors(batchId);
+                        }
+
                         MessageBox.Show(Constants.Dataprocessedandinsertedintothedatabasesuccessfully, Constants.DownloadHccErrors);
                     }
                     catch (Exception ex)
@@ -215,6 +249,7 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void AddRowToGrid(string errorMessage, string hccTable, string clientId, string sourceFileName)// to add every row in excel to grid
         {
             try
@@ -277,21 +312,43 @@ namespace RWDE
                 MessageBox.Show(ex.Message);
             }
         }
-        private void btnUpload_Click(object sender, EventArgs e)// to read  and store excel data in Database
+
+        private void btnUpload_Click(object sender, EventArgs e) // to read  and store excel data in Database
         {
             try
             {
-                if (txtPath.Text == "")
+                if (txtPath.Text == string.Empty)
                 {
                     MessageBox.Show(Constants.Nodatatoinsertintotable, Constants.DownloadHccErrors);
                     return;
                 }
+
                 string selectedFilePath = txtPath.Text;
+
+                string fileType = cbFileType.SelectedItem?.ToString();
+                if (string.IsNullOrEmpty(fileType))
+                {
+                    MessageBox.Show(Constants.PleaseSelectthefiletype, Constants.DownloadHccErrors);
+                    return;
+                }
+
+                int batchId = cbBatchId.SelectedItem != null ? Convert.ToInt32(cbBatchId.SelectedItem) : 0;
+                if (cbBatchId.Items.Count == 0)
+                {
+                    MessageBox.Show(Constants.NoBatchIdExistFortheFileType, Constants.DownloadHccErrors);
+                    return;
+                }
+                else if (batchId == 0)
+                {
+                    MessageBox.Show(Constants.PleaseSelecttheBatchID, Constants.DownloadHccErrors);
+                    return;
+                }
+
                 // Validate the selected file is an Excel file
                 if (IsAllowedFileType(selectedFilePath))
                 {
                     // Process the selected Excel file
-                    ProcessExcelData(selectedFilePath);
+                    ProcessExcelData(selectedFilePath, batchId);
                 }
             }
             catch (Exception ex)
@@ -346,6 +403,31 @@ namespace RWDE
 
                 txtPath.Text = "";
                 txtFileName.Text = "";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void cbFileType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string fileType = cbFileType.SelectedItem?.ToString();
+
+                List<int> batchTypes = dbHelper.GetNotUpdatedBatchIds(fileType);
+                if (dbHelper.ErrorOccurred)
+                {
+                    MessageBox.Show(Constants.ErrorOccurred);
+                    return;
+                }
+
+                cbBatchId.Items.Clear();  // Clear existing items
+                foreach (int batchType in batchTypes)
+                {
+                    cbBatchId.Items.Add(batchType);
+                }
             }
             catch (Exception ex)
             {

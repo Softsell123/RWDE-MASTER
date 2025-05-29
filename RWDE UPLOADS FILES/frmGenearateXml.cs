@@ -427,7 +427,7 @@ namespace RWDE
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
                 string filename = Convert.ToString(dataGridView.Rows[selectedRowIndex].Cells[Constants.FileName].Value.ToString());
                 string formattedDate = string.Empty;
-
+                string formattedTime = DateTime.Now.ToString(Constants.Hhmmss);
                 Match match = Regex.Match(filename, @"\d{8}");
                 if (match.Success)
                 {
@@ -436,7 +436,7 @@ namespace RWDE
                     // Parse to DateTime
                     if (DateTime.TryParseExact(yyyymmdd, Constants.YyyyMMdd, null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
                     {
-                        formattedDate = parsedDate.ToString(Constants.DdMMyyyy);
+                        formattedDate = parsedDate.ToString(Constants.MMddyyyy);
                     }
                 }
 
@@ -486,7 +486,7 @@ namespace RWDE
                 XElement xml = await GenerateXmlService(data, xmlStructure);// generate services Xml
                 string folderPath = txtPath.Text;
                 Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
-                string baseFileName = $"{Constants.ServiceXmlHeader}{formattedDate}{Constants.XmlFooter}";
+                string baseFileName = $"{Constants.ServiceXmlHeader}{formattedDate}{formattedTime}{Constants.XmlFooter}";
                 string servicesFilePath = Path.Combine(folderPath, baseFileName);
 
                 // Check if file exists and rename accordingly
@@ -1455,6 +1455,7 @@ namespace RWDE
                     txtTotaltime.Text = null;
                     return;
                 }
+
                 btnClose.Text = Constants.Abort;
                 txtUploadEnded.Text = null;
                 txtTotaltime.Text = null;
@@ -1462,6 +1463,7 @@ namespace RWDE
                 int selectedBatchId = Convert.ToInt32(dataGridView.Rows[selectedRowIndex].Cells[Constants.BatchId].Value.ToString());
                 string filename = Convert.ToString(dataGridView.Rows[selectedRowIndex].Cells[Constants.FileName].Value.ToString());
                 string formattedDate = string.Empty;
+                string formattedTime = DateTime.Now.ToString(Constants.Hhmmss);
 
                 Match match = Regex.Match(filename, @"\d{8}");
                 if (match.Success)
@@ -1471,7 +1473,7 @@ namespace RWDE
                     // Parse to DateTime
                     if (DateTime.TryParseExact(yyyymmdd, Constants.YyyyMMdd, null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
                     {
-                         formattedDate = parsedDate.ToString(Constants.DdMMyyyy);
+                         formattedDate = parsedDate.ToString(Constants.MMddyyyy);
                     }
                 }
 
@@ -1512,7 +1514,7 @@ namespace RWDE
                 Directory.CreateDirectory(folderPath); // Create folder if it doesn't exist
 
                 // Initial filename with the current date in the desired format (ddMMyyyy)
-                string baseFileName = $"{Constants.ClientXmlHeader}{formattedDate}{Constants.XmlFooter}";
+                string baseFileName = $"{Constants.ClientXmlHeader}{formattedDate}{formattedTime}{Constants.XmlFooter}";
                 string servicesFilePath = Path.Combine(folderPath, baseFileName);
 
                 // Check if file exists and rename accordingly
