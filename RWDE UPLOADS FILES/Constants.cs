@@ -184,7 +184,7 @@ namespace RWDE
         public const string YyyyMMdd = "yyyyMMdd";
         public const string YyyyMmDd = "yyyy-MM-dd";
         public const string YyyyMmDdSlash = "yyyy/MM/dd";
-        public const string DdMMyyyy = "ddMMyyyy";
+        public const string MMddyyyy = "MMddyyyy";
         public const string YyyyMMddHHmmss = "yyyy-MM-dd HH:mm:ss";
         public const string MMddyyyyHHmm = "MM-dd-yyyy HH:mm";
         public const string DdMMyyyyHyphen = "dd-MM-yyyy";
@@ -197,6 +197,7 @@ namespace RWDE
         public const string DMmmYyyy = "d-MMM-yyyy";
         public const string MmmDYyyy = "MMM-d-yyyy";
         public const string YyyyMd = "yyyy-M-d";
+        public const string Hhmmss = "_hhmmss";
 
         public const string MMddyyyyHHmmssbkslash = "MM/dd/yyyy HH:mm:ss";
         public const string MMddyyyyhhmmsstt = "MM/dd/yyyy hh:mm:ss tt";
@@ -458,6 +459,8 @@ namespace RWDE
         public const string GetParticularConversionDatas = "GetParticularConversionDatas";
         public const string GetAllBatchType = "GETALLBATCHTYPE";
         public const string GetAllBatchTypeHcc = "GETALLBATCHTYPEHCC";
+        public const string GetNotUpdatedServiceBatchIds = "GetNotUpdatedServiceBatchIds";
+        public const string GetNotUpdatedClientBatchIds = "GetNotUpdatedClientBatchIds";
         public const string GetallbatchtypEview = "GETALLBATCHTYPEview";
         public const string GetParticularnGenerationDatasConversionXml = "GetParticularnGenerationDatasCONVERSIONxml";
         public const string GetParticularnGenerationDatasConversion = "GetParticularnGenerationDatasCONVERSION";
@@ -482,6 +485,7 @@ namespace RWDE
         public const string GetActiveContracts = "GetActiveContracts";
         public const string SpUploadDashboardReport = "sp_Upload_DashboardREPORT";
         public const string UpdateHccServicesWithErrors = "UpdateHCCServicesWithErrors";
+        public const string UpdateHCCClientswithErrors = "UpdateHCCClientswithErrors";
         public const string SpHccRecon = "sp_HCCRecon";
         public const string ManualUploadReport = "ManualUploadReport";
         public const string PieChartData = "PieChartData";
@@ -509,7 +513,7 @@ namespace RWDE
         public const string GetTotalRowsForBatchQuery = "SELECT (SELECT COUNT(*) FROM RWDE.dbo.CMSClients WHERE BatchID = @BatchID) AS TotalCount";
         public const string UpdateBatchStatus = "UPDATE [RWDE].[dbo].[Batch] SET [Status] = @Status, [SuccessfulRows] = 0 WHERE [BatchID] = @BatchID";
 
-        public const string InsertIntoDatabaseQuery = "INSERT INTO HCC_ErrorLog (HccTable, ErrorMessage, SourceId, SourceFileName) VALUES (@HccTable, @ErrorMessage, @ClientId, @SourceFileName)";
+        public const string InsertIntoDatabaseQuery = "INSERT INTO HCC_ErrorLog (BatchID, HccTable, ErrorMessage, SourceId, SourceFileName) VALUES (@BatchID, @HccTable, @ErrorMessage, @ClientId, @SourceFileName)";
 
         public const string UpdateStatusColumnQuery = "UPDATE [RWDE].[dbo].[Batch] SET[GenerationEndedAt] = @GenerationEndedAt, [Status] = '21' WHERE[BatchID] = @BatchID AND[FileName] LIKE '%Client%'";
 
@@ -970,7 +974,7 @@ namespace RWDE
         // 
         // FrmConvertToCsv
         // 
-        public const string Clients = "Client_";
+        public const string Clientun = "Client_";
         public const string ServiceSample = "Service_Sample_";
         public const string Testfiletxt = "testfile.txt";
         public const string Testingpermissions = "Testing permissions.";
@@ -990,8 +994,16 @@ namespace RWDE
         // 
         // frmDownloadHccErrors
         // 
+
+        public const string Clients = "Clients";
+        public const string Services = "Services";
         public const string Nodataavailableforthissourcefilename = "NO Records or Check the file name";
         public const string Nodatatoinsertintotable = "Please Select an Error File";
+        public const string PleaseSelectthefiletype = "Please Select the File Type";
+        public const string PleaseSelecttheBatchID = "Please Select the Batch ID of the file";
+        public const string NoBatchIdExistFortheFileType = "No Batch Id Exist For the File Type";
+
+
         public const string HccTable = "HccTable";
         public const string HccTableSp = "HCC Table";
         public const string ErrorMessage = "ErrorMessage";
@@ -1025,9 +1037,9 @@ namespace RWDE
         public const string SmallFileName = "fileName";
         public const string Client = "Client";
         public const string Service = "Service";
-        public const string ServiceXmlHeader = "ServiceDetails_0246_0422_";
-        public const string ClientXmlHeader = "ClientDetails_0246_0689_";
-        public const string XmlFooter = "_143100.xml";
+        public const string ServiceXmlHeader = "ServiceDetails_0246_12487_";
+        public const string ClientXmlHeader = "ClientDetails_0246_12487_";
+        public const string XmlFooter = ".xml";
         public const string GeneratetoHcCforbatchIdStarted = "Generate to HCC for batch ID Started";
 
         public const string GeneratetoHcCformatcompletedsuccessfully = "Generate to HCC format completed successfully";
@@ -1067,7 +1079,7 @@ namespace RWDE
         public const int Uploadochin = 27;
         public const int UploadCT = 26;
         public const string Ochin = "OCHIN";
-        public const string Services = "Service_";
+        public const string Servicesun = "Service_";
         public const string OchinCsvUploadonAt = "OCHIN CSV Upload on {date} at {time}";
         public const string AnotherProcess = "another proces";
         public const string UploadingEmptyFile = "Uploading Empty File ";

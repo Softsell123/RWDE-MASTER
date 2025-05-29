@@ -320,14 +320,14 @@ namespace RWDE
                                 }
                             }
 
-                            if (baseFilename.Contains(Constants.Clients))
+                            if (baseFilename.Contains(Constants.Clientun))
                             {
                                 // btnClose.Text = Constants.close;
                                 TimeSpan elapsedTime = DateTime.Now - startTime;
                                 string eTime = DateTime.Now.ToString(Constants.MMddyyyyHHmmssbkslash);
                             }
 
-                            if (baseFilename.Contains(Constants.Services))
+                            if (baseFilename.Contains(Constants.Servicesun))
                             {
                                 // btnClose.Text = Constants.close;
                                 TimeSpan elapsedTime = DateTime.Now - startTime;
@@ -456,7 +456,7 @@ namespace RWDE
                         line = line.Trim('"');
                         string[] data = line.Split('|');
 
-                        if (baseFilename.Contains(Constants.Clients))
+                        if (baseFilename.Contains(Constants.Clientun))
                         {
                             clientData.Add(data);
 
@@ -481,7 +481,7 @@ namespace RWDE
                                 hasLoggedClient = true;
                             }
                         }
-                        else if (baseFilename.Contains(Constants.Services))
+                        else if (baseFilename.Contains(Constants.Servicesun))
                         {
                             serviceData.Add(data);
 
@@ -562,7 +562,7 @@ namespace RWDE
                     }
                 }
 
-                if (serviceData.Count == 0 && baseFilename.Contains(Constants.Services))
+                if (serviceData.Count == 0 && baseFilename.Contains(Constants.Servicesun))
                 {
                     MessageBox.Show(Constants.UploadingEmptyFile+baseFilename, Constants.Ochin, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }

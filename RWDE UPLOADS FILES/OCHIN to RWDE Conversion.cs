@@ -569,7 +569,7 @@ namespace RWDE
                     return;
                 }
 
-                dbHelper.UpadteHCCServicesWithErrors(); // to update the HCC Services with errors
+                //dbHelper.UpadteHCCServicesWithErrors(); // to update the HCC Services with errors
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -636,6 +636,7 @@ namespace RWDE
                         MessageBox.Show(Constants.ErrorOccurred);
                         return;
                     }
+
                     dbHelper.UpdateSucessfullyExportedServices(selectedBatchId);
                     if (dbHelper.ErrorOccurred)
                     {
