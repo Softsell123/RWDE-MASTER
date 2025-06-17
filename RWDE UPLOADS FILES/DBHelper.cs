@@ -551,7 +551,7 @@ namespace RWDE
                     cmd.Parameters.AddWithValue(Constants.AtClntId, data[1]);
                     cmd.Parameters.AddWithValue(Constants.AtServiceDate, DateTime.Parse(data[3]));
                     cmd.Parameters.AddWithValue(Constants.AtContractIdsp, string.IsNullOrWhiteSpace(data[4]) ? 0 : int.Parse(data[4]));
-                    cmd.Parameters.AddWithValue(Constants.AtStaffId, formattedName);
+                    cmd.Parameters.AddWithValue(Constants.AtStaffId, data[5]);
                     cmd.Parameters.AddWithValue(Constants.AtPrimServDesc, data[6]);
                     cmd.Parameters.AddWithValue(Constants.AtSecServDesc, data[7]);
                     cmd.Parameters.AddWithValue(Constants.AtSubServDesc, data[8]);
@@ -809,7 +809,7 @@ namespace RWDE
                     // Add parameters with appropriate conversion and null handling
                     command.Parameters.AddWithValue(Constants.AtBatchid, batchid);
                     command.Parameters.AddWithValue(Constants.AtCreatedOn, DateTime.Now);
-                    command.Parameters.AddWithValue(Constants.AtClntId, data[0] ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue(Constants.AtClntId, ConvertToIntOrNull(data[0]) ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtFirstNm, data[1] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtLastNm, data[2] ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue(Constants.AtMi, data[3] ?? (object)DBNull.Value);
@@ -3650,10 +3650,12 @@ namespace RWDE
                             {
                                 row[reader.GetName(i)] = reader[i].ToString();
                             }
+
                             results.Add(row);
                         }
                     }
                 }
+
                 return results;
             }
             catch (Exception ex)
