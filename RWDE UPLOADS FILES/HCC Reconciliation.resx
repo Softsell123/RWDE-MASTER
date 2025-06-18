@@ -136,7 +136,10 @@
     <value>True</value>
   </metadata>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> b794ee8 (HC Recon Date Filters)
   <metadata name="ServiceEntriesForRWEligibilityExpired.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -155,7 +158,10 @@
   <metadata name="ManualUpload.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+<<<<<<< HEAD
 >>>>>>> f7079a9 (HCC recon deleted Columns)
+=======
+>>>>>>> b794ee8 (HC Recon Date Filters)
   <metadata name="Drop.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

@@ -3608,6 +3608,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     conn.Open();
 
                     string query = @"
+<<<<<<< HEAD
                 SELECT 
                     FORMAT(CMSServices.ServiceDate, 'MMM-yyyy') AS [MMM-YYYY],
                     COUNT(DISTINCT CMSServices.CMSServiceID) AS [Total Service Entries],
@@ -3632,6 +3633,32 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
                     CMSServices.ServiceDate BETWEEN @StartDate AND @EndDate
                 GROUP BY 
                     FORMAT(CMSServices.ServiceDate, 'MMM-yyyy')";
+=======
+        SELECT
+            FORMAT(CMSServices.ServiceDate, 'MMM-yyyy') AS [MMM-YYYY],
+            COUNT(DISTINCT CMSServices.CMSServiceID) AS [Total Service Entries],
+            COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'YES' THEN HCCServices.ServiceID END) AS [Service Entries Successfully Exported],
+            COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS [Service Entries not Exported],
+            NULL AS [Service Entries Post Timebox Period],
+            NULL AS [Service Entries for HCCID Missing],
+            CASE
+                WHEN COUNT(CMSServices.CMSServiceID) > 0 THEN
+                    FORMAT(
+                        CAST(COUNT(DISTINCT CASE WHEN HCCServices.[Service successfully exported] = 'NO' THEN HCCServices.ServiceID END) AS FLOAT) /
+                        COUNT(DISTINCT CMSServices.CMSServiceID) * 100,
+                        'N2'
+                    ) + '%'
+                ELSE '0%'
+            END AS [% Drop]
+        FROM
+            [dbo].[CMSServices] AS CMSServices
+        LEFT JOIN
+            [dbo].[HCCServices] ON CMSServices.ClientID = HCCServices.Clnt_id
+        WHERE
+            CMSServices.ServiceDate BETWEEN @StartDate AND @EndDate
+        GROUP BY
+            FORMAT(CMSServices.ServiceDate, 'MMM-yyyy')";
+>>>>>>> b794ee8 (HC Recon Date Filters)
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -3640,6 +3667,7 @@ WHERE [Download Date] BETWEEN @StartDate AND @EndDate;
 
                         SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                         adapter.Fill(dt);
+                       
                     }
                 }
                 catch (Exception ex)

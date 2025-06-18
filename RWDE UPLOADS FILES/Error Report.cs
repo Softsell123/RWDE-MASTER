@@ -723,7 +723,11 @@ namespace RWDE_UPLOADS_FILES
         {
             InitializeDataGridView();
             dataGridView.Rows.Clear();
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> b794ee8 (HC Recon Date Filters)
             txtPath.Text = "";
             txtFileName.Text = "";
 
