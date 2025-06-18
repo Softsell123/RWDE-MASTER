@@ -88,7 +88,7 @@ namespace RWDE_UPLOADS_FILES
 
 
                 dataGridView.DataSource = dt;
-
+                // Set the DataGridView properties for better appearance
                 // Set additional properties like row height, style, etc.
                 this.dataGridView.RowTemplate.Height = 40;
                 this.dataGridView.ForeColor = Color.Black;
