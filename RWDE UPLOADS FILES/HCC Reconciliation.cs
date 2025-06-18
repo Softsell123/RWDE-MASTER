@@ -100,6 +100,7 @@ namespace RWDE
                         dataTable.Rows.Add(dataRow);
                     }
                 }
+                // Check if the DataTable is empty
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
