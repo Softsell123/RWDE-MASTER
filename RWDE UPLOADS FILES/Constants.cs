@@ -499,8 +499,8 @@ namespace RWDE
         // 
 
         // XML Queries
-        public const string XmlStructureServiceValues = "SELECT TOP (1000) [xmlGeneratorID]\r\n      ,[FileID]\r\n      ,[TagNumber]\r\n      ,[Tag]\r\n      ,[Table]\r\n      ,[Field]\r\n      ,[PresetValue]\r\n      ,[Default]\r\n      ,[Empty]\r\n      ,[HasChild]\r\n      ,[DelimiterxmlGeneratorID]\r\n      ,[DataTransformerType]\r\n      ,[CreatedBy]\r\n      ,[CreatedOn]\r\n  FROM [RWDE].[dbo].[xmlGeneratorRules] where FileID = 1";
-        public const string XmlStructureClientValues = "SELECT TOP (1000) [xmlGeneratorID]\r\n      ,[FileID]\r\n      ,[TagNumber]\r\n      ,[Tag]\r\n      ,[Table]\r\n      ,[Field]\r\n      ,[PresetValue]\r\n      ,[Default]\r\n      ,[Empty]\r\n      ,[HasChild]\r\n      ,[DelimiterxmlGeneratorID]\r\n      ,[DataTransformerType]\r\n      ,[CreatedBy]\r\n      ,[CreatedOn]\r\n  FROM [RWDE].[dbo].[xmlGeneratorRules] where FileID = 2";
+        public const string XmlStructureServiceValues = "SELECT TOP (1000) [xmlGeneratorID]\r\n      ,[FileID]\r\n      ,[TagNumber]\r\n      ,[Tag]\r\n      ,[Table]\r\n      ,[Field]\r\n      ,[PresetValue]\r\n      ,[Default]\r\n      ,[Empty]\r\n      ,[HasChild]\r\n      ,[DelimiterxmlGeneratorID]\r\n      ,[DataTransformerType]\r\n      ,[CreatedBy]\r\n      ,[CreatedOn]\r\n  FROM [dbo].[xmlGeneratorRules] where FileID = 1";
+        public const string XmlStructureClientValues = "SELECT TOP (1000) [xmlGeneratorID]\r\n      ,[FileID]\r\n      ,[TagNumber]\r\n      ,[Tag]\r\n      ,[Table]\r\n      ,[Field]\r\n      ,[PresetValue]\r\n      ,[Default]\r\n      ,[Empty]\r\n      ,[HasChild]\r\n      ,[DelimiterxmlGeneratorID]\r\n      ,[DataTransformerType]\r\n      ,[CreatedBy]\r\n      ,[CreatedOn]\r\n  FROM [dbo].[xmlGeneratorRules] where FileID = 2";
 
         public const string SelectValuefromListwhereListsId = "select Value from List where ListsID = @ListsID";
         public const string UpdateBatchStatusQuery = "UPDATE Batch SET Status = @Status, ConversionStartedAt = @Timestamp WHERE BatchID = @BatchID";
