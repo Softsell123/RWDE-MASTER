@@ -101,9 +101,11 @@ namespace RWDE
                         {
                             dataRow[cell.ColumnIndex] = cell.Value ?? DBNull.Value;
                         }
+
                         dataTable.Rows.Add(dataRow);
                     }
                 }
+
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {

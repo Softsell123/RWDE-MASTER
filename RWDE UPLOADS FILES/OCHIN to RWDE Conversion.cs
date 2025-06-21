@@ -585,7 +585,7 @@ namespace RWDE
                 txtUploadStarted.Text = starttime.ToString(Constants.MMddyyyyHHmmssbkslash);
 
                 // Get the total number of rows to be inserted
-                int totalRows = dbHelper.GetTotalRowsForBatchservicesOchin(selectedBatchId);// to get total rows
+                int totalRows = dbHelper.GetTotalRowsForBatchservicesOchin(selectedBatchId); // to get total rows
                 if (dbHelper.ErrorOccurred)
                 {
                     MessageBox.Show(Constants.ErrorOccurred);
@@ -605,6 +605,7 @@ namespace RWDE
 
                 DateTime startTime = DateTime.Now;
                 txtUploadStarted.Text = startTime.ToString(Constants.MMddyyyyHHmmssbkslash);
+
                 // Update progress textbox with initial progress information
                 if (totalRows != 0)
                     {
