@@ -105,6 +105,7 @@ namespace RWDE
                         dataTable.Rows.Add(dataRow);
                     }
                 }
+
                 // Create a new Excel workbook and worksheet
                 using (var workbook = new XLWorkbook())
                 {
