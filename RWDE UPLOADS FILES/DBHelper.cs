@@ -32,8 +32,8 @@ namespace RWDE
             // Define the connection string within the DBHelper class
             connectionString = ConfigurationManager.ConnectionStrings[Constants.MyConnection].ConnectionString;
             connection = new SqlConnection(connectionString);
-
         }
+
         public void Dispose()
         {
             Dispose(true);
