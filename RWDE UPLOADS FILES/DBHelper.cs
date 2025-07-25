@@ -543,6 +543,7 @@ namespace RWDE
                 }
 
                 errorOccurred = false;
+
                 using (SqlCommand cmd = new SqlCommand(Constants.InsertClientServicesOchin, GetConnection()))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -555,7 +556,22 @@ namespace RWDE
                     cmd.Parameters.AddWithValue(Constants.AtPrimServDesc, data[6]);
                     cmd.Parameters.AddWithValue(Constants.AtSecServDesc, data[7]);
                     cmd.Parameters.AddWithValue(Constants.AtSubServDesc, data[8]);
-                    cmd.Parameters.AddWithValue(Constants.AtQuantityServed, decimal.Parse(data[9]));
+
+                    decimal quantityServed = decimal.Parse(data[9]);
+                    string serviceName = data[6]?.Trim();
+                    if (!string.IsNullOrEmpty(serviceName))
+                    {
+                        if (serviceName.Equals(Constants.Homemakerservice, StringComparison.OrdinalIgnoreCase))
+                        {
+                            quantityServed *= 4;
+                        }
+                        cmd.Parameters.AddWithValue(Constants.AtQuantityServed, quantityServed);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue(Constants.AtQuantityServed, quantityServed);
+                    }
+                    
                     cmd.Parameters.AddWithValue(Constants.AtUnitCd, data[10]);
 
                     decimal actualMinutesSpent = 0;
@@ -574,9 +590,7 @@ namespace RWDE
                         cmd.Parameters.AddWithValue(Constants.AtActualMinutesSpent, actualMinutesSpent);
                     }
 
-
                     // ----------------------------------------------------------
-
                     cmd.Parameters.AddWithValue(Constants.AtServiceId, data[15]);
                     string additionalServiceInformation = $"{Constants.AtIdEqualTto}{data[15]};";
                     cmd.Parameters.AddWithValue(Constants.AtAdditionalServiceInformation, additionalServiceInformation);
@@ -643,6 +657,12 @@ namespace RWDE
             try
             {
                 errorOccurred = false;
+
+                // --- Begin: Service logic for specific services ---
+                
+
+                // --- End: Service logic for specific services ---
+
                 using (SqlCommand cmd = new SqlCommand(Constants.InsertClientServices, GetConnection()))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -5997,11 +6017,11 @@ namespace RWDE
             {
                 errorOccurred = false;
                 string query = string.Empty;
-                if (fileType==Constants.Clients)
+                if (fileType == Constants.Clients)
                 {
                     query = Constants.GetNotUpdatedClientBatchIds;
                 }
-                else if(fileType == Constants.Services)
+                else if (fileType == Constants.Services)
                 {
                     query = Constants.GetNotUpdatedServiceBatchIds;
                 }
@@ -6039,7 +6059,7 @@ namespace RWDE
 
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 errorOccurred = true;
                 MessageBox.Show(ex.Message);

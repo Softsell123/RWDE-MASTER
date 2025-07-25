@@ -644,6 +644,7 @@ namespace RWDE
         public const string AtActualMinutesSpent = "@Actual_minutes_spent";
         public const string AtServiceId = "@ServiceID";
         public const string AtAdditionalServiceInformation = "@AdditionalServiceInformation";
+        public const string Homemakerservice = "Home and Community-Based Health Services";
 
         public const string AtFirstNm = "@first_nm";
         public const string AtLastNm = "@last_nm";
